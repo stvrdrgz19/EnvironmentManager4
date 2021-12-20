@@ -1,0 +1,187 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace EnvironmentManager4
+{
+    public class DatabaseManagement
+    {
+        public static void ResetDatabaseVersion(string database = "TWO")
+        {
+            string script = String.Format("USE {0} EXEC dbo.sppResetDatabase", database);
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID=sa;Password=sa;", settingsModel.DbManagement.SQLServer));
+            SqlDataAdapter sqlAdapter = new SqlDataAdapter(script, sqlCon);
+            DataTable dataTable = new DataTable();
+            try
+            {
+                sqlAdapter.Fill(dataTable);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("There was an issue resetting the database version for the '{0}' Database.\n\n{1}\n\n{2}", database, e.Message, e.ToString()));
+                return;
+            }
+        }
+
+        public static bool PreDatabaseActionValidation(string backupName, string backupZip, string action)
+        {
+            if (backupName == "Select a Database Backup")
+            {
+                MessageBox.Show(String.Format(@"Please select a backup to {0}", action));
+                return false;
+            }
+            if (!File.Exists(backupZip))
+            {
+                string promptMessage = String.Format("The selected backup '{0}' does not exist in the below path:\n\n{1}", backupName, backupZip);
+                string promptCaption = "ERROR";
+                MessageBoxButtons promptButton = MessageBoxButtons.OK;
+                MessageBoxIcon promptIcon = MessageBoxIcon.Error;
+
+                MessageBox.Show(promptMessage, promptCaption, promptButton, promptIcon);
+                return false;
+            }
+            return true;
+        }
+
+        public static void RestoreDatabase(string backupName, string backupZipFile)
+        {
+            //Disable Database controls
+            Form1.EnableDBControls(false);
+
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            string unzippedBackupDirectory = String.Format(@"{0}\{1}", Path.GetDirectoryName(backupZipFile), Path.GetFileNameWithoutExtension(backupZipFile));
+            try
+            {
+                ZipFile.ExtractToDirectory(backupZipFile, unzippedBackupDirectory);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("There was an error unzipping the selected backup: {0}\n\n{1}", e.Message, e.ToString()));
+                return;
+            }
+            foreach (string databaseFile in settingsModel.DbManagement.Databases)
+            {
+                string script = String.Format(@"ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; RESTORE DATABASE {0} FROM DISK='{1}\{2}\{0}.bak' WITH FILE = 1, NOUNLOAD, REPLACE; ALTER DATABASE {0} SET MULTI_USER;",
+                    databaseFile,
+                    Path.GetDirectoryName(backupZipFile),
+                    Path.GetFileNameWithoutExtension(backupZipFile));
+
+                try
+                {
+                    SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID=sa;Password=sa;", settingsModel.DbManagement.SQLServer));
+                    SqlDataAdapter restoreScript = new SqlDataAdapter(script, sqlCon);
+                    DataTable restoreTable = new DataTable();
+                    restoreScript.Fill(restoreTable);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(String.Format("There was an error restoring the selected database backup '{0}': {1}\n\n{2}", databaseFile, e.Message, e.ToString()));
+                    return;
+                }
+            }
+            try
+            {
+                Directory.Delete(unzippedBackupDirectory, true);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("There was an error deleting the unzipped database backup at '{0}', please try manually deleting this filder.\n\n{1}\n\n{2}", unzippedBackupDirectory, e.Message, e.ToString()));
+            }
+
+            //Log the process
+            string message = String.Format(@"Backup '{0}' was successfully restored.", backupName);
+            string caption = "SUCCESS";
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            MessageBoxIcon icon = MessageBoxIcon.Exclamation;
+
+            MessageBox.Show(message, caption, buttons, icon);
+            Form1.EnableDBControls(true);
+        }
+
+        public static void DeleteDatabase(string databaseFile)
+        {
+            try
+            {
+                File.Delete(databaseFile);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("There was an error deleting the selected database backup file '{0}'\n\n{1}\n\n{2}", databaseFile, e.Message, e.ToString()));
+            }
+        }
+
+        public static void NewDatabase(string databaseName, string databaseDescription, string databaseBackupDirectory)
+        {
+            //disable database controls
+            Form1.EnableDBControls(false);
+            try
+            {
+                Directory.CreateDirectory(databaseBackupDirectory);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("There was an error creating the directory '{0}', the error is as follows:\n\n{1}\n\n{2}", databaseBackupDirectory, e.Message, e.ToString()));
+                return;
+            }
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            foreach (string databaseFile in settingsModel.DbManagement.Databases)
+            {
+                string script = String.Format(@"BACKUP DATABASE {0} TO DISK='{1}\{2}\{0}.bak' WITH INIT", databaseFile, settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
+
+                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID=sa;Password=sa;", settingsModel.DbManagement.SQLServer));
+                SqlDataAdapter newDBScript = new SqlDataAdapter(script, sqlCon);
+                DataTable newDBTable = new DataTable();
+                try
+                {
+                    newDBScript.Fill(newDBTable);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(String.Format("There was an error creating a backup of the '{0}' database. Error is as follows:\n\n{1}\n\n{2}", databaseFile, e.Message, e.ToString()));
+                    return;
+                }
+            }
+
+            using (StreamWriter sw = File.AppendText(databaseBackupDirectory + @"\Description.txt"))
+            {
+                sw.WriteLine("===============================================================================");
+                sw.WriteLine("BACKUP - " + databaseName);
+                sw.WriteLine(DateTime.Now);
+                sw.WriteLine(databaseDescription);
+            }
+
+            //log db happenings
+
+            try
+            {
+                ZipFile.CreateFromDirectory(databaseBackupDirectory, databaseBackupDirectory + ".zip");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("There was an error zipping the database backup files to '{0}'. Error is as follows:\n\n{1}\n\n{2}", databaseBackupDirectory + ".zip", e.Message, e.ToString()));
+                return;
+            }
+            try
+            {
+                Directory.Delete(databaseBackupDirectory, true);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("There was a problem deleting the database directory: {0}\n\n{1}\n\n{2}", databaseBackupDirectory, e.Message, e.ToString()));
+                return;
+            }
+
+            MessageBox.Show(String.Format("The database backup '{0}' has been created successfully.", databaseName));
+            Form1.EnableDBControls(true);
+        }
+    }
+}

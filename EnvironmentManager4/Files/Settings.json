@@ -1,0 +1,20 @@
+{
+  "DbManagement": {
+    "DatabaseBackupDirectory": "",
+    "SQLServer": "",
+    "Databases": [],
+    "LockedIn": false
+  },
+  "BuildManagement": {
+    "SalesPadx86Directory": "C:\\Program Files (x86)\\SalesPad.Desktop",
+    "SalesPadx64Directory": "C:\\Program Files\\SalesPad.Desktop",
+    "DataCollectionDirectory": "C:\\Program Files (x86)\\DataCollection",
+    "SalesPadMobileDirectory": "C:\\Program Files (x86)\\SalesPad.GP.Mobile.Server",
+    "ShipCenterDirectory": "C:\\Program Files (x86)\\ShipCenter",
+    "GPWebDirectory": "C:\\inetpub\\wwwroot\\SalesPadWebPortal",
+    "WebAPIDirectory": "C:\\inetpub\\wwwroot\\SalesPadWebAPI"
+  },
+  "Other": {
+    "Mode": "Standard"
+  }
+}
