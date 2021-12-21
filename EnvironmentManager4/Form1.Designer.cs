@@ -83,11 +83,13 @@ namespace EnvironmentManager4
             this.notesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.directoryCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trimSOLTickets = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateSettingsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateCoreModulesFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateSettingsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateCoreModulesFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateConfigurationsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateConfigurationsFileWithNullsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -549,14 +551,14 @@ namespace EnvironmentManager4
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -571,7 +573,9 @@ namespace EnvironmentManager4
             this.directoryCompareToolStripMenuItem,
             this.trimSOLTickets,
             this.generateSettingsFileToolStripMenuItem,
-            this.generateCoreModulesFileToolStripMenuItem});
+            this.generateCoreModulesFileToolStripMenuItem,
+            this.generateConfigurationsFileToolStripMenuItem,
+            this.generateConfigurationsFileWithNullsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -657,6 +661,20 @@ namespace EnvironmentManager4
             this.trimSOLTickets.Text = "Trim Solutions Ticket Numbers";
             this.trimSOLTickets.Click += new System.EventHandler(this.trimSOLTickets_Click);
             // 
+            // generateSettingsFileToolStripMenuItem
+            // 
+            this.generateSettingsFileToolStripMenuItem.Name = "generateSettingsFileToolStripMenuItem";
+            this.generateSettingsFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.generateSettingsFileToolStripMenuItem.Text = "Generate Settings File";
+            this.generateSettingsFileToolStripMenuItem.Click += new System.EventHandler(this.generateSettingsFileToolStripMenuItem_Click);
+            // 
+            // generateCoreModulesFileToolStripMenuItem
+            // 
+            this.generateCoreModulesFileToolStripMenuItem.Name = "generateCoreModulesFileToolStripMenuItem";
+            this.generateCoreModulesFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.generateCoreModulesFileToolStripMenuItem.Text = "Generate Core Modules File";
+            this.generateCoreModulesFileToolStripMenuItem.Click += new System.EventHandler(this.generateCoreModulesFileToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -678,19 +696,19 @@ namespace EnvironmentManager4
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             // 
-            // generateSettingsFileToolStripMenuItem
+            // generateConfigurationsFileToolStripMenuItem
             // 
-            this.generateSettingsFileToolStripMenuItem.Name = "generateSettingsFileToolStripMenuItem";
-            this.generateSettingsFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.generateSettingsFileToolStripMenuItem.Text = "Generate Settings File";
-            this.generateSettingsFileToolStripMenuItem.Click += new System.EventHandler(this.generateSettingsFileToolStripMenuItem_Click);
+            this.generateConfigurationsFileToolStripMenuItem.Name = "generateConfigurationsFileToolStripMenuItem";
+            this.generateConfigurationsFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.generateConfigurationsFileToolStripMenuItem.Text = "Generate Configurations File";
+            this.generateConfigurationsFileToolStripMenuItem.Click += new System.EventHandler(this.generateConfigurationsFileToolStripMenuItem_Click);
             // 
-            // generateCoreModulesFileToolStripMenuItem
+            // generateConfigurationsFileWithNullsToolStripMenuItem
             // 
-            this.generateCoreModulesFileToolStripMenuItem.Name = "generateCoreModulesFileToolStripMenuItem";
-            this.generateCoreModulesFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.generateCoreModulesFileToolStripMenuItem.Text = "Generate Core Modules File";
-            this.generateCoreModulesFileToolStripMenuItem.Click += new System.EventHandler(this.generateCoreModulesFileToolStripMenuItem_Click);
+            this.generateConfigurationsFileWithNullsToolStripMenuItem.Name = "generateConfigurationsFileWithNullsToolStripMenuItem";
+            this.generateConfigurationsFileWithNullsToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.generateConfigurationsFileWithNullsToolStripMenuItem.Text = "Generate Configurations File With Nulls";
+            this.generateConfigurationsFileWithNullsToolStripMenuItem.Click += new System.EventHandler(this.generateConfigurationsFileWithNullsToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -788,6 +806,8 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateSettingsFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateCoreModulesFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateConfigurationsFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateConfigurationsFileWithNullsToolStripMenuItem;
     }
 }
 

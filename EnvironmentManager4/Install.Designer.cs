@@ -54,7 +54,6 @@ namespace EnvironmentManager4
             // 
             // lbCustomModules
             // 
-            this.lbCustomModules.Enabled = false;
             this.lbCustomModules.FormattingEnabled = true;
             this.lbCustomModules.Location = new System.Drawing.Point(294, 84);
             this.lbCustomModules.Name = "lbCustomModules";
@@ -64,7 +63,6 @@ namespace EnvironmentManager4
             // 
             // lbExtendedModules
             // 
-            this.lbExtendedModules.Enabled = false;
             this.lbExtendedModules.FormattingEnabled = true;
             this.lbExtendedModules.Location = new System.Drawing.Point(12, 84);
             this.lbExtendedModules.Name = "lbExtendedModules";
@@ -106,6 +104,7 @@ namespace EnvironmentManager4
             // 
             // btnRemoveConfiguration
             // 
+            this.btnRemoveConfiguration.Enabled = false;
             this.btnRemoveConfiguration.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveConfiguration.Image")));
             this.btnRemoveConfiguration.Location = new System.Drawing.Point(245, 28);
             this.btnRemoveConfiguration.Name = "btnRemoveConfiguration";
@@ -116,6 +115,7 @@ namespace EnvironmentManager4
             // 
             // btnAddConfiguration
             // 
+            this.btnAddConfiguration.Enabled = false;
             this.btnAddConfiguration.Image = ((System.Drawing.Image)(resources.GetObject("btnAddConfiguration.Image")));
             this.btnAddConfiguration.Location = new System.Drawing.Point(222, 28);
             this.btnAddConfiguration.Name = "btnAddConfiguration";
@@ -126,6 +126,7 @@ namespace EnvironmentManager4
             // 
             // cbConfigurationList
             // 
+            this.cbConfigurationList.Enabled = false;
             this.cbConfigurationList.FormattingEnabled = true;
             this.cbConfigurationList.Location = new System.Drawing.Point(7, 29);
             this.cbConfigurationList.Name = "cbConfigurationList";

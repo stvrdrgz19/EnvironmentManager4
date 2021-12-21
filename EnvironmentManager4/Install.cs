@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -184,7 +185,8 @@ namespace EnvironmentManager4
         {
             //Disable Install button on form1.
             Form1.EnableInstallButton(false);
-            //string startTime = DateTime.Now.ToString();
+
+            string startTime = DateTime.Now.ToString();
 
             //global variable installer = the installer file path
             //global variable installerpath = the path to the installer, excluding the file name
@@ -200,11 +202,149 @@ namespace EnvironmentManager4
             installProduct.Start();
             installProduct.WaitForExit();
 
-            //Implement sqlite database to store installed build as well as the last installed build
+            //WRITE BUILD INFORMATION TO INSTALLEDBUILD TABLE
+            BuildModel build = new BuildModel(installerPath, version, startTime, product, installPath);
+            SqliteDataAccess.SaveBuild(build);
 
             File.Delete(tempInstaller);
 
-            //Implement DLL Install
+            //IMPLEMENT DLL INSTALL
+            if (cbConfigurationList.Text == "Select a Configuration")   //OR Selected Configuration doesn't exist
+            {
+                //Add dlls from the selected configuration
+            }
+
+            string extPath = "";
+            string custPath = "";
+            string moduleStart = "";
+            switch (product)
+            {
+                case "SalesPad GP":
+                    extPath = String.Format(@"{0}\ExtModules\{1}\", installerPath, version);
+                    custPath = String.Format(@"{0}\CustomModules\{1}\", installerPath, version);
+                    moduleStart = "SalesPad.Module.";
+                    break;
+                case "WebAPI":
+                    extPath = String.Format(@"{0}\ExtModules", installerPath);
+                    custPath = String.Format(@"{0}\CustomModules", installerPath);
+                    moduleStart = "SalesPad.GP.RESTv3.";
+                    break;
+                case "DataCollection":
+                    custPath = String.Format(@"{0}\CustomModules", installerPath);
+                    moduleStart = "SalesPad.DataCollection.";
+                    break;
+                case "SalesPad Mobile":
+                    break;
+                case "ShipCenter":
+                    custPath = String.Format(@"{0}\Custom", installerPath);
+                    moduleStart = "SalesPad.ShipCenter.";
+                    break;
+                case "WebPortal":
+                    custPath = String.Format(@"{0}\Plugins", installerPath);
+                    break;
+            }
+            List<string> custDllToAdd = new List<string>();
+            List<string> extDllToAdd = new List<string>();
+
+            //  ADD ANY SELECTED DLLS TO THE LIST
+            var selectedCustDlls = lbCustomModules.SelectedItems;
+            foreach (string dll in selectedCustDlls)
+            {
+                custDllToAdd.Add(dll);
+            }
+            custDllToAdd.Sort();
+
+            var selectedExtDlls = lbExtendedModules.SelectedItems;
+            foreach (string dll in selectedExtDlls)
+            {
+                extDllToAdd.Add(dll);
+            }
+            extDllToAdd.Sort();
+
+            //  COPY/RECORD DLLS ADDED TO INSTALL
+            if (custDllToAdd.Count > 0)
+            {
+                string dllName = "";
+                foreach (string dll in custDllToAdd.Distinct())
+                {
+                    switch (product)
+                    {
+                        case "SalesPad GP":
+                            dllName = String.Format("{0}{1}.{2}.{3}.Zip", moduleStart, dll, Modules.TrimVersion(installerPath, product), version.ToUpper());
+                            break;
+                        case "DataCollection":
+                            dllName = "";
+                            break;
+                        case "ShipCenter":
+                            dllName = "";
+                            break;
+                        case "WebAPI":
+                            dllName = "";
+                            break;
+                        case "WebPortal":
+                            dllName = "";
+                            break;
+                    }
+                    string copyFrom = String.Format("{0}{1}", custPath, dllName);
+                    string copyTo = String.Format(@"{0}\DLLs\{1}{2}.Zip", Environment.CurrentDirectory, moduleStart, dll);
+                    File.Copy(copyFrom, copyTo, true);
+                    DllModel dllModel = new DllModel(SqliteDataAccess.GetLastParentId(), dllName, "Custom DLL", version, startTime);
+                    SqliteDataAccess.SaveDlls(dllModel);
+                }
+            }
+
+            if (extDllToAdd.Count > 0)
+            {
+                foreach (string dll in extDllToAdd.Distinct())
+                {
+                    string dllName = "SalesPad.Module." + dll + "." + Modules.TrimVersion(installerPath, product) + "." + version.ToUpper();
+                    File.Copy(extPath + dllName + ".Zip", Environment.CurrentDirectory + @"\DLLs\SalesPad.Module." + dll + ".Zip", true);
+                    DllModel dllModel = new DllModel(SqliteDataAccess.GetLastParentId(), dllName, "Extended DLL", version, startTime);
+                    SqliteDataAccess.SaveDlls(dllModel);
+                }
+            }
+
+            //  UNZIP DLLS IF THERE ARE ANY
+            if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
+            {
+                string[] toExtract = Directory.GetFiles(Environment.CurrentDirectory + @"\DLLs");
+                foreach (string dll in toExtract)
+                {
+                    string dllName = Path.GetFileNameWithoutExtension(dll);
+                    string dllTempFolder = Environment.CurrentDirectory + @"\DLLs\" + dllName;
+                    Directory.CreateDirectory(dllTempFolder);
+                    using (ZipArchive zip = ZipFile.Open(dll, ZipArchiveMode.Read))
+                    {
+                        try
+                        {
+                            zip.ExtractToDirectory(dllTempFolder);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(String.Format("An error was encountered while trying to extract {0}. Exception message is as follows:\n\n{1}", dllName, e.Message));
+                        }
+                        zip.Dispose();
+                    }
+                    File.Delete(dll);
+                }
+            }
+
+            foreach (string dir in Directory.GetDirectories(Environment.CurrentDirectory + @"\DLLs\"))
+            {
+                foreach (string file in Directory.GetFiles(dir))
+                {
+                    string fileName = Path.GetFileName(file);
+                    try
+                    {
+                        File.Copy(file, String.Format(@"{0}\{1}", installPath, fileName), true);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(String.Format("An error was encountered while trying to copy {0} to {1}. Exception message is as follows:\n\n{2}", fileName, installPath, e.Message));
+                    }
+                }
+                Directory.Delete(dir, true);
+            }
 
             if (resetDatabaseVersion)
             {
@@ -239,7 +379,7 @@ namespace EnvironmentManager4
 
         private void LoadConfigurations()
         {
-
+            //ConfigModel configModel = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(Utilities.GetConfigurationsFile()));
         }
 
         private void Install_Load(object sender, EventArgs e)

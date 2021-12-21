@@ -54,7 +54,7 @@ namespace EnvironmentManager4
 
         public static void RestoreDatabase(string backupName, string backupZipFile)
         {
-            //Disable Database controls
+            //DISABLE DATABASE CONTROLS
             Form1.EnableDBControls(false);
 
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
@@ -97,7 +97,10 @@ namespace EnvironmentManager4
                 MessageBox.Show(String.Format("There was an error deleting the unzipped database backup at '{0}', please try manually deleting this filder.\n\n{1}\n\n{2}", unzippedBackupDirectory, e.Message, e.ToString()));
             }
 
-            //Log the process
+            //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
+            DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "RESTORED", backupName);
+            SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
+
             string message = String.Format(@"Backup '{0}' was successfully restored.", backupName);
             string caption = "SUCCESS";
             MessageBoxButtons buttons = MessageBoxButtons.OK;
@@ -107,11 +110,15 @@ namespace EnvironmentManager4
             Form1.EnableDBControls(true);
         }
 
-        public static void DeleteDatabase(string databaseFile)
+        public static void DeleteDatabase(string backupName, string databaseFile)
         {
             try
             {
                 File.Delete(databaseFile);
+
+                //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
+                DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "DELETED", backupName);
+                SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
             }
             catch (Exception e)
             {
@@ -119,9 +126,9 @@ namespace EnvironmentManager4
             }
         }
 
-        public static void NewDatabase(string databaseName, string databaseDescription, string databaseBackupDirectory)
+        public static void NewDatabase(string databaseName, string databaseDescription, string databaseBackupDirectory, string action)
         {
-            //disable database controls
+            //DISABLE DATABASE CONTROLS
             Form1.EnableDBControls(false);
             try
             {
@@ -159,7 +166,9 @@ namespace EnvironmentManager4
                 sw.WriteLine(databaseDescription);
             }
 
-            //log db happenings
+            //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
+            DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), action, databaseName);
+            SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
 
             try
             {

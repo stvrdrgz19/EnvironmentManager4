@@ -384,6 +384,7 @@ namespace EnvironmentManager4
                     NewDatabaseBackup newBackup = new NewDatabaseBackup();
                     NewDatabaseBackup.existingDatabaseName = backupName;
                     NewDatabaseBackup.existingDatabaseFile = backupZip;
+                    NewDatabaseBackup.action = "OVERWRITE";
                     newBackup.Show();
                 }
             }
@@ -402,6 +403,7 @@ namespace EnvironmentManager4
             if (result == DialogResult.Yes)
             {
                 NewDatabaseBackup newBackup = new NewDatabaseBackup();
+                NewDatabaseBackup.action = "OVERWRITE";
                 newBackup.Show();
             }
             return;
@@ -424,7 +426,7 @@ namespace EnvironmentManager4
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
                 {
-                    DatabaseManagement.DeleteDatabase(backupZip);
+                    DatabaseManagement.DeleteDatabase(backupName, backupZip);
                     Reload();
                 }
             }
@@ -637,7 +639,19 @@ namespace EnvironmentManager4
 
         private void databaseLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //
+            string message = "Are you sure you want to open the Database Log?";
+            string caption = "CONFIRM";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            MessageBoxIcon icon = MessageBoxIcon.Question;
+            DialogResult result;
+
+            result = MessageBox.Show(message, caption, buttons, icon);
+            if (result == DialogResult.Yes)
+            {
+                DatabaseActivityLog dbLog = new DatabaseActivityLog();
+                dbLog.Show();
+            }
+            return;
         }
 
         private void killSalesPadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -683,6 +697,18 @@ namespace EnvironmentManager4
         private void generateCoreModulesFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Utilities.CreateCoreModulesFile();
+            return;
+        }
+
+        private void generateConfigurationsFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Utilities.GenerateConfigs();
+            return;
+        }
+
+        private void generateConfigurationsFileWithNullsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Utilities.GenerateConfigsWithNulls();
             return;
         }
     }

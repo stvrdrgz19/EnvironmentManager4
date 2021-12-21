@@ -22,9 +22,14 @@ namespace EnvironmentManager4
 
         public static string existingDatabaseName;
         public static string existingDatabaseFile;
+        public static string action;
 
         private void NewDatabaseBackup_Load(object sender, EventArgs e)
         {
+            if (action == "OVERWRITE")
+            {
+                this.Text = "Overwrite Database Backup";
+            }
             if (!String.IsNullOrEmpty(existingDatabaseName))
             {
                 tbDatabaseName.Text = existingDatabaseName;
@@ -72,7 +77,7 @@ namespace EnvironmentManager4
                     return;
                 }
             }
-            Thread newDatabaseBackup = new Thread(() => DatabaseManagement.NewDatabase(databaseName, databaseDescription, databaseBackupDirectory));
+            Thread newDatabaseBackup = new Thread(() => DatabaseManagement.NewDatabase(databaseName, databaseDescription, databaseBackupDirectory, action));
             newDatabaseBackup.Start();
             this.Close();
             return;
