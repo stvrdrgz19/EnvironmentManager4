@@ -55,6 +55,7 @@
     </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -125,6 +126,7 @@
     </Compile>
     <Compile Include="SettingsModel.cs" />
     <Compile Include="SqliteDataAccess.cs" />
+    <Compile Include="SQLServices.cs" />
     <Compile Include="TextPrompt.cs">
       <SubType>Form</SubType>
     </Compile>

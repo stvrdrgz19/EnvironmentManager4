@@ -97,6 +97,13 @@ namespace EnvironmentManager4
             LoadDatabaseDescription(cbDatabaseList.Text);
         }
 
+        private void EnableSQLControls(bool enable)
+        {
+            btnStartService.Enabled = enable;
+            btnStopService.Enabled = enable;
+            btnStopAllServices.Enabled = enable;
+        }
+
         public void LoadDatabaseList()
         {
             cbDatabaseList.Items.Clear();
@@ -156,6 +163,33 @@ namespace EnvironmentManager4
             lbGPVersionsInstalled.Items.Clear();
             var gpFolderList = Directory.GetDirectories(gpPath).Select(folder => folder.Remove(0, gpPath.Length));
             lbGPVersionsInstalled.Items.AddRange(gpFolderList.ToArray());
+        }
+
+        public void LoadSQLServerListView()
+        {
+            lvInstalledSQLServers.Items.Clear();
+            List<string> sqlServices = SQLServices.InstalledSQLServerInstanceNames();
+            foreach (string sqlService in sqlServices)
+            {
+                bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(sqlService));
+                string serverStatus = "";
+                ListViewItem item = new ListViewItem(sqlService);
+                switch (status)
+                {
+                    case true:
+                        item.ForeColor = Color.Green;
+                        item.Font = new Font(this.Font, FontStyle.Bold);
+                        serverStatus = "RUNNING";
+                        break;
+                    case false:
+                        item.ForeColor = Color.Gray;
+                        item.Font = new Font(this.Font, FontStyle.Italic);
+                        serverStatus = "NOT RUNNING";
+                        break;
+                }
+                item.SubItems.Add(serverStatus);
+                lvInstalledSQLServers.Items.Add(item);
+            }
         }
 
         private void RemoveSalesPad(string x86Path, string x64Path)
@@ -258,6 +292,7 @@ namespace EnvironmentManager4
             LoadGPInstalls();
             tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();
             tbSPVPNIPAddress.Text = Utilities.GetSalesPadVPNIPAddress();
+            LoadSQLServerListView();
             return;
         }
 
@@ -335,17 +370,42 @@ namespace EnvironmentManager4
 
         private void labelSQLVersions_Click(object sender, EventArgs e)
         {
-            //LoadSQLServerStatus();
+            LoadSQLServerListView();
+            return;
         }
 
         private void btnStartService_Click(object sender, EventArgs e)
         {
-            //
+            if (lvInstalledSQLServers.SelectedItems.Count > 0)
+            {
+                EnableSQLControls(false);
+                string selectedService = lvInstalledSQLServers.SelectedItems[0].Text;
+                bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(selectedService));
+                if (!status)
+                {
+                    SQLServices.StartSQLServer(SQLServices.FormatServiceName(selectedService));
+                }
+                LoadSQLServerListView();
+                EnableSQLControls(true);
+            }
+            return;
         }
 
         private void btnStopService_Click(object sender, EventArgs e)
         {
-            //
+            if (lvInstalledSQLServers.SelectedItems.Count > 0)
+            {
+                EnableSQLControls(false);
+                string selectedService = lvInstalledSQLServers.SelectedItems[0].Text;
+                bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(selectedService));
+                if (status)
+                {
+                    SQLServices.StopSQLServer(SQLServices.FormatServiceName(selectedService));
+                }
+                LoadSQLServerListView();
+                EnableSQLControls(true);
+            }
+            return;
         }
 
         private void btnInstallService_Click(object sender, EventArgs e)
@@ -355,7 +415,22 @@ namespace EnvironmentManager4
 
         private void btnStopAllServices_Click(object sender, EventArgs e)
         {
-            //
+            List<string> installedSQLServices = SQLServices.InstalledSQLServerInstanceNames();
+            if (installedSQLServices.Count != 0)
+            {
+                EnableSQLControls(false);
+                foreach (string service in installedSQLServices)
+                {
+                    bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(service));
+                    if (status)
+                    {
+                        SQLServices.StopSQLServer(SQLServices.FormatServiceName(service));
+                    }
+                }
+                LoadSQLServerListView();
+                EnableSQLControls(true);
+            }
+            return;
         }
 
         private void btnDBBackupFolder_Click(object sender, EventArgs e)

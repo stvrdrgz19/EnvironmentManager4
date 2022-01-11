@@ -369,7 +369,6 @@ namespace EnvironmentManager4
             this.lvInstalledSQLServers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chService,
             this.chStatus});
-            this.lvInstalledSQLServers.Enabled = false;
             this.lvInstalledSQLServers.FullRowSelect = true;
             this.lvInstalledSQLServers.GridLines = true;
             this.lvInstalledSQLServers.HideSelection = false;
@@ -392,7 +391,6 @@ namespace EnvironmentManager4
             // 
             // btnStopService
             // 
-            this.btnStopService.Enabled = false;
             this.btnStopService.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnStopService.Location = new System.Drawing.Point(126, 170);
             this.btnStopService.Name = "btnStopService";
@@ -404,7 +402,6 @@ namespace EnvironmentManager4
             // 
             // btnStartService
             // 
-            this.btnStartService.Enabled = false;
             this.btnStartService.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnStartService.Location = new System.Drawing.Point(5, 170);
             this.btnStartService.Name = "btnStartService";
@@ -416,7 +413,6 @@ namespace EnvironmentManager4
             // 
             // btnStopAllServices
             // 
-            this.btnStopAllServices.Enabled = false;
             this.btnStopAllServices.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnStopAllServices.Location = new System.Drawing.Point(126, 193);
             this.btnStopAllServices.Name = "btnStopAllServices";

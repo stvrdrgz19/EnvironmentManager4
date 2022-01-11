@@ -19,20 +19,20 @@ namespace EnvironmentManager4
 
         public static string GetSettingsFile()
         {
-            //return Environment.CurrentDirectory + @"\Files\Settings.json";
-            return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+            return Environment.CurrentDirectory + @"\Files\Settings.json";
+            //return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
         }
 
         public static string GetInstallerFolder()
         {
-            //return Environment.CurrentDirectory + @"\Installers";
-            return @"C:\Program Files (x86)\EnvMgr\Installers";
+            return Environment.CurrentDirectory + @"\Installers";
+            //return @"C:\Program Files (x86)\EnvMgr\Installers";
         }
 
         public static string GetDLLsFolder()
         {
             return Environment.CurrentDirectory + @"\Dlls";
-            ////return @"C:\Program Files (x86)\EnvMgr\Dlls";
+            //return @"C:\Program Files (x86)\EnvMgr\Dlls";
         }
 
         public static string GetConfigurationsFile()
