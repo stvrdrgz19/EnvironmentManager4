@@ -24,7 +24,7 @@ namespace EnvironmentManager4
             databaseActivity = SqliteDataAccess.LoadDatabaseActivity();
             foreach (var activity in databaseActivity)
             {
-                ListViewItem item1 = new ListViewItem(activity.Created_On);
+                ListViewItem item1 = new ListViewItem(activity.TimeStamp);
                 item1.SubItems.Add(activity.Action);
                 item1.SubItems.Add(activity.Backup);
                 lvDatabaseActivityLog.Items.Add(item1);

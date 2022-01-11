@@ -20,25 +20,54 @@ namespace EnvironmentManager4
         public static string GetSettingsFile()
         {
             //return Environment.CurrentDirectory + @"\Files\Settings.json";
-            return @"C:\Program Files (x86)\EnvMgrLite\EnvMgrLite\Files\Settings.json";
+            return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
         }
 
         public static string GetInstallerFolder()
         {
             //return Environment.CurrentDirectory + @"\Installers";
-            return @"C:\Program Files (x86)\EnvMgrLite\EnvMgrLite\Installers";
+            return @"C:\Program Files (x86)\EnvMgr\Installers";
         }
 
         public static string GetDLLsFolder()
         {
             return Environment.CurrentDirectory + @"\Dlls";
-            //return @"C:\Program Files (x86)\EnvMgrLite\EnvMgrLite\Dlls";
+            ////return @"C:\Program Files (x86)\EnvMgr\Dlls";
         }
 
         public static string GetConfigurationsFile()
         {
-            return @"C: \Users\steve.rodriguez\Downloads\Configurations4.json";
-            //return @"C: \Users\steve.rodriguez\Downloads\Configurations2.json";
+            return @"C:\Users\steve.rodriguez\Downloads\Configurations4.json";
+            //return @"C:\Users\steve.rodriguez\Downloads\Configurations2.json";
+        }
+
+        public static string RetrieveExe(string product, bool filter = false)
+        {
+            string executable = "";
+            switch (product)
+            {
+                case "SalesPad GP":
+                    executable = "SalesPad.exe";
+                    break;
+                case "DataCollection":
+                    executable = "SalesPad Inventory Manager Extended Warehouse.exe";
+                    //executable = "DataCollection Extended Warehouse.exe";
+                    break;
+                case "Inventory Manager":
+                    executable = "SalesPad Inventory Manager Extended Warehouse.exe";
+                    break;
+                case "SalesPad Mobile":
+                    executable = "SalesPad.GP.Mobile.Server.exe";
+                    break;
+                case "ShipCenter":
+                    executable = "SalesPad.ShipCenter.exe";
+                    break;
+            }
+            if (filter)
+            {
+                executable = String.Format("*{0}", executable);
+            }
+            return executable;
         }
 
         public static string GetWiFiIPAddress()

@@ -28,13 +28,13 @@ namespace EnvironmentManager4
         public static string installer = "";
         public static string defaultInstallPath = "";
 
-        public static void InstallProduct(string product, string defaultSettingsFile, string version = null)
+        public static void InstallProduct(string product, string version = null)
         {
             string installer = "";
             string installerPath = "";
             string initialDir = "";
             string defaultInstallPath = "";
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(defaultSettingsFile));
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
             switch (product)
             {
                 case "SalesPad GP":
@@ -84,6 +84,7 @@ namespace EnvironmentManager4
 
                 openFileDialog.InitialDirectory = initialDir;
                 openFileDialog.RestoreDirectory = true;
+                openFileDialog.Title = String.Format("Installing {0}", product);
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -140,7 +141,7 @@ namespace EnvironmentManager4
         {
             string extModulesPath = "";
             string custModulesPath = "";
-            if (product == "DataCollection" || product == "ShipCenter" || product == "WebPortal" || product == "SalesPad Mobile")
+            if (product == "DataCollection" || product == "ShipCenter" || product == "Customer Portal Web" || product == "SalesPad Mobile")
             {
                 lbExtendedModules.Enabled = false;
                 checkRunDatabaseUpdate.Enabled = false;
@@ -158,7 +159,7 @@ namespace EnvironmentManager4
                     extModulesPath = String.Format(@"{0}\ExtModules\{1}", installerPath, productVersion);
                     custModulesPath = String.Format(@"{0}\CustomModules\{1}", installerPath, productVersion);
                     break;
-                case "WebAPI":
+                case "Customer Portal API":
                     extModulesPath = String.Format(@"{0}\ExtModules", installerPath);
                     custModulesPath = String.Format(@"{0}\CustomModules", installerPath);
                     break;
@@ -170,7 +171,7 @@ namespace EnvironmentManager4
                 case "ShipCenter":
                     custModulesPath = String.Format(@"{0}\Custom", installerPath);
                     break;
-                case "WebPortal":
+                case "Customer Portal Web":
                     custModulesPath = String.Format(@"{0}\Plugins", installerPath);
                     break;
             }
@@ -191,7 +192,6 @@ namespace EnvironmentManager4
             //global variable installer = the installer file path
             //global variable installerpath = the path to the installer, excluding the file name
             string installerFileName = Path.GetFileName(installer);     //the actual file name without it's path
-            //string tempInstaller = String.Format(@"{0}\Installers\{1}", Environment.CurrentDirectory, installerFileName);
             string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetInstallerFolder(), installerFileName);
             File.Copy(installer, tempInstaller, true);
 
@@ -204,45 +204,27 @@ namespace EnvironmentManager4
 
             //WRITE BUILD INFORMATION TO INSTALLEDBUILD TABLE
             BuildModel build = new BuildModel(installerPath, version, startTime, product, installPath);
-            SqliteDataAccess.SaveBuild(build);
-
-            File.Delete(tempInstaller);
-
-            //IMPLEMENT DLL INSTALL
-            if (cbConfigurationList.Text == "Select a Configuration")   //OR Selected Configuration doesn't exist
+            try
             {
-                //Add dlls from the selected configuration
+                SqliteDataAccess.SaveBuild(build);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("There was an error logging the build installation. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
             }
 
-            string extPath = "";
-            string custPath = "";
-            string moduleStart = "";
-            switch (product)
+            try
             {
-                case "SalesPad GP":
-                    extPath = String.Format(@"{0}\ExtModules\{1}\", installerPath, version);
-                    custPath = String.Format(@"{0}\CustomModules\{1}\", installerPath, version);
-                    moduleStart = "SalesPad.Module.";
-                    break;
-                case "WebAPI":
-                    extPath = String.Format(@"{0}\ExtModules", installerPath);
-                    custPath = String.Format(@"{0}\CustomModules", installerPath);
-                    moduleStart = "SalesPad.GP.RESTv3.";
-                    break;
-                case "DataCollection":
-                    custPath = String.Format(@"{0}\CustomModules", installerPath);
-                    moduleStart = "SalesPad.DataCollection.";
-                    break;
-                case "SalesPad Mobile":
-                    break;
-                case "ShipCenter":
-                    custPath = String.Format(@"{0}\Custom", installerPath);
-                    moduleStart = "SalesPad.ShipCenter.";
-                    break;
-                case "WebPortal":
-                    custPath = String.Format(@"{0}\Plugins", installerPath);
-                    break;
+                File.Delete(tempInstaller);
             }
+            catch (Exception deleteError)
+            {
+                MessageBox.Show(String.Format("There was an error deleting the installer file at {0}, error is as follows:\n\n{1}\n\n{2}", tempInstaller, deleteError.Message, deleteError.ToString()));
+            }
+
+            //==========================================================================================================================================================================================
+            //  DLL INSTALL START
+            //==========================================================================================================================================================================================
             List<string> custDllToAdd = new List<string>();
             List<string> extDllToAdd = new List<string>();
 
@@ -261,90 +243,27 @@ namespace EnvironmentManager4
             }
             extDllToAdd.Sort();
 
-            //  COPY/RECORD DLLS ADDED TO INSTALL
-            if (custDllToAdd.Count > 0)
+            if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
             {
-                string dllName = "";
-                foreach (string dll in custDllToAdd.Distinct())
-                {
-                    switch (product)
-                    {
-                        case "SalesPad GP":
-                            dllName = String.Format("{0}{1}.{2}.{3}.Zip", moduleStart, dll, Modules.TrimVersion(installerPath, product), version.ToUpper());
-                            break;
-                        case "DataCollection":
-                            dllName = "";
-                            break;
-                        case "ShipCenter":
-                            dllName = "";
-                            break;
-                        case "WebAPI":
-                            dllName = "";
-                            break;
-                        case "WebPortal":
-                            dllName = "";
-                            break;
-                    }
-                    string copyFrom = String.Format("{0}{1}", custPath, dllName);
-                    string copyTo = String.Format(@"{0}\DLLs\{1}{2}.Zip", Environment.CurrentDirectory, moduleStart, dll);
-                    File.Copy(copyFrom, copyTo, true);
-                    DllModel dllModel = new DllModel(SqliteDataAccess.GetLastParentId(), dllName, "Custom DLL", version, startTime);
-                    SqliteDataAccess.SaveDlls(dllModel);
-                }
-            }
-
-            if (extDllToAdd.Count > 0)
-            {
-                foreach (string dll in extDllToAdd.Distinct())
-                {
-                    string dllName = "SalesPad.Module." + dll + "." + Modules.TrimVersion(installerPath, product) + "." + version.ToUpper();
-                    File.Copy(extPath + dllName + ".Zip", Environment.CurrentDirectory + @"\DLLs\SalesPad.Module." + dll + ".Zip", true);
-                    DllModel dllModel = new DllModel(SqliteDataAccess.GetLastParentId(), dllName, "Extended DLL", version, startTime);
-                    SqliteDataAccess.SaveDlls(dllModel);
-                }
+                Modules.GetDLLs(product, installerPath, version, startTime, custDllToAdd, extDllToAdd);
             }
 
             //  UNZIP DLLS IF THERE ARE ANY
             if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
             {
-                string[] toExtract = Directory.GetFiles(Environment.CurrentDirectory + @"\DLLs");
-                foreach (string dll in toExtract)
+                if (product == "DataCollection")
                 {
-                    string dllName = Path.GetFileNameWithoutExtension(dll);
-                    string dllTempFolder = Environment.CurrentDirectory + @"\DLLs\" + dllName;
-                    Directory.CreateDirectory(dllTempFolder);
-                    using (ZipArchive zip = ZipFile.Open(dll, ZipArchiveMode.Read))
-                    {
-                        try
-                        {
-                            zip.ExtractToDirectory(dllTempFolder);
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show(String.Format("An error was encountered while trying to extract {0}. Exception message is as follows:\n\n{1}", dllName, e.Message));
-                        }
-                        zip.Dispose();
-                    }
-                    File.Delete(dll);
+                    Modules.CopyDllsToInstalledBuild(installPath);
+                }
+                else
+                {
+                    Modules.UnzipDLLFiles();
+                    Modules.CopyDllsFromDirectoriesToInstalledBuild(installPath);
                 }
             }
-
-            foreach (string dir in Directory.GetDirectories(Environment.CurrentDirectory + @"\DLLs\"))
-            {
-                foreach (string file in Directory.GetFiles(dir))
-                {
-                    string fileName = Path.GetFileName(file);
-                    try
-                    {
-                        File.Copy(file, String.Format(@"{0}\{1}", installPath, fileName), true);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(String.Format("An error was encountered while trying to copy {0} to {1}. Exception message is as follows:\n\n{2}", fileName, installPath, e.Message));
-                    }
-                }
-                Directory.Delete(dir, true);
-            }
+            //==========================================================================================================================================================================================
+            //  DLL INSTALL END
+            //==========================================================================================================================================================================================
 
             if (resetDatabaseVersion)
             {
@@ -372,7 +291,7 @@ namespace EnvironmentManager4
 
             if (launchAfterInstall)
             {
-                Process.Start(String.Format(@"{0}\SalesPad.exe", installPath));
+                Process.Start(String.Format(@"{0}\{1}", installPath, Utilities.RetrieveExe(product)));
             }
             Form1.EnableInstallButton(true);
         }
@@ -380,6 +299,10 @@ namespace EnvironmentManager4
         private void LoadConfigurations()
         {
             //ConfigModel configModel = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(Utilities.GetConfigurationsFile()));
+            //foreach (var thing in configModel.Configurations)
+            //{
+            //    MessageBox.Show(thing.ToString());
+            //}
         }
 
         private void Install_Load(object sender, EventArgs e)
@@ -395,6 +318,7 @@ namespace EnvironmentManager4
                 btnAddConfiguration.Enabled = false;
                 btnRemoveConfiguration.Enabled = false;
             }
+            if (product == "C")
             this.Text = String.Format("Install {0}", product);
             tbSelectedBuild.Text = installerPath;
             LoadModules(product, installerPath, version, installer);
@@ -494,6 +418,16 @@ namespace EnvironmentManager4
             foreach (string dll in lbCustomModules.SelectedItems)
             {
                 selectedCustomModules.Add(dll);
+            }
+
+            if (cbConfigurationList.Text == "Select a Configuration")   //OR Selected Configuration doesn't exist
+            {
+                //Prompt the user to select an existing configuration
+            }
+
+            if (cbConfigurationList.Text != "Select a Configuration")   //OR Selected Configuration exists
+            {
+                //Add dlls from the configuration to the selectedModules lists
             }
 
             Thread installBuild = new Thread(() => InstallBuild(installPath, selectedExtendedModules, selectedCustomModules, checkLaunchAfterInstall.Checked, checkInstallFolder.Checked, checkRunDatabaseUpdate.Checked, checkResetDBVersion.Checked));

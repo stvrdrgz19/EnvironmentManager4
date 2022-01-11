@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,21 +23,21 @@ namespace EnvironmentManager4
         public static string product;
         public static string version;
         public static string path;
+        public static string[] LoadDllList(string path)
+        {
+            CoreModules coreModules = JsonConvert.DeserializeObject<CoreModules>(File.ReadAllText(Environment.CurrentDirectory + @"\Files\CoreModules.json"));
+            string[] dllList = Directory.GetFiles(path, "SalesPad.Module.*.dll").Select(file => Path.GetFileName(file)).ToArray();
+            return dllList.Except(coreModules.DLLName).ToArray();
+        }
 
         private void RetrieveBuildPaths()
         {
-            string executable = "";
-            switch (product)
-            {
-                case "SalesPad":
-                    executable = @"*SalesPad.exe";
-                    break;
-            }
-            var buildList = Directory.GetFiles(path + @"\", executable, SearchOption.AllDirectories);
+            var buildList = Directory.GetFiles(path + @"\", Utilities.RetrieveExe(product, true), SearchOption.AllDirectories);
             foreach (string build in buildList)
             {
                 InstalledBuilds.Items.Add(Path.GetDirectoryName(build));
             }
+            //MessageBox.Show(String.Format("Product: {0}\nVersion: {1}\nPath: {2}", product, version, path));
         }
 
         private void LaunchProduct_Load(object sender, EventArgs e)
@@ -51,7 +52,7 @@ namespace EnvironmentManager4
             string selectedBuild = InstalledBuilds.Text;
             if (!String.IsNullOrWhiteSpace(selectedBuild))
             {
-                Process.Start(selectedBuild + @"\SalesPad.exe");
+                Process.Start(String.Format(@"{0}\{1}", selectedBuild, Utilities.RetrieveExe(product)));
                 this.Close();
             }
             return;
@@ -59,12 +60,53 @@ namespace EnvironmentManager4
 
         private void CopyLabels_Click(object sender, EventArgs e)
         {
+            if (SelectedBuildDLLs.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            List<string> selectedDLLList = new List<string>();
+            StringBuilder builder = new StringBuilder();
 
+            foreach (string dll in SelectedBuildDLLs.SelectedItems)
+            {
+                selectedDLLList.Add(dll);
+            }
+            foreach (string str in selectedDLLList)
+            {
+                builder.Append(str.ToString()).AppendLine();
+            }
+            try
+            {
+                Clipboard.SetText(builder.ToString());
+            }
+            catch (ArgumentNullException)
+            {
+                MessageBox.Show("Please select DLLs to copy.");
+                return;
+            }
+            string copyMessage = "The following dll's have been copied to the clipboard: \n\n" + builder.ToString();
+            string copyCaption = "COPIED";
+            MessageBoxButtons copyButton = MessageBoxButtons.OK;
+            MessageBoxIcon copyIcon = MessageBoxIcon.Exclamation;
+
+            MessageBox.Show(copyMessage, copyCaption, copyButton, copyIcon);
+            return;
         }
 
         private void RemoveDLLs_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void InstalledBuilds_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedBuild = InstalledBuilds.Text;
+            SelectedBuildDLLs.Items.Clear();
+            if (!String.IsNullOrWhiteSpace(selectedBuild))
+            {
+                SelectedBuildDLLs.Items.AddRange(LoadDllList(selectedBuild));
+            }
+            return;
         }
     }
 }

@@ -46,9 +46,12 @@ namespace EnvironmentManager4
                 return;
             }
 
-            if (File.Exists(existingDatabaseFile))
+            if (action == "OVERWRITE")
             {
-                DatabaseManagement.DeleteDatabase(existingDatabaseFile);
+                if (File.Exists(existingDatabaseFile))
+                {
+                    DatabaseManagement.DeleteDatabase(databaseName, existingDatabaseFile, false, false);
+                }
             }
 
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
@@ -65,7 +68,7 @@ namespace EnvironmentManager4
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
                 {
-                    DatabaseManagement.DeleteDatabase(databaseBackup);
+                    DatabaseManagement.DeleteDatabase(databaseName, databaseBackup, true, false);
                 }
                 else if (result == DialogResult.No)
                 {

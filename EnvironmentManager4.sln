@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnvironmentManager4", "EnvironmentManager4\EnvironmentManager4.csproj", "{3EEC3708-66E4-42B4-BDBA-D854741FC51A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Environment Manager", "EnvironmentManager4\Environment Manager.csproj", "{3EEC3708-66E4-42B4-BDBA-D854741FC51A}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "EnvMgr Setup", "EnvMgr Setup\EnvMgr Setup.vdproj", "{9EE97A85-C0B8-4A22-A8C9-EB077FA8D08C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{3EEC3708-66E4-42B4-BDBA-D854741FC51A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EEC3708-66E4-42B4-BDBA-D854741FC51A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EEC3708-66E4-42B4-BDBA-D854741FC51A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EE97A85-C0B8-4A22-A8C9-EB077FA8D08C}.Debug|Any CPU.ActiveCfg = Debug
+		{9EE97A85-C0B8-4A22-A8C9-EB077FA8D08C}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

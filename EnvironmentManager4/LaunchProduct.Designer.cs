@@ -71,6 +71,7 @@ namespace EnvironmentManager4
             this.InstalledBuilds.Name = "InstalledBuilds";
             this.InstalledBuilds.Size = new System.Drawing.Size(550, 147);
             this.InstalledBuilds.TabIndex = 0;
+            this.InstalledBuilds.SelectedIndexChanged += new System.EventHandler(this.InstalledBuilds_SelectedIndexChanged);
             // 
             // groupBox2
             // 
@@ -99,7 +100,6 @@ namespace EnvironmentManager4
             // 
             // CopyLabels
             // 
-            this.CopyLabels.Enabled = false;
             this.CopyLabels.ForeColor = System.Drawing.SystemColors.ControlText;
             this.CopyLabels.Location = new System.Drawing.Point(7, 174);
             this.CopyLabels.Name = "CopyLabels";

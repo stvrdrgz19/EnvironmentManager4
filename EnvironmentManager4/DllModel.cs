@@ -13,15 +13,15 @@ namespace EnvironmentManager4
         public string Name { get; set; }
         public string Type { get; set; }
         public string Version { get; set; }
-        public string Entry_Date { get; set; }
+        public string EntryDate { get; set; }
 
-        public DllModel(int Parent_Id, string Name, string Type, string Version, string Entry_Date)
+        public DllModel(int Parent_Id, string Name, string Type, string Version, string EntryDate)
         {
             this.Parent_Id = Parent_Id;
             this.Name = Name;
             this.Type = Type;
             this.Version = Version;
-            this.Entry_Date = Entry_Date;
+            this.EntryDate = EntryDate;
         }
 
         public DllModel(string Name, string Type)

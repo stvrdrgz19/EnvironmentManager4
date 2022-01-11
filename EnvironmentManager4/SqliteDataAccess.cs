@@ -32,7 +32,7 @@ namespace EnvironmentManager4
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                cnn.Execute("INSERT INTO InstalledBuilds (Path, Version, Entry_Date, Product, InstallPath) VALUES (@Path, @Version, @Entry_Date, @Product, @InstallPath)", build);
+                cnn.Execute("INSERT INTO InstalledBuilds (Path, Version, EntryDate, Product, InstallPath) VALUES (@Path, @Version, @EntryDate, @Product, @InstallPath)", build);
             }
         }
 
@@ -44,7 +44,7 @@ namespace EnvironmentManager4
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                var output = cnn.Query<BuildModel>("SELECT Path, Version, Entry_Date, Product FROM InstalledBuilds ORDER BY Id DESC", new DynamicParameters());
+                var output = cnn.Query<BuildModel>("SELECT Path, Version, EntryDate, Product, InstallPath FROM InstalledBuilds ORDER BY Id DESC", new DynamicParameters());
                 return output.ToList();
             }
         }
@@ -57,7 +57,7 @@ namespace EnvironmentManager4
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                cnn.Execute("INSERT INTO InstalledDlls (Parent_Id, Name, Type, Version, Entry_Date) VALUES (@Parent_Id, @Name, @Type, @Version, @Entry_Date)", dll);
+                cnn.Execute("INSERT INTO InstalledDlls (Parent_Id, Name, Type, Version, EntryDate) VALUES (@Parent_Id, @Name, @Type, @Version, @EntryDate)", dll);
             }
         }
 
@@ -105,7 +105,7 @@ namespace EnvironmentManager4
             int parentId = 0;
             SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
             conn.Open();
-            string stmt = "SELECT Id FROM InstalledBuilds WHERE Entry_Date = '" + entryDate + "'";
+            string stmt = "SELECT Id FROM InstalledBuilds WHERE EntryDate = '" + entryDate + "'";
             SQLiteCommand command = new SQLiteCommand(stmt, conn);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
@@ -142,7 +142,7 @@ namespace EnvironmentManager4
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                cnn.Execute("INSERT INTO DatabaseActivityLog (Created_On, Action, Backup) VALUES (@Created_On, @Action, @Backup)", databaseActivity);
+                cnn.Execute("INSERT INTO DatabaseActivity (TimeStamp, Action, Backup) VALUES (@TimeStamp, @Action, @Backup)", databaseActivity);
             }
         }
 
@@ -154,7 +154,7 @@ namespace EnvironmentManager4
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                var output = cnn.Query<DatabaseActivityLogModel>("SELECT Created_On, Action, Backup FROM DatabaseActivityLog ORDER BY Id DESC", new DynamicParameters());
+                var output = cnn.Query<DatabaseActivityLogModel>("SELECT TimeStamp, Action, Backup FROM DatabaseActivity ORDER BY Id DESC", new DynamicParameters());
                 return output.ToList();
             }
         }

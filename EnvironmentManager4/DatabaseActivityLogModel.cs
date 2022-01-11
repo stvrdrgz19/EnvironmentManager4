@@ -9,13 +9,13 @@ namespace EnvironmentManager4
     public class DatabaseActivityLogModel
     {
         public int Id { get; set; }
-        public string Created_On { get; set; }
+        public string TimeStamp { get; set; }
         public string Action { get; set; }
         public string Backup { get; set; }
 
-        public DatabaseActivityLogModel(string Created_On, string Action, string Backup)
+        public DatabaseActivityLogModel(string TimeStamp, string Action, string Backup)
         {
-            this.Created_On = Created_On;
+            this.TimeStamp = TimeStamp;
             this.Action = Action;
             this.Backup = Backup;
         }

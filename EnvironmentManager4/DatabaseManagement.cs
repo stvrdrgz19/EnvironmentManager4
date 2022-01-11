@@ -58,6 +58,11 @@ namespace EnvironmentManager4
             Form1.EnableDBControls(false);
 
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.SQLServer))
+            {
+                MessageBox.Show("SQL Server/Databases aren't configured in Settings. Please ensure a SQL Server connection is established and databases are selected in Settings.");
+                return;
+            }
             string unzippedBackupDirectory = String.Format(@"{0}\{1}", Path.GetDirectoryName(backupZipFile), Path.GetFileNameWithoutExtension(backupZipFile));
             try
             {
@@ -110,15 +115,23 @@ namespace EnvironmentManager4
             Form1.EnableDBControls(true);
         }
 
-        public static void DeleteDatabase(string backupName, string databaseFile)
+        public static void DeleteDatabase(string backupName, string databaseFile, bool log, bool message)
         {
             try
             {
                 File.Delete(databaseFile);
 
-                //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
-                DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "DELETED", backupName);
-                SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
+                if (message)
+                {
+                    MessageBox.Show(String.Format("Database '{0}' was successfully deleted.", backupName));
+                }
+
+                if (log)
+                {
+                    //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
+                    DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "DELETED", backupName);
+                    SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
+                }
             }
             catch (Exception e)
             {
@@ -140,6 +153,11 @@ namespace EnvironmentManager4
                 return;
             }
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.SQLServer))
+            {
+                MessageBox.Show("SQL Server/Databases aren't configured in Settings. Please ensure a SQL Server connection is established and databases are selected in Settings.");
+                return;
+            }
             foreach (string databaseFile in settingsModel.DbManagement.Databases)
             {
                 string script = String.Format(@"BACKUP DATABASE {0} TO DISK='{1}\{2}\{0}.bak' WITH INIT", databaseFile, settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
@@ -189,7 +207,12 @@ namespace EnvironmentManager4
                 return;
             }
 
-            MessageBox.Show(String.Format("The database backup '{0}' has been created successfully.", databaseName));
+            string message = String.Format("The database backup '{0}' has been created successfully.", databaseName);
+            string caption = "SUCCESS";
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            MessageBoxIcon icon = MessageBoxIcon.Exclamation;
+
+            MessageBox.Show(message, caption, buttons, icon);
             Form1.EnableDBControls(true);
         }
     }

@@ -31,6 +31,20 @@ namespace EnvironmentManager4
         public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
         public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
         public const string gpPath = @"C:\Program Files (x86)\Microsoft Dynamics\";
+        public static List<string> productList = new List<string>
+        {
+            "SalesPad GP",
+            "DataCollection",
+            "SalesPad Mobile",
+            "ShipCenter",
+            "Customer Portal Web",
+            "Customer Portal API"
+        };
+        public static List<string> versionList = new List<string>
+        {
+            "x86",
+            "x64"
+        };
 
         public static void EnableDBControls(bool enable)
         {
@@ -89,6 +103,11 @@ namespace EnvironmentManager4
             cbDatabaseList.Text = "Select a Database Backup";
             LoadDatabaseDescription(cbDatabaseList.Text);
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.DatabaseBackupDirectory))
+            {
+                MessageBox.Show("There is no value in the Database Backup Directory Setting. Please set one in Settings.");
+                return;
+            }
             if (!Directory.Exists(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
                 MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist."), settingsModel.DbManagement.DatabaseBackupDirectory);
@@ -225,6 +244,16 @@ namespace EnvironmentManager4
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (Environment.MachineName != "STEVERODRIGUEZ")
+            {
+                notesToolStripMenuItem.Visible = false;
+                directoryCompareToolStripMenuItem.Visible = false;
+                trimSOLTickets.Visible = false;
+                generateSettingsFileToolStripMenuItem.Visible = false;
+                generateCoreModulesFileToolStripMenuItem.Visible = false;
+                generateConfigurationsFileToolStripMenuItem.Visible = false;
+                generateConfigurationsFileWithNullsToolStripMenuItem.Visible = false;
+            }
             Reload();
             LoadGPInstalls();
             tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();
@@ -235,8 +264,14 @@ namespace EnvironmentManager4
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Settings settings = new Settings();
+            settings.FormClosing += new FormClosingEventHandler(SettingsClose);
             settings.Show();
             return;
+        }
+
+        private void SettingsClose(object sender, FormClosingEventArgs e)
+        {
+            Reload();
         }
 
         private void labelGPInstallationList_Click(object sender, EventArgs e)
@@ -403,7 +438,7 @@ namespace EnvironmentManager4
             if (result == DialogResult.Yes)
             {
                 NewDatabaseBackup newBackup = new NewDatabaseBackup();
-                NewDatabaseBackup.action = "OVERWRITE";
+                NewDatabaseBackup.action = "NEW";
                 newBackup.Show();
             }
             return;
@@ -426,7 +461,7 @@ namespace EnvironmentManager4
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
                 {
-                    DatabaseManagement.DeleteDatabase(backupName, backupZip);
+                    DatabaseManagement.DeleteDatabase(backupName, backupZip, true, true);
                     Reload();
                 }
             }
@@ -435,7 +470,25 @@ namespace EnvironmentManager4
 
         private void btnInstallProduct_Click(object sender, EventArgs e)
         {
-            Install.InstallProduct(cbProductList.Text, Utilities.GetSettingsFile(), cbSPGPVersion.Text);
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                BuildLog buildLog = new BuildLog();
+                buildLog.Show();
+                return;
+            }
+            string selectedProduct = cbProductList.Text;
+            string selectedVersion = cbSPGPVersion.Text;
+            if (!productList.Contains(selectedProduct))
+            {
+                MessageBox.Show("Please select a product from the list to continue.");
+                return;
+            }
+            if (!versionList.Contains(selectedVersion))
+            {
+                MessageBox.Show("Please select a version from the list to continue.");
+                return;
+            }
+            Install.InstallProduct(selectedProduct, selectedVersion);
             return;
         }
 
@@ -444,7 +497,7 @@ namespace EnvironmentManager4
             string selectedProduct = cbProductList.Text;
             string selectedVersion = cbSPGPVersion.Text;
 
-            if (selectedProduct != "SalesPad" && selectedProduct != "DataCollection" && selectedProduct != "SalesPad Mobile" && selectedProduct != "ShipCenter" || selectedProduct == "Select a Product")
+            if (!productList.Contains(selectedProduct))
             {
                 string message = "Please select a product from the list.";
                 string caption = "ERROR";
@@ -455,7 +508,7 @@ namespace EnvironmentManager4
                 return;
             }
 
-            if (selectedVersion != "x86" && selectedVersion != "x64")
+            if (!versionList.Contains(selectedVersion))
             {
                 string message = "Please select a version from the list.";
                 string caption = "ERROR";
@@ -470,13 +523,40 @@ namespace EnvironmentManager4
 
             if (Control.ModifierKeys == Keys.Shift)
             {
-                //last installer build
+                string lastInstalledPath = SqliteDataAccess.LastInstalledBuild(selectedProduct);
+                if (String.IsNullOrWhiteSpace(lastInstalledPath))
+                {
+                    MessageBox.Show(String.Format("There isn't a last recorded build for the selected product '{0}'", selectedProduct));
+                    return;
+                }
+                lastInstalledPath += String.Format(@"\{0}", Utilities.RetrieveExe(selectedProduct));
+
+                string message = String.Format("Are you sure you want to launch {0}?", lastInstalledPath);
+                string caption = "CONFIRM";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                MessageBoxIcon icon = MessageBoxIcon.Question;
+                DialogResult result;
+
+                result = MessageBox.Show(message, caption, buttons, icon);
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        Process.Start(lastInstalledPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(String.Format("There was an error launching the build listed below\n\n{0}\n\n{1}\n\n{2}", lastInstalledPath, ex.Message, ex.ToString()));
+                        return;
+                    }
+                }
+                return;
             }
 
             string productPath = "";
             switch (selectedProduct)
             {
-                case "SalesPad":
+                case "SalesPad GP":
                     switch (selectedVersion)
                     {
                         case "x86":
@@ -487,6 +567,24 @@ namespace EnvironmentManager4
                             break;
                     }
                     break;
+                case "DataCollection":
+                    productPath = settingsModel.BuildManagement.DataCollectionDirectory;
+                    break;
+                case "Inventory Manager":
+                    productPath = settingsModel.BuildManagement.DataCollectionDirectory;
+                    break;
+                case "SalesPad Mobile":
+                    productPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
+                    break;
+                case "ShipCenter":
+                    productPath = settingsModel.BuildManagement.ShipCenterDirectory;
+                    break;
+            }
+
+            if (!Directory.Exists(productPath))
+            {
+                MessageBox.Show(String.Format("The Settings defined path for '{0}', '{1}' does not exist. There are either no builds to launch, or Settings needs reconfigured.", selectedProduct, productPath));
+                return;
             }
 
             LaunchProduct launch = new LaunchProduct(); ;
@@ -507,7 +605,7 @@ namespace EnvironmentManager4
             string product = cbProductList.Text;
             string version = cbSPGPVersion.Text;
             string buildPath = "";
-            if (String.IsNullOrWhiteSpace(product))
+            if (!productList.Contains(product))
             {
                 string errorMessage = "Please select a Product.";
                 string errorCaption = "ERROR";
@@ -517,7 +615,7 @@ namespace EnvironmentManager4
                 MessageBox.Show(errorMessage, errorCaption, errorButton, errorIcon);
                 return;
             }
-            if (version != "x86" && version != "x64")
+            if (!versionList.Contains(version))
             {
                 string message = "Please select a version from the list.";
                 string caption = "ERROR";
@@ -528,14 +626,34 @@ namespace EnvironmentManager4
                 return;
             }
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            switch (version)
+            switch (product)
             {
-                case "x86":
-                    buildPath = settingsModel.BuildManagement.SalesPadx86Directory;
+                case "SalesPad GP":
+                    switch (version)
+                    {
+                        case "x86":
+                            buildPath = settingsModel.BuildManagement.SalesPadx86Directory;
+                            break;
+                        case "x64":
+                            buildPath = settingsModel.BuildManagement.SalesPadx64Directory;
+                            break;
+                    }
                     break;
-                case "x64":
-                    buildPath = settingsModel.BuildManagement.SalesPadx64Directory;
+                case "DataCollection":
+                    buildPath = settingsModel.BuildManagement.DataCollectionDirectory;
                     break;
+                case "SalesPad Mobile":
+                    buildPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
+                    break;
+                case "ShipCenter":
+                    buildPath = settingsModel.BuildManagement.ShipCenterDirectory;
+                    break;
+            }
+
+            if (!Directory.Exists(buildPath))
+            {
+                MessageBox.Show(String.Format("The Settings defined path for '{0}', '{1}' does not exist. There are either no builds to launch, or Settings needs reconfigured.", product, buildPath));
+                return;
             }
 
             try
@@ -574,7 +692,11 @@ namespace EnvironmentManager4
             if (Control.ModifierKeys == Keys.Shift)
             {
                 MessageBox.Show(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-                return;
+                //ConfigModel configModel = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(Utilities.GetConfigurationsFile()));
+                //foreach (var config in configModel.Configurations)
+                //{
+                //    MessageBox.Show(config.ToString());
+                //}
             }
             tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();
             return;
@@ -709,6 +831,21 @@ namespace EnvironmentManager4
         private void generateConfigurationsFileWithNullsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Utilities.GenerateConfigsWithNulls();
+            return;
+        }
+
+        private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedProduct = cbProductList.Text;
+            if (selectedProduct == "SalesPad GP")
+            {
+                cbSPGPVersion.Enabled = true;
+            }
+            else
+            {
+                cbSPGPVersion.Text = "x86";
+                cbSPGPVersion.Enabled = false;
+            }
             return;
         }
     }
