@@ -80,12 +80,13 @@ namespace EnvironmentManager4
         /// </summary>
         /// <param name="product">The product to be searched for (SalesPad, DataCollection, etc)</param>
         /// <returns>The last recording of an installed build for the selected product</returns>
-        public static string LastInstalledBuild(string product)
+        public static string LastInstalledBuild(string product, string version)
         {
             string path = "";
             SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
             conn.Open();
             string statement = "SELECT InstallPath FROM InstalledBuilds Where Product = '" + product + "' ORDER BY Id DESC LIMIT 1";
+            string stmt = String.Format("SELECT InstallPath FROM InstalledBuilds WHERE Product = '{0}' AND Version = '{1}' ORDER BY Id DESC LIMIT 1", product, version);
             SQLiteCommand command = new SQLiteCommand(statement, conn);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())

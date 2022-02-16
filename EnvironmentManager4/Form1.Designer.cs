@@ -90,6 +90,7 @@ namespace EnvironmentManager4
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteBuildInstallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -564,7 +565,7 @@ namespace EnvironmentManager4
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.resetDatabaseVersionToolStripMenuItem,
-            this.deleteBuildsToolStripMenuItem,
+            this.deleteBuildInstallsToolStripMenuItem,
             this.databaseLogToolStripMenuItem,
             this.killSalesPadToolStripMenuItem,
             this.notesToolStripMenuItem,
@@ -573,7 +574,8 @@ namespace EnvironmentManager4
             this.generateSettingsFileToolStripMenuItem,
             this.generateCoreModulesFileToolStripMenuItem,
             this.generateConfigurationsFileToolStripMenuItem,
-            this.generateConfigurationsFileWithNullsToolStripMenuItem});
+            this.generateConfigurationsFileWithNullsToolStripMenuItem,
+            this.deleteBuildsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -599,28 +601,28 @@ namespace EnvironmentManager4
             // salesPadDesktopToolStripMenuItem
             // 
             this.salesPadDesktopToolStripMenuItem.Name = "salesPadDesktopToolStripMenuItem";
-            this.salesPadDesktopToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.salesPadDesktopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.salesPadDesktopToolStripMenuItem.Text = "SalesPad Desktop";
             this.salesPadDesktopToolStripMenuItem.Click += new System.EventHandler(this.salesPadDesktopToolStripMenuItem_Click);
             // 
             // dataCollectionToolStripMenuItem
             // 
             this.dataCollectionToolStripMenuItem.Name = "dataCollectionToolStripMenuItem";
-            this.dataCollectionToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.dataCollectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.dataCollectionToolStripMenuItem.Text = "DataCollection";
             this.dataCollectionToolStripMenuItem.Click += new System.EventHandler(this.dataCollectionToolStripMenuItem_Click);
             // 
             // mobileSToolStripMenuItem
             // 
             this.mobileSToolStripMenuItem.Name = "mobileSToolStripMenuItem";
-            this.mobileSToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.mobileSToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mobileSToolStripMenuItem.Text = "Mobile Server";
             this.mobileSToolStripMenuItem.Click += new System.EventHandler(this.mobileSToolStripMenuItem_Click);
             // 
             // shipCenterToolStripMenuItem
             // 
             this.shipCenterToolStripMenuItem.Name = "shipCenterToolStripMenuItem";
-            this.shipCenterToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.shipCenterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.shipCenterToolStripMenuItem.Text = "Ship Center";
             this.shipCenterToolStripMenuItem.Click += new System.EventHandler(this.shipCenterToolStripMenuItem_Click);
             // 
@@ -707,6 +709,13 @@ namespace EnvironmentManager4
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
+            // 
+            // deleteBuildInstallsToolStripMenuItem
+            // 
+            this.deleteBuildInstallsToolStripMenuItem.Name = "deleteBuildInstallsToolStripMenuItem";
+            this.deleteBuildInstallsToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.deleteBuildInstallsToolStripMenuItem.Text = "Delete Build Installs";
+            this.deleteBuildInstallsToolStripMenuItem.Click += new System.EventHandler(this.deleteBuildInstallsToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -806,6 +815,7 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ToolStripMenuItem generateCoreModulesFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateConfigurationsFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateConfigurationsFileWithNullsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteBuildInstallsToolStripMenuItem;
     }
 }
 

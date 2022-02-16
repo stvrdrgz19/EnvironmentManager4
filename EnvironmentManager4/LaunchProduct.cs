@@ -32,12 +32,12 @@ namespace EnvironmentManager4
 
         private void RetrieveBuildPaths()
         {
-            var buildList = Directory.GetFiles(path + @"\", Utilities.RetrieveExe(product, true), SearchOption.AllDirectories);
-            foreach (string build in buildList)
+            List<string> installedBuilds = new List<string>();
+            installedBuilds.AddRange(Utilities.InstalledBuilds(product, version));
+            foreach (string build in installedBuilds)
             {
                 InstalledBuilds.Items.Add(Path.GetDirectoryName(build));
             }
-            //MessageBox.Show(String.Format("Product: {0}\nVersion: {1}\nPath: {2}", product, version, path));
         }
 
         private void LaunchProduct_Load(object sender, EventArgs e)

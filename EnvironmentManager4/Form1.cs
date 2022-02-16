@@ -598,7 +598,7 @@ namespace EnvironmentManager4
 
             if (Control.ModifierKeys == Keys.Shift)
             {
-                string lastInstalledPath = SqliteDataAccess.LastInstalledBuild(selectedProduct);
+                string lastInstalledPath = SqliteDataAccess.LastInstalledBuild(selectedProduct, selectedVersion);
                 if (String.IsNullOrWhiteSpace(lastInstalledPath))
                 {
                     MessageBox.Show(String.Format("There isn't a last recorded build for the selected product '{0}'", selectedProduct));
@@ -628,33 +628,35 @@ namespace EnvironmentManager4
                 return;
             }
 
-            string productPath = "";
-            switch (selectedProduct)
-            {
-                case "SalesPad GP":
-                    switch (selectedVersion)
-                    {
-                        case "x86":
-                            productPath = settingsModel.BuildManagement.SalesPadx86Directory;
-                            break;
-                        case "x64":
-                            productPath = settingsModel.BuildManagement.SalesPadx64Directory;
-                            break;
-                    }
-                    break;
-                case "DataCollection":
-                    productPath = settingsModel.BuildManagement.DataCollectionDirectory;
-                    break;
-                case "Inventory Manager":
-                    productPath = settingsModel.BuildManagement.DataCollectionDirectory;
-                    break;
-                case "SalesPad Mobile":
-                    productPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
-                    break;
-                case "ShipCenter":
-                    productPath = settingsModel.BuildManagement.ShipCenterDirectory;
-                    break;
-            }
+            string productPath = Utilities.GetProductInstallPath(selectedProduct, selectedVersion);
+
+            //string productPath = "";
+            //switch (selectedProduct)
+            //{
+            //    case "SalesPad GP":
+            //        switch (selectedVersion)
+            //        {
+            //            case "x86":
+            //                productPath = settingsModel.BuildManagement.SalesPadx86Directory;
+            //                break;
+            //            case "x64":
+            //                productPath = settingsModel.BuildManagement.SalesPadx64Directory;
+            //                break;
+            //        }
+            //        break;
+            //    case "DataCollection":
+            //        productPath = settingsModel.BuildManagement.DataCollectionDirectory;
+            //        break;
+            //    case "Inventory Manager":
+            //        productPath = settingsModel.BuildManagement.DataCollectionDirectory;
+            //        break;
+            //    case "SalesPad Mobile":
+            //        productPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
+            //        break;
+            //    case "ShipCenter":
+            //        productPath = settingsModel.BuildManagement.ShipCenterDirectory;
+            //        break;
+            //}
 
             if (!Directory.Exists(productPath))
             {
@@ -862,7 +864,9 @@ namespace EnvironmentManager4
 
         private void notesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //
+            Notes notes = new Notes();
+            notes.Show();
+            return;
         }
 
         private void directoryCompareToolStripMenuItem_Click(object sender, EventArgs e)
@@ -921,6 +925,13 @@ namespace EnvironmentManager4
                 cbSPGPVersion.Text = "x86";
                 cbSPGPVersion.Enabled = false;
             }
+            return;
+        }
+
+        private void deleteBuildInstallsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteBuilds deleteBuilds = new DeleteBuilds();
+            deleteBuilds.Show();
             return;
         }
     }

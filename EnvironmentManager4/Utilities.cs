@@ -17,6 +17,16 @@ namespace EnvironmentManager4
 
         //Setup File Video - https://www.youtube.com/watch?v=tiHBwAp_Kz4&t=179s
 
+        public static List<string> productList = new List<string>
+        {
+            "SalesPad GP"
+            ,"DataCollection"
+            ,"SalesPad Mobile"
+            ,"ShipCenter"
+            ,"Customer Portal Web"
+            ,"Customer Portal API"
+        };
+
         public static string GetSettingsFile()
         {
             return Environment.CurrentDirectory + @"\Files\Settings.json";
@@ -39,6 +49,12 @@ namespace EnvironmentManager4
         {
             return @"C:\Users\steve.rodriguez\Downloads\Configurations4.json";
             //return @"C:\Users\steve.rodriguez\Downloads\Configurations2.json";
+        }
+
+        public static string GetNotesFile()
+        {
+            return Environment.CurrentDirectory + @"\Files\Notes.txt";
+            //return @"C:\Program Files (x86)\EnvMgr\Files\Notes.txt";
         }
 
         public static string RetrieveExe(string product, bool filter = false)
@@ -118,6 +134,58 @@ namespace EnvironmentManager4
                 }
             }
             return ipAddress;
+        }
+
+        public static string GetProductInstallPath(string product, string version)
+        {
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            string productPath = "";
+            switch (product)
+            {
+                case "SalesPad GP":
+                    switch (version)
+                    {
+                        case "x86":
+                            productPath = settingsModel.BuildManagement.SalesPadx86Directory;
+                            break;
+                        case "x64":
+                            productPath = settingsModel.BuildManagement.SalesPadx64Directory;
+                            break;
+                    }
+                    break;
+                case "DataCollection":
+                    productPath = settingsModel.BuildManagement.DataCollectionDirectory;
+                    break;
+                case "Inventory Manager":
+                    productPath = settingsModel.BuildManagement.DataCollectionDirectory;
+                    break;
+                case "SalesPad Mobile":
+                    productPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
+                    break;
+                case "ShipCenter":
+                    productPath = settingsModel.BuildManagement.ShipCenterDirectory;
+                    break;
+            }
+            return productPath;
+        }
+
+        public static List<string> InstalledBuilds(string product, string version)
+        {
+            //if (!productList.Contains(product))
+            //{
+            //    return null;
+            //}
+            List<string> installedBuilds = new List<string>();
+            try
+            {
+                var buildList = Directory.GetFiles(GetProductInstallPath(product, version) + @"\", Utilities.RetrieveExe(product, true), SearchOption.AllDirectories);
+                installedBuilds.AddRange(buildList);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return null;
+            }
+            return installedBuilds;
         }
 
         public static void CreateDefaultSettingsFile()

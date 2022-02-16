@@ -229,15 +229,13 @@ namespace EnvironmentManager4
             List<string> extDllToAdd = new List<string>();
 
             //  ADD ANY SELECTED DLLS TO THE LIST
-            var selectedCustDlls = lbCustomModules.SelectedItems;
-            foreach (string dll in selectedCustDlls)
+            foreach (string dll in customModules)
             {
                 custDllToAdd.Add(dll);
             }
             custDllToAdd.Sort();
 
-            var selectedExtDlls = lbExtendedModules.SelectedItems;
-            foreach (string dll in selectedExtDlls)
+            foreach (string dll in extendedModules)
             {
                 extDllToAdd.Add(dll);
             }
