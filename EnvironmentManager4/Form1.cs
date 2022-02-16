@@ -95,6 +95,7 @@ namespace EnvironmentManager4
             cbDatabaseList.Text = "Select a Database Backup";
             LoadDatabaseList();
             LoadDatabaseDescription(cbDatabaseList.Text);
+            DetermineMode();
         }
 
         private void EnableSQLControls(bool enable)
@@ -273,6 +274,24 @@ namespace EnvironmentManager4
                         }
                     }
                 }
+            }
+        }
+
+        public void DetermineMode()
+        {
+            cbSPGPVersion.Text = "x86";
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            if (settingsModel.Other.Mode == "Standard")
+            {
+                cbProductList.Text = "Select a Product";
+                cbProductList.Enabled = true;
+                cbSPGPVersion.Enabled = true;
+            }
+            if (settingsModel.Other.Mode == "SmartBear")
+            {
+                cbProductList.Text = "SalesPad GP";
+                cbProductList.Enabled = false;
+                cbSPGPVersion.Enabled = false;
             }
         }
 
