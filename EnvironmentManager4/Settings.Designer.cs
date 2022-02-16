@@ -458,6 +458,7 @@ namespace EnvironmentManager4
             this.cbMode.Name = "cbMode";
             this.cbMode.Size = new System.Drawing.Size(373, 21);
             this.cbMode.TabIndex = 1;
+            this.cbMode.SelectedIndexChanged += new System.EventHandler(this.cbMode_SelectedIndexChanged);
             // 
             // label8
             // 
