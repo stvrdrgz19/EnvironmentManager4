@@ -307,6 +307,7 @@ namespace EnvironmentManager4
                 generateConfigurationsFileToolStripMenuItem.Visible = false;
                 generateConfigurationsFileWithNullsToolStripMenuItem.Visible = false;
             }
+            deleteBuildsToolStripMenuItem.Visible = false;
             Reload();
             LoadGPInstalls();
             tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();

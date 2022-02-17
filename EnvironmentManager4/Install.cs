@@ -134,6 +134,12 @@ namespace EnvironmentManager4
         public static string GetInstallPath(string defaultPath, string installerPath, int charCount)
         {
             string pathFromInstaller = installerPath.Remove(0, charCount);
+            //check if smartbear mode
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            if (settingsModel.Other.Mode == "SmartBear")
+            {
+                return String.Format(@"{0} {1}", defaultPath, pathFromInstaller.Replace(@"\", " "));
+            }
             return String.Format(@"{0}\{1}", defaultPath, pathFromInstaller);
         }
 

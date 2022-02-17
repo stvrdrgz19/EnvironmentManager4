@@ -136,6 +136,17 @@ namespace EnvironmentManager4
             return ipAddress;
         }
 
+        public static string TrimEndOfPath(string path)
+        {
+            //handle if the provided path ends in a backslash
+            char lastChar = path[path.Length - 1];
+            if (lastChar == '\\')
+            {
+                TrimEndOfPath(path);
+            }
+            return path.Substring(0, path.LastIndexOf('\\'));
+        }
+
         public static string GetProductInstallPath(string product, string version)
         {
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
@@ -146,7 +157,15 @@ namespace EnvironmentManager4
                     switch (version)
                     {
                         case "x86":
-                            productPath = settingsModel.BuildManagement.SalesPadx86Directory;
+                            switch (settingsModel.Other.Mode)
+                            {
+                                case "Standard":
+                                    productPath = settingsModel.BuildManagement.SalesPadx86Directory;
+                                    break;
+                                case "SmartBear":
+                                    productPath = TrimEndOfPath(settingsModel.BuildManagement.SalesPadx86Directory);
+                                    break;
+                            }
                             break;
                         case "x64":
                             productPath = settingsModel.BuildManagement.SalesPadx64Directory;
