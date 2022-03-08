@@ -23,9 +23,24 @@ namespace EnvironmentManager4
         public static string product;
         public static string version;
         public static string path;
+
         public static string[] LoadDllList(string path)
         {
-            CoreModules coreModules = JsonConvert.DeserializeObject<CoreModules>(File.ReadAllText(Environment.CurrentDirectory + @"\Files\CoreModules.json"));
+            string fileName = "";
+            switch (product)
+            {
+                case "SalesPad GP":
+                case "DataCollection":
+                    fileName = "CoreModules";
+                    break;
+                case "SalesPad Mobile":
+                    fileName = "SPMCoreModules";
+                    break;
+                case "ShipCenter":
+                    fileName = "SCCoreModules";
+                    break;
+            }
+            CoreModules coreModules = JsonConvert.DeserializeObject<CoreModules>(File.ReadAllText(String.Format(@"{0}\Files\{1}.json", Environment.CurrentDirectory, fileName)));
             string[] dllList = Directory.GetFiles(path, "SalesPad.Module.*.dll").Select(file => Path.GetFileName(file)).ToArray();
             return dllList.Except(coreModules.DLLName).ToArray();
         }
