@@ -322,7 +322,6 @@ namespace EnvironmentManager4
                 btnAddConfiguration.Enabled = false;
                 btnRemoveConfiguration.Enabled = false;
             }
-            if (product == "C")
             this.Text = String.Format("Install {0}", product);
             tbSelectedBuild.Text = installerPath;
             LoadModules(product, installerPath, version, installer);
