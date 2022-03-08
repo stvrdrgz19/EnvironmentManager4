@@ -73,11 +73,7 @@ namespace EnvironmentManager4
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetDatabaseVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteBuildsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.salesPadDesktopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataCollectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mobileSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.shipCenterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteBuildInstallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.databaseLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.killSalesPadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,7 +86,6 @@ namespace EnvironmentManager4
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteBuildInstallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -574,8 +569,7 @@ namespace EnvironmentManager4
             this.generateSettingsFileToolStripMenuItem,
             this.generateCoreModulesFileToolStripMenuItem,
             this.generateConfigurationsFileToolStripMenuItem,
-            this.generateConfigurationsFileWithNullsToolStripMenuItem,
-            this.deleteBuildsToolStripMenuItem});
+            this.generateConfigurationsFileWithNullsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -587,44 +581,12 @@ namespace EnvironmentManager4
             this.resetDatabaseVersionToolStripMenuItem.Text = "Reset Database Version";
             this.resetDatabaseVersionToolStripMenuItem.Click += new System.EventHandler(this.resetDatabaseVersionToolStripMenuItem_Click);
             // 
-            // deleteBuildsToolStripMenuItem
+            // deleteBuildInstallsToolStripMenuItem
             // 
-            this.deleteBuildsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.salesPadDesktopToolStripMenuItem,
-            this.dataCollectionToolStripMenuItem,
-            this.mobileSToolStripMenuItem,
-            this.shipCenterToolStripMenuItem});
-            this.deleteBuildsToolStripMenuItem.Name = "deleteBuildsToolStripMenuItem";
-            this.deleteBuildsToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.deleteBuildsToolStripMenuItem.Text = "Delete Builds";
-            // 
-            // salesPadDesktopToolStripMenuItem
-            // 
-            this.salesPadDesktopToolStripMenuItem.Name = "salesPadDesktopToolStripMenuItem";
-            this.salesPadDesktopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.salesPadDesktopToolStripMenuItem.Text = "SalesPad Desktop";
-            this.salesPadDesktopToolStripMenuItem.Click += new System.EventHandler(this.salesPadDesktopToolStripMenuItem_Click);
-            // 
-            // dataCollectionToolStripMenuItem
-            // 
-            this.dataCollectionToolStripMenuItem.Name = "dataCollectionToolStripMenuItem";
-            this.dataCollectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.dataCollectionToolStripMenuItem.Text = "DataCollection";
-            this.dataCollectionToolStripMenuItem.Click += new System.EventHandler(this.dataCollectionToolStripMenuItem_Click);
-            // 
-            // mobileSToolStripMenuItem
-            // 
-            this.mobileSToolStripMenuItem.Name = "mobileSToolStripMenuItem";
-            this.mobileSToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.mobileSToolStripMenuItem.Text = "Mobile Server";
-            this.mobileSToolStripMenuItem.Click += new System.EventHandler(this.mobileSToolStripMenuItem_Click);
-            // 
-            // shipCenterToolStripMenuItem
-            // 
-            this.shipCenterToolStripMenuItem.Name = "shipCenterToolStripMenuItem";
-            this.shipCenterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.shipCenterToolStripMenuItem.Text = "Ship Center";
-            this.shipCenterToolStripMenuItem.Click += new System.EventHandler(this.shipCenterToolStripMenuItem_Click);
+            this.deleteBuildInstallsToolStripMenuItem.Name = "deleteBuildInstallsToolStripMenuItem";
+            this.deleteBuildInstallsToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.deleteBuildInstallsToolStripMenuItem.Text = "Delete Build Installs";
+            this.deleteBuildInstallsToolStripMenuItem.Click += new System.EventHandler(this.deleteBuildInstallsToolStripMenuItem_Click);
             // 
             // databaseLogToolStripMenuItem
             // 
@@ -710,13 +672,6 @@ namespace EnvironmentManager4
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             // 
-            // deleteBuildInstallsToolStripMenuItem
-            // 
-            this.deleteBuildInstallsToolStripMenuItem.Name = "deleteBuildInstallsToolStripMenuItem";
-            this.deleteBuildInstallsToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.deleteBuildInstallsToolStripMenuItem.Text = "Delete Build Installs";
-            this.deleteBuildInstallsToolStripMenuItem.Click += new System.EventHandler(this.deleteBuildInstallsToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -798,11 +753,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetDatabaseVersionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteBuildsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem salesPadDesktopToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dataCollectionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mobileSToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem shipCenterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem databaseLogToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem killSalesPadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem notesToolStripMenuItem;
