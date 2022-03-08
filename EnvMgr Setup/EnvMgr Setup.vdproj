@@ -57,8 +57,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_88FCB06E9A06463998D5743C26405811"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_890F4654354FE6D2D65A6CA52F84D846"
         "OwnerKey" = "8:_681C0F9E643BCD6C6219CA9F53F50558"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8B4E2E9638B04AA1AE8F9C3505398689"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -196,6 +208,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -390,6 +410,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_88FCB06E9A06463998D5743C26405811"
+            {
+            "SourcePath" = "8:..\\EnvironmentManager4\\Files\\SCCoreModules.json"
+            "TargetName" = "8:SCCoreModules.json"
+            "Tag" = "8:"
+            "Folder" = "8:_FF80ACF8135C468B81892F8DBE3B8D84"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_890F4654354FE6D2D65A6CA52F84D846"
             {
             "AssemblyRegister" = "3:1"
@@ -419,6 +459,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8B4E2E9638B04AA1AE8F9C3505398689"
+            {
+            "SourcePath" = "8:..\\EnvironmentManager4\\Files\\SPMCoreModules.json"
+            "TargetName" = "8:SPMCoreModules.json"
+            "Tag" = "8:"
+            "Folder" = "8:_FF80ACF8135C468B81892F8DBE3B8D84"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A66CE6A6B47CA5EE778739CF417EE0B4"
