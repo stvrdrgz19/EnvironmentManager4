@@ -29,20 +29,20 @@ namespace EnvironmentManager4
 
         public static string GetSettingsFile()
         {
-            return Environment.CurrentDirectory + @"\Files\Settings.json";
-            //return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+            //return Environment.CurrentDirectory + @"\Files\Settings.json";
+            return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
         }
 
         public static string GetInstallerFolder()
         {
-            return Environment.CurrentDirectory + @"\Installers";
-            //return @"C:\Program Files (x86)\EnvMgr\Installers";
+            //return Environment.CurrentDirectory + @"\Installers";
+            return @"C:\Program Files (x86)\EnvMgr\Installers";
         }
 
         public static string GetDLLsFolder()
         {
-            return Environment.CurrentDirectory + @"\Dlls";
-            //return @"C:\Program Files (x86)\EnvMgr\Dlls";
+            //return Environment.CurrentDirectory + @"\Dlls";
+            return @"C:\Program Files (x86)\EnvMgr\Dlls";
         }
 
         public static string GetConfigurationsFile()
@@ -53,8 +53,8 @@ namespace EnvironmentManager4
 
         public static string GetNotesFile()
         {
-            return Environment.CurrentDirectory + @"\Files\Notes.txt";
-            //return @"C:\Program Files (x86)\EnvMgr\Files\Notes.txt";
+            //return Environment.CurrentDirectory + @"\Files\Notes.txt";
+            return @"C:\Program Files (x86)\EnvMgr\Files\Notes.txt";
         }
 
         public static string RetrieveExe(string product, bool filter = false)
@@ -136,6 +136,17 @@ namespace EnvironmentManager4
             return ipAddress;
         }
 
+        public static string TrimEndOfPath(string path)
+        {
+            //handle if the provided path ends in a backslash
+            char lastChar = path[path.Length - 1];
+            if (lastChar == '\\')
+            {
+                TrimEndOfPath(path);
+            }
+            return path.Substring(0, path.LastIndexOf('\\'));
+        }
+
         public static string GetProductInstallPath(string product, string version)
         {
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
@@ -146,7 +157,15 @@ namespace EnvironmentManager4
                     switch (version)
                     {
                         case "x86":
-                            productPath = settingsModel.BuildManagement.SalesPadx86Directory;
+                            switch (settingsModel.Other.Mode)
+                            {
+                                case "Standard":
+                                    productPath = settingsModel.BuildManagement.SalesPadx86Directory;
+                                    break;
+                                case "SmartBear":
+                                    productPath = TrimEndOfPath(settingsModel.BuildManagement.SalesPadx86Directory);
+                                    break;
+                            }
                             break;
                         case "x64":
                             productPath = settingsModel.BuildManagement.SalesPadx64Directory;

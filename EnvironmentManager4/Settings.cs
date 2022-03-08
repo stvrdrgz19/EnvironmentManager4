@@ -236,10 +236,39 @@ namespace EnvironmentManager4
             }
         }
 
+        public void ToggleMode(bool tf)
+        {
+            tbSalesPadx64Directory.Enabled = tf;
+            tbDataCollectionDirectory.Enabled = tf;
+            tbSalesPadMobileDirectory.Enabled = tf;
+            tbShipCenterDirectory.Enabled = tf;
+            tbGPWebDirectory.Enabled = tf;
+            tbWebAPIDirectory.Enabled = tf;
+            btnSelectx64SPDirectory.Enabled = tf;
+            btnSelectDatacollectionDirectory.Enabled = tf;
+            btnSelectSalesPadMobileDirectory.Enabled = tf;
+            btnSelectShipCenterDirectory.Enabled = tf;
+            btnSelectGPWebDirectory.Enabled = tf;
+            btnSelectWebAPIDirectory.Enabled = tf;
+        }
+
+        public void ToggleModeExecute()
+        {
+            if (cbMode.Text == "Standard")
+            {
+                ToggleMode(true);
+            }
+            if (cbMode.Text == "SmartBear")
+            {
+                ToggleMode(false);
+            }
+        }
+
         private void Settings_Load(object sender, EventArgs e)
         {
             LoadSettings();
             SetStartingValues();
+            ToggleModeExecute();
         }
 
         private void btnSelectBackupDirectory_Click(object sender, EventArgs e)
@@ -369,6 +398,12 @@ namespace EnvironmentManager4
         {
             int indx = lbDatabases.SelectedIndex;
             lbDatabases.Items.RemoveAt(indx);
+            return;
+        }
+
+        private void cbMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ToggleModeExecute();
             return;
         }
     }
