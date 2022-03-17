@@ -20,6 +20,8 @@ namespace EnvironmentManager4
         public static string title = "";
         public static string label = "";
         public static string output = "";
+        public static bool isConfiguration = false;
+        public static string product = "";
 
         private void TextPrompt_Load(object sender, EventArgs e)
         {
@@ -31,6 +33,19 @@ namespace EnvironmentManager4
         private void btnOK_Click(object sender, EventArgs e)
         {
             output = tbText.Text;
+            if (isConfiguration)
+            {
+                if (Configuration.DoesConfigurationExist(product, output))
+                {
+                    string message = String.Format("A configuration with the name '{0}' already exists for the {1} configuration list. Please enter a new name.", output, product);
+                    string caption = "ERROR";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    MessageBoxIcon icon = MessageBoxIcon.Error;
+                    MessageBox.Show(message, caption, buttons, icon);
+                    return;
+                }
+                //create configuration
+            }
             this.Close();
         }
 

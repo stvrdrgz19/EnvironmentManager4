@@ -302,11 +302,45 @@ namespace EnvironmentManager4
 
         private void LoadConfigurations()
         {
-            //ConfigModel configModel = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(Utilities.GetConfigurationsFile()));
-            //foreach (var thing in configModel.Configurations)
-            //{
-            //    MessageBox.Show(thing.ToString());
-            //}
+            cbConfigurationList.Items.Clear();
+            cbConfigurationList.Items.AddRange(Configuration.GetConfigurationNames(product).ToArray());
+        }
+
+        private void LoadConfigurationDLLs(string configurationName)
+        {
+            lbCustomModules.ClearSelected();
+            lbExtendedModules.ClearSelected();
+            List<string> selectedCustomDLLs = new List<string>();
+            List<string> selectedExtendedDLLs = new List<string>();
+            selectedCustomDLLs.AddRange(Configuration.GetConfigurationDLLs(product, configurationName, "Custom").ToArray());
+            selectedExtendedDLLs.AddRange(Configuration.GetConfigurationDLLs(product, configurationName, "Extended").ToArray());
+            if (selectedCustomDLLs.Count != 0)
+            {
+                foreach (string dll in selectedCustomDLLs)
+                {
+                    if (!String.IsNullOrWhiteSpace(dll))
+                    {
+                        int indx = lbCustomModules.Items.IndexOf(dll);
+                        lbCustomModules.SetSelected(indx, true);
+                    }
+                }
+            }
+            if (selectedExtendedDLLs.Count != 0)
+            {
+                MessageBox.Show("Not = to 0");
+                foreach (string dll in selectedExtendedDLLs)
+                {
+                    if (!String.IsNullOrWhiteSpace(dll))
+                    {
+                        int indx = lbExtendedModules.Items.IndexOf(dll);
+                        lbExtendedModules.SetSelected(indx, true);
+                    }
+                }
+            }
+            if (selectedExtendedDLLs.Count == 0)
+            {
+                MessageBox.Show("Is = to 0");
+            }
         }
 
         private void Install_Load(object sender, EventArgs e)
@@ -332,6 +366,16 @@ namespace EnvironmentManager4
 
         private void btnAddConfiguration_Click(object sender, EventArgs e)
         {
+            if (lbExtendedModules.SelectedItems.Count == 0 && lbCustomModules.SelectedItems.Count == 0)
+            {
+                string eMessage = "To save a configuration there must be more than 0 extended or custom dlls selected.";
+                string eCaption = "ERROR";
+                MessageBoxButtons eButtons = MessageBoxButtons.OK;
+                MessageBoxIcon eIcon = MessageBoxIcon.Error;
+
+                MessageBox.Show(eMessage, eCaption, eButtons, eIcon);
+                return;
+            }
             string message = "Are you sure you want to create a new Configuration?";
             string caption = "CONFIRM";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
@@ -345,6 +389,8 @@ namespace EnvironmentManager4
                 TextPrompt addConfiguration = new TextPrompt();
                 TextPrompt.title = "Add Configuration";
                 TextPrompt.label = "Please enter the name of the new configuration:";
+                TextPrompt.isConfiguration = true;
+                TextPrompt.product = product;
                 addConfiguration.FormClosing += new FormClosingEventHandler(AddConfigurationClose);
                 addConfiguration.Show();
             }
@@ -441,6 +487,15 @@ namespace EnvironmentManager4
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void cbConfigurationList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // add validation here
+            // inform the user if there are any dlls selected already (display a list), inform them that they may get un-selected depending on the configuration selected
+            string selectedConfiguration = cbConfigurationList.Text;
+            LoadConfigurationDLLs(selectedConfiguration);
+            return;
         }
     }
 }
