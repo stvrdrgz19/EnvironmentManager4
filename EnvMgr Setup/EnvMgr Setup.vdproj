@@ -672,6 +672,83 @@
                     "Property" = "8:_5C9B0CFFE88544038D9614EE70146A9D"
                         "Folders"
                         {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_A88A3BA53AD3428481A3CA79F9353A73"
+                            {
+                            "Name" = "8:Configurations"
+                            "AlwaysCreate" = "11:TRUE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_CFD277E2CC3C4524AC9EEF9CEAB23637"
+                                "Folders"
+                                {
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_0AEE00ED215A449CBD0EEDA8F936DEA8"
+                                    {
+                                    "Name" = "8:Customer Portal Web"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_5A5F89C23BD145D2B8FA8DC6A2769D2F"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_0B8147694C0D4BB98974B195D160B290"
+                                    {
+                                    "Name" = "8:Customer Portal API"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_9E4FB955EB1C457AAA978681900B2903"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_0E76D3AD76E84C2E82D39AD10DE45F3C"
+                                    {
+                                    "Name" = "8:SalesPad GP"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_0928831E2AC847478EDC61558D52308B"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_43E47F61E5984803815C2DD0D3AF6ED1"
+                                    {
+                                    "Name" = "8:ShipCenter"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_4AF73314D9BF4EB6A1AED795A356A964"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_9FCF7A76A95245B4B7625097DBBC6BAD"
+                                    {
+                                    "Name" = "8:SalesPad Mobile"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_1018A6DF309546ED85735C3FF004EF8A"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_B34389F9C0A5447E86719F6AA6FB1AB2"
+                                    {
+                                    "Name" = "8:DataCollection"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_FC1C8B6CCD0D45CDB764E86D3409644A"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

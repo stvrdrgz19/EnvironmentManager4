@@ -928,8 +928,8 @@ namespace EnvironmentManager4
 
         private void generateConfigurationsFileWithNullsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utilities.GenerateConfigsWithNulls();
-            return;
+            //Utilities.GenerateConfigsWithNulls();
+            //return;
         }
 
         private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)

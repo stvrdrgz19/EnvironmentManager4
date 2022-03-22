@@ -303,43 +303,45 @@ namespace EnvironmentManager4
         private void LoadConfigurations()
         {
             cbConfigurationList.Items.Clear();
-            cbConfigurationList.Items.AddRange(Configuration.GetConfigurationNames(product).ToArray());
+            cbConfigurationList.Text = "Select a Configuration";
+            cbConfigurationList.Items.Add("None");
+            cbConfigurationList.Items.AddRange(Configuration.GetConfigurationsNames(product).ToArray());
         }
 
         private void LoadConfigurationDLLs(string configurationName)
         {
-            lbCustomModules.ClearSelected();
             lbExtendedModules.ClearSelected();
-            List<string> selectedCustomDLLs = new List<string>();
-            List<string> selectedExtendedDLLs = new List<string>();
-            selectedCustomDLLs.AddRange(Configuration.GetConfigurationDLLs(product, configurationName, "Custom").ToArray());
-            selectedExtendedDLLs.AddRange(Configuration.GetConfigurationDLLs(product, configurationName, "Extended").ToArray());
-            if (selectedCustomDLLs.Count != 0)
+            lbCustomModules.ClearSelected();
+            var json = File.ReadAllText(configurationName);
+            ConfigModel configs = JsonConvert.DeserializeObject<ConfigModel> (json);
+
+            string[] extList = configs.extendedDLLs.ToArray();
+            string[] custList = configs.customDLLs.ToArray();
+
+            foreach (string dllName in extList)
             {
-                foreach (string dll in selectedCustomDLLs)
+                int indx = lbExtendedModules.Items.IndexOf(dllName);
+                try
                 {
-                    if (!String.IsNullOrWhiteSpace(dll))
-                    {
-                        int indx = lbCustomModules.Items.IndexOf(dll);
-                        lbCustomModules.SetSelected(indx, true);
-                    }
+                    lbExtendedModules.SetSelected(indx, true);
+                }
+                catch
+                {
+                    MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an Extended Module for this build.", dllName));
                 }
             }
-            if (selectedExtendedDLLs.Count != 0)
+
+            foreach (string dllName in custList)
             {
-                MessageBox.Show("Not = to 0");
-                foreach (string dll in selectedExtendedDLLs)
+                int indx = lbCustomModules.Items.IndexOf(dllName);
+                try
                 {
-                    if (!String.IsNullOrWhiteSpace(dll))
-                    {
-                        int indx = lbExtendedModules.Items.IndexOf(dll);
-                        lbExtendedModules.SetSelected(indx, true);
-                    }
+                    lbCustomModules.SetSelected(indx, true);
                 }
-            }
-            if (selectedExtendedDLLs.Count == 0)
-            {
-                MessageBox.Show("Is = to 0");
+                catch
+                {
+                    MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an Custom Module for this build.", dllName));
+                }
             }
         }
 
@@ -366,7 +368,17 @@ namespace EnvironmentManager4
 
         private void btnAddConfiguration_Click(object sender, EventArgs e)
         {
-            if (lbExtendedModules.SelectedItems.Count == 0 && lbCustomModules.SelectedItems.Count == 0)
+            List<string> extendedList = new List<string>();
+            foreach (string dll in lbExtendedModules.SelectedItems)
+            {
+                extendedList.Add(dll);
+            }
+            List<string> customList = new List<string>();
+            foreach (string dll in lbCustomModules.SelectedItems)
+            {
+                customList.Add(dll);
+            }
+            if (extendedList.Count == 0 && customList.Count == 0)
             {
                 string eMessage = "To save a configuration there must be more than 0 extended or custom dlls selected.";
                 string eCaption = "ERROR";
@@ -390,6 +402,8 @@ namespace EnvironmentManager4
                 TextPrompt.title = "Add Configuration";
                 TextPrompt.label = "Please enter the name of the new configuration:";
                 TextPrompt.isConfiguration = true;
+                TextPrompt.extended = extendedList;
+                TextPrompt.custom = customList;
                 TextPrompt.product = product;
                 addConfiguration.FormClosing += new FormClosingEventHandler(AddConfigurationClose);
                 addConfiguration.Show();
@@ -403,12 +417,24 @@ namespace EnvironmentManager4
             {
                 return;
             }
-            //get list of selected ext and custom dlls
+            LoadConfigurations();
         }
 
         private void btnRemoveConfiguration_Click(object sender, EventArgs e)
         {
-            //
+            string message = String.Format("Are you sure you want to delete the '{0}' configuration for the '{1}' product? This action cannot be undone.", product, cbConfigurationList.Text);
+            string caption = "CONFIRM";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            MessageBoxIcon icon = MessageBoxIcon.Question;
+            DialogResult result;
+
+            result = MessageBox.Show(message, caption, buttons, icon);
+            if (result == DialogResult.Yes)
+            {
+                Configuration.DeleteConfiguration(product, cbConfigurationList.Text);
+                LoadConfigurations();
+            }
+            return;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -469,16 +495,6 @@ namespace EnvironmentManager4
                 selectedCustomModules.Add(dll);
             }
 
-            if (cbConfigurationList.Text == "Select a Configuration")   //OR Selected Configuration doesn't exist
-            {
-                //Prompt the user to select an existing configuration
-            }
-
-            if (cbConfigurationList.Text != "Select a Configuration")   //OR Selected Configuration exists
-            {
-                //Add dlls from the configuration to the selectedModules lists
-            }
-
             Thread installBuild = new Thread(() => InstallBuild(installPath, selectedExtendedModules, selectedCustomModules, checkLaunchAfterInstall.Checked, checkInstallFolder.Checked, checkRunDatabaseUpdate.Checked, checkResetDBVersion.Checked));
             installBuild.Start();
             return;
@@ -491,10 +507,16 @@ namespace EnvironmentManager4
 
         private void cbConfigurationList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // add validation here
-            // inform the user if there are any dlls selected already (display a list), inform them that they may get un-selected depending on the configuration selected
-            string selectedConfiguration = cbConfigurationList.Text;
-            LoadConfigurationDLLs(selectedConfiguration);
+            if (cbConfigurationList.Text == "None")
+            {
+                lbExtendedModules.ClearSelected();
+                lbCustomModules.ClearSelected();
+            }
+            string configuration = String.Format(@"{0}\{1}.json", Utilities.GetConfigurationsFiles(product), cbConfigurationList.Text);
+            if (File.Exists(configuration))
+            {
+                LoadConfigurationDLLs(configuration);
+            }
             return;
         }
     }

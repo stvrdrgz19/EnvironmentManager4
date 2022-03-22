@@ -30,32 +30,39 @@ namespace EnvironmentManager4
 
         public static string GetSettingsFile()
         {
-            //return Environment.CurrentDirectory + @"\Files\Settings.json";
-            return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+            return Environment.CurrentDirectory + @"\Files\Settings.json";
+            //return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
         }
 
         public static string GetInstallerFolder()
         {
-            //return Environment.CurrentDirectory + @"\Installers";
-            return @"C:\Program Files (x86)\EnvMgr\Installers";
+            return Environment.CurrentDirectory + @"\Installers";
+            //return @"C:\Program Files (x86)\EnvMgr\Installers";
         }
 
         public static string GetDLLsFolder()
         {
-            //return Environment.CurrentDirectory + @"\Dlls";
-            return @"C:\Program Files (x86)\EnvMgr\Dlls";
-        }
-
-        public static string GetConfigurationsFile()
-        {
-            return @"C:\Users\steve.rodriguez\Downloads\Configurations4.json";
-            //return @"C:\Users\steve.rodriguez\Downloads\Configurations2.json";
+            return Environment.CurrentDirectory + @"\Dlls";
+            //return @"C:\Program Files (x86)\EnvMgr\Dlls";
         }
 
         public static string GetNotesFile()
         {
-            //return Environment.CurrentDirectory + @"\Files\Notes.txt";
-            return @"C:\Program Files (x86)\EnvMgr\Files\Notes.txt";
+            return Environment.CurrentDirectory + @"\Files\Notes.txt";
+            //return @"C:\Program Files (x86)\EnvMgr\Files\Notes.txt";
+        }
+
+        public static string GetConfigurationDirectory()
+        {
+            return String.Format(@"{0}\{1}", Environment.CurrentDirectory, @"\Files\Configurations");
+            //return @"C:\Program Files (x86)\EnvMgr\Files\Configurations";
+        }
+
+        public static string GetConfigurationsFiles(string product)
+        {
+            string env = Environment.CurrentDirectory;
+            //string env = @"C:\Program Files (x86)\EnvMgr";
+            return String.Format(@"{0}\Files\Configurations\{1}", env, product);
         }
 
         public static string RetrieveExe(string product, bool filter = false)
@@ -191,17 +198,13 @@ namespace EnvironmentManager4
 
         public static List<string> InstalledBuilds(string product, string version)
         {
-            //if (!productList.Contains(product))
-            //{
-            //    return null;
-            //}
             List<string> installedBuilds = new List<string>();
             try
             {
                 var buildList = Directory.GetFiles(GetProductInstallPath(product, version) + @"\", Utilities.RetrieveExe(product, true), SearchOption.AllDirectories);
                 installedBuilds.AddRange(buildList);
             }
-            catch (UnauthorizedAccessException e)
+            catch (UnauthorizedAccessException)
             {
                 return null;
             }
@@ -336,178 +339,178 @@ namespace EnvironmentManager4
 
         public static void GenerateConfigs()
         {
-            var ediExt = new List<string>
-            {
-                "SalesPadEDI"
-            };
-            var ediCust = new List<string>();
-            var ediConfig = new ExtAndCustom
-            {
-                ConfigurationName = "EDI",
-                Extended = ediExt,
-                Custom = ediCust
-            };
+            //var ediExt = new List<string>
+            //{
+            //    "SalesPadEDI"
+            //};
+            //var ediCust = new List<string>();
+            //var ediConfig = new ExtAndCustom
+            //{
+            //    ConfigurationName = "EDI",
+            //    Extended = ediExt,
+            //    Custom = ediCust
+            //};
 
-            var aaExt = new List<string>
-            {
-                "AutomationAgent",
-                "AutomationAgentService"
-            };
-            var aaCust = new List<string>();
-            var aaConfig = new ExtAndCustom
-            {
-                ConfigurationName = "AA",
-                Extended = aaExt,
-                Custom = aaCust
-            };
+            //var aaExt = new List<string>
+            //{
+            //    "AutomationAgent",
+            //    "AutomationAgentService"
+            //};
+            //var aaCust = new List<string>();
+            //var aaConfig = new ExtAndCustom
+            //{
+            //    ConfigurationName = "AA",
+            //    Extended = aaExt,
+            //    Custom = aaCust
+            //};
 
-            var intExt = new List<string>
-            {
-                "AutomationAgent",
-                "AutomationAgentService",
-                "Integration",
-                "Integration.Magento2",
-                "Integration.Shopify"
-            };
-            var intCust = new List<string>();
-            var intConfig = new ExtAndCustom
-            {
-                ConfigurationName = "Integrations",
-                Extended = intExt,
-                Custom = intCust
-            };
+            //var intExt = new List<string>
+            //{
+            //    "AutomationAgent",
+            //    "AutomationAgentService",
+            //    "Integration",
+            //    "Integration.Magento2",
+            //    "Integration.Shopify"
+            //};
+            //var intCust = new List<string>();
+            //var intConfig = new ExtAndCustom
+            //{
+            //    ConfigurationName = "Integrations",
+            //    Extended = intExt,
+            //    Custom = intCust
+            //};
 
-            var spCore = new List<ExtAndCustom>
-            {
-                ediConfig,
-                aaConfig,
-                intConfig
-            };
+            //var spCore = new List<ExtAndCustom>
+            //{
+            //    ediConfig,
+            //    aaConfig,
+            //    intConfig
+            //};
 
-            var dcCore = new List<JustCustom>();
-            var scCore = new List<JustCustom>();
-            var webCore = new List<JustCustom>();
-            var apiCore = new List<JustCustom>();
+            //var dcCore = new List<JustCustom>();
+            //var scCore = new List<JustCustom>();
+            //var webCore = new List<JustCustom>();
+            //var apiCore = new List<JustCustom>();
 
-            var configurations = new Configurations
-            {
-                SalesPad = spCore,
-                DataCollection = dcCore,
-                ShipCenter = scCore,
-                GPWeb = webCore,
-                WebAPI = apiCore
-            };
+            //var configurations = new Configurations
+            //{
+            //    SalesPad = spCore,
+            //    DataCollection = dcCore,
+            //    ShipCenter = scCore,
+            //    GPWeb = webCore,
+            //    WebAPI = apiCore
+            //};
 
-            string json = JsonConvert.SerializeObject(configurations, Formatting.Indented);
+            //string json = JsonConvert.SerializeObject(configurations, Formatting.Indented);
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "JSON |*.json";
-            saveFileDialog.Title = "Save Core Modules File";
-            saveFileDialog.ShowDialog();
+            //SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //saveFileDialog.Filter = "JSON |*.json";
+            //saveFileDialog.Title = "Save Core Modules File";
+            //saveFileDialog.ShowDialog();
 
-            if (!String.IsNullOrWhiteSpace(saveFileDialog.FileName))
-            {
-                try
-                {
-                    File.WriteAllText(saveFileDialog.FileName, json);
-                    string message = "The file was successfully saved.";
-                    string caption = "SUCCESS";
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    MessageBoxIcon icon = MessageBoxIcon.Exclamation;
+            //if (!String.IsNullOrWhiteSpace(saveFileDialog.FileName))
+            //{
+            //    try
+            //    {
+            //        File.WriteAllText(saveFileDialog.FileName, json);
+            //        string message = "The file was successfully saved.";
+            //        string caption = "SUCCESS";
+            //        MessageBoxButtons buttons = MessageBoxButtons.OK;
+            //        MessageBoxIcon icon = MessageBoxIcon.Exclamation;
 
-                    MessageBox.Show(message, caption, buttons, icon);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(String.Format("There was an error saving the file to {0}, error is as follows:\n\n{1}\n\n{2}", saveFileDialog.FileName, e.Message, e.ToString()));
-                }
-                return;
-            }
+            //        MessageBox.Show(message, caption, buttons, icon);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        MessageBox.Show(String.Format("There was an error saving the file to {0}, error is as follows:\n\n{1}\n\n{2}", saveFileDialog.FileName, e.Message, e.ToString()));
+            //    }
+            //    return;
+            //}
         }
 
         public static void GenerateConfigsWithNulls()
         {
-            var ediExt = new List<string>
-            {
-                "SalesPadEDI"
-            };
-            var ediConfig = new ExtAndCustom
-            {
-                ConfigurationName = "EDI",
-                Extended = ediExt,
-            };
+            //    var ediExt = new List<string>
+            //    {
+            //        "SalesPadEDI"
+            //    };
+            //    var ediConfig = new ExtAndCustom
+            //    {
+            //        ConfigurationName = "EDI",
+            //        Extended = ediExt,
+            //    };
 
-            var aaExt = new List<string>
-            {
-                "AutomationAgent",
-                "AutomationAgentService"
-            };
-            var aaConfig = new ExtAndCustom
-            {
-                ConfigurationName = "AA",
-                Extended = aaExt,
-            };
+            //    var aaExt = new List<string>
+            //    {
+            //        "AutomationAgent",
+            //        "AutomationAgentService"
+            //    };
+            //    var aaConfig = new ExtAndCustom
+            //    {
+            //        ConfigurationName = "AA",
+            //        Extended = aaExt,
+            //    };
 
-            var intExt = new List<string>
-            {
-                "AutomationAgent",
-                "AutomationAgentService",
-                "Integration",
-                "Integration.Magento2",
-                "Integration.Shopify"
-            };
-            var intConfig = new ExtAndCustom
-            {
-                ConfigurationName = "Integrations",
-                Extended = intExt,
-            };
+            //    var intExt = new List<string>
+            //    {
+            //        "AutomationAgent",
+            //        "AutomationAgentService",
+            //        "Integration",
+            //        "Integration.Magento2",
+            //        "Integration.Shopify"
+            //    };
+            //    var intConfig = new ExtAndCustom
+            //    {
+            //        ConfigurationName = "Integrations",
+            //        Extended = intExt,
+            //    };
 
-            var spCore = new List<ExtAndCustom>
-            {
-                ediConfig,
-                aaConfig,
-                intConfig
-            };
+            //    var spCore = new List<ExtAndCustom>
+            //    {
+            //        ediConfig,
+            //        aaConfig,
+            //        intConfig
+            //    };
 
-            var dcCore = new List<JustCustom>();
-            var scCore = new List<JustCustom>();
-            var webCore = new List<JustCustom>();
-            var apiCore = new List<JustCustom>();
+            //    var dcCore = new List<JustCustom>();
+            //    var scCore = new List<JustCustom>();
+            //    var webCore = new List<JustCustom>();
+            //    var apiCore = new List<JustCustom>();
 
-            var configurations = new Configurations
-            {
-                SalesPad = spCore,
-                DataCollection = dcCore,
-                ShipCenter = scCore,
-                GPWeb = webCore,
-                WebAPI = apiCore
-            };
+            //    var configurations = new Configurations
+            //    {
+            //        SalesPad = spCore,
+            //        DataCollection = dcCore,
+            //        ShipCenter = scCore,
+            //        GPWeb = webCore,
+            //        WebAPI = apiCore
+            //    };
 
-            string json = JsonConvert.SerializeObject(configurations, Formatting.Indented);
+            //    string json = JsonConvert.SerializeObject(configurations, Formatting.Indented);
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "JSON |*.json";
-            saveFileDialog.Title = "Save Core Modules File";
-            saveFileDialog.ShowDialog();
+            //    SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //    saveFileDialog.Filter = "JSON |*.json";
+            //    saveFileDialog.Title = "Save Core Modules File";
+            //    saveFileDialog.ShowDialog();
 
-            if (!String.IsNullOrWhiteSpace(saveFileDialog.FileName))
-            {
-                try
-                {
-                    File.WriteAllText(saveFileDialog.FileName, json);
-                    string message = "The file was successfully saved.";
-                    string caption = "SUCCESS";
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    MessageBoxIcon icon = MessageBoxIcon.Exclamation;
+            //    if (!String.IsNullOrWhiteSpace(saveFileDialog.FileName))
+            //    {
+            //        try
+            //        {
+            //            File.WriteAllText(saveFileDialog.FileName, json);
+            //            string message = "The file was successfully saved.";
+            //            string caption = "SUCCESS";
+            //            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            //            MessageBoxIcon icon = MessageBoxIcon.Exclamation;
 
-                    MessageBox.Show(message, caption, buttons, icon);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(String.Format("There was an error saving the file to {0}, error is as follows:\n\n{1}\n\n{2}", saveFileDialog.FileName, e.Message, e.ToString()));
-                }
-                return;
-            }
+            //            MessageBox.Show(message, caption, buttons, icon);
+            //        }
+            //        catch (Exception e)
+            //        {
+            //            MessageBox.Show(String.Format("There was an error saving the file to {0}, error is as follows:\n\n{1}\n\n{2}", saveFileDialog.FileName, e.Message, e.ToString()));
+            //        }
+            //        return;
+            //    }
         }
     }
 }

@@ -14,7 +14,6 @@ namespace EnvironmentManager4
         public static List<string> InstalledSQLServerInstanceNames()
         {
             List<string> sqlServerList = new List<string>();
-            string[] test;
             RegistryView registryView = Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32;
             using (RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
             {

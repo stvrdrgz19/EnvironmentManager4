@@ -21,6 +21,8 @@ namespace EnvironmentManager4
         public static string label = "";
         public static string output = "";
         public static bool isConfiguration = false;
+        public static List<string> extended = new List<string>();
+        public static List<string> custom = new List<string>();
         public static string product = "";
 
         private void TextPrompt_Load(object sender, EventArgs e)
@@ -44,7 +46,7 @@ namespace EnvironmentManager4
                     MessageBox.Show(message, caption, buttons, icon);
                     return;
                 }
-                //create configuration
+                Configuration.CreateConfiguration(product, output, extended, custom);
             }
             this.Close();
         }

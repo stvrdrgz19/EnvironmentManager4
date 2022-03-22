@@ -1,91 +1,62 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace EnvironmentManager4
 {
     public class Configuration
     {
-        public static List<string> GetConfigurationNames(string product)
+        public static List<string> GetConfigurationsNames(string product)
         {
-            List<string> configurationList = new List<string>();
-
-            //TARGET THE INSTALL PATH CONFIGURATION FILE
-            var json = File.ReadAllText(@"C:\Users\steve.rodriguez\Downloads\Configurations4.json");
-            var obj = JObject.Parse(json);
-            int configCount = 0;
-
-            while (true)
+            List<string> configurations = new List<string>();
+            string path = Utilities.GetConfigurationsFiles(product);
+            foreach (string file in Directory.GetFiles(path))
             {
-                try
-                {
-                    var configName = (string)obj[product][configCount]["ConfigurationName"];
-                    configurationList.Add(configName);
-                    configCount++;
-                }
-                catch
-                {
-                    break;
-                }
+                configurations.Add(Path.GetFileNameWithoutExtension(file));
             }
-            return configurationList;
+            return configurations;
         }
 
-        public static bool DoesConfigurationExist(string product, string configurationName)
+        public static bool DoesConfigurationExist(string product, string configName)
         {
-            List<string> configurationList = GetConfigurationNames(product);
-            if (configurationList.Contains(configurationName))
+            string path = Utilities.GetConfigurationsFiles(product);
+            if (File.Exists(String.Format(@"{0}\{1}.json", path, configName)))
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
-        public static int GetConfigurationIndexByName(string configurationName)
+        public static void CreateConfiguration(string product, string configurationName, List<string> extendedDlls, List<string> customDlls)
         {
-            int indx = 0;
-
-            //TARGET THE INSTALL PATH CONFIGURATION FILE
-            var json = File.ReadAllText(@"C:\Users\steve.rodriguez\Downloads\Configurations4.json");
-            var obj = JObject.Parse(json);
-
-            while (true)
+            var config = new ConfigModel
             {
-                try
-                {
-                    var configName = (string)obj["SalesPad"][indx]["ConfigurationName"];
-                    if (configName == configurationName)
-                    {
-                        return indx;
-                    }
-                    indx++;
-                }
-                catch
-                {
-                    break;
-                }
-            }
-            return indx;
+                configurationName = configurationName,
+                extendedDLLs = extendedDlls,
+                customDLLs = customDlls
+            };
+
+            string json = JsonConvert.SerializeObject(config, Formatting.Indented);
+            File.WriteAllText(String.Format(@"{0}\{1}\{2}.json", Utilities.GetConfigurationDirectory(), product, configurationName), json);
         }
 
-        public static List<string> GetConfigurationDLLs(string product, string configurationName, string customOrExt)
+        public static void DeleteConfiguration(string product, string configurationName)
         {
-            int indx = GetConfigurationIndexByName(configurationName);
-            List<string> configurationDLLList = new List<string>();
-
-            //TARGET THE INSTALL PATH CONFIGURATION FILE
-            var json = File.ReadAllText(@"C:\Users\steve.rodriguez\Downloads\Configurations4.json");
-            var obj = JObject.Parse(json);
-            var configDLL = (string)obj[product][indx][customOrExt];
-
-            return configurationDLLList;
+            try
+            {
+                File.Delete(String.Format(@"{0}\{1}\{2}.json", Utilities.GetConfigurationDirectory(), product, configurationName));
+            }
+            catch
+            {
+                MessageBox.Show(String.Format("There was an issue deleting the '{0}' configuration for the '{1}' product.", configurationName, product));
+                return;
+            }
         }
     }
 }
