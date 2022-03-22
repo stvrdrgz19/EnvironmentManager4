@@ -104,7 +104,6 @@ namespace EnvironmentManager4
             // 
             // btnRemoveConfiguration
             // 
-            this.btnRemoveConfiguration.Enabled = false;
             this.btnRemoveConfiguration.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveConfiguration.Image")));
             this.btnRemoveConfiguration.Location = new System.Drawing.Point(245, 28);
             this.btnRemoveConfiguration.Name = "btnRemoveConfiguration";
@@ -115,7 +114,6 @@ namespace EnvironmentManager4
             // 
             // btnAddConfiguration
             // 
-            this.btnAddConfiguration.Enabled = false;
             this.btnAddConfiguration.Image = ((System.Drawing.Image)(resources.GetObject("btnAddConfiguration.Image")));
             this.btnAddConfiguration.Location = new System.Drawing.Point(222, 28);
             this.btnAddConfiguration.Name = "btnAddConfiguration";
@@ -126,12 +124,13 @@ namespace EnvironmentManager4
             // 
             // cbConfigurationList
             // 
-            this.cbConfigurationList.Enabled = false;
             this.cbConfigurationList.FormattingEnabled = true;
             this.cbConfigurationList.Location = new System.Drawing.Point(7, 29);
             this.cbConfigurationList.Name = "cbConfigurationList";
             this.cbConfigurationList.Size = new System.Drawing.Size(213, 21);
             this.cbConfigurationList.TabIndex = 0;
+            this.cbConfigurationList.Text = "Select a Configuration";
+            this.cbConfigurationList.SelectedIndexChanged += new System.EventHandler(this.cbConfigurationList_SelectedIndexChanged);
             // 
             // groupBox1
             // 

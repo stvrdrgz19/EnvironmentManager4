@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="BuildModel.cs" />
     <Compile Include="ConfigModel.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="CoreModules.cs" />
     <Compile Include="DatabaseActivityLog.cs">
       <SubType>Form</SubType>
