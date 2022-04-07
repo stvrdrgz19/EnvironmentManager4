@@ -52,6 +52,14 @@ namespace EnvironmentManager4
             {
                 form.EnableButton(enable);
             }
+            if (enable)
+            {
+                form.Cursor = Cursors.Default;
+            }
+            if (!enable)
+            {
+                form.Cursor = Cursors.WaitCursor;
+            }
         }
 
         private void EnableButton(bool enable)
@@ -90,12 +98,15 @@ namespace EnvironmentManager4
             btnInstallProduct.Enabled = enable;
         }
 
-        public void Reload()
+        public void Reload(bool settingsChange = false)
         {
             cbDatabaseList.Text = "Select a Database Backup";
             LoadDatabaseList();
             LoadDatabaseDescription(cbDatabaseList.Text);
-            DetermineMode();
+            if (settingsChange)
+            {
+                DetermineMode();
+            }
         }
 
         private void EnableSQLControls(bool enable)
@@ -307,7 +318,7 @@ namespace EnvironmentManager4
                 generateConfigurationsFileToolStripMenuItem.Visible = false;
                 generateConfigurationsFileWithNullsToolStripMenuItem.Visible = false;
             }
-            Reload();
+            Reload(true);
             LoadGPInstalls();
             tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();
             tbSPVPNIPAddress.Text = Utilities.GetSalesPadVPNIPAddress();
@@ -325,7 +336,7 @@ namespace EnvironmentManager4
 
         private void SettingsClose(object sender, FormClosingEventArgs e)
         {
-            Reload();
+            Reload(true);
         }
 
         private void labelGPInstallationList_Click(object sender, EventArgs e)
@@ -698,6 +709,14 @@ namespace EnvironmentManager4
 
         private void btnBuildFolder_Click(object sender, EventArgs e)
         {
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                foreach (Control c in this.Controls)
+                {
+                    MessageBox.Show(c.Name);
+                }
+                return;
+            }
             string product = cbProductList.Text;
             string version = cbSPGPVersion.Text;
             string buildPath = "";
@@ -811,7 +830,8 @@ namespace EnvironmentManager4
         {
             if (!String.IsNullOrWhiteSpace(ListAndButtonForm.output))
             {
-                DatabaseManagement.ResetDatabaseVersion(ListAndButtonForm.output);
+                SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+                DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), ListAndButtonForm.output);
             }
             return;
         }

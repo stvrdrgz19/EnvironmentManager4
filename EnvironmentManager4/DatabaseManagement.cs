@@ -14,11 +14,11 @@ namespace EnvironmentManager4
 {
     public class DatabaseManagement
     {
-        public static void ResetDatabaseVersion(string database = "TWO")
+        public static void ResetDatabaseVersion(string username, string password, string database = "TWO")
         {
             string script = String.Format("USE {0} EXEC dbo.sppResetDatabase", database);
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID=sa;Password=sa;", settingsModel.DbManagement.SQLServer));
+            SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settingsModel.DbManagement.Connection, username, password));
             SqlDataAdapter sqlAdapter = new SqlDataAdapter(script, sqlCon);
             DataTable dataTable = new DataTable();
             try
@@ -58,7 +58,7 @@ namespace EnvironmentManager4
             Form1.EnableDBControls(false);
 
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.SQLServer))
+            if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
             {
                 MessageBox.Show("SQL Server/Databases aren't configured in Settings. Please ensure a SQL Server connection is established and databases are selected in Settings.");
                 return;
@@ -82,7 +82,7 @@ namespace EnvironmentManager4
 
                 try
                 {
-                    SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID=sa;Password=sa;", settingsModel.DbManagement.SQLServer));
+                    SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settingsModel.DbManagement.Connection, settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword))));
                     SqlDataAdapter restoreScript = new SqlDataAdapter(script, sqlCon);
                     DataTable restoreTable = new DataTable();
                     restoreScript.Fill(restoreTable);
@@ -153,7 +153,7 @@ namespace EnvironmentManager4
                 return;
             }
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.SQLServer))
+            if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
             {
                 MessageBox.Show("SQL Server/Databases aren't configured in Settings. Please ensure a SQL Server connection is established and databases are selected in Settings.");
                 return;
@@ -162,7 +162,7 @@ namespace EnvironmentManager4
             {
                 string script = String.Format(@"BACKUP DATABASE {0} TO DISK='{1}\{2}\{0}.bak' WITH INIT", databaseFile, settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
 
-                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID=sa;Password=sa;", settingsModel.DbManagement.SQLServer));
+                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settingsModel.DbManagement.Connection, settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword))));
                 SqlDataAdapter newDBScript = new SqlDataAdapter(script, sqlCon);
                 DataTable newDBTable = new DataTable();
                 try

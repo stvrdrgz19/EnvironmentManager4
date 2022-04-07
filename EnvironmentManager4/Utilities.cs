@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Security;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -32,6 +34,7 @@ namespace EnvironmentManager4
         {
             return Environment.CurrentDirectory + @"\Files\Settings.json";
             //return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+            //return @"C:\Users\steve.rodriguez\Desktop\test\EnvMgr Settings\Settings.json";
         }
 
         public static string GetInstallerFolder()
@@ -214,13 +217,17 @@ namespace EnvironmentManager4
         public static void CreateDefaultSettingsFile()
         {
             List<string> dbList = new List<string>();
+            List<ConnectionList> connectionList = new List<ConnectionList>();
 
             var dbManagement = new DbManagement
             {
                 DatabaseBackupDirectory = "",
-                SQLServer = "",
+                Connection = "",
+                ConnectionsList = connectionList,
+                SQLServerUserName = "",
+                SQLServerPassword = "",
                 Databases = dbList,
-                LockedIn = false
+                Connected = false
             };
 
             var buildManagement = new BuildManagement
@@ -511,6 +518,54 @@ namespace EnvironmentManager4
             //        }
             //        return;
             //    }
+        }
+
+        //=======================================================[ ENCRYPTION ]========================================================
+        static byte[] entropy = Encoding.Unicode.GetBytes("SaLtY bOy 6970 ePiC");
+
+        public static string EncryptString(SecureString input)
+        {
+            byte[] encryptedData = ProtectedData.Protect(Encoding.Unicode.GetBytes(ToInsecureString(input)), entropy, DataProtectionScope.CurrentUser);
+            return Convert.ToBase64String(encryptedData);
+        }
+
+        public static SecureString DecryptString(string encryptedData)
+        {
+            try
+            {
+                byte[] decryptedData = ProtectedData.Unprotect(Convert.FromBase64String(encryptedData), entropy, DataProtectionScope.CurrentUser);
+                return ToSecureString(Encoding.Unicode.GetString(decryptedData));
+            }
+            catch
+            {
+                return new SecureString();
+            }
+        }
+
+        public static SecureString ToSecureString(string input)
+        {
+            SecureString secure = new SecureString();
+            foreach (char c in input)
+            {
+                secure.AppendChar(c);
+            }
+            secure.MakeReadOnly();
+            return secure;
+        }
+
+        public static string ToInsecureString(SecureString input)
+        {
+            string returnValue = string.Empty;
+            IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(input);
+            try
+            {
+                returnValue = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
+            }
+            finally
+            {
+                System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
+            }
+            return returnValue;
         }
     }
 }

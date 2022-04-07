@@ -1,9 +1,12 @@
 {
   "DbManagement": {
     "DatabaseBackupDirectory": "",
-    "SQLServer": "",
+    "Connection": "",
+    "ConnectionsList": [],
+    "SQLServerUserName": "",
+    "SQLServerPassword": "",
     "Databases": [],
-    "LockedIn": false
+    "Connected": false
   },
   "BuildManagement": {
     "SalesPadx86Directory": "C:\\Program Files (x86)\\SalesPad.Desktop",

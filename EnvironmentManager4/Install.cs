@@ -190,6 +190,9 @@ namespace EnvironmentManager4
 
         public void InstallBuild(string installPath, List<string> extendedModules, List<string> customModules, bool launchAfterInstall, bool openInstallFolder, bool runDatabaseUpdate, bool resetDatabaseVersion)
         {
+            //start the busy cursor
+            this.Cursor = Cursors.WaitCursor;
+
             //Disable Install button on form1.
             Form1.EnableInstallButton(false);
 
@@ -269,16 +272,17 @@ namespace EnvironmentManager4
             //  DLL INSTALL END
             //==========================================================================================================================================================================================
 
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
             if (resetDatabaseVersion)
             {
-                DatabaseManagement.ResetDatabaseVersion();
+                DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)));
             }
 
             if (runDatabaseUpdate)
             {
                 if (!resetDatabaseVersion)
                 {
-                    DatabaseManagement.ResetDatabaseVersion();
+                    DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)));
                 }
                 Process dbUpdate = new Process();
                 dbUpdate.StartInfo.FileName = installPath + @"\SalesPad.exe";
@@ -287,6 +291,7 @@ namespace EnvironmentManager4
                 dbUpdate.Start();
                 dbUpdate.WaitForExit();
             }
+            this.Cursor = Cursors.Default;
 
             if (openInstallFolder)
             {

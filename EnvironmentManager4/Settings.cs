@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +20,7 @@ namespace EnvironmentManager4
         public Settings()
         {
             InitializeComponent();
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
         }
 
         public static string startingDatabaseBackupDirectory;
@@ -31,38 +33,51 @@ namespace EnvironmentManager4
         public static string startingWebAPIDirectory;
         public static string startingMode;
         public static string startingSQLServer;
+        public static string startingConnection;
+        public static List<string> startingConnectionsList;
+        public static string startingSQLServerUsername;
+        public static string startingSQLServerPassword;
+        public static bool startingRememberPassword;
         public static List<string> startingDatabases;
-        public static bool startingLocked;
+        public static bool connected;
+        public static bool startingIsConnected;
+        public static List<ConnectionList> connectionsInMemory = new List<ConnectionList>();
+        public static bool overrideClose = false;
 
         public void LoadSettings()
         {
             try
             {
+                //Clear fields
+                cbConnections.Items.Clear();
+                lbDatabases.Items.Clear();
+
                 SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+
+                //==============================================[ DATABASE MANAGEMENT SETTINGS ]===============================================
                 tbdatabaseBackupDirectory.Text = settingsModel.DbManagement.DatabaseBackupDirectory;
-                tbSQLServer.Text = settingsModel.DbManagement.SQLServer;
+                cbConnections.Text = settingsModel.DbManagement.Connection;
+
+                //Loading the array of connections
+                //Adding the connection name of each connection to the list
+                List<ConnectionList> connectionsLists = new List<ConnectionList>();
+                connectionsLists.AddRange(settingsModel.DbManagement.ConnectionsList);
+                connectionsInMemory.AddRange(settingsModel.DbManagement.ConnectionsList);
+                foreach (ConnectionList conn in connectionsLists)
+                {
+                    cbConnections.Items.Add(conn.ConnectionName);
+                }
+
+                tbSQLServerUN.Text = settingsModel.DbManagement.SQLServerUserName;
+                tbSQLServerPW.Text = Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword));
                 foreach (string item in settingsModel.DbManagement.Databases)
                 {
                     lbDatabases.Items.Add(item);
                 }
-                if (settingsModel.DbManagement.LockedIn)
-                {
-                    cbLocked.Checked = true;
-                    tbSQLServer.Enabled = false;
-                    lbDatabases.Enabled = true;
-                    btnAdd.Enabled = true;
-                    btnRemove.Enabled = true;
-                }
-                else
-                {
-                    cbLocked.Checked = false;
-                    tbSQLServer.Enabled = true;
-                    lbDatabases.Enabled = false;
-                    btnAdd.Enabled = false;
-                    btnRemove.Enabled = false;
-                    lbDatabases.Items.Clear();
-                }
 
+                Connect(settingsModel.DbManagement.Connected);
+
+                //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
                 tbSalesPadx86Directory.Text = settingsModel.BuildManagement.SalesPadx86Directory;
                 tbSalesPadx64Directory.Text = settingsModel.BuildManagement.SalesPadx64Directory;
                 tbDataCollectionDirectory.Text = settingsModel.BuildManagement.DataCollectionDirectory;
@@ -70,6 +85,8 @@ namespace EnvironmentManager4
                 tbShipCenterDirectory.Text = settingsModel.BuildManagement.ShipCenterDirectory;
                 tbGPWebDirectory.Text = settingsModel.BuildManagement.GPWebDirectory;
                 tbWebAPIDirectory.Text = settingsModel.BuildManagement.WebAPIDirectory;
+
+                //=====================================================[ OTHER SETTINGS ]======================================================
                 cbMode.Text = settingsModel.Other.Mode;
                 SetStartingValues();
             }
@@ -79,17 +96,52 @@ namespace EnvironmentManager4
             }
         }
 
+        public void Connect(bool tf)
+        {
+            switch(tf)
+            {
+                case true:
+                    connected = true;
+                    btnConnect.Text = "Disconnect";
+                    btnDeleteConnection.Enabled = false;
+                    btnToggleVisibility.Enabled = false;
+                    tf = false;
+                    break;
+                case false:
+                    connected = false;
+                    btnConnect.Text = "Connect";
+                    btnDeleteConnection.Enabled = true;
+                    btnToggleVisibility.Enabled = true;
+                    tf = true;
+                    break;
+            }
+            cbConnections.Enabled = tf;
+            tbSQLServerUN.Enabled = tf;
+            tbSQLServerPW.Enabled = tf;
+        }
+
         private void SetStartingValues()
         {
+            //==============================================[ DATABASE MANAGEMENT SETTINGS ]===============================================
+            startingDatabaseBackupDirectory = tbdatabaseBackupDirectory.Text;
+            startingConnection = cbConnections.Text;
+            List<string> connections = new List<string>();
+            foreach (string conn in cbConnections.Items)
+            {
+                connections.Add(conn);
+            }
+            startingConnectionsList = connections;
+            startingSQLServerUsername = tbSQLServerUN.Text;
+            startingSQLServerPassword = tbSQLServerPW.Text;
+            startingIsConnected = connected;
             List<string> dbs = new List<string>();
             foreach (string item in lbDatabases.Items)
             {
                 dbs.Add(item);
             }
-            startingDatabaseBackupDirectory = tbdatabaseBackupDirectory.Text;
-            startingSQLServer = tbSQLServer.Text;
             startingDatabases = dbs;
-            startingLocked = cbLocked.Checked;
+
+            //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
             startingSalesPadx86Directory = tbSalesPadx86Directory.Text;
             startingSalesPadx64Directory = tbSalesPadx64Directory.Text;
             startingDataCollectionDirectory = tbDataCollectionDirectory.Text;
@@ -97,6 +149,8 @@ namespace EnvironmentManager4
             startingShipCenterDirectory = tbShipCenterDirectory.Text;
             startingGPWebDirectory = tbGPWebDirectory.Text;
             startingWebAPIDirectory = tbWebAPIDirectory.Text;
+
+            //=====================================================[ OTHER SETTINGS ]======================================================
             startingMode = cbMode.Text;
         }
 
@@ -107,10 +161,13 @@ namespace EnvironmentManager4
                 List<string> unsavedChanges = GetUnsavedChanges();
                 if (unsavedChanges.Count > 0)
                 {
+                    //Check if the Settings file exists
                     if (File.Exists(Utilities.GetSettingsFile()))
                     {
                         File.Delete(Utilities.GetSettingsFile());
                     }
+
+                    //Gets the list of databases
                     List<string> dbList = new List<string>();
                     foreach (string item in lbDatabases.Items)
                     {
@@ -120,9 +177,12 @@ namespace EnvironmentManager4
                     var dbManagement = new DbManagement
                     {
                         DatabaseBackupDirectory = tbdatabaseBackupDirectory.Text,
-                        SQLServer = tbSQLServer.Text,
+                        Connection = cbConnections.Text,
+                        ConnectionsList = connectionsInMemory,
+                        SQLServerUserName = tbSQLServerUN.Text,
+                        SQLServerPassword = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text)),
                         Databases = dbList,
-                        LockedIn = cbLocked.Checked
+                        Connected = connected
                     };
 
                     var buildManagement = new BuildManagement
@@ -150,9 +210,11 @@ namespace EnvironmentManager4
 
                     string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
                     File.WriteAllText(Utilities.GetSettingsFile(), json);
-                    SetStartingValues();
+                    connectionsInMemory.Clear();
+                    LoadSettings();
                     //https://stackoverflow.com/questions/55981217/serialize-a-nested-object-json-net
                 }
+                unsavedChanges.Clear();
             }
             catch (Exception e)
             {
@@ -163,28 +225,49 @@ namespace EnvironmentManager4
         public List<string> GetUnsavedChanges()
         {
             List<string> unsavedChanges = new List<string>();
+            //==============================================[ DATABASE MANAGEMENT SETTINGS ]===============================================
+            if (startingDatabaseBackupDirectory != tbdatabaseBackupDirectory.Text)
+            {
+                unsavedChanges.Add("DatabaseBackupDirectory");
+            }
+            if (startingConnection != cbConnections.Text.ToString())
+            {
+                unsavedChanges.Add("Connection");
+            }
+            List<string> connectionList = new List<string>();
+            foreach (string conn in cbConnections.Items)
+            {
+                connectionList.Add(conn);
+            }
+            bool areConnectionsEqual = Enumerable.SequenceEqual(startingConnectionsList, connectionList);
+            if (!areConnectionsEqual)
+            {
+                unsavedChanges.Add("Connections");
+            }
+            if (startingSQLServerUsername != tbSQLServerUN.Text)
+            {
+                unsavedChanges.Add("SQLServerUserName");
+            }
+            if (startingSQLServerPassword != tbSQLServerPW.Text)
+            {
+                unsavedChanges.Add("SQLServerPassword");
+            }
+            if (startingIsConnected != connected)
+            {
+                unsavedChanges.Add("Connected");
+            }
             List<string> dbs = new List<string>();
             foreach (string item in lbDatabases.Items)
             {
                 dbs.Add(item);
             }
-            if (startingDatabaseBackupDirectory != tbdatabaseBackupDirectory.Text)
-            {
-                unsavedChanges.Add("DatabaseBackupDirectory");
-            }
-            if (startingSQLServer != tbSQLServer.Text)
-            {
-                unsavedChanges.Add("SQLServer");
-            }
-            bool isEqual = Enumerable.SequenceEqual(startingDatabases, dbs);
-            if (!isEqual)
+            bool areDBsEqual = Enumerable.SequenceEqual(startingDatabases, dbs);
+            if (!areDBsEqual)
             {
                 unsavedChanges.Add("Databases");
             }
-            if (startingLocked != cbLocked.Checked)
-            {
-                unsavedChanges.Add("LockedIn");
-            }
+
+            //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
             if (startingSalesPadx86Directory != tbSalesPadx86Directory.Text)
             {
                 unsavedChanges.Add("SalesPadx86Directory");
@@ -213,6 +296,8 @@ namespace EnvironmentManager4
             {
                 unsavedChanges.Add("WebAPIDirectory");
             }
+
+            //=====================================================[ OTHER SETTINGS ]======================================================
             if (startingMode != cbMode.Text)
             {
                 unsavedChanges.Add("Mode");
@@ -262,6 +347,53 @@ namespace EnvironmentManager4
             {
                 ToggleMode(false);
             }
+        }
+
+        public bool DoesConnectionExist(string connectionName)
+        {
+            List<string> connectionList = new List<string>();
+            foreach (string connection in cbConnections.Items)
+            {
+                connectionList.Add(connection);
+            }
+            if (connectionList.Contains(connectionName))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void ConnectToSQLDatabase()
+        {
+            string sqlServer = cbConnections.Text;
+            string script = @"SELECT name FROM master.dbo.sysdatabases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb')";
+            try
+            {
+                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID=sa;Password=sa;", sqlServer));
+                var sqlQuery = sqlCon.Query<string>(script).AsList();
+                lbDatabases.Items.Clear();
+                foreach (string database in sqlQuery)
+                {
+                    lbDatabases.Items.Add(database);
+                }
+            }
+            catch (Exception sqlError)
+            {
+                MessageBox.Show(String.Format("There was an error retrieveing existing databases:\n\n{0}\n\n{1}", sqlError.Message, sqlError.ToString()));
+            }
+        }
+
+        public bool AreThereUnsavedChanges()
+        {
+            List<string> unsavedChanges = GetUnsavedChanges();
+            if (unsavedChanges.Count > 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         private void Settings_Load(object sender, EventArgs e)
@@ -327,77 +459,7 @@ namespace EnvironmentManager4
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            List<string> unsavedChanges = GetUnsavedChanges();
-            if (unsavedChanges.Count > 0)
-            {
-                string message = "There are unsaved changes. Do you want to save these changes?";
-                string caption = "UNSAVED CHANGES";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNoCancel;
-                MessageBoxIcon icon = MessageBoxIcon.Question;
-                DialogResult result;
-
-                result = MessageBox.Show(message, caption, buttons, icon);
-                if (result == DialogResult.Yes)
-                {
-                    SaveSettings();
-                }
-                if (result == DialogResult.No)
-                {
-                    this.Close();
-                }
-                if (result == DialogResult.Cancel)
-                {
-                    return;
-                }
-            }
             this.Close();
-            return;
-        }
-
-        private void cbLocked_CheckedChanged(object sender, EventArgs e)
-        {
-            if (tbSQLServer.Enabled)
-            {
-                tbSQLServer.Enabled = false;
-                lbDatabases.Enabled = true;
-                btnAdd.Enabled = true;
-                btnRemove.Enabled = true;
-            }
-            else
-            {
-                tbSQLServer.Enabled = true;
-                lbDatabases.Enabled = false;
-                btnAdd.Enabled = false;
-                btnRemove.Enabled = false;
-                lbDatabases.Items.Clear();
-            }
-        }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            string sqlServer = tbSQLServer.Text;
-            string script = @"SELECT name FROM master.dbo.sysdatabases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb')";
-            try
-            {
-                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID=sa;Password=sa;", sqlServer));
-                var sqlQuery = sqlCon.Query<string>(script).AsList();
-                lbDatabases.Items.Clear();
-                foreach (string database in sqlQuery)
-                {
-                    lbDatabases.Items.Add(database);
-                }
-            }
-            catch (Exception sqlError)
-            {
-                MessageBox.Show(String.Format("There was an error retrieveing existing databases:\n\n{0}\n\n{1}", sqlError.Message, sqlError.ToString()));
-            }
-            return;
-        }
-
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            int indx = lbDatabases.SelectedIndex;
-            lbDatabases.Items.RemoveAt(indx);
             return;
         }
 
@@ -405,6 +467,142 @@ namespace EnvironmentManager4
         {
             ToggleModeExecute();
             return;
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            if (connected)
+            {
+                //Disconnecting...
+                Connect(false);
+            }
+            else
+            {
+                //Connecting...
+                //Add new connection (Name + un/pw) to the ConnectionList list
+                Connect(true);
+                ConnectToSQLDatabase();
+
+                //Check if the connection exists - stop if it does
+                if (DoesConnectionExist(cbConnections.Text))
+                {
+                    return;
+                }
+
+                //Place the current connection info into a ConnectionList class
+                ConnectionList conn = new ConnectionList();
+                conn.ConnectionName = cbConnections.Text;
+                conn.ConnectionUN = tbSQLServerUN.Text;
+                conn.ConnectionPW = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text));
+
+                //Add the new connection to the list to be saved
+                connectionsInMemory.Add(conn);
+
+                //Add the new connection name to the combobox
+                cbConnections.Items.Add(cbConnections.Text);
+            }
+            return;
+        }
+
+        private void cbConnections_SelectedIndexChanged(object sender, EventArgs e) 
+        {
+            string selectedConnection = cbConnections.Text;
+            foreach (ConnectionList conn in connectionsInMemory)
+            {
+                if (selectedConnection == conn.ConnectionName)
+                {
+                    tbSQLServerUN.Text = conn.ConnectionUN;
+                    tbSQLServerPW.Text = conn.ConnectionPW;
+                }
+            }
+            return;
+        }
+
+        private void btnReload_Click(object sender, EventArgs e)
+        {
+            ConnectToSQLDatabase();
+            return;
+        }
+
+        private void btnRemove_Click_1(object sender, EventArgs e)
+        {
+            int indx = lbDatabases.SelectedIndex;
+            lbDatabases.Items.RemoveAt(indx);
+            return;
+        }
+
+        private void btnDeleteConnection_Click(object sender, EventArgs e)
+        {
+            string selectedConnection = cbConnections.Text;
+            int count = connectionsInMemory.Count();
+            var json = File.ReadAllText(Utilities.GetSettingsFile());
+            var obj = JObject.Parse(json);
+
+            for (int i = 0; i < count; i++)
+            {
+                var connectionName = (string)obj["DbManagement"]["ConnectionsList"][i]["ConnectionName"];
+                if (connectionName == selectedConnection)
+                {
+                    connectionsInMemory.RemoveAt(i);
+                    cbConnections.Items.RemoveAt(i);
+                    cbConnections.Text = "";
+                    tbSQLServerUN.Text = "";
+                    tbSQLServerPW.Text = "";
+                    break;
+                }
+            }
+            return;
+        }
+
+        private void btnToggleVisibility_Click(object sender, EventArgs e)
+        {
+            if (btnToggleVisibility.Text == "---")
+            {
+                tbSQLServerPW.UseSystemPasswordChar = false;
+                btnToggleVisibility.Text = "0";
+                return;
+            }
+            else
+            {
+                tbSQLServerPW.UseSystemPasswordChar = true;
+                btnToggleVisibility.Text = "---";
+                return;
+            }
+        }
+
+        private void FormIsClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!overrideClose)
+            {
+                if (AreThereUnsavedChanges())
+                {
+                    string message = "There are unsaved changes. Do you want to save these changes?";
+                    string caption = "UNSAVED CHANGES";
+                    MessageBoxButtons buttons = MessageBoxButtons.YesNoCancel;
+                    MessageBoxIcon icon = MessageBoxIcon.Question;
+                    DialogResult result;
+
+                    result = MessageBox.Show(message, caption, buttons, icon);
+                    if (result == DialogResult.Yes)
+                    {
+                        SaveSettings();
+                        overrideClose = true;
+                        return;
+                    }
+                    if (result == DialogResult.No)
+                    {
+                        overrideClose = true;
+                        return;
+                    }
+                    if (result == DialogResult.Cancel)
+                    {
+                        overrideClose = true;
+                        e.Cancel = true;
+                        return;
+                    }
+                }
+            }
+            overrideClose = false;
         }
     }
 }
