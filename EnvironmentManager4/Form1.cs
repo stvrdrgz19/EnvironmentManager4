@@ -52,6 +52,14 @@ namespace EnvironmentManager4
             {
                 form.EnableButton(enable);
             }
+            if (enable)
+            {
+                form.Cursor = Cursors.Default;
+            }
+            if (!enable)
+            {
+                form.Cursor = Cursors.WaitCursor;
+            }
         }
 
         private void EnableButton(bool enable)
@@ -90,12 +98,15 @@ namespace EnvironmentManager4
             btnInstallProduct.Enabled = enable;
         }
 
-        public void Reload()
+        public void Reload(bool settingsChange = false)
         {
             cbDatabaseList.Text = "Select a Database Backup";
             LoadDatabaseList();
             LoadDatabaseDescription(cbDatabaseList.Text);
-            DetermineMode();
+            if (settingsChange)
+            {
+                DetermineMode();
+            }
         }
 
         private void EnableSQLControls(bool enable)
@@ -281,7 +292,7 @@ namespace EnvironmentManager4
         {
             cbSPGPVersion.Text = "x86";
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            if (settingsModel.Other.Mode == "Standard")
+            if (settingsModel.Other.Mode == "Standard" || settingsModel.Other.Mode == "Kyle")
             {
                 cbProductList.Text = "Select a Product";
                 cbProductList.Enabled = true;
@@ -307,11 +318,15 @@ namespace EnvironmentManager4
                 generateConfigurationsFileToolStripMenuItem.Visible = false;
                 generateConfigurationsFileWithNullsToolStripMenuItem.Visible = false;
             }
-            Reload();
+            Reload(true);
             LoadGPInstalls();
             tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();
             tbSPVPNIPAddress.Text = Utilities.GetSalesPadVPNIPAddress();
             LoadSQLServerListView();
+            foreach (string product in productList)
+            {
+                cbProductList.Items.Add(product);
+            }
             return;
         }
 
@@ -325,7 +340,7 @@ namespace EnvironmentManager4
 
         private void SettingsClose(object sender, FormClosingEventArgs e)
         {
-            Reload();
+            Reload(true);
         }
 
         private void labelGPInstallationList_Click(object sender, EventArgs e)
@@ -454,6 +469,12 @@ namespace EnvironmentManager4
 
         private void btnDBBackupFolder_Click(object sender, EventArgs e)
         {
+            //if (Control.ModifierKeys == Keys.Shift)
+            //{
+            //    TestTextPrompt test = new TestTextPrompt();
+            //    test.Show();
+            //    return;
+            //}
             string message = "Are you sure you want to open the database backup folder?";
             string caption = "CONFIRM";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
@@ -649,34 +670,6 @@ namespace EnvironmentManager4
 
             string productPath = Utilities.GetProductInstallPath(selectedProduct, selectedVersion);
 
-            //string productPath = "";
-            //switch (selectedProduct)
-            //{
-            //    case "SalesPad GP":
-            //        switch (selectedVersion)
-            //        {
-            //            case "x86":
-            //                productPath = settingsModel.BuildManagement.SalesPadx86Directory;
-            //                break;
-            //            case "x64":
-            //                productPath = settingsModel.BuildManagement.SalesPadx64Directory;
-            //                break;
-            //        }
-            //        break;
-            //    case "DataCollection":
-            //        productPath = settingsModel.BuildManagement.DataCollectionDirectory;
-            //        break;
-            //    case "Inventory Manager":
-            //        productPath = settingsModel.BuildManagement.DataCollectionDirectory;
-            //        break;
-            //    case "SalesPad Mobile":
-            //        productPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
-            //        break;
-            //    case "ShipCenter":
-            //        productPath = settingsModel.BuildManagement.ShipCenterDirectory;
-            //        break;
-            //}
-
             if (!Directory.Exists(productPath))
             {
                 MessageBox.Show(String.Format("The Settings defined path for '{0}', '{1}' does not exist. There are either no builds to launch, or Settings needs reconfigured.", selectedProduct, productPath));
@@ -698,6 +691,14 @@ namespace EnvironmentManager4
 
         private void btnBuildFolder_Click(object sender, EventArgs e)
         {
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                foreach (Control c in this.Controls)
+                {
+                    MessageBox.Show(c.Name);
+                }
+                return;
+            }
             string product = cbProductList.Text;
             string version = cbSPGPVersion.Text;
             string buildPath = "";
@@ -811,7 +812,8 @@ namespace EnvironmentManager4
         {
             if (!String.IsNullOrWhiteSpace(ListAndButtonForm.output))
             {
-                DatabaseManagement.ResetDatabaseVersion(ListAndButtonForm.output);
+                SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+                DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), ListAndButtonForm.output);
             }
             return;
         }

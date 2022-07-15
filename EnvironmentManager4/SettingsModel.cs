@@ -16,9 +16,12 @@ namespace EnvironmentManager4
     public class DbManagement
     {
         public string DatabaseBackupDirectory { get; set; }
-        public string SQLServer { get; set; }
+        public string Connection { get; set; }
+        public List<ConnectionList> ConnectionsList { get; set; }
+        public string SQLServerUserName { get; set; }
+        public string SQLServerPassword { get; set; }
         public List<string> Databases { get; set; }
-        public bool LockedIn { get; set; }
+        public bool Connected { get; set; }
     }
 
     public class BuildManagement
@@ -35,5 +38,12 @@ namespace EnvironmentManager4
     public class Other
     {
         public string Mode { get; set; }
+    }
+
+    public class ConnectionList
+    {
+        public string ConnectionName { get; set; }
+        public string ConnectionUN { get; set; }
+        public string ConnectionPW { get; set; }
     }
 }

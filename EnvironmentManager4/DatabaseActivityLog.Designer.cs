@@ -66,7 +66,7 @@ namespace EnvironmentManager4
             // chBackup
             // 
             this.chBackup.Text = "Backup";
-            this.chBackup.Width = 465;
+            this.chBackup.Width = 488;
             // 
             // DatabaseActivityLog
             // 

@@ -35,11 +35,13 @@ namespace EnvironmentManager4
                 item1.SubItems.Add(build.Product);
                 lvBuilds.Items.Add(item1);
             }
+            Utilities.ResizeListviewColumnWidth(lvBuilds, 9, 0, 467, 484);
         }
 
         private void BuildLog_Load(object sender, EventArgs e)
         {
             LoadBuildLog();
+            return;
         }
 
         private void lvBuilds_SelectedIndexChanged(object sender, EventArgs e)
@@ -62,6 +64,7 @@ namespace EnvironmentManager4
                 item1.SubItems.Add(dll.Type);
                 lvDlls.Items.Add(item1);
             }
+            Utilities.ResizeListviewColumnWidth(lvDlls, 9, 1, 228, 245);
             return;
         }
 

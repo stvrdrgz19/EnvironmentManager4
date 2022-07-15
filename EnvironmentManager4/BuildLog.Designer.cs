@@ -52,7 +52,7 @@ namespace EnvironmentManager4
             // btnLaunch
             // 
             this.btnLaunch.Enabled = false;
-            this.btnLaunch.Location = new System.Drawing.Point(364, 450);
+            this.btnLaunch.Location = new System.Drawing.Point(87, 435);
             this.btnLaunch.Name = "btnLaunch";
             this.btnLaunch.Size = new System.Drawing.Size(75, 23);
             this.btnLaunch.TabIndex = 13;
@@ -65,7 +65,7 @@ namespace EnvironmentManager4
             this.cbProduct.AutoSize = true;
             this.cbProduct.Checked = true;
             this.cbProduct.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbProduct.Location = new System.Drawing.Point(552, 454);
+            this.cbProduct.Location = new System.Drawing.Point(547, 439);
             this.cbProduct.Name = "cbProduct";
             this.cbProduct.Size = new System.Drawing.Size(90, 17);
             this.cbProduct.TabIndex = 12;
@@ -74,7 +74,7 @@ namespace EnvironmentManager4
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(2, 450);
+            this.btnRefresh.Location = new System.Drawing.Point(9, 435);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(75, 23);
             this.btnRefresh.TabIndex = 11;
@@ -85,7 +85,7 @@ namespace EnvironmentManager4
             // cbDlls
             // 
             this.cbDlls.AutoSize = true;
-            this.cbDlls.Location = new System.Drawing.Point(648, 454);
+            this.cbDlls.Location = new System.Drawing.Point(643, 439);
             this.cbDlls.Name = "cbDlls";
             this.cbDlls.Size = new System.Drawing.Size(70, 17);
             this.cbDlls.TabIndex = 10;
@@ -94,7 +94,7 @@ namespace EnvironmentManager4
             // 
             // btnCopy
             // 
-            this.btnCopy.Location = new System.Drawing.Point(724, 450);
+            this.btnCopy.Location = new System.Drawing.Point(719, 435);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(75, 23);
             this.btnCopy.TabIndex = 9;
@@ -106,7 +106,7 @@ namespace EnvironmentManager4
             // 
             this.groupBox2.Controls.Add(this.lvDlls);
             this.groupBox2.ForeColor = System.Drawing.Color.Blue;
-            this.groupBox2.Location = new System.Drawing.Point(3, 228);
+            this.groupBox2.Location = new System.Drawing.Point(3, 213);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(796, 219);
             this.groupBox2.TabIndex = 8;
@@ -123,7 +123,7 @@ namespace EnvironmentManager4
             this.lvDlls.HideSelection = false;
             this.lvDlls.Location = new System.Drawing.Point(7, 20);
             this.lvDlls.Name = "lvDlls";
-            this.lvDlls.Size = new System.Drawing.Size(783, 193);
+            this.lvDlls.Size = new System.Drawing.Size(783, 181);
             this.lvDlls.TabIndex = 0;
             this.lvDlls.UseCompatibleStateImageBehavior = false;
             this.lvDlls.View = System.Windows.Forms.View.Details;
@@ -131,7 +131,7 @@ namespace EnvironmentManager4
             // chDllName
             // 
             this.chDllName.Text = "Name";
-            this.chDllName.Width = 515;
+            this.chDllName.Width = 534;
             // 
             // chType
             // 
@@ -144,7 +144,7 @@ namespace EnvironmentManager4
             this.groupBox1.ForeColor = System.Drawing.Color.Blue;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(796, 219);
+            this.groupBox1.Size = new System.Drawing.Size(796, 207);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Builds";
@@ -162,7 +162,7 @@ namespace EnvironmentManager4
             this.lvBuilds.Location = new System.Drawing.Point(7, 20);
             this.lvBuilds.MultiSelect = false;
             this.lvBuilds.Name = "lvBuilds";
-            this.lvBuilds.Size = new System.Drawing.Size(783, 193);
+            this.lvBuilds.Size = new System.Drawing.Size(783, 181);
             this.lvBuilds.TabIndex = 0;
             this.lvBuilds.UseCompatibleStateImageBehavior = false;
             this.lvBuilds.View = System.Windows.Forms.View.Details;
@@ -171,7 +171,7 @@ namespace EnvironmentManager4
             // chPath
             // 
             this.chPath.Text = "Path";
-            this.chPath.Width = 465;
+            this.chPath.Width = 484;
             // 
             // chVersion
             // 
@@ -192,7 +192,7 @@ namespace EnvironmentManager4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 476);
+            this.ClientSize = new System.Drawing.Size(800, 460);
             this.Controls.Add(this.btnLaunch);
             this.Controls.Add(this.cbProduct);
             this.Controls.Add(this.btnRefresh);

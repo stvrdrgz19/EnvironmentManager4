@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,16 @@ namespace EnvironmentManager4
             this.EntryDate = EntryDate;
             this.Product = Product;
             this.InstallPath = InstallPath;
+        }
+
+        public void LaunchBuild()
+        {
+            Process.Start(String.Format(@"{0}\{1}", this.InstallPath, Utilities.RetrieveExe(this.Product)));
+        }
+
+        public void LaunchInstalledFolder()
+        {
+            Process.Start(this.InstallPath);
         }
     }
 }
