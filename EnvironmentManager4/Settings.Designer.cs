@@ -81,6 +81,7 @@ namespace EnvironmentManager4
             // 
             // btnExit
             // 
+            this.btnExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnExit.Location = new System.Drawing.Point(428, 529);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 23);
@@ -528,7 +529,8 @@ namespace EnvironmentManager4
             this.cbMode.FormattingEnabled = true;
             this.cbMode.Items.AddRange(new object[] {
             "Standard",
-            "SmartBear"});
+            "SmartBear",
+            "Kyle"});
             this.cbMode.Location = new System.Drawing.Point(151, 17);
             this.cbMode.Name = "cbMode";
             this.cbMode.Size = new System.Drawing.Size(349, 21);
@@ -562,7 +564,7 @@ namespace EnvironmentManager4
             this.Name = "Settings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
+            //this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
             this.Load += new System.EventHandler(this.Settings_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

@@ -136,7 +136,7 @@ namespace EnvironmentManager4
             string pathFromInstaller = installerPath.Remove(0, charCount);
             //check if smartbear mode
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            if (settingsModel.Other.Mode == "SmartBear")
+            if (settingsModel.Other.Mode == "SmartBear" || settingsModel.Other.Mode == "Kyle")
             {
                 return String.Format(@"{0} {1}", defaultPath, pathFromInstaller.Replace(@"\", " "));
             }
@@ -295,12 +295,12 @@ namespace EnvironmentManager4
 
             if (openInstallFolder)
             {
-                Process.Start(installPath);
+                build.LaunchInstalledFolder();
             }
 
             if (launchAfterInstall)
             {
-                Process.Start(String.Format(@"{0}\{1}", installPath, Utilities.RetrieveExe(product)));
+                build.LaunchBuild();
             }
             Form1.EnableInstallButton(true);
         }

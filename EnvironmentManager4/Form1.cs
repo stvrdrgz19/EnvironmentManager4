@@ -292,7 +292,7 @@ namespace EnvironmentManager4
         {
             cbSPGPVersion.Text = "x86";
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            if (settingsModel.Other.Mode == "Standard")
+            if (settingsModel.Other.Mode == "Standard" || settingsModel.Other.Mode == "Kyle")
             {
                 cbProductList.Text = "Select a Product";
                 cbProductList.Enabled = true;
@@ -323,6 +323,10 @@ namespace EnvironmentManager4
             tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();
             tbSPVPNIPAddress.Text = Utilities.GetSalesPadVPNIPAddress();
             LoadSQLServerListView();
+            foreach (string product in productList)
+            {
+                cbProductList.Items.Add(product);
+            }
             return;
         }
 
@@ -465,6 +469,12 @@ namespace EnvironmentManager4
 
         private void btnDBBackupFolder_Click(object sender, EventArgs e)
         {
+            //if (Control.ModifierKeys == Keys.Shift)
+            //{
+            //    TestTextPrompt test = new TestTextPrompt();
+            //    test.Show();
+            //    return;
+            //}
             string message = "Are you sure you want to open the database backup folder?";
             string caption = "CONFIRM";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
@@ -659,34 +669,6 @@ namespace EnvironmentManager4
             }
 
             string productPath = Utilities.GetProductInstallPath(selectedProduct, selectedVersion);
-
-            //string productPath = "";
-            //switch (selectedProduct)
-            //{
-            //    case "SalesPad GP":
-            //        switch (selectedVersion)
-            //        {
-            //            case "x86":
-            //                productPath = settingsModel.BuildManagement.SalesPadx86Directory;
-            //                break;
-            //            case "x64":
-            //                productPath = settingsModel.BuildManagement.SalesPadx64Directory;
-            //                break;
-            //        }
-            //        break;
-            //    case "DataCollection":
-            //        productPath = settingsModel.BuildManagement.DataCollectionDirectory;
-            //        break;
-            //    case "Inventory Manager":
-            //        productPath = settingsModel.BuildManagement.DataCollectionDirectory;
-            //        break;
-            //    case "SalesPad Mobile":
-            //        productPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
-            //        break;
-            //    case "ShipCenter":
-            //        productPath = settingsModel.BuildManagement.ShipCenterDirectory;
-            //        break;
-            //}
 
             if (!Directory.Exists(productPath))
             {

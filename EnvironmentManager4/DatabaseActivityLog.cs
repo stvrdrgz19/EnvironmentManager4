@@ -29,6 +29,7 @@ namespace EnvironmentManager4
                 item1.SubItems.Add(activity.Backup);
                 lvDatabaseActivityLog.Items.Add(item1);
             }
+            Utilities.ResizeListviewColumnWidth(lvDatabaseActivityLog, 15, 2, 471, 488);
         }
 
         private void DatabaseActivityLog_Load(object sender, EventArgs e)

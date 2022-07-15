@@ -148,6 +148,7 @@
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities.cs" />
+    <Compile Include="Variance.cs" />
     <EmbeddedResource Include="BuildLog.resx">
       <DependentUpon>BuildLog.cs</DependentUpon>
     </EmbeddedResource>

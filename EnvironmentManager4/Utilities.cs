@@ -32,8 +32,8 @@ namespace EnvironmentManager4
 
         public static string GetSettingsFile()
         {
-            return Environment.CurrentDirectory + @"\Files\Settings.json";
-            //return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+            //return Environment.CurrentDirectory + @"\Files\Settings.json";
+            return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
             //return @"C:\Users\steve.rodriguez\Desktop\test\EnvMgr Settings\Settings.json";
         }
 
@@ -174,6 +174,7 @@ namespace EnvironmentManager4
                                     productPath = settingsModel.BuildManagement.SalesPadx86Directory;
                                     break;
                                 case "SmartBear":
+                                case "Kyle":
                                     productPath = TrimEndOfPath(settingsModel.BuildManagement.SalesPadx86Directory);
                                     break;
                             }
@@ -566,6 +567,15 @@ namespace EnvironmentManager4
                 System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
             }
             return returnValue;
+        }
+
+        public static void ResizeListviewColumnWidth(ListView lv, int rowCount, int indx, int minW, int maxW)
+        {
+            int count = lv.Items.Count;
+            if (count > rowCount)
+                lv.Columns[indx].Width = minW;
+            else
+                lv.Columns[indx].Width = maxW;
         }
     }
 }

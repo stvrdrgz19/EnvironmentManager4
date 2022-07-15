@@ -20,49 +20,38 @@ namespace EnvironmentManager4
         public Settings()
         {
             InitializeComponent();
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
+            this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
-        public static string startingDatabaseBackupDirectory;
-        public static string startingSalesPadx86Directory;
-        public static string startingSalesPadx64Directory;
-        public static string startingDataCollectionDirectory;
-        public static string startingSalesPadMobileDirectory;
-        public static string startingShipCenterDirectory;
-        public static string startingGPWebDirectory;
-        public static string startingWebAPIDirectory;
-        public static string startingMode;
-        public static string startingSQLServer;
-        public static string startingConnection;
-        public static List<string> startingConnectionsList;
-        public static string startingSQLServerUsername;
-        public static string startingSQLServerPassword;
-        public static bool startingRememberPassword;
-        public static List<string> startingDatabases;
-        public static bool connected;
-        public static bool startingIsConnected;
+        public static SettingsModel startingSettings = new SettingsModel();
         public static List<ConnectionList> connectionsInMemory = new List<ConnectionList>();
-        public static bool overrideClose = false;
+        public static bool connectionModified = false;
+        public static bool connected;
 
-        public void LoadSettings()
+        public void LoadSettings(SettingsModel settingsModel)
         {
             try
             {
-                //Clear fields
                 cbConnections.Items.Clear();
                 lbDatabases.Items.Clear();
 
-                SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-
-                //==============================================[ DATABASE MANAGEMENT SETTINGS ]===============================================
                 tbdatabaseBackupDirectory.Text = settingsModel.DbManagement.DatabaseBackupDirectory;
                 cbConnections.Text = settingsModel.DbManagement.Connection;
 
-                //Loading the array of connections
-                //Adding the connection name of each connection to the list
                 List<ConnectionList> connectionsLists = new List<ConnectionList>();
                 connectionsLists.AddRange(settingsModel.DbManagement.ConnectionsList);
-                connectionsInMemory.AddRange(settingsModel.DbManagement.ConnectionsList);
+
+                //Need to check if connectionsInMemory already has a connection being loaded.
+                List<string> connectionNames = new List<string>();
+                foreach (ConnectionList connectionInMemory in connectionsInMemory)
+                    connectionNames.Add(connectionInMemory.ConnectionName);
+                foreach (ConnectionList connectionList in settingsModel.DbManagement.ConnectionsList)
+                {
+                    if (!connectionNames.Contains(connectionList.ConnectionName))
+                        connectionsInMemory.Add(connectionList);
+                }
+                //connectionsInMemory.AddRange(settingsModel.DbManagement.ConnectionsList);
+
                 foreach (ConnectionList conn in connectionsLists)
                 {
                     cbConnections.Items.Add(conn.ConnectionName);
@@ -96,9 +85,54 @@ namespace EnvironmentManager4
             }
         }
 
+        public SettingsModel GetSettingsValues()
+        {
+            List<string> dbList = new List<string>();
+            foreach (string item in lbDatabases.Items)
+            {
+                dbList.Add(item);
+            }
+
+            var dbManagement = new DbManagement
+            {
+                DatabaseBackupDirectory = tbdatabaseBackupDirectory.Text,
+                Connection = cbConnections.Text,
+                ConnectionsList = connectionsInMemory,
+                SQLServerUserName = tbSQLServerUN.Text,
+                SQLServerPassword = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text)),
+                Databases = dbList,
+                Connected = connected
+            };
+
+            var buildManagement = new BuildManagement
+            {
+                SalesPadx86Directory = tbSalesPadx86Directory.Text,
+                SalesPadx64Directory = tbSalesPadx64Directory.Text,
+                DataCollectionDirectory = tbDataCollectionDirectory.Text,
+                SalesPadMobileDirectory = tbSalesPadMobileDirectory.Text,
+                ShipCenterDirectory = tbShipCenterDirectory.Text,
+                GPWebDirectory = tbGPWebDirectory.Text,
+                WebAPIDirectory = tbWebAPIDirectory.Text
+            };
+
+            var other = new Other
+            {
+                Mode = cbMode.Text
+            };
+
+            var settings = new SettingsModel
+            {
+                DbManagement = dbManagement,
+                BuildManagement = buildManagement,
+                Other = other
+            };
+
+            return settings;
+        }
+
         public void Connect(bool tf)
         {
-            switch(tf)
+            switch (tf)
             {
                 case true:
                     connected = true;
@@ -122,187 +156,66 @@ namespace EnvironmentManager4
 
         private void SetStartingValues()
         {
-            //==============================================[ DATABASE MANAGEMENT SETTINGS ]===============================================
-            startingDatabaseBackupDirectory = tbdatabaseBackupDirectory.Text;
-            startingConnection = cbConnections.Text;
-            List<string> connections = new List<string>();
-            foreach (string conn in cbConnections.Items)
-            {
-                connections.Add(conn);
-            }
-            startingConnectionsList = connections;
-            startingSQLServerUsername = tbSQLServerUN.Text;
-            startingSQLServerPassword = tbSQLServerPW.Text;
-            startingIsConnected = connected;
-            List<string> dbs = new List<string>();
-            foreach (string item in lbDatabases.Items)
-            {
-                dbs.Add(item);
-            }
-            startingDatabases = dbs;
-
-            //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
-            startingSalesPadx86Directory = tbSalesPadx86Directory.Text;
-            startingSalesPadx64Directory = tbSalesPadx64Directory.Text;
-            startingDataCollectionDirectory = tbDataCollectionDirectory.Text;
-            startingSalesPadMobileDirectory = tbSalesPadMobileDirectory.Text;
-            startingShipCenterDirectory = tbShipCenterDirectory.Text;
-            startingGPWebDirectory = tbGPWebDirectory.Text;
-            startingWebAPIDirectory = tbWebAPIDirectory.Text;
-
-            //=====================================================[ OTHER SETTINGS ]======================================================
-            startingMode = cbMode.Text;
+            startingSettings = GetSettingsValues();
+            connectionModified = false;
         }
 
-        private void SaveSettings()
+        public static bool UnsavedChanges(SettingsModel currentSettings)
+        {
+            bool unsavedChanges = false;
+
+            //DBMANAGEMENT
+            DbManagement db1 = currentSettings.DbManagement;
+            DbManagement db2 = startingSettings.DbManagement;
+            var dbManagementVariances = db1.Compare(db2);
+            var dbManagementProperties = dbManagementVariances.Aggregate(string.Empty, (a, next) => $"{ a }\r\n\t{ next.PropertyName }: { next.valA } | { next.valB }");
+            if (dbManagementProperties.Count() != 0)
+                unsavedChanges = true;
+
+            //BUILDMANAGEMENT
+            BuildManagement bm1 = currentSettings.BuildManagement;
+            BuildManagement bm2 = startingSettings.BuildManagement;
+            var buildManagementVariances = bm1.Compare(bm2);
+            var buildManagementProperties = buildManagementVariances.Aggregate(string.Empty, (a, next) => $"{ a }\r\n\t{ next.PropertyName }: { next.valA } | { next.valB }");
+            if (buildManagementProperties.Count() != 0)
+                unsavedChanges = true;
+
+            //OTHER
+            Other other1 = currentSettings.Other;
+            Other other2 = startingSettings.Other;
+            var otherVariances = other1.Compare(other2);
+            var otherProperties = otherVariances.Aggregate(string.Empty, (a, next) => $"{ a }\r\n\t{ next.PropertyName }: { next.valA } | { next.valB }");
+            if (otherProperties.Count() != 0)
+                unsavedChanges = true;
+
+            //DBLIST
+            List<string> dbList1 = currentSettings.DbManagement.Databases;
+            List<string> dbList2 = startingSettings.DbManagement.Databases;
+            bool equal = dbList1.SequenceEqual(dbList2);
+            if (!equal)
+                unsavedChanges = true;
+
+            if (connectionModified)
+                unsavedChanges = true;
+
+            return unsavedChanges;
+        }
+
+        private void SaveSettings(SettingsModel settings)
         {
             try
             {
-                List<string> unsavedChanges = GetUnsavedChanges();
-                if (unsavedChanges.Count > 0)
+                if (UnsavedChanges(settings))
                 {
-                    //Check if the Settings file exists
-                    if (File.Exists(Utilities.GetSettingsFile()))
-                    {
-                        File.Delete(Utilities.GetSettingsFile());
-                    }
-
-                    //Gets the list of databases
-                    List<string> dbList = new List<string>();
-                    foreach (string item in lbDatabases.Items)
-                    {
-                        dbList.Add(item);
-                    }
-
-                    var dbManagement = new DbManagement
-                    {
-                        DatabaseBackupDirectory = tbdatabaseBackupDirectory.Text,
-                        Connection = cbConnections.Text,
-                        ConnectionsList = connectionsInMemory,
-                        SQLServerUserName = tbSQLServerUN.Text,
-                        SQLServerPassword = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text)),
-                        Databases = dbList,
-                        Connected = connected
-                    };
-
-                    var buildManagement = new BuildManagement
-                    {
-                        SalesPadx86Directory = tbSalesPadx86Directory.Text,
-                        SalesPadx64Directory = tbSalesPadx64Directory.Text,
-                        DataCollectionDirectory = tbDataCollectionDirectory.Text,
-                        SalesPadMobileDirectory = tbSalesPadMobileDirectory.Text,
-                        ShipCenterDirectory = tbShipCenterDirectory.Text,
-                        GPWebDirectory = tbGPWebDirectory.Text,
-                        WebAPIDirectory = tbWebAPIDirectory.Text
-                    };
-
-                    var other = new Other
-                    {
-                        Mode = cbMode.Text
-                    };
-
-                    var settings = new SettingsModel
-                    {
-                        DbManagement = dbManagement,
-                        BuildManagement = buildManagement,
-                        Other = other
-                    };
-
+                    SetStartingValues();
                     string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
                     File.WriteAllText(Utilities.GetSettingsFile(), json);
-                    connectionsInMemory.Clear();
-                    LoadSettings();
-                    //https://stackoverflow.com/questions/55981217/serialize-a-nested-object-json-net
                 }
-                unsavedChanges.Clear();
             }
             catch (Exception e)
             {
                 MessageBox.Show(String.Format("There was an issue attempting to save settings. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
             }
-        }
-
-        public List<string> GetUnsavedChanges()
-        {
-            List<string> unsavedChanges = new List<string>();
-            //==============================================[ DATABASE MANAGEMENT SETTINGS ]===============================================
-            if (startingDatabaseBackupDirectory != tbdatabaseBackupDirectory.Text)
-            {
-                unsavedChanges.Add("DatabaseBackupDirectory");
-            }
-            if (startingConnection != cbConnections.Text.ToString())
-            {
-                unsavedChanges.Add("Connection");
-            }
-            List<string> connectionList = new List<string>();
-            foreach (string conn in cbConnections.Items)
-            {
-                connectionList.Add(conn);
-            }
-            bool areConnectionsEqual = Enumerable.SequenceEqual(startingConnectionsList, connectionList);
-            if (!areConnectionsEqual)
-            {
-                unsavedChanges.Add("Connections");
-            }
-            if (startingSQLServerUsername != tbSQLServerUN.Text)
-            {
-                unsavedChanges.Add("SQLServerUserName");
-            }
-            if (startingSQLServerPassword != tbSQLServerPW.Text)
-            {
-                unsavedChanges.Add("SQLServerPassword");
-            }
-            if (startingIsConnected != connected)
-            {
-                unsavedChanges.Add("Connected");
-            }
-            List<string> dbs = new List<string>();
-            foreach (string item in lbDatabases.Items)
-            {
-                dbs.Add(item);
-            }
-            bool areDBsEqual = Enumerable.SequenceEqual(startingDatabases, dbs);
-            if (!areDBsEqual)
-            {
-                unsavedChanges.Add("Databases");
-            }
-
-            //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
-            if (startingSalesPadx86Directory != tbSalesPadx86Directory.Text)
-            {
-                unsavedChanges.Add("SalesPadx86Directory");
-            }
-            if (startingSalesPadx64Directory != tbSalesPadx64Directory.Text)
-            {
-                unsavedChanges.Add("SalesPadx64Directory");
-            }
-            if (startingDataCollectionDirectory != tbDataCollectionDirectory.Text)
-            {
-                unsavedChanges.Add("DataCollectionDirectory");
-            }
-            if (startingSalesPadMobileDirectory != tbSalesPadMobileDirectory.Text)
-            {
-                unsavedChanges.Add("SalesPadMobileDirectory");
-            }
-            if (startingShipCenterDirectory != tbShipCenterDirectory.Text)
-            {
-                unsavedChanges.Add("ShipCenterDirectory");
-            }
-            if (startingGPWebDirectory != tbGPWebDirectory.Text)
-            {
-                unsavedChanges.Add("GPWebDirectory");
-            }
-            if (startingWebAPIDirectory != tbWebAPIDirectory.Text)
-            {
-                unsavedChanges.Add("WebAPIDirectory");
-            }
-
-            //=====================================================[ OTHER SETTINGS ]======================================================
-            if (startingMode != cbMode.Text)
-            {
-                unsavedChanges.Add("Mode");
-            }
-            return unsavedChanges;
         }
 
         public static string GetDirectory(string selectedPath = @"C:\")
@@ -339,7 +252,7 @@ namespace EnvironmentManager4
 
         public void ToggleModeExecute()
         {
-            if (cbMode.Text == "Standard")
+            if (cbMode.Text == "Standard" || cbMode.Text == "Kyle")
             {
                 ToggleMode(true);
             }
@@ -368,17 +281,17 @@ namespace EnvironmentManager4
 
         private void ConnectToSQLDatabase()
         {
-            string sqlServer = cbConnections.Text;
             string script = @"SELECT name FROM master.dbo.sysdatabases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb')";
             try
             {
-                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID=sa;Password=sa;", sqlServer));
+                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", cbConnections.Text, tbSQLServerUN.Text, tbSQLServerPW.Text));
                 var sqlQuery = sqlCon.Query<string>(script).AsList();
                 lbDatabases.Items.Clear();
                 foreach (string database in sqlQuery)
                 {
                     lbDatabases.Items.Add(database);
                 }
+                Connect(true);
             }
             catch (Exception sqlError)
             {
@@ -386,19 +299,10 @@ namespace EnvironmentManager4
             }
         }
 
-        public bool AreThereUnsavedChanges()
-        {
-            List<string> unsavedChanges = GetUnsavedChanges();
-            if (unsavedChanges.Count > 0)
-            {
-                return true;
-            }
-            return false;
-        }
-
         private void Settings_Load(object sender, EventArgs e)
         {
-            LoadSettings();
+            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            LoadSettings(settingsModel);
             SetStartingValues();
             ToggleModeExecute();
         }
@@ -453,7 +357,7 @@ namespace EnvironmentManager4
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveSettings();
+            SaveSettings(GetSettingsValues());
             return;
         }
 
@@ -471,6 +375,7 @@ namespace EnvironmentManager4
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
+            connectionModified = true;
             if (connected)
             {
                 //Disconnecting...
@@ -480,7 +385,6 @@ namespace EnvironmentManager4
             {
                 //Connecting...
                 //Add new connection (Name + un/pw) to the ConnectionList list
-                Connect(true);
                 ConnectToSQLDatabase();
 
                 //Check if the connection exists - stop if it does
@@ -504,7 +408,7 @@ namespace EnvironmentManager4
             return;
         }
 
-        private void cbConnections_SelectedIndexChanged(object sender, EventArgs e) 
+        private void cbConnections_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedConnection = cbConnections.Text;
             foreach (ConnectionList conn in connectionsInMemory)
@@ -512,7 +416,7 @@ namespace EnvironmentManager4
                 if (selectedConnection == conn.ConnectionName)
                 {
                     tbSQLServerUN.Text = conn.ConnectionUN;
-                    tbSQLServerPW.Text = conn.ConnectionPW;
+                    tbSQLServerPW.Text = Utilities.ToInsecureString(Utilities.DecryptString(conn.ConnectionPW));
                 }
             }
             return;
@@ -534,6 +438,19 @@ namespace EnvironmentManager4
         private void btnDeleteConnection_Click(object sender, EventArgs e)
         {
             string selectedConnection = cbConnections.Text;
+
+            string message = String.Format(@"Are you sure you want to delete the '{0}' connection?", selectedConnection);
+            string caption = "DELETE";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            MessageBoxIcon icon = MessageBoxIcon.Question;
+            DialogResult result;
+            result = MessageBox.Show(message, caption, buttons, icon);
+
+            if (result == DialogResult.No)
+            {
+                return;
+            }
+
             int count = connectionsInMemory.Count();
             var json = File.ReadAllText(Utilities.GetSettingsFile());
             var obj = JObject.Parse(json);
@@ -572,37 +489,21 @@ namespace EnvironmentManager4
 
         private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
-            if (!overrideClose)
+            SettingsModel settings = GetSettingsValues();
+            if (UnsavedChanges(settings))
             {
-                if (AreThereUnsavedChanges())
-                {
-                    string message = "There are unsaved changes. Do you want to save these changes?";
-                    string caption = "UNSAVED CHANGES";
-                    MessageBoxButtons buttons = MessageBoxButtons.YesNoCancel;
-                    MessageBoxIcon icon = MessageBoxIcon.Question;
-                    DialogResult result;
+                string unsavedMessage = "There are unsaved changes. Would you like to save these changes?";
+                string unsavedCaption = "UNSAVED CHANGES";
+                MessageBoxButtons unsavedButtons = MessageBoxButtons.YesNoCancel;
+                MessageBoxIcon unsavedIcon = MessageBoxIcon.Question;
+                DialogResult unsavedResult;
 
-                    result = MessageBox.Show(message, caption, buttons, icon);
-                    if (result == DialogResult.Yes)
-                    {
-                        SaveSettings();
-                        overrideClose = true;
-                        return;
-                    }
-                    if (result == DialogResult.No)
-                    {
-                        overrideClose = true;
-                        return;
-                    }
-                    if (result == DialogResult.Cancel)
-                    {
-                        overrideClose = true;
-                        e.Cancel = true;
-                        return;
-                    }
-                }
+                unsavedResult = MessageBox.Show(unsavedMessage, unsavedCaption, unsavedButtons, unsavedIcon);
+                if (unsavedResult == DialogResult.Yes)
+                    SaveSettings(settings);
+                if (unsavedResult == DialogResult.Cancel)
+                    e.Cancel = true;
             }
-            overrideClose = false;
         }
     }
 }

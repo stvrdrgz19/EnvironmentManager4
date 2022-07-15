@@ -96,7 +96,7 @@ namespace EnvironmentManager4
             // labelReloadVPNIPAddress
             // 
             this.labelReloadVPNIPAddress.AutoSize = true;
-            this.labelReloadVPNIPAddress.Location = new System.Drawing.Point(145, 566);
+            this.labelReloadVPNIPAddress.Location = new System.Drawing.Point(89, 566);
             this.labelReloadVPNIPAddress.Name = "labelReloadVPNIPAddress";
             this.labelReloadVPNIPAddress.Size = new System.Drawing.Size(45, 13);
             this.labelReloadVPNIPAddress.TabIndex = 18;
@@ -105,7 +105,7 @@ namespace EnvironmentManager4
             // 
             // tbSPVPNIPAddress
             // 
-            this.tbSPVPNIPAddress.Location = new System.Drawing.Point(192, 563);
+            this.tbSPVPNIPAddress.Location = new System.Drawing.Point(136, 563);
             this.tbSPVPNIPAddress.Name = "tbSPVPNIPAddress";
             this.tbSPVPNIPAddress.ReadOnly = true;
             this.tbSPVPNIPAddress.Size = new System.Drawing.Size(123, 20);
@@ -115,7 +115,7 @@ namespace EnvironmentManager4
             // cbAlwaysOnTop
             // 
             this.cbAlwaysOnTop.AutoSize = true;
-            this.cbAlwaysOnTop.Location = new System.Drawing.Point(11, 565);
+            this.cbAlwaysOnTop.Location = new System.Drawing.Point(419, 4);
             this.cbAlwaysOnTop.Name = "cbAlwaysOnTop";
             this.cbAlwaysOnTop.Size = new System.Drawing.Size(98, 17);
             this.cbAlwaysOnTop.TabIndex = 16;
@@ -197,13 +197,6 @@ namespace EnvironmentManager4
             // cbProductList
             // 
             this.cbProductList.FormattingEnabled = true;
-            this.cbProductList.Items.AddRange(new object[] {
-            "SalesPad GP",
-            "DataCollection",
-            "SalesPad Mobile",
-            "ShipCenter",
-            "Customer Portal Web",
-            "Customer Portal API"});
             this.cbProductList.Location = new System.Drawing.Point(6, 18);
             this.cbProductList.Name = "cbProductList";
             this.cbProductList.Size = new System.Drawing.Size(425, 21);
@@ -358,7 +351,7 @@ namespace EnvironmentManager4
             this.groupBox2.Size = new System.Drawing.Size(252, 222);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "SQL Server Management";
+            this.groupBox2.Text = "SQL Service Management";
             // 
             // lvInstalledSQLServers
             // 
@@ -424,9 +417,9 @@ namespace EnvironmentManager4
             this.labelSQLVersions.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelSQLVersions.Location = new System.Drawing.Point(6, 20);
             this.labelSQLVersions.Name = "labelSQLVersions";
-            this.labelSQLVersions.Size = new System.Drawing.Size(70, 13);
+            this.labelSQLVersions.Size = new System.Drawing.Size(75, 13);
             this.labelSQLVersions.TabIndex = 3;
-            this.labelSQLVersions.Text = "SQL Servers:";
+            this.labelSQLVersions.Text = "SQL Services:";
             this.labelSQLVersions.Click += new System.EventHandler(this.labelSQLVersions_Click);
             // 
             // btnInstallService
