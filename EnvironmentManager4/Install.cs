@@ -22,24 +22,25 @@ namespace EnvironmentManager4
             InitializeComponent();
         }
 
-        public static string product = "";
-        public static string installerPath = "";
-        public static string version = "";
-        public static string installer = "";
-        public static string defaultInstallPath = "";
+        //public static string product = "";
+        //public static string installerPath = "";
+        //public static string version = "";
+        //public static string installer = "";
+        //public static string defaultInstallPath = "";
+        public static Installer install = new Installer();
 
-        public static void InstallProduct(string product, string version = null)
+        public Installer GetInstallerFile(GetInstaller getInstaller)
         {
-            string installer = "";
-            string installerPath = "";
             string initialDir = "";
             string defaultInstallPath = "";
+            string buildPath = "";
+            string installerPath = "";
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            switch (product)
+            switch (getInstaller.Product)
             {
                 case "SalesPad GP":
                     initialDir = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\";
-                    switch (version)
+                    switch (getInstaller.Version)
                     {
                         case "x86":
                             defaultInstallPath = settingsModel.BuildManagement.SalesPadx86Directory;
@@ -73,47 +74,56 @@ namespace EnvironmentManager4
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                if (product == "SalesPad GP")
+                if (install.Product == "SalesPad GP")
                 {
-                    openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", version);
+                    openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", install.Version);
                 }
                 else
                 {
                     openFileDialog.Filter = "Executable Files (*.exe)|*.exe";
                 }
-
-                openFileDialog.InitialDirectory = initialDir;
-                openFileDialog.RestoreDirectory = true;
-                openFileDialog.Title = String.Format("Installing {0}", product);
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                if (!Directory.Exists(getInstaller.Path))
                 {
-                    installer = openFileDialog.FileName;
-                    installerPath = Path.GetDirectoryName(installer);
+                    string newPath = String.Format(@"{0}{1}", "\\", getInstaller.Path);
+                    if (Directory.Exists(newPath))
+                        openFileDialog.InitialDirectory = newPath;
+                    else
+                        openFileDialog.InitialDirectory = initialDir;
                 }
                 else
                 {
-                    return;
+                    openFileDialog.InitialDirectory = getInstaller.Path;
                 }
+
+                openFileDialog.RestoreDirectory = true;
+                openFileDialog.Title = "Installing Product";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    installerPath = openFileDialog.FileName;
+                    buildPath = Path.GetDirectoryName(installerPath);
+                }
+                else
+                    installerPath = "EXIT";
             }
 
-            Install install = new Install();
-            Install.product = product;
-            Install.installerPath = installerPath;
-            Install.installer = installer;
-            Install.version = version;
-            Install.defaultInstallPath = defaultInstallPath;
-            install.Show();
+            Installer installer = new Installer();
+            installer.BuildPath = buildPath;
+            installer.InstallerPath = installerPath;
+            installer.DefaultInstallPath = defaultInstallPath;
+            installer.Product = getInstaller.Product;
+            installer.Version = getInstaller.Version;
+            return installer;
         }
 
         public void LoadInstallPath()
         {
-            if (product == "Customer Portal Web" || product == "Customer Portal API")
+            if (install.Product == "Customer Portal Web" || install.Product == "Customer Portal API")
             {
                 return;
             }
             int charCount = 0;
-            switch (product)
+            switch (install.Product)
             {
                 case "SalesPad GP":
                     charCount = 43;
@@ -128,7 +138,7 @@ namespace EnvironmentManager4
                     charCount = 42;
                     break;
             }
-            tbInstallLocation.Text = GetInstallPath(defaultInstallPath, installerPath, charCount);
+            tbInstallLocation.Text = GetInstallPath(install.DefaultInstallPath, install.BuildPath, charCount);
         }
 
         public static string GetInstallPath(string defaultPath, string installerPath, int charCount)
@@ -200,9 +210,9 @@ namespace EnvironmentManager4
 
             //global variable installer = the installer file path
             //global variable installerpath = the path to the installer, excluding the file name
-            string installerFileName = Path.GetFileName(installer);     //the actual file name without it's path
+            string installerFileName = Path.GetFileName(install.InstallerPath);     //the actual file name without it's path
             string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetInstallerFolder(), installerFileName);
-            File.Copy(installer, tempInstaller, true);
+            File.Copy(install.InstallerPath, tempInstaller, true);
 
             //SILENTLY INSTALL PRODUCT
             Process installProduct = new Process();
@@ -212,7 +222,7 @@ namespace EnvironmentManager4
             installProduct.WaitForExit();
 
             //WRITE BUILD INFORMATION TO INSTALLEDBUILD TABLE
-            BuildModel build = new BuildModel(installerPath, version, startTime, product, installPath);
+            BuildModel build = new BuildModel(install.BuildPath, install.Version, startTime, install.Product, installPath);
             try
             {
                 SqliteDataAccess.SaveBuild(build);
@@ -252,13 +262,13 @@ namespace EnvironmentManager4
 
             if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
             {
-                Modules.GetDLLs(product, installerPath, version, startTime, custDllToAdd, extDllToAdd);
+                Modules.GetDLLs(install.Product, install.BuildPath, install.Version, startTime, custDllToAdd, extDllToAdd);
             }
 
             //  UNZIP DLLS IF THERE ARE ANY
             if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
             {
-                if (product == "DataCollection")
+                if (install.Product == "DataCollection")
                 {
                     Modules.CopyDllsToInstalledBuild(installPath);
                 }
@@ -310,7 +320,7 @@ namespace EnvironmentManager4
             cbConfigurationList.Items.Clear();
             cbConfigurationList.Text = "Select a Configuration";
             cbConfigurationList.Items.Add("None");
-            cbConfigurationList.Items.AddRange(Configuration.GetConfigurationsNames(product).ToArray());
+            cbConfigurationList.Items.AddRange(Configuration.GetConfigurationsNames(install.Product).ToArray());
         }
 
         private void LoadConfigurationDLLs(string configurationName)
@@ -352,20 +362,20 @@ namespace EnvironmentManager4
 
         private void Install_Load(object sender, EventArgs e)
         {
-            if (product != "SalesPad GP")
+            if (install.Product != "SalesPad GP")
             {
                 checkResetDBVersion.Enabled = false;
                 checkRunDatabaseUpdate.Enabled = false;
             }
-            if (product == "SalesPad Mobile")
+            if (install.Product == "SalesPad Mobile")
             {
                 cbConfigurationList.Enabled = false;
                 btnAddConfiguration.Enabled = false;
                 btnRemoveConfiguration.Enabled = false;
             }
-            this.Text = String.Format("Install {0}", product);
-            tbSelectedBuild.Text = installerPath;
-            LoadModules(product, installerPath, version, installer);
+            this.Text = String.Format("Install {0}", install.Product);
+            tbSelectedBuild.Text = install.BuildPath;
+            LoadModules(install.Product, install.BuildPath, install.Version, install.InstallerPath);
             LoadInstallPath();
             LoadConfigurations();
             return;
@@ -409,7 +419,7 @@ namespace EnvironmentManager4
                 TextPrompt.isConfiguration = true;
                 TextPrompt.extended = extendedList;
                 TextPrompt.custom = customList;
-                TextPrompt.product = product;
+                TextPrompt.product = install.Product;
                 addConfiguration.FormClosing += new FormClosingEventHandler(AddConfigurationClose);
                 addConfiguration.Show();
             }
@@ -427,7 +437,7 @@ namespace EnvironmentManager4
 
         private void btnRemoveConfiguration_Click(object sender, EventArgs e)
         {
-            string message = String.Format("Are you sure you want to delete the '{0}' configuration for the '{1}' product? This action cannot be undone.", product, cbConfigurationList.Text);
+            string message = String.Format("Are you sure you want to delete the '{0}' configuration for the '{1}' product? This action cannot be undone.", install.Product, cbConfigurationList.Text);
             string caption = "CONFIRM";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
             MessageBoxIcon icon = MessageBoxIcon.Question;
@@ -436,7 +446,7 @@ namespace EnvironmentManager4
             result = MessageBox.Show(message, caption, buttons, icon);
             if (result == DialogResult.Yes)
             {
-                Configuration.DeleteConfiguration(product, cbConfigurationList.Text);
+                Configuration.DeleteConfiguration(install.Product, cbConfigurationList.Text);
                 LoadConfigurations();
             }
             return;
@@ -471,7 +481,7 @@ namespace EnvironmentManager4
 
             if (Directory.Exists(installPath))
             {
-                string existsMessage = String.Format("{0} is already installed in the specified location, do you want to overwrite this install?", product);
+                string existsMessage = String.Format("{0} is already installed in the specified location, do you want to overwrite this install?", install.Product);
                 string existsCaption = "EXISTS";
                 MessageBoxButtons existsButtons = MessageBoxButtons.YesNo;
                 MessageBoxIcon existsIcon = MessageBoxIcon.Warning;
@@ -517,7 +527,7 @@ namespace EnvironmentManager4
                 lbExtendedModules.ClearSelected();
                 lbCustomModules.ClearSelected();
             }
-            string configuration = String.Format(@"{0}\{1}.json", Utilities.GetConfigurationsFiles(product), cbConfigurationList.Text);
+            string configuration = String.Format(@"{0}\{1}.json", Utilities.GetConfigurationsFiles(install.Product), cbConfigurationList.Text);
             if (File.Exists(configuration))
             {
                 LoadConfigurationDLLs(configuration);

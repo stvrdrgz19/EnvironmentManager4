@@ -27,7 +27,7 @@ namespace EnvironmentManager4
 
         public void LaunchBuild()
         {
-            Process.Start(String.Format(@"{0}\{1}", this.InstallPath, Utilities.RetrieveExe(this.Product)));
+            Process.Start(String.Format(@"{0}\{1}", this.InstallPath, Utilities.RetrieveExe(this.Product, this.InstallPath)));
         }
 
         public void LaunchInstalledFolder()

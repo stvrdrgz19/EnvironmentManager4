@@ -32,8 +32,8 @@ namespace EnvironmentManager4
 
         public static string GetSettingsFile()
         {
-            //return Environment.CurrentDirectory + @"\Files\Settings.json";
-            return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+            return Environment.CurrentDirectory + @"\Files\Settings.json";
+            //return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
             //return @"C:\Users\steve.rodriguez\Desktop\test\EnvMgr Settings\Settings.json";
         }
 
@@ -68,7 +68,7 @@ namespace EnvironmentManager4
             return String.Format(@"{0}\Files\Configurations\{1}", env, product);
         }
 
-        public static string RetrieveExe(string product, bool filter = false)
+        public static string RetrieveExe(string product, string installerPath = null, bool filter = false)
         {
             string executable = "";
             switch (product)
@@ -77,8 +77,18 @@ namespace EnvironmentManager4
                     executable = "SalesPad.exe";
                     break;
                 case "DataCollection":
-                    executable = "SalesPad Inventory Manager Extended Warehouse.exe";
-                    //executable = "DataCollection Extended Warehouse.exe";
+                    if (File.Exists(String.Format(@"{0}\{1}", installerPath, "DataCollection Extended Warehouse.exe")))
+                    {
+                        executable = "DataCollection Extended Warehouse.exe";
+                    }
+                    if (File.Exists(String.Format(@"{0}\{1}", installerPath, "SalesPad Inventory Manager Extended Warehouse.exe")))
+                    {
+                        executable = "SalesPad Inventory Manager Extended Warehouse.exe";
+                    }
+                    if (File.Exists(String.Format(@"{0}\{1}", installerPath, "SalesPad Inventory Manager.exe")))
+                    {
+                        executable = "SalesPad Inventory Manager.exe";
+                    }
                     break;
                 case "Inventory Manager":
                     executable = "SalesPad Inventory Manager Extended Warehouse.exe";
@@ -205,7 +215,7 @@ namespace EnvironmentManager4
             List<string> installedBuilds = new List<string>();
             try
             {
-                var buildList = Directory.GetFiles(GetProductInstallPath(product, version) + @"\", Utilities.RetrieveExe(product, true), SearchOption.AllDirectories);
+                var buildList = Directory.GetFiles(GetProductInstallPath(product, version) + @"\", Utilities.RetrieveExe(product, "", true), SearchOption.AllDirectories);
                 installedBuilds.AddRange(buildList);
             }
             catch (UnauthorizedAccessException)

@@ -323,6 +323,8 @@ namespace EnvironmentManager4
             tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();
             tbSPVPNIPAddress.Text = Utilities.GetSalesPadVPNIPAddress();
             LoadSQLServerListView();
+            cbSPGPVersion.Enabled = false;
+            cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact("x64");
             foreach (string product in productList)
             {
                 cbProductList.Items.Add(product);
@@ -603,7 +605,14 @@ namespace EnvironmentManager4
                 MessageBox.Show("Please select a version from the list to continue.");
                 return;
             }
-            Install.InstallProduct(selectedProduct, selectedVersion);
+
+            Install installBuild = new Install();
+            string path = Clipboard.GetText();
+            GetInstaller getInstaller = new GetInstaller(path, selectedProduct, selectedVersion);
+            Install.install = installBuild.GetInstallerFile(getInstaller);
+            if (Install.install.InstallerPath != "EXIT")
+                installBuild.Show();
+
             return;
         }
 
@@ -633,8 +642,6 @@ namespace EnvironmentManager4
                 MessageBox.Show(message, caption, buttons, icon);
                 return;
             }
-
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
 
             if (Control.ModifierKeys == Keys.Shift)
             {
@@ -939,11 +946,12 @@ namespace EnvironmentManager4
             string selectedProduct = cbProductList.Text;
             if (selectedProduct == "SalesPad GP")
             {
+                cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact("x64");
                 cbSPGPVersion.Enabled = true;
             }
             else
             {
-                cbSPGPVersion.Text = "x86";
+                cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact("x86");
                 cbSPGPVersion.Enabled = false;
             }
             return;
