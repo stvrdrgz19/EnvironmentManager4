@@ -866,18 +866,8 @@ namespace EnvironmentManager4
 
         private void databaseLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string message = "Are you sure you want to open the Database Log?";
-            string caption = "CONFIRM";
-            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-            MessageBoxIcon icon = MessageBoxIcon.Question;
-            DialogResult result;
-
-            result = MessageBox.Show(message, caption, buttons, icon);
-            if (result == DialogResult.Yes)
-            {
-                DatabaseActivityLog dbLog = new DatabaseActivityLog();
-                dbLog.Show();
-            }
+            DatabaseActivityLog dbLog = new DatabaseActivityLog();
+            dbLog.Show();
             return;
         }
 

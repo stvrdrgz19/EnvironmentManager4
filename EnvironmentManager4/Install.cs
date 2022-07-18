@@ -74,9 +74,9 @@ namespace EnvironmentManager4
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                if (install.Product == "SalesPad GP")
+                if (getInstaller.Product == "SalesPad GP")
                 {
-                    openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", install.Version);
+                    openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", getInstaller.Version);
                 }
                 else
                 {
@@ -146,11 +146,24 @@ namespace EnvironmentManager4
             string pathFromInstaller = installerPath.Remove(0, charCount);
             //check if smartbear mode
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            if (settingsModel.Other.Mode == "SmartBear" || settingsModel.Other.Mode == "Kyle")
+            string newPath = "";
+            switch (settingsModel.Other.Mode)
             {
-                return String.Format(@"{0} {1}", defaultPath, pathFromInstaller.Replace(@"\", " "));
+                case "Standard":
+                    newPath = String.Format(@"{0}\{1}", defaultPath, pathFromInstaller);
+                    break;
+                case "Kyle":
+                    string[] pathSplit = pathFromInstaller.Split('\\');
+                    if (pathSplit.Count() > 2)
+                        newPath = String.Format(@"{0} {1}", defaultPath, pathFromInstaller.Substring(Utilities.GetNthIndex(pathFromInstaller, '\\', pathSplit.Count() - 2)));
+                    else
+                        newPath = String.Format(@"{0} {1}", defaultPath, pathFromInstaller);
+                    break;
+                case "SmartBear":
+                    newPath = String.Format(@"{0} {1}", defaultPath, pathFromInstaller.Replace(@"\", " "));
+                    break;
             }
-            return String.Format(@"{0}\{1}", defaultPath, pathFromInstaller);
+            return newPath;
         }
 
         public void LoadModules(string product, string installerPath, string productVersion, string installer)
