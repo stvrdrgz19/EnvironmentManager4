@@ -29,6 +29,7 @@ namespace EnvironmentManager4
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.labelReloadVPNIPAddress = new System.Windows.Forms.Label();
             this.tbSPVPNIPAddress = new System.Windows.Forms.TextBox();
@@ -86,6 +87,7 @@ namespace EnvironmentManager4
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -202,6 +204,7 @@ namespace EnvironmentManager4
             this.cbProductList.Size = new System.Drawing.Size(425, 21);
             this.cbProductList.TabIndex = 0;
             this.cbProductList.Text = "Select a Product";
+            this.toolTip1.SetToolTip(this.cbProductList, "Select a product to install or launch");
             this.cbProductList.SelectedIndexChanged += new System.EventHandler(this.cbProductList_SelectedIndexChanged);
             // 
             // btnLaunchProduct
@@ -223,6 +226,7 @@ namespace EnvironmentManager4
             this.btnInstallProduct.Size = new System.Drawing.Size(125, 23);
             this.btnInstallProduct.TabIndex = 9;
             this.btnInstallProduct.Text = "Install";
+            this.toolTip1.SetToolTip(this.btnInstallProduct, "Install the selected product.");
             this.btnInstallProduct.UseVisualStyleBackColor = true;
             this.btnInstallProduct.Click += new System.EventHandler(this.btnInstallProduct_Click);
             // 
@@ -759,6 +763,7 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ToolStripMenuItem generateConfigurationsFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateConfigurationsFileWithNullsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteBuildInstallsToolStripMenuItem;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

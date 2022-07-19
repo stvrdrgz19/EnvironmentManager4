@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -32,8 +33,8 @@ namespace EnvironmentManager4
 
         public static string GetSettingsFile()
         {
-            return Environment.CurrentDirectory + @"\Files\Settings.json";
-            //return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+            //return Environment.CurrentDirectory + @"\Files\Settings.json";
+            return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
             //return @"C:\Users\steve.rodriguez\Desktop\test\EnvMgr Settings\Settings.json";
         }
 
@@ -587,6 +588,7 @@ namespace EnvironmentManager4
             else
                 lv.Columns[indx].Width = maxW;
         }
+
         public static int GetNthIndex(string s, char t, int n)
         {
             int count = 0;
@@ -602,6 +604,22 @@ namespace EnvironmentManager4
                 }
             }
             return -1;
+        }
+
+        public static string GetDatabaseDescription(string backupName)
+        {
+            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(GetSettingsFile()));
+            string zipPath = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
+
+            using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
+            {
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
+                {
+                    ZipArchiveEntry description = archive.GetEntry("Description.txt");
+                    using (StreamReader reader = new StreamReader(description.Open()))
+                        return reader.ReadToEnd();
+                }
+            }
         }
     }
 }

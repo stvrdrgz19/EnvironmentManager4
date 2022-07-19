@@ -71,14 +71,16 @@ namespace EnvironmentManager4
             catch (Exception e)
             {
                 MessageBox.Show(String.Format("There was an error unzipping the selected backup: {0}\n\n{1}", e.Message, e.ToString()));
+                if (Directory.Exists(unzippedBackupDirectory))
+                    Directory.Delete(unzippedBackupDirectory, true);
                 return;
             }
             foreach (string databaseFile in settingsModel.DbManagement.Databases)
             {
-                string script = String.Format(@"ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; RESTORE DATABASE {0} FROM DISK='{1}\{2}\{0}.bak' WITH FILE = 1, NOUNLOAD, REPLACE; ALTER DATABASE {0} SET MULTI_USER;",
-                    databaseFile,
-                    Path.GetDirectoryName(backupZipFile),
-                    Path.GetFileNameWithoutExtension(backupZipFile));
+                string script = String.Format(@"ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; RESTORE DATABASE {0} FROM DISK='{1}\{2}\{0}.bak' WITH FILE = 1, NOUNLOAD, REPLACE; ALTER DATABASE {0} SET MULTI_USER;"
+                    ,databaseFile
+                    ,Path.GetDirectoryName(backupZipFile)
+                    ,Path.GetFileNameWithoutExtension(backupZipFile));
 
                 try
                 {
@@ -90,7 +92,7 @@ namespace EnvironmentManager4
                 catch (Exception e)
                 {
                     MessageBox.Show(String.Format("There was an error restoring the selected database backup '{0}': {1}\n\n{2}", databaseFile, e.Message, e.ToString()));
-                    return;
+                    //return;
                 }
             }
             try
@@ -139,7 +141,7 @@ namespace EnvironmentManager4
             }
         }
 
-        public static void NewDatabase(string databaseName, string databaseDescription, string databaseBackupDirectory, string action)
+        public static void NewDatabase(string databaseName, string newDatabaseDescription, string databaseBackupDirectory, string action, string existingDatabaseDescription)
         {
             //DISABLE DATABASE CONTROLS
             Form1.EnableDBControls(false);
@@ -179,9 +181,11 @@ namespace EnvironmentManager4
             using (StreamWriter sw = File.AppendText(databaseBackupDirectory + @"\Description.txt"))
             {
                 sw.WriteLine("===============================================================================");
-                sw.WriteLine("BACKUP - " + databaseName);
+                sw.WriteLine(String.Format("{0} - {1}", action, databaseName));
                 sw.WriteLine(DateTime.Now);
-                sw.WriteLine(databaseDescription);
+                sw.WriteLine(newDatabaseDescription);
+                if (!String.IsNullOrWhiteSpace(existingDatabaseDescription))
+                    sw.WriteLine(existingDatabaseDescription);
             }
 
             //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
@@ -207,13 +211,27 @@ namespace EnvironmentManager4
                 return;
             }
 
-            string message = String.Format("The database backup '{0}' has been created successfully.", databaseName);
+            string actionLabel = "";
+            switch(action)
+            {
+                case "BACKUP":
+                    actionLabel = "created";
+                    break;
+                case "OVERWRITE":
+                    actionLabel = "overwritten";
+                    break;
+            }
+
+            Form1.EnableDBControls(true);
+            Form1.newDBBackupName = databaseName;
+            Form1.SetStaticBackup(true);
+
+            string message = String.Format("The database backup '{0}' has been {1} successfully.", databaseName, actionLabel);
             string caption = "SUCCESS";
             MessageBoxButtons buttons = MessageBoxButtons.OK;
             MessageBoxIcon icon = MessageBoxIcon.Exclamation;
 
             MessageBox.Show(message, caption, buttons, icon);
-            Form1.EnableDBControls(true);
         }
     }
 }

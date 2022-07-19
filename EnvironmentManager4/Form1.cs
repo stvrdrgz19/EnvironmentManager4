@@ -20,6 +20,7 @@ namespace EnvironmentManager4
         private static Form1 form = null;
         private delegate void EnableDelegate(bool enable);
         //https://www.py4u.net/discuss/717463
+        //https://www.codegrepper.com/code-examples/csharp/c%23+edit+form+controls+from+another+class
 
         public Form1()
         {
@@ -31,6 +32,7 @@ namespace EnvironmentManager4
         public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
         public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
         public const string gpPath = @"C:\Program Files (x86)\Microsoft Dynamics\";
+        public static string newDBBackupName = "";
         public static List<string> productList = new List<string>
         {
             "SalesPad GP",
@@ -54,11 +56,11 @@ namespace EnvironmentManager4
             }
             if (enable)
             {
-                form.Cursor = Cursors.Default;
+                //form.Cursor = Cursors.Default;
             }
             if (!enable)
             {
-                form.Cursor = Cursors.WaitCursor;
+                //form.Cursor = Cursors.WaitCursor;
             }
         }
 
@@ -109,6 +111,22 @@ namespace EnvironmentManager4
             }
         }
 
+        public static void SetStaticBackup(bool enable)
+        {
+            if (form != null)
+                form.SetSelectedBackup(enable);
+        }
+
+        public void SetSelectedBackup(bool enable)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new EnableDelegate(SetSelectedBackup), new object[] { enable });
+                return;
+            }
+            cbDatabaseList.SelectedIndex = cbDatabaseList.FindStringExact(newDBBackupName);
+        }
+
         private void EnableSQLControls(bool enable)
         {
             btnStartService.Enabled = enable;
@@ -146,21 +164,9 @@ namespace EnvironmentManager4
             }
             else
             {
-                string zipPath = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backup);
-
                 try
                 {
-                    using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
-                    {
-                        using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
-                        {
-                            ZipArchiveEntry descEntry = archive.GetEntry("Description.txt");
-                            using (StreamReader reader = new StreamReader(descEntry.Open()))
-                            {
-                                tbDBDesc.Text = reader.ReadToEnd();
-                            }
-                        }
-                    }
+                    tbDBDesc.Text = Utilities.GetDatabaseDescription(backup);
                 }
                 catch (Exception e)
                 {
@@ -381,18 +387,18 @@ namespace EnvironmentManager4
             {
                 return;
             }
-            if (Control.ModifierKeys == Keys.Shift)
-            {
-                try
-                {
-                    Process.Start(@"C:\Program Files\Microsoft SQL Server\MSSQL13.SQLSERVER2016\MSSQL\Backup");
-                }
-                catch
-                {
-                    MessageBox.Show("There was an error launching the Dynamics Database backup folder.");
-                }
-                return;
-            }
+            //if (Control.ModifierKeys == Keys.Shift)
+            //{
+            //    try
+            //    {
+            //        Process.Start(@"C:\Program Files\Microsoft SQL Server\MSSQL13.SQLSERVER2016\MSSQL\Backup");
+            //    }
+            //    catch
+            //    {
+            //        MessageBox.Show("There was an error launching the Dynamics Database backup folder.");
+            //    }
+            //    return;
+            //}
             string selectedGP = lbGPVersionsInstalled.Text;
             Process.Start(gpPath + selectedGP + "\\DynUtils.exe", "\"" + gpPath + selectedGP + "\\DYNUTILS.SET\"");
             return;
@@ -555,7 +561,7 @@ namespace EnvironmentManager4
             if (result == DialogResult.Yes)
             {
                 NewDatabaseBackup newBackup = new NewDatabaseBackup();
-                NewDatabaseBackup.action = "NEW";
+                NewDatabaseBackup.action = "BACKUP";
                 newBackup.Show();
             }
             return;
@@ -889,7 +895,8 @@ namespace EnvironmentManager4
 
         private void directoryCompareToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //
+            MessageBox.Show("Directory Compare is not currently hooked up to Environment Manager.");
+            return;
         }
 
         private void trimSOLTickets_Click(object sender, EventArgs e)
