@@ -22,11 +22,6 @@ namespace EnvironmentManager4
             InitializeComponent();
         }
 
-        //public static string product = "";
-        //public static string installerPath = "";
-        //public static string version = "";
-        //public static string installer = "";
-        //public static string defaultInstallPath = "";
         public static Installer install = new Installer();
 
         public Installer GetInstallerFile(GetInstaller getInstaller)

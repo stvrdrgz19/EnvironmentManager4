@@ -40,14 +40,14 @@ namespace EnvironmentManager4
 
         public static string GetInstallerFolder()
         {
-            return Environment.CurrentDirectory + @"\Installers";
-            //return @"C:\Program Files (x86)\EnvMgr\Installers";
+            //return Environment.CurrentDirectory + @"\Installers";
+            return @"C:\Program Files (x86)\EnvMgr\Installers";
         }
 
         public static string GetDLLsFolder()
         {
-            return Environment.CurrentDirectory + @"\Dlls";
-            //return @"C:\Program Files (x86)\EnvMgr\Dlls";
+            //return Environment.CurrentDirectory + @"\Dlls";
+            return @"C:\Program Files (x86)\EnvMgr\Dlls";
         }
 
         public static string GetNotesFile()
@@ -58,14 +58,14 @@ namespace EnvironmentManager4
 
         public static string GetConfigurationDirectory()
         {
-            return String.Format(@"{0}\{1}", Environment.CurrentDirectory, @"\Files\Configurations");
-            //return @"C:\Program Files (x86)\EnvMgr\Files\Configurations";
+            //return String.Format(@"{0}\{1}", Environment.CurrentDirectory, @"\Files\Configurations");
+            return @"C:\Program Files (x86)\EnvMgr\Files\Configurations";
         }
 
         public static string GetConfigurationsFiles(string product)
         {
-            string env = Environment.CurrentDirectory;
-            //string env = @"C:\Program Files (x86)\EnvMgr";
+            //string env = Environment.CurrentDirectory;
+            string env = @"C:\Program Files (x86)\EnvMgr";
             return String.Format(@"{0}\Files\Configurations\{1}", env, product);
         }
 
@@ -171,7 +171,7 @@ namespace EnvironmentManager4
 
         public static string GetProductInstallPath(string product, string version)
         {
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
             string productPath = "";
             switch (product)
             {
@@ -179,45 +179,54 @@ namespace EnvironmentManager4
                     switch (version)
                     {
                         case "x86":
-                            switch (settingsModel.Other.Mode)
-                            {
-                                case "Standard":
-                                    productPath = settingsModel.BuildManagement.SalesPadx86Directory;
-                                    break;
-                                case "SmartBear":
-                                case "Kyle":
-                                    productPath = TrimEndOfPath(settingsModel.BuildManagement.SalesPadx86Directory);
-                                    break;
-                            }
+                            productPath = settings.BuildManagement.SalesPadx86Directory;
                             break;
                         case "x64":
-                            productPath = settingsModel.BuildManagement.SalesPadx64Directory;
+                            productPath = settings.BuildManagement.SalesPadx64Directory;
                             break;
                     }
                     break;
                 case "DataCollection":
-                    productPath = settingsModel.BuildManagement.DataCollectionDirectory;
+                    productPath = settings.BuildManagement.DataCollectionDirectory;
                     break;
                 case "Inventory Manager":
-                    productPath = settingsModel.BuildManagement.DataCollectionDirectory;
+                    productPath = settings.BuildManagement.DataCollectionDirectory;
                     break;
                 case "SalesPad Mobile":
-                    productPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
+                    productPath = settings.BuildManagement.SalesPadMobileDirectory;
                     break;
                 case "ShipCenter":
-                    productPath = settingsModel.BuildManagement.ShipCenterDirectory;
+                    productPath = settings.BuildManagement.ShipCenterDirectory;
                     break;
             }
+            if (settings.Other.Mode != "Standard")
+                return productPath.Substring(0, productPath.LastIndexOf('\\'));
             return productPath;
         }
 
         public static List<string> InstalledBuilds(string product, string version)
         {
+            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
             List<string> installedBuilds = new List<string>();
             try
             {
-                var buildList = Directory.GetFiles(GetProductInstallPath(product, version) + @"\", Utilities.RetrieveExe(product, "", true), SearchOption.AllDirectories);
-                installedBuilds.AddRange(buildList);
+                if (settings.Other.Mode == "Standard")
+                {
+                    var buildList = Directory.GetFiles(GetProductInstallPath(product, version) + @"\", Utilities.RetrieveExe(product, "", true), SearchOption.AllDirectories);
+                    installedBuilds.AddRange(buildList);
+                }
+                else
+                {
+                    var buildList = Directory.GetDirectories(GetProductInstallPath(product, version), "SalesPad.Desktop*");
+                    foreach (string buildPath in buildList)
+                    {
+                        var file = Directory.GetFiles(buildPath, Utilities.RetrieveExe(product, "", true), SearchOption.AllDirectories);
+                        foreach (string f in file)
+                        {
+                            installedBuilds.Add(f);
+                        }
+                    }
+                }
             }
             catch (UnauthorizedAccessException)
             {

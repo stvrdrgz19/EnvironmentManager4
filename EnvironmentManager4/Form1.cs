@@ -35,12 +35,12 @@ namespace EnvironmentManager4
         public static string newDBBackupName = "";
         public static List<string> productList = new List<string>
         {
-            "SalesPad GP",
-            "DataCollection",
-            "SalesPad Mobile",
-            "ShipCenter",
-            "Customer Portal Web",
-            "Customer Portal API"
+            "SalesPad GP"
+            ,"DataCollection"
+            ,"SalesPad Mobile"
+            ,"ShipCenter"
+            //,"Customer Portal Web"
+            //,"Customer Portal API"
         };
         public static List<string> versionList = new List<string>
         {
@@ -296,19 +296,26 @@ namespace EnvironmentManager4
 
         public void DetermineMode()
         {
-            cbSPGPVersion.Text = "x86";
+            cbSPGPVersion.Text = "x64";
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            if (settingsModel.Other.Mode == "Standard" || settingsModel.Other.Mode == "Kyle")
+            switch (settingsModel.Other.Mode)
             {
-                cbProductList.Text = "Select a Product";
-                cbProductList.Enabled = true;
-                cbSPGPVersion.Enabled = true;
-            }
-            if (settingsModel.Other.Mode == "SmartBear")
-            {
-                cbProductList.Text = "SalesPad GP";
-                cbProductList.Enabled = false;
-                cbSPGPVersion.Enabled = false;
+                case "Standard":
+                    cbProductList.Text = "Select a Product";
+                    cbProductList.Enabled = true;
+                    cbSPGPVersion.Enabled = true;
+                    break;
+                case "Kyle":
+                    cbProductList.Text = "Select a Product";
+                    cbProductList.Enabled = true;
+                    cbSPGPVersion.Enabled = true;
+                    btnBuildFolder.Enabled = false;
+                    break;
+                case "SmartBear":
+                    cbProductList.Text = "SalesPad GP";
+                    cbProductList.Enabled = false;
+                    cbSPGPVersion.Enabled = false;
+                    break;
             }
         }
 
@@ -681,18 +688,9 @@ namespace EnvironmentManager4
                 return;
             }
 
-            string productPath = Utilities.GetProductInstallPath(selectedProduct, selectedVersion);
-
-            if (!Directory.Exists(productPath))
-            {
-                MessageBox.Show(String.Format("The Settings defined path for '{0}', '{1}' does not exist. There are either no builds to launch, or Settings needs reconfigured.", selectedProduct, productPath));
-                return;
-            }
-
-            LaunchProduct launch = new LaunchProduct(); ;
+            LaunchProduct launch = new LaunchProduct();
             LaunchProduct.product = selectedProduct;
             LaunchProduct.version = selectedVersion;
-            LaunchProduct.path = productPath;
             launch.Show();
             return;
         }

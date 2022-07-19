@@ -51,7 +51,6 @@ namespace EnvironmentManager4
             this.btnRestoreDB = new System.Windows.Forms.Button();
             this.btnDBBackupFolder = new System.Windows.Forms.Button();
             this.cbDatabaseList = new System.Windows.Forms.ComboBox();
-            this.cbSelectedGP = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lvInstalledSQLServers = new System.Windows.Forms.ListView();
             this.chService = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -239,7 +238,6 @@ namespace EnvironmentManager4
             this.groupBox3.Controls.Add(this.btnRestoreDB);
             this.groupBox3.Controls.Add(this.btnDBBackupFolder);
             this.groupBox3.Controls.Add(this.cbDatabaseList);
-            this.groupBox3.Controls.Add(this.cbSelectedGP);
             this.groupBox3.ForeColor = System.Drawing.Color.Blue;
             this.groupBox3.Location = new System.Drawing.Point(5, 254);
             this.groupBox3.Name = "groupBox3";
@@ -316,30 +314,12 @@ namespace EnvironmentManager4
             // cbDatabaseList
             // 
             this.cbDatabaseList.FormattingEnabled = true;
-            this.cbDatabaseList.Location = new System.Drawing.Point(86, 20);
+            this.cbDatabaseList.Location = new System.Drawing.Point(6, 20);
             this.cbDatabaseList.Name = "cbDatabaseList";
-            this.cbDatabaseList.Size = new System.Drawing.Size(394, 21);
+            this.cbDatabaseList.Size = new System.Drawing.Size(474, 21);
             this.cbDatabaseList.TabIndex = 1;
             this.cbDatabaseList.Text = "Select a Database";
             this.cbDatabaseList.SelectedIndexChanged += new System.EventHandler(this.cbDatabaseList_SelectedIndexChanged);
-            // 
-            // cbSelectedGP
-            // 
-            this.cbSelectedGP.Enabled = false;
-            this.cbSelectedGP.FormattingEnabled = true;
-            this.cbSelectedGP.Items.AddRange(new object[] {
-            "GP10",
-            "GP2010",
-            "GP2013",
-            "GP2015",
-            "GP2016",
-            "GP2018",
-            "GP2019"});
-            this.cbSelectedGP.Location = new System.Drawing.Point(6, 20);
-            this.cbSelectedGP.Name = "cbSelectedGP";
-            this.cbSelectedGP.Size = new System.Drawing.Size(76, 21);
-            this.cbSelectedGP.TabIndex = 0;
-            this.cbSelectedGP.Text = "Select GP";
             // 
             // groupBox2
             // 
@@ -727,7 +707,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Button btnRestoreDB;
         private System.Windows.Forms.Button btnDBBackupFolder;
         private System.Windows.Forms.ComboBox cbDatabaseList;
-        private System.Windows.Forms.ComboBox cbSelectedGP;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ListView lvInstalledSQLServers;
         private System.Windows.Forms.ColumnHeader chService;

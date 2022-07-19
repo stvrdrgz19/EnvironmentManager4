@@ -130,7 +130,7 @@ namespace EnvironmentManager4
                         break;
                 }
                 string copyFrom = String.Format("{0}{1}", custExtPath, dllName);
-                string copyTo = String.Format(@"{0}\DLLs\{1}{2}", Environment.CurrentDirectory, moduleStart, dllName);
+                string copyTo = String.Format(@"{0}\{1}{2}", Utilities.GetDLLsFolder(), moduleStart, dllName);
                 try
                 {
                     File.Copy(copyFrom, copyTo, true);
@@ -155,11 +155,11 @@ namespace EnvironmentManager4
 
         public static void UnzipDLLFiles()
         {
-            string[] toExtract = Directory.GetFiles(Environment.CurrentDirectory + @"\DLLs");
+            string[] toExtract = Directory.GetFiles(Utilities.GetDLLsFolder());
             foreach (string dll in toExtract)
             {
                 string dllName = Path.GetFileNameWithoutExtension(dll);
-                string dllTempFolder = Environment.CurrentDirectory + @"\DLLs\" + dllName;
+                string dllTempFolder = Utilities.GetDLLsFolder() + @"\" + dllName;
                 Directory.CreateDirectory(dllTempFolder);
                 using (ZipArchive zip = ZipFile.Open(dll, ZipArchiveMode.Read))
                 {
@@ -179,7 +179,7 @@ namespace EnvironmentManager4
 
         public static void CopyDllsFromDirectoriesToInstalledBuild(string installPath)
         {
-            foreach (string dir in Directory.GetDirectories(Environment.CurrentDirectory + @"\DLLs\"))
+            foreach (string dir in Directory.GetDirectories(Utilities.GetDLLsFolder()))
             {
                 foreach (string file in Directory.GetFiles(dir))
                 {
@@ -199,7 +199,7 @@ namespace EnvironmentManager4
 
         public static void CopyDllsToInstalledBuild(string installPath)
         {
-            foreach (string file in Directory.GetFiles(Environment.CurrentDirectory + @"\DLLs\"))
+            foreach (string file in Directory.GetFiles(Utilities.GetDLLsFolder()))
             {
                 string fileName = Path.GetFileName(file);
                 try
