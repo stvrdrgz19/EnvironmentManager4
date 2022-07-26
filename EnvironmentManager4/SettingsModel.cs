@@ -17,7 +17,7 @@ namespace EnvironmentManager4
     {
         public string DatabaseBackupDirectory { get; set; }
         public string Connection { get; set; }
-        public List<ConnectionList> ConnectionsList { get; set; }
+        public List<Connection> ConnectionsList { get; set; }
         public string SQLServerUserName { get; set; }
         public string SQLServerPassword { get; set; }
         public List<string> Databases { get; set; }
@@ -38,9 +38,13 @@ namespace EnvironmentManager4
     public class Other
     {
         public string Mode { get; set; }
+        public string DefaultVersion { get; set; }
+        public bool ShowAlwaysOnTop { get; set; }
+        public bool ShowVPNIP { get; set; }
+        public bool ShowIP { get; set; }
     }
 
-    public class ConnectionList
+    public class Connection
     {
         public string ConnectionName { get; set; }
         public string ConnectionUN { get; set; }

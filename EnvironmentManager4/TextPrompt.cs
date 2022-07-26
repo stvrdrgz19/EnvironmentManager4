@@ -34,19 +34,16 @@ namespace EnvironmentManager4
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            output = tbText.Text;
             if (isConfiguration)
             {
-                if (Configuration.DoesConfigurationExist(product, output))
-                {
-                    string message = String.Format("A configuration with the name '{0}' already exists for the {1} configuration list. Please enter a new name.", output, product);
-                    string caption = "ERROR";
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    MessageBoxIcon icon = MessageBoxIcon.Error;
-                    MessageBox.Show(message, caption, buttons, icon);
-                    return;
-                }
-                Configuration.CreateConfiguration(product, output, extended, custom);
+                output = tbText.Text;
+                Configurations newConfiguration = new Configurations();
+                newConfiguration.Product = product;
+                newConfiguration.ConfigurationName = tbText.Text;
+                newConfiguration.ExtendedModules = extended;
+                newConfiguration.CustomModules = custom;
+
+                Configurations.SaveConfiguration(newConfiguration);
             }
             this.Close();
         }

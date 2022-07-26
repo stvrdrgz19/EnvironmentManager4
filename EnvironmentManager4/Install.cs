@@ -26,46 +26,11 @@ namespace EnvironmentManager4
 
         public Installer GetInstallerFile(GetInstaller getInstaller)
         {
-            string initialDir = "";
-            string defaultInstallPath = "";
+            ProductInfo pi = ProductInfo.GetProductInfo(getInstaller.Product, getInstaller.Version);
+            string initialDir = pi.FileserverDirectory;
+            string defaultInstallPath = pi.InstallDirectory;
             string buildPath = "";
             string installerPath = "";
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            switch (getInstaller.Product)
-            {
-                case "SalesPad GP":
-                    initialDir = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\";
-                    switch (getInstaller.Version)
-                    {
-                        case "x86":
-                            defaultInstallPath = settingsModel.BuildManagement.SalesPadx86Directory;
-                            break;
-                        case "x64":
-                            defaultInstallPath = settingsModel.BuildManagement.SalesPadx64Directory;
-                            break;
-                    }
-                    break;
-                case "DataCollection":
-                    initialDir = @"\\sp-fileserv-01\Shares\Builds\Ares\DataCollection\";
-                    defaultInstallPath = settingsModel.BuildManagement.DataCollectionDirectory;
-                    break;
-                case "SalesPad Mobile":
-                    initialDir = @"\\sp-fileserv-01\Shares\Builds\Ares\Mobile-Server\";
-                    defaultInstallPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
-                    break;
-                case "ShipCenter":
-                    initialDir = @"\\sp-fileserv-01\Shares\Builds\ShipCenter\";
-                    defaultInstallPath = settingsModel.BuildManagement.ShipCenterDirectory;
-                    break;
-                case "Customer Portal Web":
-                    initialDir = @"\\sp-fileserv-01\Shares\Builds\Web-Portal\GP";
-                    defaultInstallPath = settingsModel.BuildManagement.GPWebDirectory;
-                    break;
-                case "Customer Portal API":
-                    initialDir = @"\\sp-fileserv-01\Shares\Builds\SalesPad.WebApi";
-                    defaultInstallPath = settingsModel.BuildManagement.WebAPIDirectory;
-                    break;
-            }
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
@@ -81,13 +46,21 @@ namespace EnvironmentManager4
                 {
                     string newPath = String.Format(@"{0}{1}", "\\", getInstaller.Path);
                     if (Directory.Exists(newPath))
-                        openFileDialog.InitialDirectory = newPath;
+                    {
+                        if (newPath.Contains(initialDir))
+                            openFileDialog.InitialDirectory = newPath;
+                        else
+                            openFileDialog.InitialDirectory = initialDir;
+                    }
                     else
                         openFileDialog.InitialDirectory = initialDir;
                 }
                 else
                 {
-                    openFileDialog.InitialDirectory = getInstaller.Path;
+                    if (getInstaller.Path.Contains(initialDir))
+                        openFileDialog.InitialDirectory = getInstaller.Path;
+                    else
+                        openFileDialog.InitialDirectory = initialDir;
                 }
 
                 openFileDialog.RestoreDirectory = true;
@@ -323,49 +296,27 @@ namespace EnvironmentManager4
             Form1.EnableInstallButton(true);
         }
 
-        private void LoadConfigurations()
+        private void LoadConfigurations(string product)
         {
             cbConfigurationList.Items.Clear();
             cbConfigurationList.Text = "Select a Configuration";
             cbConfigurationList.Items.Add("None");
-            cbConfigurationList.Items.AddRange(Configuration.GetConfigurationsNames(install.Product).ToArray());
+            List<Configurations> configurations = Configurations.GetConfigurations();
+            foreach (Configurations config in configurations)
+            {
+                if (config.Product == product)
+                    cbConfigurationList.Items.Add(config.ConfigurationName);
+            }
         }
 
-        private void LoadConfigurationDLLs(string configurationName)
+        private List<string> SelectedModules(ListBox lb)
         {
-            lbExtendedModules.ClearSelected();
-            lbCustomModules.ClearSelected();
-            var json = File.ReadAllText(configurationName);
-            ConfigModel configs = JsonConvert.DeserializeObject<ConfigModel> (json);
-
-            string[] extList = configs.extendedDLLs.ToArray();
-            string[] custList = configs.customDLLs.ToArray();
-
-            foreach (string dllName in extList)
+            List<string> selectedModules = new List<string>();
+            foreach (string dll in lb.SelectedItems)
             {
-                int indx = lbExtendedModules.Items.IndexOf(dllName);
-                try
-                {
-                    lbExtendedModules.SetSelected(indx, true);
-                }
-                catch
-                {
-                    MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an Extended Module for this build.", dllName));
-                }
+                selectedModules.Add(dll);
             }
-
-            foreach (string dllName in custList)
-            {
-                int indx = lbCustomModules.Items.IndexOf(dllName);
-                try
-                {
-                    lbCustomModules.SetSelected(indx, true);
-                }
-                catch
-                {
-                    MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an Custom Module for this build.", dllName));
-                }
-            }
+            return selectedModules;
         }
 
         private void Install_Load(object sender, EventArgs e)
@@ -385,22 +336,14 @@ namespace EnvironmentManager4
             tbSelectedBuild.Text = install.BuildPath;
             LoadModules(install.Product, install.BuildPath, install.Version, install.InstallerPath);
             LoadInstallPath();
-            LoadConfigurations();
+            LoadConfigurations(install.Product);
             return;
         }
 
         private void btnAddConfiguration_Click(object sender, EventArgs e)
         {
-            List<string> extendedList = new List<string>();
-            foreach (string dll in lbExtendedModules.SelectedItems)
-            {
-                extendedList.Add(dll);
-            }
-            List<string> customList = new List<string>();
-            foreach (string dll in lbCustomModules.SelectedItems)
-            {
-                customList.Add(dll);
-            }
+            List<string> extendedList = SelectedModules(lbExtendedModules);
+            List<string> customList = SelectedModules(lbCustomModules);
             if (extendedList.Count == 0 && customList.Count == 0)
             {
                 string eMessage = "To save a configuration there must be more than 0 extended or custom dlls selected.";
@@ -440,12 +383,23 @@ namespace EnvironmentManager4
             {
                 return;
             }
-            LoadConfigurations();
+            LoadConfigurations(install.Product);
         }
 
         private void btnRemoveConfiguration_Click(object sender, EventArgs e)
         {
-            string message = String.Format("Are you sure you want to delete the '{0}' configuration for the '{1}' product? This action cannot be undone.", install.Product, cbConfigurationList.Text);
+            if (cbConfigurationList.Text == "Select a Configuration" || cbConfigurationList.Text == "None")
+                return;
+
+            Configurations configurationToDelete = new Configurations();
+            configurationToDelete.Product = install.Product;
+            configurationToDelete.ConfigurationName = cbConfigurationList.Text;
+            configurationToDelete.ExtendedModules = SelectedModules(lbExtendedModules);
+            configurationToDelete.CustomModules = SelectedModules(lbCustomModules);
+
+            string message = String.Format("Are you sure you want to delete the '{0}' configuration for the '{1}' product? This action cannot be undone."
+                ,configurationToDelete.ConfigurationName
+                ,configurationToDelete.Product);
             string caption = "CONFIRM";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
             MessageBoxIcon icon = MessageBoxIcon.Question;
@@ -454,8 +408,8 @@ namespace EnvironmentManager4
             result = MessageBox.Show(message, caption, buttons, icon);
             if (result == DialogResult.Yes)
             {
-                Configuration.DeleteConfiguration(install.Product, cbConfigurationList.Text);
-                LoadConfigurations();
+                Configurations.DeleteConfiguration(configurationToDelete);
+                LoadConfigurations(install.Product);
             }
             return;
         }
@@ -535,12 +489,51 @@ namespace EnvironmentManager4
                 lbExtendedModules.ClearSelected();
                 lbCustomModules.ClearSelected();
             }
-            string configuration = String.Format(@"{0}\{1}.json", Utilities.GetConfigurationsFiles(install.Product), cbConfigurationList.Text);
-            if (File.Exists(configuration))
-            {
-                LoadConfigurationDLLs(configuration);
-            }
+
+            string prod = install.Product;
+            string configName = cbConfigurationList.Text;
+            LoadConfiguration(prod, configName);
             return;
+        }
+
+        private void LoadConfiguration(string product, string configurationName)
+        {
+            lbExtendedModules.ClearSelected();
+            lbCustomModules.ClearSelected();
+            List<string> extendedModules = new List<string>();
+            List<string> customModules = new List<string>();
+            List<Configurations> configurations = Configurations.GetConfigurationsByProduct(product);
+            foreach (Configurations configuration in configurations)
+            {
+                if (configurationName == configuration.ConfigurationName)
+                {
+                    extendedModules = configuration.ExtendedModules;
+                    customModules = configuration.CustomModules;
+                    break;
+                }
+            }
+
+            if (extendedModules != null)
+                LoadConfigurationModules(extendedModules, lbExtendedModules, "Extended");
+
+            if (customModules != null)
+                LoadConfigurationModules(customModules, lbCustomModules, "Custom");
+        }
+
+        private void LoadConfigurationModules(List<string> modules, ListBox listBox, string type)
+        {
+            foreach (string dll in modules)
+            {
+                int index = listBox.FindStringExact(dll);
+                try
+                {
+                    listBox.SetSelected(index, true);
+                }
+                catch
+                {
+                    MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an {1} Modules for this build.", dll, type));
+                }
+            }
         }
     }
 }

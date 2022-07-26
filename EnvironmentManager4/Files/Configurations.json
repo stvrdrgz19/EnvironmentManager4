@@ -1,0 +1,32 @@
+[
+  {
+    "Product": "SalesPad GP",
+    "ConfigurationName": "EDI",
+    "ExtendedModules": [
+      "SalesPadEDI"
+    ],
+    "CustomModules": null
+  },
+  {
+    "Product": "SalesPad GP",
+    "ConfigurationName": "AA",
+    "ExtendedModules": [
+      "AutomationAgent",
+      "AutomationAgentService"
+    ],
+    "CustomModules": []
+  },
+  {
+    "Product": "SalesPad GP",
+    "ConfigurationName": "Demo Test",
+    "ExtendedModules": [
+      "AutomationAgent",
+      "Integration",
+      "Integration.Shopify"
+    ],
+    "CustomModules": [
+      "Amada",
+      "Apet"
+    ]
+  }
+]

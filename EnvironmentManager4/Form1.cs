@@ -99,12 +99,23 @@ namespace EnvironmentManager4
             }
             btnInstallProduct.Enabled = enable;
         }
-
-        public void Reload(bool settingsChange = false)
+        
+        public void SettingsReload(bool settingsChange = false)
         {
             cbDatabaseList.Text = "Select a Database Backup";
             LoadDatabaseList();
             LoadDatabaseDescription(cbDatabaseList.Text);
+            if (settingsChange)
+            {
+                DetermineMode();
+            }
+        }
+
+        public void Reload(bool settingsChange = false)
+        {
+            //cbDatabaseList.Text = "Select a Database Backup";
+            //LoadDatabaseList();
+            //LoadDatabaseDescription(cbDatabaseList.Text);
             if (settingsChange)
             {
                 DetermineMode();
@@ -186,12 +197,17 @@ namespace EnvironmentManager4
         public void LoadSQLServerListView()
         {
             lvInstalledSQLServers.Items.Clear();
-            List<string> sqlServices = SQLServices.InstalledSQLServerInstanceNames();
-            foreach (string sqlService in sqlServices)
+            List<string> services = SQLServices.InstalledSQLServerInstanceNames();
+            services.AddRange(SQLServices.GetSalesPadServices());
+            bool status = false;
+            string serverStatus = "";
+            foreach (string service in services)
             {
-                bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(sqlService));
-                string serverStatus = "";
-                ListViewItem item = new ListViewItem(sqlService);
+                if (SQLServices.IsSQLService(service))
+                    status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(service));
+                else
+                    status = SQLServices.IsServiceRunning(service);
+                ListViewItem item = new ListViewItem(service);
                 switch (status)
                 {
                     case true:
@@ -246,26 +262,7 @@ namespace EnvironmentManager4
 
         private void RemoveOtherProducts(string product)
         {
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            string buildPath = "";
-            switch (product)
-            {
-                case "DataCollection":
-                    buildPath = settingsModel.BuildManagement.DataCollectionDirectory;
-                    break;
-                case "SalesPad Mobile":
-                    buildPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
-                    break;
-                case "ShipCenter":
-                    buildPath = settingsModel.BuildManagement.ShipCenterDirectory;
-                    break;
-                case "Customer Portal Web":
-                    buildPath = settingsModel.BuildManagement.GPWebDirectory;
-                    break;
-                case "Customer Portal API":
-                    buildPath = settingsModel.BuildManagement.WebAPIDirectory;
-                    break;
-            }
+            string buildPath = ProductInfo.GetProductInfo(product).InstallDirectory;
 
             string message = String.Format("Are you sure you want to delete all of your {0} builds?", product);
             string caption = "CONFIRM";
@@ -296,52 +293,100 @@ namespace EnvironmentManager4
 
         public void DetermineMode()
         {
-            cbSPGPVersion.Text = "x64";
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            switch (settingsModel.Other.Mode)
+            LoadProductList();
+            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
+            cbAlwaysOnTop.Visible = settings.Other.ShowAlwaysOnTop;
+            labelReloadVPNIPAddress.Visible = settings.Other.ShowVPNIP;
+            tbSPVPNIPAddress.Visible = settings.Other.ShowVPNIP;
+            labelReloadIPAddress.Visible = settings.Other.ShowIP;
+            tbWiFiIPAddress.Visible = settings.Other.ShowIP;
+
+            labelReloadVPNIPAddress.Location = new Point(89, 566);
+            tbSPVPNIPAddress.Location = new Point(136, 563);
+
+            if (settings.Other.ShowVPNIP || settings.Other.ShowIP)
+                this.Size = new Size(536, 626);
+
+            if (!settings.Other.ShowVPNIP && !settings.Other.ShowIP)
+                this.Size = new Size(536, 605);
+
+            if (settings.Other.ShowVPNIP && !settings.Other.ShowIP)
+            {
+                //starting VPNIPLabel POS   89, 566
+                //starting VPNIPTextBox POS 136, 563
+                //starting WifiIPLabel POS  339, 566
+                //starting WifiTextBox POS  386, 563
+                labelReloadVPNIPAddress.Location = new Point(339, 566);
+                tbSPVPNIPAddress.Location = new Point(386, 563);
+            }
+
+            switch (settings.Other.Mode)
             {
                 case "Standard":
                     cbProductList.Text = "Select a Product";
                     cbProductList.Enabled = true;
-                    cbSPGPVersion.Enabled = true;
+                    cbSPGPVersion.Enabled = false;
+                    btnBuildFolder.Enabled = true;
                     break;
                 case "Kyle":
                     cbProductList.Text = "Select a Product";
                     cbProductList.Enabled = true;
-                    cbSPGPVersion.Enabled = true;
+                    cbSPGPVersion.Enabled = false;
                     btnBuildFolder.Enabled = false;
                     break;
                 case "SmartBear":
-                    cbProductList.Text = "SalesPad GP";
+                    cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact("x86");
+                    cbProductList.SelectedIndex = cbProductList.FindStringExact("SalesPad GP");
                     cbProductList.Enabled = false;
                     cbSPGPVersion.Enabled = false;
+                    btnBuildFolder.Enabled = false;
                     break;
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void LoadProductList()
         {
-            if (Environment.MachineName != "STEVERODRIGUEZ")
+            cbProductList.Items.Clear();
+            foreach (string product in productList)
+            {
+                cbProductList.Items.Add(product);
+            }
+        }
+
+        private void LoadWifiIP()
+        {
+            tbWiFiIPAddress.Text = Utilities.GetIP("Wi-Fi");
+        }
+
+        private void LoadVPNIP()
+        {
+            tbSPVPNIPAddress.Text = Utilities.GetIP("SalesPad VPN");
+        }
+
+        private void ConfigureEnvironment(string machine)
+        {
+            if (machine != "STEVERODRIGUEZ")
             {
                 notesToolStripMenuItem.Visible = false;
                 directoryCompareToolStripMenuItem.Visible = false;
                 trimSOLTickets.Visible = false;
                 generateSettingsFileToolStripMenuItem.Visible = false;
                 generateCoreModulesFileToolStripMenuItem.Visible = false;
-                generateConfigurationsFileToolStripMenuItem.Visible = false;
-                generateConfigurationsFileWithNullsToolStripMenuItem.Visible = false;
+                deleteBuildInstallsToolStripMenuItem.Visible = false;
             }
-            Reload(true);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ConfigureEnvironment(Environment.MachineName);
+            SettingsReload(true);
             LoadGPInstalls();
-            tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();
-            tbSPVPNIPAddress.Text = Utilities.GetSalesPadVPNIPAddress();
+            LoadWifiIP();
+            LoadVPNIP();
             LoadSQLServerListView();
             cbSPGPVersion.Enabled = false;
-            cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact("x64");
-            foreach (string product in productList)
-            {
-                cbProductList.Items.Add(product);
-            }
+            LoadProductList();
             return;
         }
 
@@ -355,7 +400,7 @@ namespace EnvironmentManager4
 
         private void SettingsClose(object sender, FormClosingEventArgs e)
         {
-            Reload(true);
+            SettingsReload(true);
         }
 
         private void labelGPInstallationList_Click(object sender, EventArgs e)
@@ -429,10 +474,18 @@ namespace EnvironmentManager4
             {
                 EnableSQLControls(false);
                 string selectedService = lvInstalledSQLServers.SelectedItems[0].Text;
-                bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(selectedService));
-                if (!status)
+                bool isSQLService = SQLServices.IsSQLService(selectedService);
+                if (isSQLService)
                 {
-                    SQLServices.StartSQLServer(SQLServices.FormatServiceName(selectedService));
+                    bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(selectedService));
+                    if (!status)
+                        SQLServices.StartSQLServer(SQLServices.FormatServiceName(selectedService));
+                }
+                else
+                {
+                    bool status = SQLServices.IsServiceRunning(selectedService);
+                    if (!status)
+                        SQLServices.StartSQLServer(selectedService);
                 }
                 LoadSQLServerListView();
                 EnableSQLControls(true);
@@ -446,10 +499,19 @@ namespace EnvironmentManager4
             {
                 EnableSQLControls(false);
                 string selectedService = lvInstalledSQLServers.SelectedItems[0].Text;
-                bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(selectedService));
-                if (status)
+                bool isSQLService = SQLServices.IsSQLService(selectedService);
+                if (isSQLService)
                 {
-                    SQLServices.StopSQLServer(SQLServices.FormatServiceName(selectedService));
+                    bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(selectedService));
+                    if (status)
+                        SQLServices.StopSQLServer(SQLServices.FormatServiceName(selectedService));
+                }
+                else
+                {
+                    bool status = SQLServices.IsServiceRunning(selectedService);
+                    if (status)
+                        SQLServices.StopSQLServer(selectedService);
+
                 }
                 LoadSQLServerListView();
                 EnableSQLControls(true);
@@ -464,16 +526,29 @@ namespace EnvironmentManager4
 
         private void btnStopAllServices_Click(object sender, EventArgs e)
         {
-            List<string> installedSQLServices = SQLServices.InstalledSQLServerInstanceNames();
+            List<string> installedSQLServices = new List<string>();
+            foreach (ListViewItem service in lvInstalledSQLServers.Items)
+            {
+                installedSQLServices.Add(service.Text);
+            }
             if (installedSQLServices.Count != 0)
             {
                 EnableSQLControls(false);
                 foreach (string service in installedSQLServices)
                 {
-                    bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(service));
-                    if (status)
+                    bool isSQLService = SQLServices.IsSQLService(service);
+                    if (isSQLService)
                     {
-                        SQLServices.StopSQLServer(SQLServices.FormatServiceName(service));
+                        bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(service));
+                        if (status)
+                            SQLServices.StopSQLServer(SQLServices.FormatServiceName(service));
+                    }
+                    else
+                    {
+                        bool status = SQLServices.IsServiceRunning(service);
+                        if (status)
+                            SQLServices.StopSQLServer(service);
+
                     }
                 }
                 LoadSQLServerListView();
@@ -486,8 +561,6 @@ namespace EnvironmentManager4
         {
             //if (Control.ModifierKeys == Keys.Shift)
             //{
-            //    TestTextPrompt test = new TestTextPrompt();
-            //    test.Show();
             //    return;
             //}
             string message = "Are you sure you want to open the database backup folder?";
@@ -592,7 +665,7 @@ namespace EnvironmentManager4
                 if (result == DialogResult.Yes)
                 {
                     DatabaseManagement.DeleteDatabase(backupName, backupZip, true, true);
-                    Reload();
+                    SettingsReload();
                 }
             }
             return;
@@ -712,7 +785,6 @@ namespace EnvironmentManager4
             }
             string product = cbProductList.Text;
             string version = cbSPGPVersion.Text;
-            string buildPath = "";
             if (!productList.Contains(product))
             {
                 string errorMessage = "Please select a Product.";
@@ -733,37 +805,13 @@ namespace EnvironmentManager4
                 MessageBox.Show(message, caption, buttons, icon);
                 return;
             }
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            switch (product)
-            {
-                case "SalesPad GP":
-                    switch (version)
-                    {
-                        case "x86":
-                            buildPath = settingsModel.BuildManagement.SalesPadx86Directory;
-                            break;
-                        case "x64":
-                            buildPath = settingsModel.BuildManagement.SalesPadx64Directory;
-                            break;
-                    }
-                    break;
-                case "DataCollection":
-                    buildPath = settingsModel.BuildManagement.DataCollectionDirectory;
-                    break;
-                case "SalesPad Mobile":
-                    buildPath = settingsModel.BuildManagement.SalesPadMobileDirectory;
-                    break;
-                case "ShipCenter":
-                    buildPath = settingsModel.BuildManagement.ShipCenterDirectory;
-                    break;
-            }
 
+            string buildPath = ProductInfo.GetProductInfo(product, version).InstallDirectory;
             if (!Directory.Exists(buildPath))
             {
                 MessageBox.Show(String.Format("The Settings defined path for '{0}', '{1}' does not exist. There are either no builds to launch, or Settings needs reconfigured.", product, buildPath));
                 return;
             }
-
             try
             {
                 Process.Start(buildPath);
@@ -791,22 +839,13 @@ namespace EnvironmentManager4
 
         private void labelReloadVPNIPAddress_Click(object sender, EventArgs e)
         {
-            tbSPVPNIPAddress.Text = Utilities.GetSalesPadVPNIPAddress();
+            LoadVPNIP();
             return;
         }
 
         private void labelReloadIPAddress_Click(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Shift)
-            {
-                MessageBox.Show(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-                //ConfigModel configModel = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(Utilities.GetConfigurationsFile()));
-                //foreach (var config in configModel.Configurations)
-                //{
-                //    MessageBox.Show(config.ToString());
-                //}
-            }
-            tbWiFiIPAddress.Text = Utilities.GetWiFiIPAddress();
+            LoadWifiIP();
             return;
         }
 
@@ -924,24 +963,13 @@ namespace EnvironmentManager4
             return;
         }
 
-        private void generateConfigurationsFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Utilities.GenerateConfigs();
-            return;
-        }
-
-        private void generateConfigurationsFileWithNullsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //Utilities.GenerateConfigsWithNulls();
-            //return;
-        }
-
         private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedProduct = cbProductList.Text;
             if (selectedProduct == "SalesPad GP")
             {
-                cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact("x64");
+                SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+                cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
                 cbSPGPVersion.Enabled = true;
             }
             else

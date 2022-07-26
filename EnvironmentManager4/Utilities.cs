@@ -31,76 +31,57 @@ namespace EnvironmentManager4
             ,"Customer Portal API"
         };
 
+        public static bool DevEnvironment()
+        {
+            if (Environment.CurrentDirectory == @"C:\Program Files (x86)\EnvMgr")
+                return false;
+            else
+                return true;
+        }
+
         public static string GetSettingsFile()
         {
-            //return Environment.CurrentDirectory + @"\Files\Settings.json";
-            return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
-            //return @"C:\Users\steve.rodriguez\Desktop\test\EnvMgr Settings\Settings.json";
+            if (DevEnvironment())
+                return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+            else
+                return Environment.CurrentDirectory + @"\Files\Settings.json";
         }
 
         public static string GetInstallerFolder()
         {
-            //return Environment.CurrentDirectory + @"\Installers";
-            return @"C:\Program Files (x86)\EnvMgr\Installers";
+            if (DevEnvironment())
+                return @"C:\Program Files (x86)\EnvMgr\Installers";
+            else
+                return Environment.CurrentDirectory + @"\Installers";
         }
 
         public static string GetDLLsFolder()
         {
-            //return Environment.CurrentDirectory + @"\Dlls";
-            return @"C:\Program Files (x86)\EnvMgr\Dlls";
+            if (DevEnvironment())
+                return @"C:\Program Files (x86)\EnvMgr\Dlls";
+            else
+                return Environment.CurrentDirectory + @"\Dlls";
         }
 
         public static string GetNotesFile()
         {
-            return Environment.CurrentDirectory + @"\Files\Notes.txt";
-            //return @"C:\Program Files (x86)\EnvMgr\Files\Notes.txt";
+            if (DevEnvironment())
+                return @"C:\Program Files (x86)\EnvMgr\Files\Notes.txt";
+            else
+                return Environment.CurrentDirectory + @"\Files\Notes.txt";
         }
 
-        public static string GetConfigurationDirectory()
+        public static string GetConfigurationsFile()
         {
-            //return String.Format(@"{0}\{1}", Environment.CurrentDirectory, @"\Files\Configurations");
-            return @"C:\Program Files (x86)\EnvMgr\Files\Configurations";
-        }
-
-        public static string GetConfigurationsFiles(string product)
-        {
-            //string env = Environment.CurrentDirectory;
-            string env = @"C:\Program Files (x86)\EnvMgr";
-            return String.Format(@"{0}\Files\Configurations\{1}", env, product);
+            if (DevEnvironment())
+                return @"C:\Program Files (x86)\EnvMgr\Files\Configurations.json";
+            else
+                return Environment.CurrentDirectory + @"\Files\Configurations.json";
         }
 
         public static string RetrieveExe(string product, string installerPath = null, bool filter = false)
         {
-            string executable = "";
-            switch (product)
-            {
-                case "SalesPad GP":
-                    executable = "SalesPad.exe";
-                    break;
-                case "DataCollection":
-                    if (File.Exists(String.Format(@"{0}\{1}", installerPath, "DataCollection Extended Warehouse.exe")))
-                    {
-                        executable = "DataCollection Extended Warehouse.exe";
-                    }
-                    if (File.Exists(String.Format(@"{0}\{1}", installerPath, "SalesPad Inventory Manager Extended Warehouse.exe")))
-                    {
-                        executable = "SalesPad Inventory Manager Extended Warehouse.exe";
-                    }
-                    if (File.Exists(String.Format(@"{0}\{1}", installerPath, "SalesPad Inventory Manager.exe")))
-                    {
-                        executable = "SalesPad Inventory Manager.exe";
-                    }
-                    break;
-                case "Inventory Manager":
-                    executable = "SalesPad Inventory Manager Extended Warehouse.exe";
-                    break;
-                case "SalesPad Mobile":
-                    executable = "SalesPad.GP.Mobile.Server.exe";
-                    break;
-                case "ShipCenter":
-                    executable = "SalesPad.ShipCenter.exe";
-                    break;
-            }
+            string executable = ProductInfo.GetProductInfo(product, null, installerPath).ProductExecutable;
             if (filter)
             {
                 executable = String.Format("*{0}", executable);
@@ -108,9 +89,9 @@ namespace EnvironmentManager4
             return executable;
         }
 
-        public static string GetWiFiIPAddress()
+        public static string GetIP(string networkName)
         {
-            string local = "";
+            string ip = "";
             NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface network in networkInterfaces)
             {
@@ -123,39 +104,14 @@ namespace EnvironmentManager4
                     if (IPAddress.IsLoopback(address.Address))
                         continue;
 
-                    if (network.Name == "Wi-Fi")
+                    if (network.Name == networkName)
                     {
                         return address.Address.ToString();
                     }
-                    local = "NOT CONNECTED";
+                    ip = "NOT CONNECTED";
                 }
             }
-            return local;
-        }
-
-        public static string GetSalesPadVPNIPAddress()
-        {
-            string ipAddress = "";
-            NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (NetworkInterface network in networkInterfaces)
-            {
-                IPInterfaceProperties properties = network.GetIPProperties();
-                foreach (IPAddressInformation address in properties.UnicastAddresses)
-                {
-                    if (address.Address.AddressFamily != AddressFamily.InterNetwork)
-                        continue;
-
-                    if (IPAddress.IsLoopback(address.Address))
-                        continue;
-
-                    if (network.Name == "SalesPad VPN")
-                    {
-                        return address.Address.ToString();
-                    }
-                    ipAddress = "NOT CONNECTED";
-                }
-            }
-            return ipAddress;
+            return ip;
         }
 
         public static string TrimEndOfPath(string path)
@@ -171,37 +127,11 @@ namespace EnvironmentManager4
 
         public static string GetProductInstallPath(string product, string version)
         {
-            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            string productPath = "";
-            switch (product)
-            {
-                case "SalesPad GP":
-                    switch (version)
-                    {
-                        case "x86":
-                            productPath = settings.BuildManagement.SalesPadx86Directory;
-                            break;
-                        case "x64":
-                            productPath = settings.BuildManagement.SalesPadx64Directory;
-                            break;
-                    }
-                    break;
-                case "DataCollection":
-                    productPath = settings.BuildManagement.DataCollectionDirectory;
-                    break;
-                case "Inventory Manager":
-                    productPath = settings.BuildManagement.DataCollectionDirectory;
-                    break;
-                case "SalesPad Mobile":
-                    productPath = settings.BuildManagement.SalesPadMobileDirectory;
-                    break;
-                case "ShipCenter":
-                    productPath = settings.BuildManagement.ShipCenterDirectory;
-                    break;
-            }
-            if (settings.Other.Mode != "Standard")
-                return productPath.Substring(0, productPath.LastIndexOf('\\'));
-            return productPath;
+            string mode = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile())).Other.Mode;
+            string installDir = ProductInfo.GetProductInfo(product, version).InstallDirectory;
+            if (mode != "Standard")
+                return installDir.Substring(0, installDir.LastIndexOf('\\'));
+            return installDir;
         }
 
         public static List<string> InstalledBuilds(string product, string version)
@@ -238,7 +168,7 @@ namespace EnvironmentManager4
         public static void CreateDefaultSettingsFile()
         {
             List<string> dbList = new List<string>();
-            List<ConnectionList> connectionList = new List<ConnectionList>();
+            List<Connection> connectionList = new List<Connection>();
 
             var dbManagement = new DbManagement
             {
@@ -264,7 +194,11 @@ namespace EnvironmentManager4
 
             var other = new Other
             {
-                Mode = "Standard"
+                Mode = "Standard",
+                DefaultVersion = "x64",
+                ShowAlwaysOnTop = true,
+                ShowVPNIP = true,
+                ShowIP = true
             };
 
             var settings = new SettingsModel
@@ -365,180 +299,46 @@ namespace EnvironmentManager4
             }
         }
 
-        public static void GenerateConfigs()
+        public static void ResizeListviewColumnWidth(ListView lv, int rowCount, int indx, int minW, int maxW)
         {
-            //var ediExt = new List<string>
-            //{
-            //    "SalesPadEDI"
-            //};
-            //var ediCust = new List<string>();
-            //var ediConfig = new ExtAndCustom
-            //{
-            //    ConfigurationName = "EDI",
-            //    Extended = ediExt,
-            //    Custom = ediCust
-            //};
-
-            //var aaExt = new List<string>
-            //{
-            //    "AutomationAgent",
-            //    "AutomationAgentService"
-            //};
-            //var aaCust = new List<string>();
-            //var aaConfig = new ExtAndCustom
-            //{
-            //    ConfigurationName = "AA",
-            //    Extended = aaExt,
-            //    Custom = aaCust
-            //};
-
-            //var intExt = new List<string>
-            //{
-            //    "AutomationAgent",
-            //    "AutomationAgentService",
-            //    "Integration",
-            //    "Integration.Magento2",
-            //    "Integration.Shopify"
-            //};
-            //var intCust = new List<string>();
-            //var intConfig = new ExtAndCustom
-            //{
-            //    ConfigurationName = "Integrations",
-            //    Extended = intExt,
-            //    Custom = intCust
-            //};
-
-            //var spCore = new List<ExtAndCustom>
-            //{
-            //    ediConfig,
-            //    aaConfig,
-            //    intConfig
-            //};
-
-            //var dcCore = new List<JustCustom>();
-            //var scCore = new List<JustCustom>();
-            //var webCore = new List<JustCustom>();
-            //var apiCore = new List<JustCustom>();
-
-            //var configurations = new Configurations
-            //{
-            //    SalesPad = spCore,
-            //    DataCollection = dcCore,
-            //    ShipCenter = scCore,
-            //    GPWeb = webCore,
-            //    WebAPI = apiCore
-            //};
-
-            //string json = JsonConvert.SerializeObject(configurations, Formatting.Indented);
-
-            //SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //saveFileDialog.Filter = "JSON |*.json";
-            //saveFileDialog.Title = "Save Core Modules File";
-            //saveFileDialog.ShowDialog();
-
-            //if (!String.IsNullOrWhiteSpace(saveFileDialog.FileName))
-            //{
-            //    try
-            //    {
-            //        File.WriteAllText(saveFileDialog.FileName, json);
-            //        string message = "The file was successfully saved.";
-            //        string caption = "SUCCESS";
-            //        MessageBoxButtons buttons = MessageBoxButtons.OK;
-            //        MessageBoxIcon icon = MessageBoxIcon.Exclamation;
-
-            //        MessageBox.Show(message, caption, buttons, icon);
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        MessageBox.Show(String.Format("There was an error saving the file to {0}, error is as follows:\n\n{1}\n\n{2}", saveFileDialog.FileName, e.Message, e.ToString()));
-            //    }
-            //    return;
-            //}
+            int count = lv.Items.Count;
+            if (count > rowCount)
+                lv.Columns[indx].Width = minW;
+            else
+                lv.Columns[indx].Width = maxW;
         }
 
-        public static void GenerateConfigsWithNulls()
+        public static int GetNthIndex(string s, char t, int n)
         {
-            //    var ediExt = new List<string>
-            //    {
-            //        "SalesPadEDI"
-            //    };
-            //    var ediConfig = new ExtAndCustom
-            //    {
-            //        ConfigurationName = "EDI",
-            //        Extended = ediExt,
-            //    };
+            int count = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == t)
+                {
+                    count++;
+                    if (count == n)
+                    {
+                        return i + 1;
+                    }
+                }
+            }
+            return -1;
+        }
 
-            //    var aaExt = new List<string>
-            //    {
-            //        "AutomationAgent",
-            //        "AutomationAgentService"
-            //    };
-            //    var aaConfig = new ExtAndCustom
-            //    {
-            //        ConfigurationName = "AA",
-            //        Extended = aaExt,
-            //    };
+        public static string GetDatabaseDescription(string backupName)
+        {
+            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(GetSettingsFile()));
+            string zipPath = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
 
-            //    var intExt = new List<string>
-            //    {
-            //        "AutomationAgent",
-            //        "AutomationAgentService",
-            //        "Integration",
-            //        "Integration.Magento2",
-            //        "Integration.Shopify"
-            //    };
-            //    var intConfig = new ExtAndCustom
-            //    {
-            //        ConfigurationName = "Integrations",
-            //        Extended = intExt,
-            //    };
-
-            //    var spCore = new List<ExtAndCustom>
-            //    {
-            //        ediConfig,
-            //        aaConfig,
-            //        intConfig
-            //    };
-
-            //    var dcCore = new List<JustCustom>();
-            //    var scCore = new List<JustCustom>();
-            //    var webCore = new List<JustCustom>();
-            //    var apiCore = new List<JustCustom>();
-
-            //    var configurations = new Configurations
-            //    {
-            //        SalesPad = spCore,
-            //        DataCollection = dcCore,
-            //        ShipCenter = scCore,
-            //        GPWeb = webCore,
-            //        WebAPI = apiCore
-            //    };
-
-            //    string json = JsonConvert.SerializeObject(configurations, Formatting.Indented);
-
-            //    SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //    saveFileDialog.Filter = "JSON |*.json";
-            //    saveFileDialog.Title = "Save Core Modules File";
-            //    saveFileDialog.ShowDialog();
-
-            //    if (!String.IsNullOrWhiteSpace(saveFileDialog.FileName))
-            //    {
-            //        try
-            //        {
-            //            File.WriteAllText(saveFileDialog.FileName, json);
-            //            string message = "The file was successfully saved.";
-            //            string caption = "SUCCESS";
-            //            MessageBoxButtons buttons = MessageBoxButtons.OK;
-            //            MessageBoxIcon icon = MessageBoxIcon.Exclamation;
-
-            //            MessageBox.Show(message, caption, buttons, icon);
-            //        }
-            //        catch (Exception e)
-            //        {
-            //            MessageBox.Show(String.Format("There was an error saving the file to {0}, error is as follows:\n\n{1}\n\n{2}", saveFileDialog.FileName, e.Message, e.ToString()));
-            //        }
-            //        return;
-            //    }
+            using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
+            {
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
+                {
+                    ZipArchiveEntry description = archive.GetEntry("Description.txt");
+                    using (StreamReader reader = new StreamReader(description.Open()))
+                        return reader.ReadToEnd();
+                }
+            }
         }
 
         //=======================================================[ ENCRYPTION ]========================================================
@@ -587,48 +387,6 @@ namespace EnvironmentManager4
                 System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
             }
             return returnValue;
-        }
-
-        public static void ResizeListviewColumnWidth(ListView lv, int rowCount, int indx, int minW, int maxW)
-        {
-            int count = lv.Items.Count;
-            if (count > rowCount)
-                lv.Columns[indx].Width = minW;
-            else
-                lv.Columns[indx].Width = maxW;
-        }
-
-        public static int GetNthIndex(string s, char t, int n)
-        {
-            int count = 0;
-            for (int i = 0; i < s.Length; i++)
-            {
-                if (s[i] == t)
-                {
-                    count++;
-                    if (count == n)
-                    {
-                        return i + 1;
-                    }
-                }
-            }
-            return -1;
-        }
-
-        public static string GetDatabaseDescription(string backupName)
-        {
-            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(GetSettingsFile()));
-            string zipPath = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
-
-            using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
-            {
-                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
-                {
-                    ZipArchiveEntry description = archive.GetEntry("Description.txt");
-                    using (StreamReader reader = new StreamReader(description.Open()))
-                        return reader.ReadToEnd();
-                }
-            }
         }
     }
 }

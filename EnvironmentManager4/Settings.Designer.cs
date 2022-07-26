@@ -74,6 +74,11 @@ namespace EnvironmentManager4
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbMode = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.cbDefaultProductVersion = new System.Windows.Forms.ComboBox();
+            this.checkShowAlwaysOnTop = new System.Windows.Forms.CheckBox();
+            this.checkShowVPNIP = new System.Windows.Forms.CheckBox();
+            this.checkShowWiFiIP = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -82,7 +87,7 @@ namespace EnvironmentManager4
             // btnExit
             // 
             this.btnExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnExit.Location = new System.Drawing.Point(428, 529);
+            this.btnExit.Location = new System.Drawing.Point(428, 613);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 23);
             this.btnExit.TabIndex = 27;
@@ -92,7 +97,7 @@ namespace EnvironmentManager4
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(353, 529);
+            this.btnSave.Location = new System.Drawing.Point(353, 613);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 26;
@@ -514,12 +519,17 @@ namespace EnvironmentManager4
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.checkShowWiFiIP);
+            this.groupBox3.Controls.Add(this.checkShowVPNIP);
+            this.groupBox3.Controls.Add(this.checkShowAlwaysOnTop);
+            this.groupBox3.Controls.Add(this.cbDefaultProductVersion);
+            this.groupBox3.Controls.Add(this.label14);
             this.groupBox3.Controls.Add(this.cbMode);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.ForeColor = System.Drawing.Color.Blue;
             this.groupBox3.Location = new System.Drawing.Point(2, 476);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(533, 51);
+            this.groupBox3.Size = new System.Drawing.Size(533, 135);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Other";
@@ -547,12 +557,67 @@ namespace EnvironmentManager4
             this.label8.TabIndex = 0;
             this.label8.Text = "Mode:";
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label14.Location = new System.Drawing.Point(9, 46);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(130, 13);
+            this.label14.TabIndex = 26;
+            this.label14.Text = "Default SalesPad Version:";
+            // 
+            // cbDefaultProductVersion
+            // 
+            this.cbDefaultProductVersion.FormattingEnabled = true;
+            this.cbDefaultProductVersion.Items.AddRange(new object[] {
+            "x64",
+            "x86",
+            "Pre"});
+            this.cbDefaultProductVersion.Location = new System.Drawing.Point(151, 42);
+            this.cbDefaultProductVersion.Name = "cbDefaultProductVersion";
+            this.cbDefaultProductVersion.Size = new System.Drawing.Size(349, 21);
+            this.cbDefaultProductVersion.TabIndex = 29;
+            // 
+            // checkShowAlwaysOnTop
+            // 
+            this.checkShowAlwaysOnTop.AutoSize = true;
+            this.checkShowAlwaysOnTop.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.checkShowAlwaysOnTop.Location = new System.Drawing.Point(11, 70);
+            this.checkShowAlwaysOnTop.Name = "checkShowAlwaysOnTop";
+            this.checkShowAlwaysOnTop.Size = new System.Drawing.Size(189, 17);
+            this.checkShowAlwaysOnTop.TabIndex = 31;
+            this.checkShowAlwaysOnTop.Text = "Show \"Always On Top\" Checkbox";
+            this.checkShowAlwaysOnTop.UseVisualStyleBackColor = true;
+            // 
+            // checkShowVPNIP
+            // 
+            this.checkShowVPNIP.AutoSize = true;
+            this.checkShowVPNIP.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.checkShowVPNIP.Location = new System.Drawing.Point(11, 91);
+            this.checkShowVPNIP.Name = "checkShowVPNIP";
+            this.checkShowVPNIP.Size = new System.Drawing.Size(193, 17);
+            this.checkShowVPNIP.TabIndex = 32;
+            this.checkShowVPNIP.Text = "Show \"VPN IP\" TextBox and Label";
+            this.checkShowVPNIP.UseVisualStyleBackColor = true;
+            // 
+            // checkShowWiFiIP
+            // 
+            this.checkShowWiFiIP.AutoSize = true;
+            this.checkShowWiFiIP.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.checkShowWiFiIP.Location = new System.Drawing.Point(11, 111);
+            this.checkShowWiFiIP.Name = "checkShowWiFiIP";
+            this.checkShowWiFiIP.Size = new System.Drawing.Size(192, 17);
+            this.checkShowWiFiIP.TabIndex = 33;
+            this.checkShowWiFiIP.Text = "Show \"WiFi IP\" TextBox and Label";
+            this.checkShowWiFiIP.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnExit;
-            this.ClientSize = new System.Drawing.Size(537, 554);
+            this.ClientSize = new System.Drawing.Size(537, 639);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnSave);
@@ -564,7 +629,6 @@ namespace EnvironmentManager4
             this.Name = "Settings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings";
-            //this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormIsClosing);
             this.Load += new System.EventHandler(this.Settings_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -622,5 +686,10 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnDeleteConnection;
         private System.Windows.Forms.Button btnToggleVisibility;
+        private System.Windows.Forms.CheckBox checkShowWiFiIP;
+        private System.Windows.Forms.CheckBox checkShowVPNIP;
+        private System.Windows.Forms.CheckBox checkShowAlwaysOnTop;
+        private System.Windows.Forms.ComboBox cbDefaultProductVersion;
+        private System.Windows.Forms.Label label14;
     }
 }
