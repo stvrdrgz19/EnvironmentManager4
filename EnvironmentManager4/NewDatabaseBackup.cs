@@ -39,7 +39,8 @@ namespace EnvironmentManager4
         private void btnOK_Click(object sender, EventArgs e)
         {
             string databaseName = tbDatabaseName.Text;
-            string databaseDescription = tbDatabaseDescription.Text;
+            string newDatabaseDescription = tbDatabaseDescription.Text;
+            string existingDatabaseDescription = "";
             if (String.IsNullOrWhiteSpace(databaseName))
             {
                 MessageBox.Show("Please enter a database name to continue.");
@@ -50,10 +51,11 @@ namespace EnvironmentManager4
             {
                 if (File.Exists(existingDatabaseFile))
                 {
+                    existingDatabaseDescription = Utilities.GetDatabaseDescription(databaseName);
                     DatabaseManagement.DeleteDatabase(databaseName, existingDatabaseFile, false, false);
                 }
             }
-
+            
             SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
             string databaseBackup = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
             string databaseBackupDirectory = String.Format(@"{0}\{1}", settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
@@ -80,7 +82,7 @@ namespace EnvironmentManager4
                     return;
                 }
             }
-            Thread newDatabaseBackup = new Thread(() => DatabaseManagement.NewDatabase(databaseName, databaseDescription, databaseBackupDirectory, action));
+            Thread newDatabaseBackup = new Thread(() => DatabaseManagement.NewDatabase(databaseName, newDatabaseDescription, databaseBackupDirectory, action, existingDatabaseDescription));
             newDatabaseBackup.Start();
             this.Close();
             return;

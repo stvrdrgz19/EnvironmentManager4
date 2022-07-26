@@ -22,7 +22,6 @@ namespace EnvironmentManager4
 
         public static string product;
         public static string version;
-        public static string path;
 
         public static string[] LoadDllList(string path)
         {

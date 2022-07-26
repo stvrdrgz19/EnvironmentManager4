@@ -24,7 +24,7 @@ namespace EnvironmentManager4
         }
 
         public static SettingsModel startingSettings = new SettingsModel();
-        public static List<ConnectionList> connectionsInMemory = new List<ConnectionList>();
+        public static List<Connection> connectionsInMemory = new List<Connection>();
         public static bool connectionModified = false;
         public static bool connected;
 
@@ -38,21 +38,21 @@ namespace EnvironmentManager4
                 tbdatabaseBackupDirectory.Text = settingsModel.DbManagement.DatabaseBackupDirectory;
                 cbConnections.Text = settingsModel.DbManagement.Connection;
 
-                List<ConnectionList> connectionsLists = new List<ConnectionList>();
+                List<Connection> connectionsLists = new List<Connection>();
                 connectionsLists.AddRange(settingsModel.DbManagement.ConnectionsList);
 
                 //Need to check if connectionsInMemory already has a connection being loaded.
                 List<string> connectionNames = new List<string>();
-                foreach (ConnectionList connectionInMemory in connectionsInMemory)
+                foreach (Connection connectionInMemory in connectionsInMemory)
                     connectionNames.Add(connectionInMemory.ConnectionName);
-                foreach (ConnectionList connectionList in settingsModel.DbManagement.ConnectionsList)
+                foreach (Connection connectionList in settingsModel.DbManagement.ConnectionsList)
                 {
                     if (!connectionNames.Contains(connectionList.ConnectionName))
                         connectionsInMemory.Add(connectionList);
                 }
                 //connectionsInMemory.AddRange(settingsModel.DbManagement.ConnectionsList);
 
-                foreach (ConnectionList conn in connectionsLists)
+                foreach (Connection conn in connectionsLists)
                 {
                     cbConnections.Items.Add(conn.ConnectionName);
                 }
@@ -77,6 +77,10 @@ namespace EnvironmentManager4
 
                 //=====================================================[ OTHER SETTINGS ]======================================================
                 cbMode.Text = settingsModel.Other.Mode;
+                cbDefaultProductVersion.Text = settingsModel.Other.DefaultVersion;
+                checkShowAlwaysOnTop.Checked = settingsModel.Other.ShowAlwaysOnTop;
+                checkShowVPNIP.Checked = settingsModel.Other.ShowVPNIP;
+                checkShowWiFiIP.Checked = settingsModel.Other.ShowIP;
                 SetStartingValues();
             }
             catch (Exception e)
@@ -117,7 +121,11 @@ namespace EnvironmentManager4
 
             var other = new Other
             {
-                Mode = cbMode.Text
+                Mode = cbMode.Text,
+                DefaultVersion = cbDefaultProductVersion.Text,
+                ShowAlwaysOnTop = checkShowAlwaysOnTop.Checked,
+                ShowVPNIP = checkShowVPNIP.Checked,
+                ShowIP = checkShowWiFiIP.Checked
             };
 
             var settings = new SettingsModel
@@ -394,7 +402,7 @@ namespace EnvironmentManager4
                 }
 
                 //Place the current connection info into a ConnectionList class
-                ConnectionList conn = new ConnectionList();
+                Connection conn = new Connection();
                 conn.ConnectionName = cbConnections.Text;
                 conn.ConnectionUN = tbSQLServerUN.Text;
                 conn.ConnectionPW = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text));
@@ -411,7 +419,7 @@ namespace EnvironmentManager4
         private void cbConnections_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedConnection = cbConnections.Text;
-            foreach (ConnectionList conn in connectionsInMemory)
+            foreach (Connection conn in connectionsInMemory)
             {
                 if (selectedConnection == conn.ConnectionName)
                 {

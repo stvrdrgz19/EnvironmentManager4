@@ -18,6 +18,10 @@
     "WebAPIDirectory": "C:\\inetpub\\wwwroot\\SalesPadWebAPI"
   },
   "Other": {
-    "Mode": "Standard"
+    "Mode": "Standard",
+    "DefaultVersion": "x64",
+    "ShowAlwaysOnTop": true,
+    "ShowVPNIP": true,
+    "ShowIP": true
   }
 }

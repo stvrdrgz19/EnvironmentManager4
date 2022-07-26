@@ -29,6 +29,7 @@ namespace EnvironmentManager4
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.labelReloadVPNIPAddress = new System.Windows.Forms.Label();
             this.tbSPVPNIPAddress = new System.Windows.Forms.TextBox();
@@ -50,7 +51,6 @@ namespace EnvironmentManager4
             this.btnRestoreDB = new System.Windows.Forms.Button();
             this.btnDBBackupFolder = new System.Windows.Forms.Button();
             this.cbDatabaseList = new System.Windows.Forms.ComboBox();
-            this.cbSelectedGP = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lvInstalledSQLServers = new System.Windows.Forms.ListView();
             this.chService = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -81,11 +81,10 @@ namespace EnvironmentManager4
             this.trimSOLTickets = new System.Windows.Forms.ToolStripMenuItem();
             this.generateSettingsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateCoreModulesFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateConfigurationsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateConfigurationsFileWithNullsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -202,6 +201,7 @@ namespace EnvironmentManager4
             this.cbProductList.Size = new System.Drawing.Size(425, 21);
             this.cbProductList.TabIndex = 0;
             this.cbProductList.Text = "Select a Product";
+            this.toolTip1.SetToolTip(this.cbProductList, "Select a product to install or launch");
             this.cbProductList.SelectedIndexChanged += new System.EventHandler(this.cbProductList_SelectedIndexChanged);
             // 
             // btnLaunchProduct
@@ -223,6 +223,7 @@ namespace EnvironmentManager4
             this.btnInstallProduct.Size = new System.Drawing.Size(125, 23);
             this.btnInstallProduct.TabIndex = 9;
             this.btnInstallProduct.Text = "Install";
+            this.toolTip1.SetToolTip(this.btnInstallProduct, "Install the selected product.");
             this.btnInstallProduct.UseVisualStyleBackColor = true;
             this.btnInstallProduct.Click += new System.EventHandler(this.btnInstallProduct_Click);
             // 
@@ -235,7 +236,6 @@ namespace EnvironmentManager4
             this.groupBox3.Controls.Add(this.btnRestoreDB);
             this.groupBox3.Controls.Add(this.btnDBBackupFolder);
             this.groupBox3.Controls.Add(this.cbDatabaseList);
-            this.groupBox3.Controls.Add(this.cbSelectedGP);
             this.groupBox3.ForeColor = System.Drawing.Color.Blue;
             this.groupBox3.Location = new System.Drawing.Point(5, 254);
             this.groupBox3.Name = "groupBox3";
@@ -312,30 +312,12 @@ namespace EnvironmentManager4
             // cbDatabaseList
             // 
             this.cbDatabaseList.FormattingEnabled = true;
-            this.cbDatabaseList.Location = new System.Drawing.Point(86, 20);
+            this.cbDatabaseList.Location = new System.Drawing.Point(6, 20);
             this.cbDatabaseList.Name = "cbDatabaseList";
-            this.cbDatabaseList.Size = new System.Drawing.Size(394, 21);
+            this.cbDatabaseList.Size = new System.Drawing.Size(474, 21);
             this.cbDatabaseList.TabIndex = 1;
             this.cbDatabaseList.Text = "Select a Database";
             this.cbDatabaseList.SelectedIndexChanged += new System.EventHandler(this.cbDatabaseList_SelectedIndexChanged);
-            // 
-            // cbSelectedGP
-            // 
-            this.cbSelectedGP.Enabled = false;
-            this.cbSelectedGP.FormattingEnabled = true;
-            this.cbSelectedGP.Items.AddRange(new object[] {
-            "GP10",
-            "GP2010",
-            "GP2013",
-            "GP2015",
-            "GP2016",
-            "GP2018",
-            "GP2019"});
-            this.cbSelectedGP.Location = new System.Drawing.Point(6, 20);
-            this.cbSelectedGP.Name = "cbSelectedGP";
-            this.cbSelectedGP.Size = new System.Drawing.Size(76, 21);
-            this.cbSelectedGP.TabIndex = 0;
-            this.cbSelectedGP.Text = "Select GP";
             // 
             // groupBox2
             // 
@@ -346,9 +328,9 @@ namespace EnvironmentManager4
             this.groupBox2.Controls.Add(this.labelSQLVersions);
             this.groupBox2.Controls.Add(this.btnInstallService);
             this.groupBox2.ForeColor = System.Drawing.Color.Blue;
-            this.groupBox2.Location = new System.Drawing.Point(263, 31);
+            this.groupBox2.Location = new System.Drawing.Point(191, 31);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(252, 222);
+            this.groupBox2.Size = new System.Drawing.Size(324, 222);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "SQL Service Management";
@@ -363,7 +345,7 @@ namespace EnvironmentManager4
             this.lvInstalledSQLServers.HideSelection = false;
             this.lvInstalledSQLServers.Location = new System.Drawing.Point(6, 37);
             this.lvInstalledSQLServers.Name = "lvInstalledSQLServers";
-            this.lvInstalledSQLServers.Size = new System.Drawing.Size(240, 132);
+            this.lvInstalledSQLServers.Size = new System.Drawing.Size(312, 132);
             this.lvInstalledSQLServers.TabIndex = 11;
             this.lvInstalledSQLServers.UseCompatibleStateImageBehavior = false;
             this.lvInstalledSQLServers.View = System.Windows.Forms.View.Details;
@@ -371,19 +353,19 @@ namespace EnvironmentManager4
             // chService
             // 
             this.chService.Text = "Service";
-            this.chService.Width = 118;
+            this.chService.Width = 218;
             // 
             // chStatus
             // 
             this.chStatus.Text = "Status";
-            this.chStatus.Width = 118;
+            this.chStatus.Width = 90;
             // 
             // btnStopService
             // 
             this.btnStopService.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnStopService.Location = new System.Drawing.Point(126, 170);
+            this.btnStopService.Location = new System.Drawing.Point(162, 170);
             this.btnStopService.Name = "btnStopService";
-            this.btnStopService.Size = new System.Drawing.Size(121, 23);
+            this.btnStopService.Size = new System.Drawing.Size(157, 23);
             this.btnStopService.TabIndex = 10;
             this.btnStopService.Text = "Stop Service";
             this.btnStopService.UseVisualStyleBackColor = true;
@@ -394,7 +376,7 @@ namespace EnvironmentManager4
             this.btnStartService.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnStartService.Location = new System.Drawing.Point(5, 170);
             this.btnStartService.Name = "btnStartService";
-            this.btnStartService.Size = new System.Drawing.Size(121, 23);
+            this.btnStartService.Size = new System.Drawing.Size(157, 23);
             this.btnStartService.TabIndex = 9;
             this.btnStartService.Text = "Start Service";
             this.btnStartService.UseVisualStyleBackColor = true;
@@ -403,9 +385,9 @@ namespace EnvironmentManager4
             // btnStopAllServices
             // 
             this.btnStopAllServices.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnStopAllServices.Location = new System.Drawing.Point(126, 193);
+            this.btnStopAllServices.Location = new System.Drawing.Point(162, 193);
             this.btnStopAllServices.Name = "btnStopAllServices";
-            this.btnStopAllServices.Size = new System.Drawing.Size(121, 23);
+            this.btnStopAllServices.Size = new System.Drawing.Size(157, 23);
             this.btnStopAllServices.TabIndex = 8;
             this.btnStopAllServices.Text = "Stop All Services";
             this.btnStopAllServices.UseVisualStyleBackColor = true;
@@ -428,7 +410,7 @@ namespace EnvironmentManager4
             this.btnInstallService.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnInstallService.Location = new System.Drawing.Point(5, 193);
             this.btnInstallService.Name = "btnInstallService";
-            this.btnInstallService.Size = new System.Drawing.Size(121, 23);
+            this.btnInstallService.Size = new System.Drawing.Size(157, 23);
             this.btnInstallService.TabIndex = 7;
             this.btnInstallService.Text = "Install Service";
             this.btnInstallService.UseVisualStyleBackColor = true;
@@ -445,7 +427,7 @@ namespace EnvironmentManager4
             this.groupBox1.ForeColor = System.Drawing.Color.Blue;
             this.groupBox1.Location = new System.Drawing.Point(5, 31);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(252, 222);
+            this.groupBox1.Size = new System.Drawing.Size(180, 222);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Dynamics GP Management";
@@ -453,9 +435,9 @@ namespace EnvironmentManager4
             // btnLaunchGPUtils
             // 
             this.btnLaunchGPUtils.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnLaunchGPUtils.Location = new System.Drawing.Point(126, 146);
+            this.btnLaunchGPUtils.Location = new System.Drawing.Point(90, 146);
             this.btnLaunchGPUtils.Name = "btnLaunchGPUtils";
-            this.btnLaunchGPUtils.Size = new System.Drawing.Size(121, 23);
+            this.btnLaunchGPUtils.Size = new System.Drawing.Size(85, 23);
             this.btnLaunchGPUtils.TabIndex = 7;
             this.btnLaunchGPUtils.Text = "Launch GP Utils";
             this.btnLaunchGPUtils.UseVisualStyleBackColor = true;
@@ -466,7 +448,7 @@ namespace EnvironmentManager4
             this.btnLaunchSelectedGP.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnLaunchSelectedGP.Location = new System.Drawing.Point(5, 146);
             this.btnLaunchSelectedGP.Name = "btnLaunchSelectedGP";
-            this.btnLaunchSelectedGP.Size = new System.Drawing.Size(121, 23);
+            this.btnLaunchSelectedGP.Size = new System.Drawing.Size(85, 23);
             this.btnLaunchSelectedGP.TabIndex = 4;
             this.btnLaunchSelectedGP.Text = "Launch GP";
             this.btnLaunchSelectedGP.UseVisualStyleBackColor = true;
@@ -478,7 +460,7 @@ namespace EnvironmentManager4
             this.cbGPListToInstall.FormattingEnabled = true;
             this.cbGPListToInstall.Location = new System.Drawing.Point(6, 171);
             this.cbGPListToInstall.Name = "cbGPListToInstall";
-            this.cbGPListToInstall.Size = new System.Drawing.Size(240, 21);
+            this.cbGPListToInstall.Size = new System.Drawing.Size(168, 21);
             this.cbGPListToInstall.TabIndex = 3;
             this.cbGPListToInstall.Text = "Select a GP Version To Install";
             // 
@@ -488,7 +470,7 @@ namespace EnvironmentManager4
             this.btnInstallGP.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnInstallGP.Location = new System.Drawing.Point(5, 193);
             this.btnInstallGP.Name = "btnInstallGP";
-            this.btnInstallGP.Size = new System.Drawing.Size(242, 23);
+            this.btnInstallGP.Size = new System.Drawing.Size(170, 23);
             this.btnInstallGP.TabIndex = 2;
             this.btnInstallGP.Text = "Install GP";
             this.btnInstallGP.UseVisualStyleBackColor = true;
@@ -499,7 +481,7 @@ namespace EnvironmentManager4
             this.lbGPVersionsInstalled.FormattingEnabled = true;
             this.lbGPVersionsInstalled.Location = new System.Drawing.Point(6, 37);
             this.lbGPVersionsInstalled.Name = "lbGPVersionsInstalled";
-            this.lbGPVersionsInstalled.Size = new System.Drawing.Size(240, 108);
+            this.lbGPVersionsInstalled.Size = new System.Drawing.Size(168, 108);
             this.lbGPVersionsInstalled.TabIndex = 1;
             // 
             // labelGPInstallationList
@@ -560,9 +542,7 @@ namespace EnvironmentManager4
             this.directoryCompareToolStripMenuItem,
             this.trimSOLTickets,
             this.generateSettingsFileToolStripMenuItem,
-            this.generateCoreModulesFileToolStripMenuItem,
-            this.generateConfigurationsFileToolStripMenuItem,
-            this.generateConfigurationsFileWithNullsToolStripMenuItem});
+            this.generateCoreModulesFileToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -570,79 +550,65 @@ namespace EnvironmentManager4
             // resetDatabaseVersionToolStripMenuItem
             // 
             this.resetDatabaseVersionToolStripMenuItem.Name = "resetDatabaseVersionToolStripMenuItem";
-            this.resetDatabaseVersionToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.resetDatabaseVersionToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.resetDatabaseVersionToolStripMenuItem.Text = "Reset Database Version";
             this.resetDatabaseVersionToolStripMenuItem.Click += new System.EventHandler(this.resetDatabaseVersionToolStripMenuItem_Click);
             // 
             // deleteBuildInstallsToolStripMenuItem
             // 
             this.deleteBuildInstallsToolStripMenuItem.Name = "deleteBuildInstallsToolStripMenuItem";
-            this.deleteBuildInstallsToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.deleteBuildInstallsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.deleteBuildInstallsToolStripMenuItem.Text = "Delete Build Installs";
             this.deleteBuildInstallsToolStripMenuItem.Click += new System.EventHandler(this.deleteBuildInstallsToolStripMenuItem_Click);
             // 
             // databaseLogToolStripMenuItem
             // 
             this.databaseLogToolStripMenuItem.Name = "databaseLogToolStripMenuItem";
-            this.databaseLogToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.databaseLogToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.databaseLogToolStripMenuItem.Text = "Database Log";
             this.databaseLogToolStripMenuItem.Click += new System.EventHandler(this.databaseLogToolStripMenuItem_Click);
             // 
             // killSalesPadToolStripMenuItem
             // 
             this.killSalesPadToolStripMenuItem.Name = "killSalesPadToolStripMenuItem";
-            this.killSalesPadToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.killSalesPadToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.killSalesPadToolStripMenuItem.Text = "Kill SalesPad";
             this.killSalesPadToolStripMenuItem.Click += new System.EventHandler(this.killSalesPadToolStripMenuItem_Click);
             // 
             // notesToolStripMenuItem
             // 
             this.notesToolStripMenuItem.Name = "notesToolStripMenuItem";
-            this.notesToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.notesToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.notesToolStripMenuItem.Text = "Notes";
             this.notesToolStripMenuItem.Click += new System.EventHandler(this.notesToolStripMenuItem_Click);
             // 
             // directoryCompareToolStripMenuItem
             // 
             this.directoryCompareToolStripMenuItem.Name = "directoryCompareToolStripMenuItem";
-            this.directoryCompareToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.directoryCompareToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.directoryCompareToolStripMenuItem.Text = "Directory Compare";
             this.directoryCompareToolStripMenuItem.Click += new System.EventHandler(this.directoryCompareToolStripMenuItem_Click);
             // 
             // trimSOLTickets
             // 
             this.trimSOLTickets.Name = "trimSOLTickets";
-            this.trimSOLTickets.Size = new System.Drawing.Size(282, 22);
+            this.trimSOLTickets.Size = new System.Drawing.Size(235, 22);
             this.trimSOLTickets.Text = "Trim Solutions Ticket Numbers";
             this.trimSOLTickets.Click += new System.EventHandler(this.trimSOLTickets_Click);
             // 
             // generateSettingsFileToolStripMenuItem
             // 
             this.generateSettingsFileToolStripMenuItem.Name = "generateSettingsFileToolStripMenuItem";
-            this.generateSettingsFileToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.generateSettingsFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.generateSettingsFileToolStripMenuItem.Text = "Generate Settings File";
             this.generateSettingsFileToolStripMenuItem.Click += new System.EventHandler(this.generateSettingsFileToolStripMenuItem_Click);
             // 
             // generateCoreModulesFileToolStripMenuItem
             // 
             this.generateCoreModulesFileToolStripMenuItem.Name = "generateCoreModulesFileToolStripMenuItem";
-            this.generateCoreModulesFileToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.generateCoreModulesFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.generateCoreModulesFileToolStripMenuItem.Text = "Generate Core Modules File";
             this.generateCoreModulesFileToolStripMenuItem.Click += new System.EventHandler(this.generateCoreModulesFileToolStripMenuItem_Click);
-            // 
-            // generateConfigurationsFileToolStripMenuItem
-            // 
-            this.generateConfigurationsFileToolStripMenuItem.Name = "generateConfigurationsFileToolStripMenuItem";
-            this.generateConfigurationsFileToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.generateConfigurationsFileToolStripMenuItem.Text = "Generate Configurations File";
-            this.generateConfigurationsFileToolStripMenuItem.Click += new System.EventHandler(this.generateConfigurationsFileToolStripMenuItem_Click);
-            // 
-            // generateConfigurationsFileWithNullsToolStripMenuItem
-            // 
-            this.generateConfigurationsFileWithNullsToolStripMenuItem.Name = "generateConfigurationsFileWithNullsToolStripMenuItem";
-            this.generateConfigurationsFileWithNullsToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.generateConfigurationsFileWithNullsToolStripMenuItem.Text = "Generate Configurations File With Nulls";
-            this.generateConfigurationsFileWithNullsToolStripMenuItem.Click += new System.EventHandler(this.generateConfigurationsFileWithNullsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -723,7 +689,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Button btnRestoreDB;
         private System.Windows.Forms.Button btnDBBackupFolder;
         private System.Windows.Forms.ComboBox cbDatabaseList;
-        private System.Windows.Forms.ComboBox cbSelectedGP;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ListView lvInstalledSQLServers;
         private System.Windows.Forms.ColumnHeader chService;
@@ -756,9 +721,8 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateSettingsFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateCoreModulesFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem generateConfigurationsFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem generateConfigurationsFileWithNullsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteBuildInstallsToolStripMenuItem;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

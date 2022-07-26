@@ -93,5 +93,27 @@ namespace EnvironmentManager4
                 MessageBox.Show(message, caption, buttons, icon);
             }
         }
+
+        public static List<string> GetSalesPadServices()
+        {
+            List<string> serverList = new List<string>();
+            ServiceController[] services = ServiceController.GetServices();
+            foreach (ServiceController service in services)
+            {
+                if (service.DisplayName.Contains("SalesPad"))
+                {
+                    serverList.Add(service.DisplayName);
+                }
+            }
+            return serverList;
+        }
+
+        public static bool IsSQLService(string serviceName)
+        {
+            bool tf = false;
+            if (serviceName.Contains("SQL"))
+                tf = true;
+            return tf;
+        }
     }
 }
