@@ -36,7 +36,16 @@ namespace EnvironmentManager4
             {
                 if (getInstaller.Product == "SalesPad GP")
                 {
-                    openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", getInstaller.Version);
+                    switch (getInstaller.Version)
+                    {
+                        case "x64":
+                        case "x86":
+                            openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", getInstaller.Version);
+                            break;
+                        case "Pre":
+                            openFileDialog.Filter = "Executable Files (*.exe)|*.exe";
+                            break;
+                    }
                 }
                 else
                 {
@@ -153,8 +162,18 @@ namespace EnvironmentManager4
             switch (product)
             {
                 case "SalesPad GP":
-                    extModulesPath = String.Format(@"{0}\ExtModules\{1}", installerPath, productVersion);
-                    custModulesPath = String.Format(@"{0}\CustomModules\{1}", installerPath, productVersion);
+                    switch (productVersion)
+                    {
+                        case "x64":
+                        case "x86":
+                            extModulesPath = String.Format(@"{0}\ExtModules\{1}", installerPath, productVersion);
+                            custModulesPath = String.Format(@"{0}\CustomModules\{1}", installerPath, productVersion);
+                            break;
+                        case "Pre":
+                            extModulesPath = String.Format(@"{0}\ExtModules\WithOutCardControl", installerPath);
+                            custModulesPath = String.Format(@"{0}\CustomModules\WithOutCardControl", installerPath);
+                            break;
+                    }
                     break;
                 case "Customer Portal API":
                     extModulesPath = String.Format(@"{0}\ExtModules", installerPath);
@@ -174,9 +193,9 @@ namespace EnvironmentManager4
             }
             if (!String.IsNullOrWhiteSpace(extModulesPath))
             {
-                lbExtendedModules.Items.AddRange(Modules.RetrieveDLLs(extModulesPath, installerPath, product, installer));
+                lbExtendedModules.Items.AddRange(Modules.RetrieveDLLs(extModulesPath, installerPath, product, installer, productVersion));
             }
-            lbCustomModules.Items.AddRange(Modules.RetrieveDLLs(custModulesPath, installerPath, product, installer));
+            lbCustomModules.Items.AddRange(Modules.RetrieveDLLs(custModulesPath, installerPath, product, installer, productVersion));
         }
 
         public void InstallBuild(string installPath, List<string> extendedModules, List<string> customModules, bool launchAfterInstall, bool openInstallFolder, bool runDatabaseUpdate, bool resetDatabaseVersion)

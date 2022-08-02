@@ -11,13 +11,22 @@ namespace EnvironmentManager4
 {
     public class Modules
     {
-        public static string[] RetrieveDLLs(string modulePath, string buildPath, string product, string installer)
+        public static string[] RetrieveDLLs(string modulePath, string buildPath, string product, string installer, string version)
         {
             List<string> dllList = new List<string>();
             switch (product)
             {
                 case "SalesPad GP":
-                    dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, "SalesPad GP").ToString())).TrimEnd('.')));
+                    switch (version)
+                    {
+                        case "x64":
+                        case "x86":
+                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, "SalesPad GP").ToString())).TrimEnd('.')));
+                            break;
+                        case "Pre":
+                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, "SalesPad GP").ToString())).TrimEnd('.')));
+                            break;
+                    }
                     break;
                 case "DataCollection":
                     dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(24, Path.GetFileName(file).Substring(24).IndexOf(".dll"))));
@@ -35,7 +44,7 @@ namespace EnvironmentManager4
             return dllList.ToArray();
         }
 
-        public static string TrimVersion(string path, string product)
+        public static string TrimVersion(string path, string product, bool pre = false)
         {
             int charCount = 0;
             switch (product)
@@ -48,6 +57,8 @@ namespace EnvironmentManager4
                     break;
             }
             string spVersion = path.Substring(path.LastIndexOf('\\') + 1);
+            if (pre)
+                return spVersion;
             if (spVersion.Count(character => character == '.') == charCount)
             {
                 spVersion = spVersion.Substring(0, spVersion.LastIndexOf('.'));
@@ -69,8 +80,18 @@ namespace EnvironmentManager4
             switch (product)
             {
                 case "SalesPad GP":
-                    extPath = String.Format(@"{0}\ExtModules\{1}\", installerPath, version);
-                    custPath = String.Format(@"{0}\CustomModules\{1}\", installerPath, version);
+                    switch (version)
+                    {
+                        case "x64":
+                        case "x86":
+                            extPath = String.Format(@"{0}\ExtModules\{1}\", installerPath, version);
+                            custPath = String.Format(@"{0}\CustomModules\{1}\", installerPath, version);
+                            break;
+                        case "Pre":
+                            extPath = String.Format(@"{0}\ExtModules\WithOutCardControl\", installerPath);
+                            custPath = String.Format(@"{0}\CustomModules\WithOutCardControl\", installerPath);
+                            break;
+                    }
                     moduleStart = "SalesPad.Module.";
                     break;
                 case "Customer Portal API":
@@ -112,7 +133,16 @@ namespace EnvironmentManager4
                 switch (product)
                 {
                     case "SalesPad GP":
-                        dllName = String.Format("{0}{1}.{2}.{3}.Zip", moduleStart, dll, Modules.TrimVersion(installerPath, product), version.ToUpper());
+                        switch (version)
+                        {
+                            case "x64":
+                            case "x86":
+                                dllName = String.Format("{0}{1}.{2}.{3}.Zip", moduleStart, dll, Modules.TrimVersion(installerPath, product), version.ToUpper());
+                                break;
+                            case "Pre":
+                                dllName = String.Format("{0}{1}.{2}.Zip", moduleStart, dll, Modules.TrimVersion(installerPath, product, true));
+                                break;
+                        }
                         break;
                     case "Customer Portal API":
                         dllName = String.Format("");

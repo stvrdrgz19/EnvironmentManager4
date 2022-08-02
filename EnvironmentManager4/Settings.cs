@@ -289,7 +289,7 @@ namespace EnvironmentManager4
 
         private void ConnectToSQLDatabase()
         {
-            string script = @"SELECT name FROM master.dbo.sysdatabases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb')";
+            string script = @"SELECT name FROM master.dbo.sysdatabases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb', 'toolbox')";
             try
             {
                 SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", cbConnections.Text, tbSQLServerUN.Text, tbSQLServerPW.Text));
@@ -446,6 +446,22 @@ namespace EnvironmentManager4
         private void btnDeleteConnection_Click(object sender, EventArgs e)
         {
             string selectedConnection = cbConnections.Text;
+            //Check to make sure a connection is selected
+            if (String.IsNullOrWhiteSpace(selectedConnection))
+                return;
+
+            //Add all existing connection names to a list to be checked
+            List<string> connectionNames = new List<string>();
+            foreach (Connection connection in connectionsInMemory)
+            {
+                connectionNames.Add(connection.ConnectionName);
+            }
+            //Make sure the connection is actually a saved connection before attempting to delete
+            if (!connectionNames.Contains(selectedConnection))
+            {
+                MessageBox.Show(String.Format("The selected connection '{0}' does not exist as a saved connection", selectedConnection));
+                return;
+            }
 
             string message = String.Format(@"Are you sure you want to delete the '{0}' connection?", selectedConnection);
             string caption = "DELETE";

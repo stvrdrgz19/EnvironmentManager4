@@ -29,6 +29,7 @@ namespace EnvironmentManager4
             if (action == "OVERWRITE")
             {
                 this.Text = "Overwrite Database Backup";
+                tbDatabaseName.ReadOnly = true;
             }
             if (!String.IsNullOrEmpty(existingDatabaseName))
             {

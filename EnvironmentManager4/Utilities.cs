@@ -21,14 +21,11 @@ namespace EnvironmentManager4
 
         //Setup File Video - https://www.youtube.com/watch?v=tiHBwAp_Kz4&t=179s
 
-        public static List<string> productList = new List<string>
+        public static List<string> versionList = new List<string>
         {
-            "SalesPad GP"
-            ,"DataCollection"
-            ,"SalesPad Mobile"
-            ,"ShipCenter"
-            ,"Customer Portal Web"
-            ,"Customer Portal API"
+            "x86",
+            "x64",
+            "Pre"
         };
 
         public static bool DevEnvironment()
@@ -41,40 +38,65 @@ namespace EnvironmentManager4
 
         public static string GetSettingsFile()
         {
-            if (DevEnvironment())
-                return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+            if (Environment.MachineName == "STEVERODRIGUEZ")
+            {
+                if (DevEnvironment())
+                    return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+                else
+                    return Environment.CurrentDirectory + @"\Files\Settings.json";
+            }
             else
                 return Environment.CurrentDirectory + @"\Files\Settings.json";
         }
 
         public static string GetInstallerFolder()
         {
-            if (DevEnvironment())
-                return @"C:\Program Files (x86)\EnvMgr\Installers";
+            if (Environment.MachineName == "STEVERODRIGUEZ")
+            {
+                if (DevEnvironment())
+                    return @"C:\Program Files (x86)\EnvMgr\Installers";
+                else
+                    return Environment.CurrentDirectory + @"\Installers";
+            }
             else
                 return Environment.CurrentDirectory + @"\Installers";
         }
 
         public static string GetDLLsFolder()
         {
-            if (DevEnvironment())
-                return @"C:\Program Files (x86)\EnvMgr\Dlls";
+            if (Environment.MachineName == "STEVERODRIGUEZ")
+            {
+                if (DevEnvironment())
+                    return @"C:\Program Files (x86)\EnvMgr\Dlls";
+                else
+                    return Environment.CurrentDirectory + @"\Dlls";
+            }
             else
                 return Environment.CurrentDirectory + @"\Dlls";
         }
 
         public static string GetNotesFile()
         {
-            if (DevEnvironment())
-                return @"C:\Program Files (x86)\EnvMgr\Files\Notes.txt";
+            if (Environment.MachineName == "STEVERODRIGUEZ")
+            {
+                if (DevEnvironment())
+                    return @"C:\Program Files (x86)\EnvMgr\Files\Notes.txt";
+                else
+                    return Environment.CurrentDirectory + @"\Files\Notes.txt";
+            }
             else
                 return Environment.CurrentDirectory + @"\Files\Notes.txt";
         }
 
         public static string GetConfigurationsFile()
         {
-            if (DevEnvironment())
-                return @"C:\Program Files (x86)\EnvMgr\Files\Configurations.json";
+            if (Environment.MachineName == "STEVERODRIGUEZ")
+            {
+                if (DevEnvironment())
+                    return @"C:\Program Files (x86)\EnvMgr\Files\Configurations.json";
+                else
+                    return Environment.CurrentDirectory + @"\Files\Configurations.json";
+            }
             else
                 return Environment.CurrentDirectory + @"\Files\Configurations.json";
         }
@@ -104,7 +126,7 @@ namespace EnvironmentManager4
                     if (IPAddress.IsLoopback(address.Address))
                         continue;
 
-                    if (network.Name == networkName)
+                    if (network.Name.Contains(networkName))
                     {
                         return address.Address.ToString();
                     }
@@ -299,13 +321,12 @@ namespace EnvironmentManager4
             }
         }
 
-        public static void ResizeListviewColumnWidth(ListView lv, int rowCount, int indx, int minW, int maxW)
+        public static void ResizeListViewColumnWidth(ListView lv, int maxRowCount, int colIndx)
         {
             int count = lv.Items.Count;
-            if (count > rowCount)
-                lv.Columns[indx].Width = minW;
-            else
-                lv.Columns[indx].Width = maxW;
+            int maxW = lv.Columns[colIndx].Width;
+            if (count > maxRowCount)
+                lv.Columns[colIndx].Width = maxW-17;
         }
 
         public static int GetNthIndex(string s, char t, int n)
@@ -387,6 +408,41 @@ namespace EnvironmentManager4
                 System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
             }
             return returnValue;
+        }
+    }
+
+    public class Products
+    {
+        public string SalesPad { get; set; }
+        public string DataCollection { get; set; }
+        public string SalesPadMobile { get; set; }
+        public string ShipCenter { get; set; }
+        public string WebAPI { get; set; }
+        public string GPWeb { get; set; }
+
+        public static Products GetProductNames()
+        {
+            Products products = new Products();
+            products.SalesPad = "SalesPad GP";
+            products.DataCollection = "DataCollection";
+            products.SalesPadMobile = "SalesPad Mobile";
+            products.ShipCenter = "ShipCenter";
+            products.WebAPI = "Customer Portal Web";
+            products.GPWeb = "Customer Portal API";
+            return products;
+        }
+
+        public static List<string> ListOfProducts()
+        {
+            List<string> productsList = new List<string>();
+            Products products = GetProductNames();
+            productsList.Add(products.SalesPad);
+            productsList.Add(products.DataCollection);
+            productsList.Add(products.SalesPadMobile);
+            productsList.Add(products.ShipCenter);
+            //productsList.Add(products.WebAPI);
+            //productsList.Add(products.GPWeb);
+            return productsList;
         }
     }
 }

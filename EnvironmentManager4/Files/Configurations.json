@@ -15,18 +15,5 @@
       "AutomationAgentService"
     ],
     "CustomModules": []
-  },
-  {
-    "Product": "SalesPad GP",
-    "ConfigurationName": "Demo Test",
-    "ExtendedModules": [
-      "AutomationAgent",
-      "Integration",
-      "Integration.Shopify"
-    ],
-    "CustomModules": [
-      "Amada",
-      "Apet"
-    ]
   }
 ]

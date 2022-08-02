@@ -33,20 +33,6 @@ namespace EnvironmentManager4
         public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
         public const string gpPath = @"C:\Program Files (x86)\Microsoft Dynamics\";
         public static string newDBBackupName = "";
-        public static List<string> productList = new List<string>
-        {
-            "SalesPad GP"
-            ,"DataCollection"
-            ,"SalesPad Mobile"
-            ,"ShipCenter"
-            //,"Customer Portal Web"
-            //,"Customer Portal API"
-        };
-        public static List<string> versionList = new List<string>
-        {
-            "x86",
-            "x64"
-        };
 
         public static void EnableDBControls(bool enable)
         {
@@ -113,9 +99,6 @@ namespace EnvironmentManager4
 
         public void Reload(bool settingsChange = false)
         {
-            //cbDatabaseList.Text = "Select a Database Backup";
-            //LoadDatabaseList();
-            //LoadDatabaseDescription(cbDatabaseList.Text);
             if (settingsChange)
             {
                 DetermineMode();
@@ -136,6 +119,7 @@ namespace EnvironmentManager4
                 return;
             }
             cbDatabaseList.SelectedIndex = cbDatabaseList.FindStringExact(newDBBackupName);
+            SettingsReload();
         }
 
         private void EnableSQLControls(bool enable)
@@ -224,6 +208,7 @@ namespace EnvironmentManager4
                 item.SubItems.Add(serverStatus);
                 lvInstalledSQLServers.Items.Add(item);
             }
+            Utilities.ResizeListViewColumnWidth(lvInstalledSQLServers, 6, 0);
         }
 
         private void RemoveSalesPad(string x86Path, string x64Path)
@@ -348,7 +333,7 @@ namespace EnvironmentManager4
         private void LoadProductList()
         {
             cbProductList.Items.Clear();
-            foreach (string product in productList)
+            foreach (string product in Products.ListOfProducts())
             {
                 cbProductList.Items.Add(product);
             }
@@ -439,18 +424,6 @@ namespace EnvironmentManager4
             {
                 return;
             }
-            //if (Control.ModifierKeys == Keys.Shift)
-            //{
-            //    try
-            //    {
-            //        Process.Start(@"C:\Program Files\Microsoft SQL Server\MSSQL13.SQLSERVER2016\MSSQL\Backup");
-            //    }
-            //    catch
-            //    {
-            //        MessageBox.Show("There was an error launching the Dynamics Database backup folder.");
-            //    }
-            //    return;
-            //}
             string selectedGP = lbGPVersionsInstalled.Text;
             Process.Start(gpPath + selectedGP + "\\DynUtils.exe", "\"" + gpPath + selectedGP + "\\DYNUTILS.SET\"");
             return;
@@ -559,10 +532,6 @@ namespace EnvironmentManager4
 
         private void btnDBBackupFolder_Click(object sender, EventArgs e)
         {
-            //if (Control.ModifierKeys == Keys.Shift)
-            //{
-            //    return;
-            //}
             string message = "Are you sure you want to open the database backup folder?";
             string caption = "CONFIRM";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
@@ -675,18 +644,21 @@ namespace EnvironmentManager4
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                BuildLog buildLog = new BuildLog();
-                buildLog.Show();
+                if (Products.ListOfProducts().Contains(cbProductList.Text))
+                {
+                    BuildLog buildLog = new BuildLog();
+                    buildLog.Show();
+                }
                 return;
             }
             string selectedProduct = cbProductList.Text;
             string selectedVersion = cbSPGPVersion.Text;
-            if (!productList.Contains(selectedProduct))
+            if (!Products.ListOfProducts().Contains(selectedProduct))
             {
                 MessageBox.Show("Please select a product from the list to continue.");
                 return;
             }
-            if (!versionList.Contains(selectedVersion))
+            if (!Utilities.versionList.Contains(selectedVersion))
             {
                 MessageBox.Show("Please select a version from the list to continue.");
                 return;
@@ -707,7 +679,7 @@ namespace EnvironmentManager4
             string selectedProduct = cbProductList.Text;
             string selectedVersion = cbSPGPVersion.Text;
 
-            if (!productList.Contains(selectedProduct))
+            if (!Products.ListOfProducts().Contains(selectedProduct))
             {
                 string message = "Please select a product from the list.";
                 string caption = "ERROR";
@@ -718,7 +690,7 @@ namespace EnvironmentManager4
                 return;
             }
 
-            if (!versionList.Contains(selectedVersion))
+            if (!Utilities.versionList.Contains(selectedVersion))
             {
                 string message = "Please select a version from the list.";
                 string caption = "ERROR";
@@ -785,7 +757,7 @@ namespace EnvironmentManager4
             }
             string product = cbProductList.Text;
             string version = cbSPGPVersion.Text;
-            if (!productList.Contains(product))
+            if (!Products.ListOfProducts().Contains(product))
             {
                 string errorMessage = "Please select a Product.";
                 string errorCaption = "ERROR";
@@ -795,7 +767,7 @@ namespace EnvironmentManager4
                 MessageBox.Show(errorMessage, errorCaption, errorButton, errorIcon);
                 return;
             }
-            if (!versionList.Contains(version))
+            if (!Utilities.versionList.Contains(version))
             {
                 string message = "Please select a version from the list.";
                 string caption = "ERROR";

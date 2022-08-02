@@ -311,6 +311,8 @@ namespace EnvironmentManager4
             // 
             // cbDatabaseList
             // 
+            this.cbDatabaseList.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cbDatabaseList.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbDatabaseList.FormattingEnabled = true;
             this.cbDatabaseList.Location = new System.Drawing.Point(6, 20);
             this.cbDatabaseList.Name = "cbDatabaseList";
@@ -439,7 +441,7 @@ namespace EnvironmentManager4
             this.btnLaunchGPUtils.Name = "btnLaunchGPUtils";
             this.btnLaunchGPUtils.Size = new System.Drawing.Size(85, 23);
             this.btnLaunchGPUtils.TabIndex = 7;
-            this.btnLaunchGPUtils.Text = "Launch GP Utils";
+            this.btnLaunchGPUtils.Text = "Launch Utils";
             this.btnLaunchGPUtils.UseVisualStyleBackColor = true;
             this.btnLaunchGPUtils.Click += new System.EventHandler(this.btnLaunchGPUtils_Click);
             // 
