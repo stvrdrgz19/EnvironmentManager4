@@ -211,71 +211,6 @@ namespace EnvironmentManager4
             Utilities.ResizeListViewColumnWidth(lvInstalledSQLServers, 6, 0);
         }
 
-        private void RemoveSalesPad(string x86Path, string x64Path)
-        {
-            if (!String.IsNullOrWhiteSpace(x86Path) && Directory.Exists(x86Path))
-            {
-                string[] foldersx86 = Directory.GetDirectories(x86Path);
-                foreach (string dir in foldersx86)
-                {
-                    try
-                    {
-                        Directory.Delete(dir, true);
-                    }
-                    catch (Exception ex86)
-                    {
-                        MessageBox.Show(String.Format("The following build could not be deleted. It may be running.\n\n{0}\n\nThe error is as follows:{1}\n\n", dir, ex86));
-                    }
-                }
-            }
-            if (!String.IsNullOrWhiteSpace(x64Path) && Directory.Exists(x64Path))
-            {
-                string[] foldersx64 = Directory.GetDirectories(x64Path);
-                foreach (string dir in foldersx64)
-                {
-                    try
-                    {
-                        Directory.Delete(dir, true);
-                    }
-                    catch (Exception ex64)
-                    {
-                        MessageBox.Show(String.Format("The following build could not be deleted. It may be running.\n\n{0}\n\nThe error is as follows:\n\n{1}", dir, ex64));
-                    }
-                }
-            }
-        }
-
-        private void RemoveOtherProducts(string product)
-        {
-            string buildPath = ProductInfo.GetProductInfo(product).InstallDirectory;
-
-            string message = String.Format("Are you sure you want to delete all of your {0} builds?", product);
-            string caption = "CONFIRM";
-            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-            MessageBoxIcon icon = MessageBoxIcon.Question;
-            DialogResult result;
-
-            result = MessageBox.Show(message, caption, buttons, icon);
-            if (result == DialogResult.Yes)
-            {
-                if (!String.IsNullOrWhiteSpace(buildPath) && Directory.Exists(buildPath))
-                {
-                    string[] folders = Directory.GetDirectories(buildPath);
-                    foreach (string dir in folders)
-                    {
-                        try
-                        {
-                            Directory.Delete(dir, true);
-                        }
-                        catch (Exception exPath)
-                        {
-                            MessageBox.Show(String.Format("The following build could not be deleted. It may be running.\n\n{0}\n\nThe error is as follows:\n\n{1}", dir, exPath));
-                        }
-                    }
-                }
-            }
-        }
-
         public void DetermineMode()
         {
             LoadProductList();
@@ -358,7 +293,7 @@ namespace EnvironmentManager4
                 trimSOLTickets.Visible = false;
                 generateSettingsFileToolStripMenuItem.Visible = false;
                 generateCoreModulesFileToolStripMenuItem.Visible = false;
-                deleteBuildInstallsToolStripMenuItem.Visible = false;
+                //deleteBuildInstallsToolStripMenuItem.Visible = false;
             }
         }
 
@@ -709,7 +644,17 @@ namespace EnvironmentManager4
                     MessageBox.Show(String.Format("There isn't a last recorded build for the selected product '{0}'", selectedProduct));
                     return;
                 }
-                lastInstalledPath += String.Format(@"\{0}", Utilities.RetrieveExe(selectedProduct));
+
+                string exe = "";
+
+                List<Builds> builds = Builds.GetInstalledBuilds(selectedProduct, selectedVersion);
+                foreach (Builds build in builds)
+                {
+                    if (lastInstalledPath == build.InstallPath)
+                        exe = (String.Format(@"{0}\{1}",
+                            lastInstalledPath,
+                            build.Exe));
+                }
 
                 string message = String.Format("Are you sure you want to launch {0}?", lastInstalledPath);
                 string caption = "CONFIRM";
@@ -722,11 +667,11 @@ namespace EnvironmentManager4
                 {
                     try
                     {
-                        Process.Start(lastInstalledPath);
+                        Process.Start(exe);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(String.Format("There was an error launching the build listed below\n\n{0}\n\n{1}\n\n{2}", lastInstalledPath, ex.Message, ex.ToString()));
+                        MessageBox.Show(String.Format("There was an error launching the build listed below\n\n{0}\n\n{1}\n\n{2}", exe, ex.Message, ex.ToString()));
                         return;
                     }
                 }
@@ -837,45 +782,6 @@ namespace EnvironmentManager4
                 SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
                 DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), ListAndButtonForm.output);
             }
-            return;
-        }
-
-        private void salesPadDesktopToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            string x86Path = settingsModel.BuildManagement.SalesPadx86Directory;
-            string x64Path = settingsModel.BuildManagement.SalesPadx64Directory;
-
-            string message = "Are you sure you want to delete all of your SalesPad GP builds?";
-            string caption = "CONFIRM";
-            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-            MessageBoxIcon icon = MessageBoxIcon.Question;
-            DialogResult result;
-
-            result = MessageBox.Show(message, caption, buttons, icon);
-            if (result == DialogResult.Yes)
-            {
-                Thread removeSPGP = new Thread(() => RemoveSalesPad(x86Path, x64Path));
-                removeSPGP.Start();
-            }
-            return;
-        }
-
-        private void dataCollectionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RemoveOtherProducts("DataCollection");
-            return;
-        }
-
-        private void mobileSToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RemoveOtherProducts("SalesPad Mobile");
-            return;
-        }
-
-        private void shipCenterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RemoveOtherProducts("ShipCenter");
             return;
         }
 

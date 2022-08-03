@@ -101,16 +101,6 @@ namespace EnvironmentManager4
                 return Environment.CurrentDirectory + @"\Files\Configurations.json";
         }
 
-        public static string RetrieveExe(string product, string installerPath = null, bool filter = false)
-        {
-            string executable = ProductInfo.GetProductInfo(product, null, installerPath).ProductExecutable;
-            if (filter)
-            {
-                executable = String.Format("*{0}", executable);
-            }
-            return executable;
-        }
-
         public static string GetIP(string networkName)
         {
             string ip = "";
@@ -134,57 +124,6 @@ namespace EnvironmentManager4
                 }
             }
             return ip;
-        }
-
-        public static string TrimEndOfPath(string path)
-        {
-            //handle if the provided path ends in a backslash
-            char lastChar = path[path.Length - 1];
-            if (lastChar == '\\')
-            {
-                TrimEndOfPath(path);
-            }
-            return path.Substring(0, path.LastIndexOf('\\'));
-        }
-
-        public static string GetProductInstallPath(string product, string version)
-        {
-            string mode = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile())).Other.Mode;
-            string installDir = ProductInfo.GetProductInfo(product, version).InstallDirectory;
-            if (mode != "Standard")
-                return installDir.Substring(0, installDir.LastIndexOf('\\'));
-            return installDir;
-        }
-
-        public static List<string> InstalledBuilds(string product, string version)
-        {
-            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            List<string> installedBuilds = new List<string>();
-            try
-            {
-                if (settings.Other.Mode == "Standard")
-                {
-                    var buildList = Directory.GetFiles(GetProductInstallPath(product, version) + @"\", Utilities.RetrieveExe(product, "", true), SearchOption.AllDirectories);
-                    installedBuilds.AddRange(buildList);
-                }
-                else
-                {
-                    var buildList = Directory.GetDirectories(GetProductInstallPath(product, version), "SalesPad.Desktop*");
-                    foreach (string buildPath in buildList)
-                    {
-                        var file = Directory.GetFiles(buildPath, Utilities.RetrieveExe(product, "", true), SearchOption.AllDirectories);
-                        foreach (string f in file)
-                        {
-                            installedBuilds.Add(f);
-                        }
-                    }
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return null;
-            }
-            return installedBuilds;
         }
 
         public static void CreateDefaultSettingsFile()
@@ -327,6 +266,15 @@ namespace EnvironmentManager4
             int maxW = lv.Columns[colIndx].Width;
             if (count > maxRowCount)
                 lv.Columns[colIndx].Width = maxW-17;
+        }
+
+        public static void ResizeUpdateableListViewColumnWidth(ListView lv, int maxRowCount, int colIndx, int colDefaultWidth)
+        {
+            int count = lv.Items.Count;
+            if (count > maxRowCount)
+                lv.Columns[colIndx].Width = colDefaultWidth - 17;
+            else
+                lv.Columns[colIndx].Width = colDefaultWidth;
         }
 
         public static int GetNthIndex(string s, char t, int n)
