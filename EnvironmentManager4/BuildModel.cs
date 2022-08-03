@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace EnvironmentManager4
 {
@@ -29,7 +30,14 @@ namespace EnvironmentManager4
 
         public void LaunchBuild()
         {
-            Process.Start(String.Format(@"{0}\{1}", this.InstallPath, Utilities.RetrieveExe(this.Product, this.InstallPath)));
+            List<Builds> builds = Builds.GetInstalledBuilds(this.Product, this.Version);
+            foreach (Builds build in builds)
+            {
+                if (this.InstallPath == build.InstallPath)
+                    Process.Start(String.Format(@"{0}\{1}",
+                        this.InstallPath,
+                        build.Exe));
+            }
         }
 
         public void LaunchInstalledFolder()
@@ -42,9 +50,10 @@ namespace EnvironmentManager4
     {
         public string InstallDirectory { get; set; }
         public string FileserverDirectory { get; set; }
-        public string ProductExecutable { get; set; }
+        public List<string> ProductExecutables { get; set; }
+        public List<string> DirectoryFilters { get; set; }
 
-        public static ProductInfo GetProductInfo(string product, string version = null, string dcPath = null)
+        public static ProductInfo GetProductInfo(string product, string version, bool install = false)
         {
             SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
             ProductInfo pi = new ProductInfo();
@@ -52,54 +61,155 @@ namespace EnvironmentManager4
             {
                 case "SalesPad GP":
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\";
-                    pi.ProductExecutable = "SalesPad.exe";
+                    pi.ProductExecutables = new List<string> { "SalesPad.exe" };
+                    pi.DirectoryFilters = new List<string> { "SalesPad.Desktop",
+                        settings.BuildManagement.SalesPadx86Directory.Substring(settings.BuildManagement.SalesPadx86Directory.LastIndexOf('\\')+1),
+                        settings.BuildManagement.SalesPadx64Directory.Substring(settings.BuildManagement.SalesPadx64Directory.LastIndexOf('\\')+1)};
                     switch (version)
                     {
                         case "x64":
-                            pi.InstallDirectory = settings.BuildManagement.SalesPadx64Directory;
+                            switch (install)
+                            {
+                                case true:
+                                    pi.InstallDirectory = settings.BuildManagement.SalesPadx64Directory;
+                                    break;
+                                case false:
+                                    pi.InstallDirectory = @"C:\Program Files";
+                                    break;
+                            }
                             break;
                         case "x86":
                         case "Pre":
-                            pi.InstallDirectory = settings.BuildManagement.SalesPadx86Directory;
+                            switch (install)
+                            {
+                                case true:
+                                    pi.InstallDirectory = settings.BuildManagement.SalesPadx86Directory;
+                                    break;
+                                case false:
+                                    pi.InstallDirectory = @"C:\Program Files (x86)";
+                                    break;
+                            }
                             break;
                     }
                     break;
                 case "DataCollection":
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\Ares\DataCollection\";
-                    pi.InstallDirectory = settings.BuildManagement.DataCollectionDirectory;
-                    if (File.Exists(String.Format(@"{0}\{1}", dcPath, "DataCollection Extended Warehouse.exe")))
+                    pi.ProductExecutables = new List<string> { "DataCollection Extended Warehouse.exe",
+                        "SalesPad Inventory Manager Extended Warehouse.exe",
+                        "SalesPad Inventory Manager.exe" };
+                    pi.DirectoryFilters = new List<string> { "DataCollection",
+                        "SalesPad Inventory Manager",
+                        settings.BuildManagement.DataCollectionDirectory.Substring(settings.BuildManagement.DataCollectionDirectory.LastIndexOf('\\')+1)};
+                    switch (install)
                     {
-                        pi.ProductExecutable = "DataCollection Extended Warehouse.exe";
-                    }
-                    if (File.Exists(String.Format(@"{0}\{1}", dcPath, "SalesPad Inventory Manager Extended Warehouse.exe")))
-                    {
-                        pi.ProductExecutable = "SalesPad Inventory Manager Extended Warehouse.exe";
-                    }
-                    if (File.Exists(String.Format(@"{0}\{1}", dcPath, "SalesPad Inventory Manager.exe")))
-                    {
-                        pi.ProductExecutable = "SalesPad Inventory Manager.exe";
+                        case true:
+                            pi.InstallDirectory = settings.BuildManagement.DataCollectionDirectory;
+                            break;
+                        case false:
+                            pi.InstallDirectory = @"C:\Program Files (x86)";
+                            break;
                     }
                     break;
                 case "SalesPad Mobile":
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\Ares\Mobile-Server\";
-                    pi.InstallDirectory = settings.BuildManagement.SalesPadMobileDirectory;
-                    pi.ProductExecutable = "SalesPad.GP.Mobile.Server.exe";
+                    pi.ProductExecutables = new List<string> { "SalesPad.GP.Mobile.Server.exe" };
+                    pi.DirectoryFilters = new List<string> { "SalesPad.GP.Mobile.Server",
+                        settings.BuildManagement.SalesPadMobileDirectory.Substring(settings.BuildManagement.SalesPadMobileDirectory.LastIndexOf('\\')+1)};
+                    switch (install)
+                    {
+                        case true:
+                            pi.InstallDirectory = settings.BuildManagement.SalesPadMobileDirectory;
+                            break;
+                        case false:
+                            pi.InstallDirectory = @"C:\Program Files (x86)";
+                            break;
+                    }
                     break;
                 case "ShipCenter":
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\ShipCenter\";
-                    pi.InstallDirectory = settings.BuildManagement.ShipCenterDirectory;
-                    pi.ProductExecutable = "SalesPad.ShipCenter.exe";
+                    pi.ProductExecutables = new List<string> { "SalesPad.ShipCenter.exe" };
+                    pi.DirectoryFilters = new List<string> { "ShipCenter",
+                        settings.BuildManagement.ShipCenterDirectory.Substring(settings.BuildManagement.ShipCenterDirectory.LastIndexOf('\\')+1)};
+                    switch (install)
+                    {
+                        case true:
+                            pi.InstallDirectory = settings.BuildManagement.ShipCenterDirectory;
+                            break;
+                        case false:
+                            pi.InstallDirectory = @"C:\Program Files (x86)";
+                            break;
+                    }
                     break;
                 case "Customer Portal Web":
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\Web-Portal\GP";
-                    pi.InstallDirectory = settings.BuildManagement.GPWebDirectory;
                     break;
                 case "Customer Portal API":
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\SalesPad.WebApi";
-                    pi.InstallDirectory = settings.BuildManagement.WebAPIDirectory;
                     break;
             }
             return pi;
+        }
+    }
+
+    public class Builds
+    {
+        public string InstallPath { get; set; }
+        public string Exe { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public Builds(string path, string exe, DateTime modifiedDate)
+        {
+            this.InstallPath = path;
+            this.Exe = exe;
+            this.ModifiedDate = modifiedDate;
+        }
+
+        public static List<Builds> GetInstalledBuilds(string product, string version)
+        {
+            List<Builds> builds = new List<Builds>();
+            ProductInfo pi = ProductInfo.GetProductInfo(product, version);
+            foreach (string exe in pi.ProductExecutables)
+            {
+                List<string> paths = new List<string>();
+                foreach (string filter in pi.DirectoryFilters)
+                {
+                    string[] dirs = Directory.GetDirectories(pi.InstallDirectory, String.Format("{0}*", filter));
+                    foreach (string dir in dirs)
+                    {
+                        paths.AddRange(Directory.GetFiles(dir,
+                            String.Format("*{0}", exe),
+                            SearchOption.AllDirectories));
+                    }
+
+                    foreach (string path in paths)
+                    {
+                        bool contains = builds.Any(p => p.InstallPath == Path.GetDirectoryName(path));
+                        if (!contains)
+                            builds.Add(new Builds(Path.GetDirectoryName(path),
+                                exe,
+                                Directory.GetLastWriteTime(Path.GetDirectoryName(path))));
+                    }
+                }
+            }
+            return builds;
+        }
+
+        public static void PopulateBuildLists(ListView lv, string product, string version)
+        {
+            lv.Items.Clear();
+            List<Builds> builds = GetInstalledBuilds(product, version);
+            builds.Sort(delegate (Builds x, Builds y)
+            {
+                return x.ModifiedDate.CompareTo(y.ModifiedDate);
+            });
+            builds.Reverse();
+
+            foreach (Builds build in builds)
+            {
+                ListViewItem item = new ListViewItem(build.InstallPath);
+                item.SubItems.Add(build.ModifiedDate.ToString());
+                lv.Items.Add(item);
+            }
+            Utilities.ResizeUpdateableListViewColumnWidth(lv, 7, 0, 500);
         }
     }
 }

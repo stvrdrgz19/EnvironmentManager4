@@ -15,9 +15,12 @@ namespace EnvironmentManager4
 {
     public partial class LaunchProduct : Form
     {
+        private ListViewColumnSorter lvwColumnSorter;
         public LaunchProduct()
         {
             InitializeComponent();
+            lvwColumnSorter = new ListViewColumnSorter();
+            this.lvInstalledBuilds.ListViewItemSorter = lvwColumnSorter;
         }
 
         public static string product;
@@ -44,29 +47,27 @@ namespace EnvironmentManager4
             return dllList.Except(coreModules.DLLName).ToArray();
         }
 
-        private void RetrieveBuildPaths()
-        {
-            List<string> installedBuilds = new List<string>();
-            installedBuilds.AddRange(Utilities.InstalledBuilds(product, version));
-            foreach (string build in installedBuilds)
-            {
-                InstalledBuilds.Items.Add(Path.GetDirectoryName(build));
-            }
-        }
-
         private void LaunchProduct_Load(object sender, EventArgs e)
         {
             this.Text = String.Format(@"Launch {0} {1}", product, version);
-            RetrieveBuildPaths();
+            Builds.PopulateBuildLists(lvInstalledBuilds, product, version);
+            this.lvInstalledBuilds.ColumnClick += new ColumnClickEventHandler(ColumnClick);
             return;
         }
 
         private void Launch_Click(object sender, EventArgs e)
         {
-            string selectedBuild = InstalledBuilds.Text;
+            string selectedBuild = lvInstalledBuilds.SelectedItems[0].Text;
             if (!String.IsNullOrWhiteSpace(selectedBuild))
             {
-                Process.Start(String.Format(@"{0}\{1}", selectedBuild, Utilities.RetrieveExe(product)));
+                List<Builds> builds = Builds.GetInstalledBuilds(product, version);
+                foreach (Builds build in builds)
+                {
+                    if (selectedBuild == build.InstallPath)
+                        Process.Start(String.Format(@"{0}\{1}",
+                            selectedBuild,
+                            build.Exe));
+                }
                 this.Close();
             }
             return;
@@ -112,15 +113,38 @@ namespace EnvironmentManager4
 
         }
 
-        private void InstalledBuilds_SelectedIndexChanged(object sender, EventArgs e)
+        private void lvInstalledBuilds_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedBuild = InstalledBuilds.Text;
+            if (lvInstalledBuilds.SelectedItems.Count == 0)
+                return;
             SelectedBuildDLLs.Items.Clear();
-            if (!String.IsNullOrWhiteSpace(selectedBuild))
-            {
-                SelectedBuildDLLs.Items.AddRange(LoadDllList(selectedBuild));
-            }
+            SelectedBuildDLLs.Items.AddRange(LoadDllList(lvInstalledBuilds.SelectedItems[0].Text));
             return;
+        }
+
+        private void ColumnClick(object o, ColumnClickEventArgs e)
+        {
+            if (e.Column == lvwColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                if (lvwColumnSorter.Order == SortOrder.Ascending)
+                {
+                    lvwColumnSorter.Order = SortOrder.Descending;
+                }
+                else
+                {
+                    lvwColumnSorter.Order = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                lvwColumnSorter.SortColumn = e.Column;
+                lvwColumnSorter.Order = SortOrder.Ascending;
+            }
+
+            // Perform the sort with these new sort options.
+            this.lvInstalledBuilds.Sort();
         }
     }
 }

@@ -26,7 +26,7 @@ namespace EnvironmentManager4
 
         public Installer GetInstallerFile(GetInstaller getInstaller)
         {
-            ProductInfo pi = ProductInfo.GetProductInfo(getInstaller.Product, getInstaller.Version);
+            ProductInfo pi = ProductInfo.GetProductInfo(getInstaller.Product, getInstaller.Version, true);
             string initialDir = pi.FileserverDirectory;
             string defaultInstallPath = pi.InstallDirectory;
             string buildPath = "";

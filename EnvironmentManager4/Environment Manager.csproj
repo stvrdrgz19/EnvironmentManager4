@@ -116,6 +116,7 @@
     <Compile Include="ListAndButtonForm.Designer.cs">
       <DependentUpon>ListAndButtonForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ListViewColumnSorter.cs" />
     <Compile Include="Modules.cs" />
     <Compile Include="NewDatabaseBackup.cs">
       <SubType>Form</SubType>

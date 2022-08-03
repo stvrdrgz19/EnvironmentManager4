@@ -32,23 +32,25 @@ namespace EnvironmentManager4
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LaunchProduct));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Launch = new System.Windows.Forms.Button();
-            this.InstalledBuilds = new System.Windows.Forms.ListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.RemoveDLLs = new System.Windows.Forms.Button();
             this.CopyLabels = new System.Windows.Forms.Button();
             this.SelectedBuildDLLs = new System.Windows.Forms.ListBox();
+            this.lvInstalledBuilds = new System.Windows.Forms.ListView();
+            this.cbBuildPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chDateModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lvInstalledBuilds);
             this.groupBox1.Controls.Add(this.Launch);
-            this.groupBox1.Controls.Add(this.InstalledBuilds);
             this.groupBox1.ForeColor = System.Drawing.Color.Blue;
             this.groupBox1.Location = new System.Drawing.Point(2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(565, 208);
+            this.groupBox1.Size = new System.Drawing.Size(680, 208);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Builds";
@@ -58,20 +60,11 @@ namespace EnvironmentManager4
             this.Launch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Launch.Location = new System.Drawing.Point(7, 174);
             this.Launch.Name = "Launch";
-            this.Launch.Size = new System.Drawing.Size(550, 23);
+            this.Launch.Size = new System.Drawing.Size(665, 23);
             this.Launch.TabIndex = 1;
             this.Launch.Text = "Launch";
             this.Launch.UseVisualStyleBackColor = true;
             this.Launch.Click += new System.EventHandler(this.Launch_Click);
-            // 
-            // InstalledBuilds
-            // 
-            this.InstalledBuilds.FormattingEnabled = true;
-            this.InstalledBuilds.Location = new System.Drawing.Point(7, 20);
-            this.InstalledBuilds.Name = "InstalledBuilds";
-            this.InstalledBuilds.Size = new System.Drawing.Size(550, 147);
-            this.InstalledBuilds.TabIndex = 0;
-            this.InstalledBuilds.SelectedIndexChanged += new System.EventHandler(this.InstalledBuilds_SelectedIndexChanged);
             // 
             // groupBox2
             // 
@@ -81,7 +74,7 @@ namespace EnvironmentManager4
             this.groupBox2.ForeColor = System.Drawing.Color.Blue;
             this.groupBox2.Location = new System.Drawing.Point(2, 216);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(565, 208);
+            this.groupBox2.Size = new System.Drawing.Size(680, 208);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "DLLs";
@@ -90,9 +83,9 @@ namespace EnvironmentManager4
             // 
             this.RemoveDLLs.Enabled = false;
             this.RemoveDLLs.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.RemoveDLLs.Location = new System.Drawing.Point(284, 174);
+            this.RemoveDLLs.Location = new System.Drawing.Point(342, 174);
             this.RemoveDLLs.Name = "RemoveDLLs";
-            this.RemoveDLLs.Size = new System.Drawing.Size(273, 23);
+            this.RemoveDLLs.Size = new System.Drawing.Size(331, 23);
             this.RemoveDLLs.TabIndex = 2;
             this.RemoveDLLs.Text = "Remove DLL(s)";
             this.RemoveDLLs.UseVisualStyleBackColor = true;
@@ -103,7 +96,7 @@ namespace EnvironmentManager4
             this.CopyLabels.ForeColor = System.Drawing.SystemColors.ControlText;
             this.CopyLabels.Location = new System.Drawing.Point(7, 174);
             this.CopyLabels.Name = "CopyLabels";
-            this.CopyLabels.Size = new System.Drawing.Size(273, 23);
+            this.CopyLabels.Size = new System.Drawing.Size(331, 23);
             this.CopyLabels.TabIndex = 1;
             this.CopyLabels.Text = "Copy Label(s)";
             this.CopyLabels.UseVisualStyleBackColor = true;
@@ -115,14 +108,41 @@ namespace EnvironmentManager4
             this.SelectedBuildDLLs.Location = new System.Drawing.Point(7, 20);
             this.SelectedBuildDLLs.Name = "SelectedBuildDLLs";
             this.SelectedBuildDLLs.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.SelectedBuildDLLs.Size = new System.Drawing.Size(550, 147);
+            this.SelectedBuildDLLs.Size = new System.Drawing.Size(665, 147);
             this.SelectedBuildDLLs.TabIndex = 0;
+            // 
+            // lvInstalledBuilds
+            // 
+            this.lvInstalledBuilds.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.cbBuildPath,
+            this.chDateModified});
+            this.lvInstalledBuilds.FullRowSelect = true;
+            this.lvInstalledBuilds.GridLines = true;
+            this.lvInstalledBuilds.HideSelection = false;
+            this.lvInstalledBuilds.Location = new System.Drawing.Point(8, 20);
+            this.lvInstalledBuilds.MultiSelect = false;
+            this.lvInstalledBuilds.Name = "lvInstalledBuilds";
+            this.lvInstalledBuilds.Size = new System.Drawing.Size(663, 148);
+            this.lvInstalledBuilds.TabIndex = 2;
+            this.lvInstalledBuilds.UseCompatibleStateImageBehavior = false;
+            this.lvInstalledBuilds.View = System.Windows.Forms.View.Details;
+            this.lvInstalledBuilds.SelectedIndexChanged += new System.EventHandler(this.lvInstalledBuilds_SelectedIndexChanged);
+            // 
+            // cbBuildPath
+            // 
+            this.cbBuildPath.Text = "Install Path";
+            this.cbBuildPath.Width = 500;
+            // 
+            // chDateModified
+            // 
+            this.chDateModified.Text = "Date Modified";
+            this.chDateModified.Width = 159;
             // 
             // LaunchProduct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(569, 426);
+            this.ClientSize = new System.Drawing.Size(684, 426);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -142,10 +162,12 @@ namespace EnvironmentManager4
 
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button Launch;
-        private System.Windows.Forms.ListBox InstalledBuilds;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button RemoveDLLs;
         private System.Windows.Forms.Button CopyLabels;
         private System.Windows.Forms.ListBox SelectedBuildDLLs;
+        private System.Windows.Forms.ListView lvInstalledBuilds;
+        private System.Windows.Forms.ColumnHeader cbBuildPath;
+        private System.Windows.Forms.ColumnHeader chDateModified;
     }
 }

@@ -13,68 +13,57 @@ namespace EnvironmentManager4
 {
     public partial class DeleteBuilds : Form
     {
+        private ListViewColumnSorter lvwColumnSorter;
         public DeleteBuilds()
         {
             InitializeComponent();
-        }
-
-        /*
-        SalesPad GP
-        DataCollection
-        SalesPad Mobile
-        ShipCenter
-        Customer Portal Web
-        Customer Portal API
-        */
-
-        private void UpdateBuildList(string product, string version)
-        {
-            InstalledBuilds.Items.Clear();
-            List<string> installedBuilds = new List<string>();
-            installedBuilds.AddRange(Utilities.InstalledBuilds(product, version));
-            foreach (string build in installedBuilds)
-            {
-                InstalledBuilds.Items.Add(Path.GetDirectoryName(build));
-            }
+            lvwColumnSorter = new ListViewColumnSorter();
+            this.lvInstalledBuilds.ListViewItemSorter = lvwColumnSorter;
         }
 
         private void DeleteBuilds_Load(object sender, EventArgs e)
         {
-            //
+            this.lvInstalledBuilds.ColumnClick += new ColumnClickEventHandler(ColumnClick);
         }
 
         private void btnSelectAll_Click(object sender, EventArgs e)
         {
-            //https://stackoverflow.com/questions/934241/how-do-i-select-all-items-in-a-listbox-on-checkbox-checked
-            for (int i = 0; i < InstalledBuilds.Items.Count; i++)
+            foreach (ListViewItem item in lvInstalledBuilds.Items)
             {
-                InstalledBuilds.SetSelected(i, true);
+                item.Selected = true;
             }
             return;
         }
 
         private void btnSelectNone_Click(object sender, EventArgs e)
         {
-            InstalledBuilds.ClearSelected();
+            foreach (ListViewItem item in lvInstalledBuilds.Items)
+            {
+                item.Selected = false;
+            }
             return;
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            string message = "Are you sure you want to delete the selected builds? This action cannot be undone.";
-            string caption = "CONFIRM";
-            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-            MessageBoxIcon icon = MessageBoxIcon.Question;
-            DialogResult result;
-
-            result = MessageBox.Show(message, caption, buttons, icon);
-            if (result == DialogResult.Yes)
+            int count = lvInstalledBuilds.SelectedItems.Count;
+            if (count > 0)
             {
-                foreach (string ListBoxItem in InstalledBuilds.SelectedItems)
+                string message = "Are you sure you want to delete the selected build(s)? This action cannot be undone.";
+                string caption = "CONFIRM";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                MessageBoxIcon icon = MessageBoxIcon.Question;
+                DialogResult result;
+
+                result = MessageBox.Show(message, caption, buttons, icon);
+                if (result == DialogResult.Yes)
                 {
-                    Directory.Delete(ListBoxItem, true);
+                    foreach (ListViewItem item in lvInstalledBuilds.SelectedItems)
+                    {
+                        Directory.Delete(item.Text, true);
+                    }
+                    Builds.PopulateBuildLists(lvInstalledBuilds, cbProducts.Text, cbVersion.Text);
                 }
-                UpdateBuildList(cbProducts.Text, cbVersion.Text);
             }
             return;
         }
@@ -94,14 +83,39 @@ namespace EnvironmentManager4
                     cbVersion.Enabled = true;
                 }
             }
-            UpdateBuildList(cbProducts.Text, cbVersion.Text);
+            Builds.PopulateBuildLists(lvInstalledBuilds, product, cbVersion.Text);
             return;
         }
 
         private void cbVersion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateBuildList(cbProducts.Text, cbVersion.Text);
+            Builds.PopulateBuildLists(lvInstalledBuilds, cbProducts.Text, cbVersion.Text);
             return;
+        }
+
+        private void ColumnClick(object o, ColumnClickEventArgs e)
+        {
+            if (e.Column == lvwColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                if (lvwColumnSorter.Order == SortOrder.Ascending)
+                {
+                    lvwColumnSorter.Order = SortOrder.Descending;
+                }
+                else
+                {
+                    lvwColumnSorter.Order = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                lvwColumnSorter.SortColumn = e.Column;
+                lvwColumnSorter.Order = SortOrder.Ascending;
+            }
+
+            // Perform the sort with these new sort options.
+            this.lvInstalledBuilds.Sort();
         }
     }
 }
