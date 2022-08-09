@@ -37,9 +37,9 @@ namespace EnvironmentManager4
             this.labelReloadIPAddress = new System.Windows.Forms.Label();
             this.tbWiFiIPAddress = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btnOpenBuildFolder = new System.Windows.Forms.Button();
             this.btnBuildFolder = new System.Windows.Forms.Button();
             this.cbSPGPVersion = new System.Windows.Forms.ComboBox();
-            this.btnDLLManager = new System.Windows.Forms.Button();
             this.cbProductList = new System.Windows.Forms.ComboBox();
             this.btnLaunchProduct = new System.Windows.Forms.Button();
             this.btnInstallProduct = new System.Windows.Forms.Button();
@@ -143,9 +143,9 @@ namespace EnvironmentManager4
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.btnOpenBuildFolder);
             this.groupBox4.Controls.Add(this.btnBuildFolder);
             this.groupBox4.Controls.Add(this.cbSPGPVersion);
-            this.groupBox4.Controls.Add(this.btnDLLManager);
             this.groupBox4.Controls.Add(this.cbProductList);
             this.groupBox4.Controls.Add(this.btnLaunchProduct);
             this.groupBox4.Controls.Add(this.btnInstallProduct);
@@ -156,6 +156,17 @@ namespace EnvironmentManager4
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Build Management";
+            // 
+            // btnOpenBuildFolder
+            // 
+            this.btnOpenBuildFolder.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnOpenBuildFolder.Location = new System.Drawing.Point(255, 42);
+            this.btnOpenBuildFolder.Name = "btnOpenBuildFolder";
+            this.btnOpenBuildFolder.Size = new System.Drawing.Size(125, 23);
+            this.btnOpenBuildFolder.TabIndex = 11;
+            this.btnOpenBuildFolder.Text = "Open FileServer Folder";
+            this.btnOpenBuildFolder.UseVisualStyleBackColor = true;
+            this.btnOpenBuildFolder.Click += new System.EventHandler(this.btnOpenBuildFolder_Click);
             // 
             // btnBuildFolder
             // 
@@ -181,18 +192,6 @@ namespace EnvironmentManager4
             this.cbSPGPVersion.TabIndex = 1;
             this.cbSPGPVersion.Text = "x86";
             // 
-            // btnDLLManager
-            // 
-            this.btnDLLManager.Enabled = false;
-            this.btnDLLManager.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnDLLManager.Location = new System.Drawing.Point(255, 42);
-            this.btnDLLManager.Name = "btnDLLManager";
-            this.btnDLLManager.Size = new System.Drawing.Size(125, 23);
-            this.btnDLLManager.TabIndex = 11;
-            this.btnDLLManager.Text = "DLL Manager";
-            this.btnDLLManager.UseVisualStyleBackColor = true;
-            this.btnDLLManager.Click += new System.EventHandler(this.btnDLLManager_Click);
-            // 
             // cbProductList
             // 
             this.cbProductList.FormattingEnabled = true;
@@ -211,7 +210,7 @@ namespace EnvironmentManager4
             this.btnLaunchProduct.Name = "btnLaunchProduct";
             this.btnLaunchProduct.Size = new System.Drawing.Size(125, 23);
             this.btnLaunchProduct.TabIndex = 10;
-            this.btnLaunchProduct.Text = "Launch Product";
+            this.btnLaunchProduct.Text = "Launch Build";
             this.btnLaunchProduct.UseVisualStyleBackColor = true;
             this.btnLaunchProduct.Click += new System.EventHandler(this.btnLaunchProduct_Click);
             // 
@@ -223,7 +222,7 @@ namespace EnvironmentManager4
             this.btnInstallProduct.Size = new System.Drawing.Size(125, 23);
             this.btnInstallProduct.TabIndex = 9;
             this.btnInstallProduct.Text = "Install";
-            this.toolTip1.SetToolTip(this.btnInstallProduct, "Install the selected product.");
+            this.toolTip1.SetToolTip(this.btnInstallProduct, "Install a build for the selected product");
             this.btnInstallProduct.UseVisualStyleBackColor = true;
             this.btnInstallProduct.Click += new System.EventHandler(this.btnInstallProduct_Click);
             // 
@@ -679,7 +678,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button btnBuildFolder;
         private System.Windows.Forms.ComboBox cbSPGPVersion;
-        private System.Windows.Forms.Button btnDLLManager;
         private System.Windows.Forms.ComboBox cbProductList;
         private System.Windows.Forms.Button btnLaunchProduct;
         private System.Windows.Forms.Button btnInstallProduct;
@@ -725,6 +723,7 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ToolStripMenuItem generateCoreModulesFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteBuildInstallsToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button btnOpenBuildFolder;
     }
 }
 

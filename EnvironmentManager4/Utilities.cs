@@ -36,17 +36,47 @@ namespace EnvironmentManager4
                 return true;
         }
 
+        public static string GetLogFile()
+        {
+            if (Environment.MachineName == "STEVERODRIGUEZ")
+            {
+                if (DevEnvironment())
+                    return @"C:\Program Files (x86)\EnvMgr\Files\Log.txt";
+                else
+                    return Environment.CurrentDirectory + @"\Files\Log.txt";
+            }
+            else
+                return Environment.CurrentDirectory + @"\Files\Log.txt";
+        }
+
+        public static void CheckForSettingsFile(string path)
+        {
+            if (!File.Exists(path))
+            {
+                CreateDefaultSettingsFile(path);
+            }
+        }
+
         public static string GetSettingsFile()
         {
             if (Environment.MachineName == "STEVERODRIGUEZ")
             {
                 if (DevEnvironment())
+                {
+                    CheckForSettingsFile(@"C:\Program Files (x86)\EnvMgr\Files\Settings.json");
                     return @"C:\Program Files (x86)\EnvMgr\Files\Settings.json";
+                }
                 else
+                {
+                    CheckForSettingsFile(Environment.CurrentDirectory + @"\Files\Settings.json");
                     return Environment.CurrentDirectory + @"\Files\Settings.json";
+                }
             }
             else
+            {
+                CheckForSettingsFile(Environment.CurrentDirectory + @"\Files\Settings.json");
                 return Environment.CurrentDirectory + @"\Files\Settings.json";
+            }
         }
 
         public static string GetInstallerFolder()
@@ -126,7 +156,7 @@ namespace EnvironmentManager4
             return ip;
         }
 
-        public static void CreateDefaultSettingsFile()
+        public static void CreateDefaultSettingsFile(string path)
         {
             List<string> dbList = new List<string>();
             List<Connection> connectionList = new List<Connection>();
@@ -170,30 +200,40 @@ namespace EnvironmentManager4
             };
 
             string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
-
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "JSON |*.json";
-            saveFileDialog.Title = "Save Settings File";
-            saveFileDialog.ShowDialog();
-
-            if (!String.IsNullOrWhiteSpace(saveFileDialog.FileName))
+            try
             {
-                try
-                {
-                    File.WriteAllText(saveFileDialog.FileName, json);
-                    string message = "The file was successfully saved.";
-                    string caption = "SUCCESS";
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    MessageBoxIcon icon = MessageBoxIcon.Exclamation;
-
-                    MessageBox.Show(message, caption, buttons, icon);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(String.Format("There was an error saving the file to {0}, error is as follows:\n\n{1}\n\n{2}", saveFileDialog.FileName, e.Message, e.ToString()));
-                }
-                return;
+                File.WriteAllText(path, json);
             }
+            catch (Exception e)
+            {
+                MessageBox.Show(String.Format("There was an issue creating the Settings file, error is as follows:\n\n{0}\n\n{1}",
+                    e.Message,
+                    e.ToString()));
+            }
+
+            //SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //saveFileDialog.Filter = "JSON |*.json";
+            //saveFileDialog.Title = "Save Settings File";
+            //saveFileDialog.ShowDialog();
+
+            //if (!String.IsNullOrWhiteSpace(saveFileDialog.FileName))
+            //{
+            //    try
+            //    {
+            //        File.WriteAllText(saveFileDialog.FileName, json);
+            //        string message = "The file was successfully saved.";
+            //        string caption = "SUCCESS";
+            //        MessageBoxButtons buttons = MessageBoxButtons.OK;
+            //        MessageBoxIcon icon = MessageBoxIcon.Exclamation;
+
+            //        MessageBox.Show(message, caption, buttons, icon);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        MessageBox.Show(String.Format("There was an error saving the file to {0}, error is as follows:\n\n{1}\n\n{2}", saveFileDialog.FileName, e.Message, e.ToString()));
+            //    }
+            //    return;
+            //}
         }
 
         public static void CreateCoreModulesFile()
@@ -391,6 +431,58 @@ namespace EnvironmentManager4
             //productsList.Add(products.WebAPI);
             //productsList.Add(products.GPWeb);
             return productsList;
+        }
+    }
+
+    public class ErrorHandling
+    {
+        public static void LogException(Exception e)
+        {
+            string logFile = Utilities.GetLogFile();
+            DateTime logTime = DateTime.Now;
+            if (!File.Exists(logFile))
+            {
+                using (StreamWriter sw = File.CreateText(logFile))
+                {
+                    sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
+                    sw.WriteLine(String.Format("Exception Message: {0}", e.Message));
+                    sw.WriteLine(String.Format("Exception Type: {0}",e.GetType().ToString()));
+                    sw.WriteLine(String.Format("Exception Source: {0}",e.Source));
+                    sw.WriteLine(String.Format("Exception Target Site: {0}",e.TargetSite));
+                    sw.WriteLine("");
+                    sw.WriteLine("STACK TRACE");
+                    sw.WriteLine(e.StackTrace);
+                    sw.WriteLine("");
+                }
+            }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(logFile))
+                {
+                    sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
+                    sw.WriteLine(String.Format("Exception Message: {0}", e.Message));
+                    sw.WriteLine(String.Format("Exception Type: {0}",e.GetType().ToString()));
+                    sw.WriteLine(String.Format("Exception Source: {0}", e.Source));
+                    sw.WriteLine(String.Format("Exception Target Site: {0}", e.TargetSite));
+                    sw.WriteLine("");
+                    sw.WriteLine("STACK TRACE");
+                    sw.WriteLine(e.StackTrace);
+                    sw.WriteLine("");
+                }
+            }
+        }
+
+        public static void DisplayExceptionMessage(Exception e)
+        {
+            string exceptionMessage = String.Format("Exception Message: {0}\nException Type: {1}\nException Source: {2}\nException Traget Site: {3}\n\nSTACK TRACE\n{4}",
+                e.Message,
+                e.GetType().ToString(),
+                e.Source,
+                e.TargetSite,
+                e.StackTrace);
+            ExceptionForm form = new ExceptionForm();
+            ExceptionForm.exceptionMessage = exceptionMessage;
+            form.Show();
         }
     }
 }

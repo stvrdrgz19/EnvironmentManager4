@@ -152,7 +152,6 @@ namespace EnvironmentManager4
         public void LoadDatabaseDescription(string backup)
         {
             tbDBDesc.Clear();
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
             if (backup == "Select a Database Backup")
             {
                 tbDBDesc.Text = dbDescDefault;
@@ -685,11 +684,6 @@ namespace EnvironmentManager4
             return;
         }
 
-        private void btnDLLManager_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnBuildFolder_Click(object sender, EventArgs e)
         {
             if (Control.ModifierKeys == Keys.Shift)
@@ -762,7 +756,9 @@ namespace EnvironmentManager4
 
         private void labelReloadIPAddress_Click(object sender, EventArgs e)
         {
-            LoadWifiIP();
+            ExceptionForm ef = new ExceptionForm();
+            ef.Show();
+            //LoadWifiIP();
             return;
         }
 
@@ -831,7 +827,7 @@ namespace EnvironmentManager4
 
         private void generateSettingsFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utilities.CreateDefaultSettingsFile();
+            //Utilities.CreateDefaultSettingsFile();
             return;
         }
 
@@ -863,6 +859,24 @@ namespace EnvironmentManager4
             DeleteBuilds deleteBuilds = new DeleteBuilds();
             deleteBuilds.Show();
             return;
+        }
+
+        private void btnOpenBuildFolder_Click(object sender, EventArgs e)
+        {
+            string product = cbProductList.Text;
+            if (String.IsNullOrWhiteSpace(product) || product == "Select a Product")
+                return;
+            ProductInfo pi = ProductInfo.GetProductInfo(product, cbSPGPVersion.Text);
+            try
+            {
+                Process.Start(pi.FileserverDirectory);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format("There was an issue opening the file server directory for the '{0}' product. Error is as follows:\n\n{1}",
+                    product,
+                    ex.ToString()));
+            }
         }
     }
 }

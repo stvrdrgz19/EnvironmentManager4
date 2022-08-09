@@ -84,15 +84,20 @@ namespace EnvironmentManager4
 
                 try
                 {
-                    SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settingsModel.DbManagement.Connection, settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword))));
+                    SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};",
+                        settingsModel.DbManagement.Connection,
+                        settingsModel.DbManagement.SQLServerUserName,
+                        Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword))));
                     SqlDataAdapter restoreScript = new SqlDataAdapter(script, sqlCon);
                     DataTable restoreTable = new DataTable();
                     restoreScript.Fill(restoreTable);
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(String.Format("There was an error restoring the selected database backup '{0}': {1}\n\n{2}", databaseFile, e.Message, e.ToString()));
-                    //return;
+                    if (e is SqlException)
+                    {
+                        ErrorHandling.LogException(e);
+                    }
                 }
             }
             try

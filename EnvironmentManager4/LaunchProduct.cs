@@ -57,9 +57,9 @@ namespace EnvironmentManager4
 
         private void Launch_Click(object sender, EventArgs e)
         {
-            string selectedBuild = lvInstalledBuilds.SelectedItems[0].Text;
-            if (!String.IsNullOrWhiteSpace(selectedBuild))
+            if (lvInstalledBuilds.SelectedItems.Count != 0)
             {
+                string selectedBuild = lvInstalledBuilds.SelectedItems[0].Text;
                 List<Builds> builds = Builds.GetInstalledBuilds(product, version);
                 foreach (Builds build in builds)
                 {

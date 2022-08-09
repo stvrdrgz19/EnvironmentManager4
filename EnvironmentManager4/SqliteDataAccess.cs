@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace EnvironmentManager4
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Sqlite Database Connection String</returns>
-        private static string LoadConnectionString(string id = "Default")
+        public static string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
@@ -30,6 +31,7 @@ namespace EnvironmentManager4
         /// <param name="build">the build information to be written to InstalledBuilds</param>
         public static void SaveBuild(BuildModel build)
         {
+            DatabaseUtilities.GetDatabaseFile();
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 cnn.Execute("INSERT INTO InstalledBuilds (Path, Version, EntryDate, Product, InstallPath) VALUES (@Path, @Version, @EntryDate, @Product, @InstallPath)", build);
@@ -42,6 +44,7 @@ namespace EnvironmentManager4
         /// <returns>a list of build installation information from InstalledBuilds</returns>
         public static List<BuildModel> LoadBuilds()
         {
+            DatabaseUtilities.GetDatabaseFile();
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 var output = cnn.Query<BuildModel>("SELECT Path, Version, EntryDate, Product, InstallPath FROM InstalledBuilds ORDER BY Id DESC", new DynamicParameters());
@@ -55,6 +58,7 @@ namespace EnvironmentManager4
         /// <param name="dll">dll information (name/type/version) to be written to the InstalledDlls table</param>
         public static void SaveDlls(DllModel dll)
         {
+            DatabaseUtilities.GetDatabaseFile();
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 cnn.Execute("INSERT INTO InstalledDlls (Parent_Id, Name, Type, Version, EntryDate) VALUES (@Parent_Id, @Name, @Type, @Version, @EntryDate)", dll);
@@ -68,6 +72,7 @@ namespace EnvironmentManager4
         /// <returns>Dll with information</returns>
         public static List<DllModel> LoadDlls(int parentID)
         {
+            DatabaseUtilities.GetDatabaseFile();
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 var output = cnn.Query<DllModel>("SELECT Name, Type FROM InstalledDlls WHERE Parent_Id = " + parentID, new DynamicParameters());
@@ -82,6 +87,7 @@ namespace EnvironmentManager4
         /// <returns>The last recording of an installed build for the selected product</returns>
         public static string LastInstalledBuild(string product, string version)
         {
+            DatabaseUtilities.GetDatabaseFile();
             string path = "";
             SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
             conn.Open();
@@ -103,6 +109,7 @@ namespace EnvironmentManager4
         /// <returns>The Id value of the selected build</returns>
         public static int GetParentId(string entryDate)
         {
+            DatabaseUtilities.GetDatabaseFile();
             int parentId = 0;
             SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
             conn.Open();
@@ -122,6 +129,7 @@ namespace EnvironmentManager4
         /// <returns>the Id of the last installed build</returns>
         public static int GetLastParentId()
         {
+            DatabaseUtilities.GetDatabaseFile();
             int parentId = 0;
             SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
             conn.Open();
@@ -141,6 +149,7 @@ namespace EnvironmentManager4
         /// <param name="databaseActivity">The database activity that was performed</param>
         public static void SaveDatabaseActivity(DatabaseActivityLogModel databaseActivity)
         {
+            DatabaseUtilities.GetDatabaseFile();
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 cnn.Execute("INSERT INTO DatabaseActivity (TimeStamp, Action, Backup) VALUES (@TimeStamp, @Action, @Backup)", databaseActivity);
@@ -153,10 +162,81 @@ namespace EnvironmentManager4
         /// <returns>Database activity</returns>
         public static List<DatabaseActivityLogModel> LoadDatabaseActivity()
         {
+            DatabaseUtilities.GetDatabaseFile();
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 var output = cnn.Query<DatabaseActivityLogModel>("SELECT TimeStamp, Action, Backup FROM DatabaseActivity ORDER BY Id DESC", new DynamicParameters());
                 return output.ToList();
+            }
+        }
+    }
+    
+    public class DatabaseUtilities
+    {
+        public static void CheckForDatabaseFile(string path)
+        {
+            if (!File.Exists(path))
+                CreateDatabase();
+        }
+
+        public static void GetDatabaseFile()
+        {
+            if (Environment.MachineName == "STEVERODRIGUEZ")
+            {
+                if (Utilities.DevEnvironment())
+                    CheckForDatabaseFile(@"C:\Program Files (x86)\EnvMgr\Files\Database.db");
+                else
+                    CheckForDatabaseFile(Environment.CurrentDirectory + @"\Files\Database.db");
+            }
+            else
+                CheckForDatabaseFile(Environment.CurrentDirectory + @"\Files\Database.db");
+        }
+
+        public static void CreateDatabase()
+        {
+            SQLiteConnection.CreateFile(String.Format(@"{0}\Files\Database.db", Environment.CurrentDirectory));
+            CreateTables();
+        }
+
+        public static void CreateTables()
+        {
+            SQLiteConnection conn = new SQLiteConnection(SqliteDataAccess.LoadConnectionString());
+            conn.Open();
+
+            string sqlDatabaseActivity = @"CREATE TABLE DatabaseActivity (
+                Id INTEGER NOT NULL UNIQUE,
+                TimeStamp TEXT NOT NULL,
+            	Action TEXT NOT NULL,
+            	Backup TEXT NOT NULL,
+            	PRIMARY KEY(Id AUTOINCREMENT)
+            );";
+
+            string sqlInstalledBuilds = @"CREATE TABLE InstalledBuilds (
+                Id INTEGER NOT NULL UNIQUE,
+                Path TEXT NOT NULL,
+                Version TEXT,
+                EntryDate TEXT NOT NULL,
+                Product TEXT NOT NULL,
+                InstallPath TEXT NOT NULL,
+                PRIMARY KEY(Id AUTOINCREMENT)
+            );";
+
+            string sqlInstalledDLLs = @"CREATE TABLE InstalledDLLs (
+                Id INTEGER NOT NULL UNIQUE,
+                Parent_Id INTEGER NOT NULL,
+                Name TEXT NOT NULL,
+                Type TEXT NOT NULL,
+                Version TEXT NOT NULL,
+                EntryDate TEXT NOT NULL,
+                PRIMARY KEY(Id AUTOINCREMENT),
+                FOREIGN KEY(Parent_Id) REFERENCES InstalledBuilds(Id)
+            );";
+
+            List<string> sqlScripts = new List<string> { sqlDatabaseActivity, sqlInstalledBuilds, sqlInstalledDLLs };
+            foreach (string script in sqlScripts)
+            {
+                SQLiteCommand command = new SQLiteCommand(script, conn);
+                command.ExecuteNonQuery();
             }
         }
     }

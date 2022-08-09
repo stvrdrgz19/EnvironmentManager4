@@ -21,12 +21,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_06D9F0C171FC43C687E94309F4949411"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_140655928B72EA9BC8057EBC0E985DB8"
         "OwnerKey" = "8:_021B9A986BF841918CC53951FA409F7A"
         "MsmSig" = "8:_UNDEFINED"
@@ -83,12 +77,6 @@
         {
         "MsmKey" = "8:_A7259C18753F4D19B40B3E17256B7B9D"
         "OwnerKey" = "8:_021B9A986BF841918CC53951FA409F7A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_AEE531E5DE8142C884FF8999E33611C9"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -252,26 +240,6 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_06D9F0C171FC43C687E94309F4949411"
-            {
-            "SourcePath" = "8:..\\EnvironmentManager4\\Files\\Settings.json"
-            "TargetName" = "8:Settings.json"
-            "Tag" = "8:"
-            "Folder" = "8:_FF80ACF8135C468B81892F8DBE3B8D84"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_140655928B72EA9BC8057EBC0E985DB8"
             {
             "AssemblyRegister" = "3:1"
@@ -549,26 +517,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AEE531E5DE8142C884FF8999E33611C9"
-            {
-            "SourcePath" = "8:..\\EnvironmentManager4\\Files\\Database.db"
-            "TargetName" = "8:Database.db"
-            "Tag" = "8:"
-            "Folder" = "8:_FF80ACF8135C468B81892F8DBE3B8D84"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B103040EF780416C82FFE543B287ED80"
             {
             "SourcePath" = "8:..\\EnvironmentManager4\\Files\\CoreModules.json"
@@ -718,15 +666,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:EnvMgr"
-        "ProductCode" = "8:{80749A21-DC6E-4D88-B527-7E764F6375E8}"
-        "PackageCode" = "8:{5619B6B9-7627-4F6A-858E-BFC66C589AEF}"
+        "ProductCode" = "8:{77C970E5-8250-44E0-A4EB-0D3DAEE7057C}"
+        "PackageCode" = "8:{C6D383A2-23A8-42A9-BAD1-3FB0D47B92A3}"
         "UpgradeCode" = "8:{D4416156-6E67-4E56-B187-FCE1B44FAAF4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.5"
         "Manufacturer" = "8:EnvMgr"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
