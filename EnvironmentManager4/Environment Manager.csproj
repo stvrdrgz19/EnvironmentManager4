@@ -153,6 +153,12 @@
     <Compile Include="TextPrompt.Designer.cs">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </Compile>
+    <Compile Include="UpdateDatabaseDescription.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateDatabaseDescription.Designer.cs">
+      <DependentUpon>UpdateDatabaseDescription.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities.cs" />
     <Compile Include="Variance.cs" />
     <EmbeddedResource Include="BuildLog.resx">
@@ -206,6 +212,9 @@
     <Content Include="Files\CoreModules.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="UpdateDatabaseDescription.resx">
+      <DependentUpon>UpdateDatabaseDescription.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Files\Configurations.json" />
     <None Include="Files\SCCoreModules.json" />

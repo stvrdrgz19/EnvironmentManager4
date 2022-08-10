@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,5 +51,72 @@ namespace EnvironmentManager4
         public string ConnectionName { get; set; }
         public string ConnectionUN { get; set; }
         public string ConnectionPW { get; set; }
+    }
+
+    public class SettingsUtilities
+    {
+        public static SettingsModel GetSettings()
+        {
+            string settingsFile = Utilities.GetFile("Settings.json");
+            if (!File.Exists(settingsFile))
+                GenerateSettingsFile(settingsFile);
+
+            return JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(settingsFile));
+        }
+
+        public static void GenerateSettingsFile(string path)
+        {
+            List<string> dbList = new List<string>();
+            List<Connection> connectionList = new List<Connection>();
+
+            var dbManagement = new DbManagement
+            {
+                DatabaseBackupDirectory = "",
+                Connection = "",
+                ConnectionsList = connectionList,
+                SQLServerUserName = "",
+                SQLServerPassword = "",
+                Databases = dbList,
+                Connected = false
+            };
+
+            var buildManagement = new BuildManagement
+            {
+                SalesPadx86Directory = @"C:\Program Files (x86)\SalesPad.Desktop",
+                SalesPadx64Directory = @"C:\Program Files\SalesPad.Desktop",
+                DataCollectionDirectory = @"C:\Program Files (x86)\DataCollection",
+                SalesPadMobileDirectory = @"C:\Program Files (x86)\SalesPad.GP.Mobile.Server",
+                ShipCenterDirectory = @"C:\Program Files (x86)\ShipCenter",
+                GPWebDirectory = @"C:\inetpub\wwwroot\SalesPadWebPortal",
+                WebAPIDirectory = @"C:\inetpub\wwwroot\SalesPadWebAPI"
+            };
+
+            var other = new Other
+            {
+                Mode = "Standard",
+                DefaultVersion = "x64",
+                ShowAlwaysOnTop = true,
+                ShowVPNIP = true,
+                ShowIP = true
+            };
+
+            var settings = new SettingsModel
+            {
+                DbManagement = dbManagement,
+                BuildManagement = buildManagement,
+                Other = other
+            };
+
+            string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+            try
+            {
+                File.WriteAllText(path, json);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.DisplayExceptionMessage(e);
+                return;
+            }
+        }
     }
 }

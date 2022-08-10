@@ -37,13 +37,7 @@ namespace EnvironmentManager4
             if (isConfiguration)
             {
                 output = tbText.Text;
-                Configurations newConfiguration = new Configurations();
-                newConfiguration.Product = product;
-                newConfiguration.ConfigurationName = tbText.Text;
-                newConfiguration.ExtendedModules = extended;
-                newConfiguration.CustomModules = custom;
-
-                Configurations.SaveConfiguration(newConfiguration);
+                Configurations.SaveConfiguration(new Configurations(product, output, extended, custom));
             }
             this.Close();
         }

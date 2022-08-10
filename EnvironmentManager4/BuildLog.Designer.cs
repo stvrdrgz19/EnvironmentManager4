@@ -85,6 +85,8 @@ namespace EnvironmentManager4
             // cbDlls
             // 
             this.cbDlls.AutoSize = true;
+            this.cbDlls.Checked = true;
+            this.cbDlls.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbDlls.Location = new System.Drawing.Point(643, 439);
             this.cbDlls.Name = "cbDlls";
             this.cbDlls.Size = new System.Drawing.Size(70, 17);

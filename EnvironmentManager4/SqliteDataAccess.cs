@@ -173,26 +173,14 @@ namespace EnvironmentManager4
     
     public class DatabaseUtilities
     {
-        public static void CheckForDatabaseFile(string path)
-        {
-            if (!File.Exists(path))
-                CreateDatabase();
-        }
-
         public static void GetDatabaseFile()
         {
-            if (Environment.MachineName == "STEVERODRIGUEZ")
-            {
-                if (Utilities.DevEnvironment())
-                    CheckForDatabaseFile(@"C:\Program Files (x86)\EnvMgr\Files\Database.db");
-                else
-                    CheckForDatabaseFile(Environment.CurrentDirectory + @"\Files\Database.db");
-            }
-            else
-                CheckForDatabaseFile(Environment.CurrentDirectory + @"\Files\Database.db");
+            string dbFile = Utilities.GetFile("Database.db");
+            if (!File.Exists(dbFile))
+                GenerateDatabaseFile();
         }
 
-        public static void CreateDatabase()
+        public static void GenerateDatabaseFile()
         {
             SQLiteConnection.CreateFile(String.Format(@"{0}\Files\Database.db", Environment.CurrentDirectory));
             CreateTables();

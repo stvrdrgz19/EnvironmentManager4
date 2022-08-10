@@ -57,7 +57,7 @@ namespace EnvironmentManager4
                 }
             }
             
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string databaseBackup = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
             string databaseBackupDirectory = String.Format(@"{0}\{1}", settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
             if (File.Exists(databaseBackup))

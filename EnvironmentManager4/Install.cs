@@ -122,7 +122,7 @@ namespace EnvironmentManager4
         {
             string pathFromInstaller = installerPath.Remove(0, charCount);
             //check if smartbear mode
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string newPath = "";
             switch (settingsModel.Other.Mode)
             {
@@ -211,7 +211,7 @@ namespace EnvironmentManager4
             //global variable installer = the installer file path
             //global variable installerpath = the path to the installer, excluding the file name
             string installerFileName = Path.GetFileName(install.InstallerPath);     //the actual file name without it's path
-            string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetInstallerFolder(), installerFileName);
+            string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetFolder("Installers"), installerFileName);
             File.Copy(install.InstallerPath, tempInstaller, true);
 
             //SILENTLY INSTALL PRODUCT
@@ -282,7 +282,7 @@ namespace EnvironmentManager4
             //  DLL INSTALL END
             //==========================================================================================================================================================================================
 
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (resetDatabaseVersion)
             {
                 DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)));
@@ -410,11 +410,10 @@ namespace EnvironmentManager4
             if (cbConfigurationList.Text == "Select a Configuration" || cbConfigurationList.Text == "None")
                 return;
 
-            Configurations configurationToDelete = new Configurations();
-            configurationToDelete.Product = install.Product;
-            configurationToDelete.ConfigurationName = cbConfigurationList.Text;
-            configurationToDelete.ExtendedModules = SelectedModules(lbExtendedModules);
-            configurationToDelete.CustomModules = SelectedModules(lbCustomModules);
+            Configurations configurationToDelete = new Configurations(install.Product,
+                cbConfigurationList.Text,
+                SelectedModules(lbExtendedModules),
+                SelectedModules(lbCustomModules));
 
             string message = String.Format("Are you sure you want to delete the '{0}' configuration for the '{1}' product? This action cannot be undone."
                 ,configurationToDelete.ConfigurationName
@@ -435,7 +434,7 @@ namespace EnvironmentManager4
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             List<string> defaultPaths = new List<string>
             {
                 settingsModel.BuildManagement.SalesPadx86Directory,
@@ -447,7 +446,7 @@ namespace EnvironmentManager4
                 settingsModel.BuildManagement.WebAPIDirectory
             };
 
-            DirectoryInfo di = new DirectoryInfo(Utilities.GetInstallerFolder());
+            DirectoryInfo di = new DirectoryInfo(Utilities.GetFolder("Installers"));
             foreach (FileInfo file in di.GetFiles())
             {
                 file.Delete();
@@ -471,7 +470,15 @@ namespace EnvironmentManager4
                 existsResult = MessageBox.Show(existsMessage, existsCaption, existsButtons, existsIcon);
                 if (existsResult == DialogResult.Yes)
                 {
-                    Directory.Delete(installPath, true);
+                    try
+                    {
+                        Directory.Delete(installPath, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorHandling.DisplayExceptionMessage(ex);
+                        return;
+                    }
                 }
                 else
                 {

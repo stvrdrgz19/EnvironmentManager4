@@ -85,6 +85,7 @@ namespace EnvironmentManager4
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnEditDescription = new System.Windows.Forms.Button();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -165,6 +166,7 @@ namespace EnvironmentManager4
             this.btnOpenBuildFolder.Size = new System.Drawing.Size(125, 23);
             this.btnOpenBuildFolder.TabIndex = 11;
             this.btnOpenBuildFolder.Text = "Open FileServer Folder";
+            this.toolTip1.SetToolTip(this.btnOpenBuildFolder, "Opens the default build directory for the selected product");
             this.btnOpenBuildFolder.UseVisualStyleBackColor = true;
             this.btnOpenBuildFolder.Click += new System.EventHandler(this.btnOpenBuildFolder_Click);
             // 
@@ -199,7 +201,6 @@ namespace EnvironmentManager4
             this.cbProductList.Name = "cbProductList";
             this.cbProductList.Size = new System.Drawing.Size(425, 21);
             this.cbProductList.TabIndex = 0;
-            this.cbProductList.Text = "Select a Product";
             this.toolTip1.SetToolTip(this.cbProductList, "Select a product to install or launch");
             this.cbProductList.SelectedIndexChanged += new System.EventHandler(this.cbProductList_SelectedIndexChanged);
             // 
@@ -211,6 +212,7 @@ namespace EnvironmentManager4
             this.btnLaunchProduct.Size = new System.Drawing.Size(125, 23);
             this.btnLaunchProduct.TabIndex = 10;
             this.btnLaunchProduct.Text = "Launch Build";
+            this.toolTip1.SetToolTip(this.btnLaunchProduct, "Launch a build for the selected product");
             this.btnLaunchProduct.UseVisualStyleBackColor = true;
             this.btnLaunchProduct.Click += new System.EventHandler(this.btnLaunchProduct_Click);
             // 
@@ -228,6 +230,7 @@ namespace EnvironmentManager4
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btnEditDescription);
             this.groupBox3.Controls.Add(this.btnDeleteBackup);
             this.groupBox3.Controls.Add(this.btnNewDB);
             this.groupBox3.Controls.Add(this.btnOverwriteDB);
@@ -305,6 +308,7 @@ namespace EnvironmentManager4
             this.btnDBBackupFolder.Name = "btnDBBackupFolder";
             this.btnDBBackupFolder.Size = new System.Drawing.Size(23, 23);
             this.btnDBBackupFolder.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.btnDBBackupFolder, "Open the Settings defined database backup folder");
             this.btnDBBackupFolder.UseVisualStyleBackColor = true;
             this.btnDBBackupFolder.Click += new System.EventHandler(this.btnDBBackupFolder_Click);
             // 
@@ -315,7 +319,7 @@ namespace EnvironmentManager4
             this.cbDatabaseList.FormattingEnabled = true;
             this.cbDatabaseList.Location = new System.Drawing.Point(6, 20);
             this.cbDatabaseList.Name = "cbDatabaseList";
-            this.cbDatabaseList.Size = new System.Drawing.Size(474, 21);
+            this.cbDatabaseList.Size = new System.Drawing.Size(450, 21);
             this.cbDatabaseList.TabIndex = 1;
             this.cbDatabaseList.Text = "Select a Database";
             this.cbDatabaseList.SelectedIndexChanged += new System.EventHandler(this.cbDatabaseList_SelectedIndexChanged);
@@ -334,7 +338,7 @@ namespace EnvironmentManager4
             this.groupBox2.Size = new System.Drawing.Size(324, 222);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "SQL Service Management";
+            this.groupBox2.Text = "Service Management";
             // 
             // lvInstalledSQLServers
             // 
@@ -353,7 +357,7 @@ namespace EnvironmentManager4
             // 
             // chService
             // 
-            this.chService.Text = "Service";
+            this.chService.Text = "Service Name";
             this.chService.Width = 218;
             // 
             // chStatus
@@ -400,9 +404,9 @@ namespace EnvironmentManager4
             this.labelSQLVersions.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelSQLVersions.Location = new System.Drawing.Point(6, 20);
             this.labelSQLVersions.Name = "labelSQLVersions";
-            this.labelSQLVersions.Size = new System.Drawing.Size(75, 13);
+            this.labelSQLVersions.Size = new System.Drawing.Size(51, 13);
             this.labelSQLVersions.TabIndex = 3;
-            this.labelSQLVersions.Text = "SQL Services:";
+            this.labelSQLVersions.Text = "Services:";
             this.labelSQLVersions.Click += new System.EventHandler(this.labelSQLVersions_Click);
             // 
             // btnInstallService
@@ -632,6 +636,18 @@ namespace EnvironmentManager4
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             // 
+            // btnEditDescription
+            // 
+            this.btnEditDescription.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.btnEditDescription.Image = ((System.Drawing.Image)(resources.GetObject("btnEditDescription.Image")));
+            this.btnEditDescription.Location = new System.Drawing.Point(458, 19);
+            this.btnEditDescription.Name = "btnEditDescription";
+            this.btnEditDescription.Size = new System.Drawing.Size(23, 23);
+            this.btnEditDescription.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.btnEditDescription, "Edit the description of the selected database backup");
+            this.btnEditDescription.UseVisualStyleBackColor = true;
+            this.btnEditDescription.Click += new System.EventHandler(this.btnEditDescription_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -724,6 +740,7 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ToolStripMenuItem deleteBuildInstallsToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnOpenBuildFolder;
+        private System.Windows.Forms.Button btnEditDescription;
     }
 }
 

@@ -55,7 +55,7 @@ namespace EnvironmentManager4
 
         public static ProductInfo GetProductInfo(string product, string version, bool install = false)
         {
-            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settings = SettingsUtilities.GetSettings();
             ProductInfo pi = new ProductInfo();
             switch (product)
             {

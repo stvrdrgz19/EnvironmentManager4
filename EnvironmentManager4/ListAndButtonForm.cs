@@ -25,7 +25,7 @@ namespace EnvironmentManager4
 
         public void LoadDatabases()
         {
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             foreach (string databaseFile in settingsModel.DbManagement.Databases)
             {
                 if (!databaseFile.Contains("DYNAMICS"))

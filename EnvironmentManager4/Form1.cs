@@ -134,7 +134,7 @@ namespace EnvironmentManager4
             cbDatabaseList.Items.Clear();
             cbDatabaseList.Text = "Select a Database Backup";
             LoadDatabaseDescription(cbDatabaseList.Text);
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
                 MessageBox.Show("There is no value in the Database Backup Directory Setting. Please set one in Settings.");
@@ -142,7 +142,7 @@ namespace EnvironmentManager4
             }
             if (!Directory.Exists(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
-                MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist."), settingsModel.DbManagement.DatabaseBackupDirectory);
+                MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist.", settingsModel.DbManagement.DatabaseBackupDirectory));
                 return;
             }
             var databases = Directory.GetFiles(settingsModel.DbManagement.DatabaseBackupDirectory).Select(file => Path.GetFileNameWithoutExtension(file));
@@ -182,7 +182,7 @@ namespace EnvironmentManager4
             lvInstalledSQLServers.Items.Clear();
             List<string> services = SQLServices.InstalledSQLServerInstanceNames();
             services.AddRange(SQLServices.GetSalesPadServices());
-            bool status = false;
+            bool status;
             string serverStatus = "";
             foreach (string service in services)
             {
@@ -213,7 +213,7 @@ namespace EnvironmentManager4
         public void DetermineMode()
         {
             LoadProductList();
-            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settings = SettingsUtilities.GetSettings();
             cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
             cbAlwaysOnTop.Visible = settings.Other.ShowAlwaysOnTop;
             labelReloadVPNIPAddress.Visible = settings.Other.ShowVPNIP;
@@ -240,23 +240,21 @@ namespace EnvironmentManager4
                 tbSPVPNIPAddress.Location = new Point(386, 563);
             }
 
+            cbProductList.SelectedIndex = cbProductList.FindStringExact("SalesPad GP");
             switch (settings.Other.Mode)
             {
                 case "Standard":
-                    cbProductList.Text = "Select a Product";
                     cbProductList.Enabled = true;
-                    cbSPGPVersion.Enabled = false;
+                    cbSPGPVersion.Enabled = true;
                     btnBuildFolder.Enabled = true;
                     break;
                 case "Kyle":
-                    cbProductList.Text = "Select a Product";
                     cbProductList.Enabled = true;
-                    cbSPGPVersion.Enabled = false;
+                    cbSPGPVersion.Enabled = true;
                     btnBuildFolder.Enabled = false;
                     break;
                 case "SmartBear":
                     cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact("x86");
-                    cbProductList.SelectedIndex = cbProductList.FindStringExact("SalesPad GP");
                     cbProductList.Enabled = false;
                     cbSPGPVersion.Enabled = false;
                     btnBuildFolder.Enabled = false;
@@ -271,6 +269,7 @@ namespace EnvironmentManager4
             {
                 cbProductList.Items.Add(product);
             }
+            cbProductList.SelectedIndex = cbProductList.FindStringExact("SalesPad GP");
         }
 
         private void LoadWifiIP()
@@ -475,7 +474,7 @@ namespace EnvironmentManager4
             result = MessageBox.Show(message, caption, buttons, icon);
             if (result == DialogResult.Yes)
             {
-                SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+                SettingsModel settingsModel = SettingsUtilities.GetSettings();
                 Process.Start(settingsModel.DbManagement.DatabaseBackupDirectory);
             }
             return;
@@ -484,7 +483,7 @@ namespace EnvironmentManager4
         private void btnRestoreDB_Click(object sender, EventArgs e)
         {
             string backupName = cbDatabaseList.Text;
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
             bool continueRestore = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Restore");
             if (continueRestore)
@@ -508,7 +507,7 @@ namespace EnvironmentManager4
         private void btnOverwriteDB_Click(object sender, EventArgs e)
         {
             string backupName = cbDatabaseList.Text;
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
             bool continueOverwrite = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Overwrite");
             if (continueOverwrite)
@@ -553,7 +552,7 @@ namespace EnvironmentManager4
         private void btnDeleteBackup_Click(object sender, EventArgs e)
         {
             string backupName = cbDatabaseList.Text;
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
             bool continueDelete = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Delete");
             if (continueDelete)
@@ -756,9 +755,7 @@ namespace EnvironmentManager4
 
         private void labelReloadIPAddress_Click(object sender, EventArgs e)
         {
-            ExceptionForm ef = new ExceptionForm();
-            ef.Show();
-            //LoadWifiIP();
+            LoadWifiIP();
             return;
         }
 
@@ -775,7 +772,7 @@ namespace EnvironmentManager4
         {
             if (!String.IsNullOrWhiteSpace(ListAndButtonForm.output))
             {
-                SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+                SettingsModel settingsModel = SettingsUtilities.GetSettings();
                 DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), ListAndButtonForm.output);
             }
             return;
@@ -827,13 +824,13 @@ namespace EnvironmentManager4
 
         private void generateSettingsFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Utilities.CreateDefaultSettingsFile();
+            //SettingsUtilities.GenerateSettingsFile();
             return;
         }
 
         private void generateCoreModulesFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utilities.CreateCoreModulesFile();
+            CoreModules.GenerateCoreModulesFile();
             return;
         }
 
@@ -842,7 +839,7 @@ namespace EnvironmentManager4
             string selectedProduct = cbProductList.Text;
             if (selectedProduct == "SalesPad GP")
             {
-                SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+                SettingsModel settings = SettingsUtilities.GetSettings();
                 cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
                 cbSPGPVersion.Enabled = true;
             }
@@ -877,6 +874,28 @@ namespace EnvironmentManager4
                     product,
                     ex.ToString()));
             }
+        }
+
+        private void btnEditDescription_Click(object sender, EventArgs e)
+        {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            if (cbDatabaseList.Text == "Select a Database"
+                || !File.Exists(String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, cbDatabaseList.Text)))
+                return;
+
+            DatabaseManagement backupConfig = new DatabaseManagement();
+            backupConfig.BackupName = cbDatabaseList.Text;
+            backupConfig.BackupDescription = tbDBDesc.Text;
+            UpdateDatabaseDescription udd = new UpdateDatabaseDescription();
+            UpdateDatabaseDescription.backupConfig = backupConfig;
+            udd.FormClosing += new FormClosingEventHandler(EditDescriptionClose);
+            udd.Show();
+        }
+
+        private void EditDescriptionClose(object sender, FormClosingEventArgs e)
+        {
+            LoadDatabaseDescription(cbDatabaseList.Text);
+            return;
         }
     }
 }

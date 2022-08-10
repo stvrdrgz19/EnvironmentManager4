@@ -36,6 +36,8 @@ namespace EnvironmentManager4
                 lvBuilds.Items.Add(item1);
             }
             Utilities.ResizeListViewColumnWidth(lvBuilds, 9, 0);
+            this.lvBuilds.Items[0].Focused = true;
+            this.lvBuilds.Items[0].Selected = true;
         }
 
         private void BuildLog_Load(object sender, EventArgs e)

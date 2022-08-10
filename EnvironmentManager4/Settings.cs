@@ -217,7 +217,7 @@ namespace EnvironmentManager4
                 {
                     SetStartingValues();
                     string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
-                    File.WriteAllText(Utilities.GetSettingsFile(), json);
+                    File.WriteAllText(Utilities.GetFile("Settings.json"), json);
                 }
             }
             catch (Exception e)
@@ -309,7 +309,7 @@ namespace EnvironmentManager4
 
         private void Settings_Load(object sender, EventArgs e)
         {
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             LoadSettings(settingsModel);
             SetStartingValues();
             ToggleModeExecute();
@@ -476,7 +476,7 @@ namespace EnvironmentManager4
             }
 
             int count = connectionsInMemory.Count();
-            var json = File.ReadAllText(Utilities.GetSettingsFile());
+            var json = File.ReadAllText(Utilities.GetFile("Settings.json"));
             var obj = JObject.Parse(json);
 
             for (int i = 0; i < count; i++)

@@ -32,10 +32,10 @@ namespace EnvironmentManager4
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExceptionForm));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tbException = new System.Windows.Forms.TextBox();
             this.btnClose = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -64,6 +64,17 @@ namespace EnvironmentManager4
             this.panel1.Size = new System.Drawing.Size(808, 59);
             this.panel1.TabIndex = 1;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.ImageLocation = "C:\\Users\\steve.rodriguez\\source\\repos\\EnvironmentManager4\\EnvironmentManager4\\Fil" +
+    "es\\Icons\\ico1402.ico";
+            this.pictureBox1.Location = new System.Drawing.Point(20, 14);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(30, 30);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -76,34 +87,26 @@ namespace EnvironmentManager4
             // 
             // tbException
             // 
+            this.tbException.AcceptsReturn = true;
+            this.tbException.AcceptsTab = true;
             this.tbException.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.tbException.Location = new System.Drawing.Point(16, 81);
             this.tbException.Multiline = true;
             this.tbException.Name = "tbException";
+            this.tbException.ReadOnly = true;
             this.tbException.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbException.Size = new System.Drawing.Size(772, 337);
-            this.tbException.TabIndex = 3;
+            this.tbException.TabIndex = 4;
             // 
             // btnClose
             // 
             this.btnClose.Location = new System.Drawing.Point(714, 421);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
-            this.btnClose.TabIndex = 4;
+            this.btnClose.TabIndex = 3;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.ImageLocation = "C:\\Users\\steve.rodriguez\\source\\repos\\EnvironmentManager4\\EnvironmentManager4\\Fil" +
-    "es\\Icons\\ico1402.ico";
-            this.pictureBox1.Location = new System.Drawing.Point(20, 14);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(30, 30);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
             // 
             // ExceptionForm
             // 
