@@ -18,6 +18,7 @@ namespace EnvironmentManager4
         public NewDatabaseBackup()
         {
             InitializeComponent();
+            this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
         public static string existingDatabaseName;
@@ -28,6 +29,7 @@ namespace EnvironmentManager4
         {
             if (action == "OVERWRITE")
             {
+                tbDatabaseName.TabStop = false;
                 this.Text = "Overwrite Database Backup";
                 tbDatabaseName.ReadOnly = true;
             }
@@ -57,7 +59,7 @@ namespace EnvironmentManager4
                 }
             }
             
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string databaseBackup = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
             string databaseBackupDirectory = String.Format(@"{0}\{1}", settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
             if (File.Exists(databaseBackup))
@@ -92,6 +94,14 @@ namespace EnvironmentManager4
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void FormIsClosing(object sender, FormClosingEventArgs e)
+        {
+            if (action == "OVERWRITE")
+                Form1.overwriteBackup = null;
+            else
+                Form1.newBackup = null;
         }
     }
 }

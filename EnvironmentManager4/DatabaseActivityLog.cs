@@ -15,6 +15,7 @@ namespace EnvironmentManager4
         public DatabaseActivityLog()
         {
             InitializeComponent();
+            this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
         private void ReloadDatabaseActivityLog()
@@ -36,6 +37,11 @@ namespace EnvironmentManager4
         {
             ReloadDatabaseActivityLog();
             return;
+        }
+
+        private void FormIsClosing(object sender, FormClosingEventArgs e)
+        {
+            Form1.dbLog = null;
         }
     }
 }

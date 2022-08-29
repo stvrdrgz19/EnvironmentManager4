@@ -31,14 +31,14 @@ namespace EnvironmentManager4
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LaunchProduct));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lvInstalledBuilds = new System.Windows.Forms.ListView();
+            this.cbBuildPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chDateModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Launch = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.RemoveDLLs = new System.Windows.Forms.Button();
             this.CopyLabels = new System.Windows.Forms.Button();
             this.SelectedBuildDLLs = new System.Windows.Forms.ListBox();
-            this.lvInstalledBuilds = new System.Windows.Forms.ListView();
-            this.cbBuildPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chDateModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -55,13 +55,41 @@ namespace EnvironmentManager4
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Builds";
             // 
+            // lvInstalledBuilds
+            // 
+            this.lvInstalledBuilds.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.cbBuildPath,
+            this.chDateModified});
+            this.lvInstalledBuilds.FullRowSelect = true;
+            this.lvInstalledBuilds.GridLines = true;
+            this.lvInstalledBuilds.HideSelection = false;
+            this.lvInstalledBuilds.Location = new System.Drawing.Point(8, 20);
+            this.lvInstalledBuilds.MultiSelect = false;
+            this.lvInstalledBuilds.Name = "lvInstalledBuilds";
+            this.lvInstalledBuilds.Size = new System.Drawing.Size(663, 148);
+            this.lvInstalledBuilds.TabIndex = 2;
+            this.lvInstalledBuilds.TabStop = false;
+            this.lvInstalledBuilds.UseCompatibleStateImageBehavior = false;
+            this.lvInstalledBuilds.View = System.Windows.Forms.View.Details;
+            this.lvInstalledBuilds.SelectedIndexChanged += new System.EventHandler(this.lvInstalledBuilds_SelectedIndexChanged);
+            // 
+            // cbBuildPath
+            // 
+            this.cbBuildPath.Text = "Install Path";
+            this.cbBuildPath.Width = 500;
+            // 
+            // chDateModified
+            // 
+            this.chDateModified.Text = "Date Modified";
+            this.chDateModified.Width = 159;
+            // 
             // Launch
             // 
             this.Launch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Launch.Location = new System.Drawing.Point(7, 174);
             this.Launch.Name = "Launch";
             this.Launch.Size = new System.Drawing.Size(665, 23);
-            this.Launch.TabIndex = 1;
+            this.Launch.TabIndex = 0;
             this.Launch.Text = "Launch";
             this.Launch.UseVisualStyleBackColor = true;
             this.Launch.Click += new System.EventHandler(this.Launch_Click);
@@ -110,33 +138,7 @@ namespace EnvironmentManager4
             this.SelectedBuildDLLs.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.SelectedBuildDLLs.Size = new System.Drawing.Size(665, 147);
             this.SelectedBuildDLLs.TabIndex = 0;
-            // 
-            // lvInstalledBuilds
-            // 
-            this.lvInstalledBuilds.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.cbBuildPath,
-            this.chDateModified});
-            this.lvInstalledBuilds.FullRowSelect = true;
-            this.lvInstalledBuilds.GridLines = true;
-            this.lvInstalledBuilds.HideSelection = false;
-            this.lvInstalledBuilds.Location = new System.Drawing.Point(8, 20);
-            this.lvInstalledBuilds.MultiSelect = false;
-            this.lvInstalledBuilds.Name = "lvInstalledBuilds";
-            this.lvInstalledBuilds.Size = new System.Drawing.Size(663, 148);
-            this.lvInstalledBuilds.TabIndex = 2;
-            this.lvInstalledBuilds.UseCompatibleStateImageBehavior = false;
-            this.lvInstalledBuilds.View = System.Windows.Forms.View.Details;
-            this.lvInstalledBuilds.SelectedIndexChanged += new System.EventHandler(this.lvInstalledBuilds_SelectedIndexChanged);
-            // 
-            // cbBuildPath
-            // 
-            this.cbBuildPath.Text = "Install Path";
-            this.cbBuildPath.Width = 500;
-            // 
-            // chDateModified
-            // 
-            this.chDateModified.Text = "Date Modified";
-            this.chDateModified.Width = 159;
+            this.SelectedBuildDLLs.TabStop = false;
             // 
             // LaunchProduct
             // 

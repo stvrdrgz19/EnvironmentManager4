@@ -23,7 +23,7 @@ namespace EnvironmentManager4
 
         private void LoadNotes()
         {
-            string notesFile = Utilities.GetNotesFile();
+            string notesFile = Utilities.GetFile("Notes.txt");
             if (!File.Exists(notesFile))
             {
                 string message = "There is no notes file to load notes from. Would you like to create a notes file?";
@@ -52,12 +52,12 @@ namespace EnvironmentManager4
 
         private void SaveNotes(string contents)
         {
-            string notesFile = Utilities.GetNotesFile();
+            string notesFile = Utilities.GetFile("Notes.txt");
             var notesPathFile = File.Create(notesFile);
             notesPathFile.Close();
             using (StreamWriter sw = File.AppendText(notesFile))
             {
-                sw.WriteLine(contents.TrimEnd('\r', '\n'));
+                sw.Write(contents.TrimEnd('\r', '\n'));
             }
             LoadNotes();
         }
@@ -76,7 +76,7 @@ namespace EnvironmentManager4
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            string notesFile = Utilities.GetNotesFile();
+            string notesFile = Utilities.GetFile("Notes.txt");
             string textToAdd = divider + Environment.NewLine + DateTime.Now.ToString() + Environment.NewLine + tbAddNotes.Text;
             string oldFileContents = File.ReadAllText(notesFile);
             SaveNotes(textToAdd + Environment.NewLine + oldFileContents);
@@ -86,7 +86,7 @@ namespace EnvironmentManager4
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (File.Exists(Utilities.GetNotesFile()))
+            if (File.Exists(Utilities.GetFile("Notes.txt")))
             {
                 if (tbNotes.ReadOnly)
                 {
@@ -129,6 +129,7 @@ namespace EnvironmentManager4
                 }
                 return;
             }
+            Form1.notes = null;
         }
     }
 }

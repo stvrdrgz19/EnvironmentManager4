@@ -14,10 +14,13 @@ namespace EnvironmentManager4
 {
     public class DatabaseManagement
     {
+        public string BackupName { get; set; }
+        public string BackupDescription { get; set; }
+
         public static void ResetDatabaseVersion(string username, string password, string database = "TWO")
         {
             string script = String.Format("USE {0} EXEC dbo.sppResetDatabase", database);
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settingsModel.DbManagement.Connection, username, password));
             SqlDataAdapter sqlAdapter = new SqlDataAdapter(script, sqlCon);
             DataTable dataTable = new DataTable();
@@ -27,7 +30,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an issue resetting the database version for the '{0}' Database.\n\n{1}\n\n{2}", database, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
                 return;
             }
         }
@@ -57,7 +61,7 @@ namespace EnvironmentManager4
             //DISABLE DATABASE CONTROLS
             Form1.EnableDBControls(false);
 
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
             {
                 MessageBox.Show("SQL Server/Databases aren't configured in Settings. Please ensure a SQL Server connection is established and databases are selected in Settings.");
@@ -70,7 +74,9 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error unzipping the selected backup: {0}\n\n{1}", e.Message, e.ToString()));
+                string extraMessage = "The existing unzipped backup will be deleted after this error message window is closed.";
+                ErrorHandling.DisplayExceptionMessage(e, extraMessage);
+                ErrorHandling.LogException(e);
                 if (Directory.Exists(unzippedBackupDirectory))
                     Directory.Delete(unzippedBackupDirectory, true);
                 return;
@@ -94,10 +100,7 @@ namespace EnvironmentManager4
                 }
                 catch (Exception e)
                 {
-                    if (e is SqlException)
-                    {
-                        ErrorHandling.LogException(e);
-                    }
+                    ErrorHandling.LogException(e);
                 }
             }
             try
@@ -106,7 +109,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error deleting the unzipped database backup at '{0}', please try manually deleting this filder.\n\n{1}\n\n{2}", unzippedBackupDirectory, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
             }
 
             //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
@@ -142,7 +146,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error deleting the selected database backup file '{0}'\n\n{1}\n\n{2}", databaseFile, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
             }
         }
 
@@ -156,10 +161,11 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error creating the directory '{0}', the error is as follows:\n\n{1}\n\n{2}", databaseBackupDirectory, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
                 return;
             }
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
             {
                 MessageBox.Show("SQL Server/Databases aren't configured in Settings. Please ensure a SQL Server connection is established and databases are selected in Settings.");
@@ -178,7 +184,7 @@ namespace EnvironmentManager4
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(String.Format("There was an error creating a backup of the '{0}' database. Error is as follows:\n\n{1}\n\n{2}", databaseFile, e.Message, e.ToString()));
+                    ErrorHandling.LogException(e);
                     return;
                 }
             }
@@ -188,9 +194,13 @@ namespace EnvironmentManager4
                 sw.WriteLine("===============================================================================");
                 sw.WriteLine(String.Format("{0} - {1}", action, databaseName));
                 sw.WriteLine(DateTime.Now);
-                sw.WriteLine(newDatabaseDescription);
                 if (!String.IsNullOrWhiteSpace(existingDatabaseDescription))
-                    sw.WriteLine(existingDatabaseDescription);
+                {
+                    sw.WriteLine(newDatabaseDescription);
+                    sw.Write(existingDatabaseDescription);
+                }
+                else
+                    sw.Write(newDatabaseDescription);
             }
 
             //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
@@ -203,7 +213,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error zipping the database backup files to '{0}'. Error is as follows:\n\n{1}\n\n{2}", databaseBackupDirectory + ".zip", e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
                 return;
             }
             try
@@ -212,7 +223,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was a problem deleting the database directory: {0}\n\n{1}\n\n{2}", databaseBackupDirectory, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
                 return;
             }
 

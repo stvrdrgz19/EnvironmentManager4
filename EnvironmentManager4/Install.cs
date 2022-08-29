@@ -20,6 +20,7 @@ namespace EnvironmentManager4
         public Install()
         {
             InitializeComponent();
+            this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
         public static Installer install = new Installer();
@@ -122,7 +123,7 @@ namespace EnvironmentManager4
         {
             string pathFromInstaller = installerPath.Remove(0, charCount);
             //check if smartbear mode
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string newPath = "";
             switch (settingsModel.Other.Mode)
             {
@@ -211,7 +212,7 @@ namespace EnvironmentManager4
             //global variable installer = the installer file path
             //global variable installerpath = the path to the installer, excluding the file name
             string installerFileName = Path.GetFileName(install.InstallerPath);     //the actual file name without it's path
-            string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetInstallerFolder(), installerFileName);
+            string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetFolder("Installers"), installerFileName);
             File.Copy(install.InstallerPath, tempInstaller, true);
 
             //SILENTLY INSTALL PRODUCT
@@ -229,7 +230,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error logging the build installation. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
+                ErrorHandling.DisplayExceptionMessage(e);
+                //MessageBox.Show(String.Format("There was an error logging the build installation. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
             }
 
             try
@@ -238,7 +240,9 @@ namespace EnvironmentManager4
             }
             catch (Exception deleteError)
             {
-                MessageBox.Show(String.Format("There was an error deleting the installer file at {0}, error is as follows:\n\n{1}\n\n{2}", tempInstaller, deleteError.Message, deleteError.ToString()));
+                ErrorHandling.LogException(deleteError);
+                ErrorHandling.DisplayExceptionMessage(deleteError);
+                //MessageBox.Show(String.Format("There was an error deleting the installer file at {0}, error is as follows:\n\n{1}\n\n{2}", tempInstaller, deleteError.Message, deleteError.ToString()));
             }
 
             //==========================================================================================================================================================================================
@@ -282,7 +286,7 @@ namespace EnvironmentManager4
             //  DLL INSTALL END
             //==========================================================================================================================================================================================
 
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (resetDatabaseVersion)
             {
                 DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)));
@@ -410,11 +414,10 @@ namespace EnvironmentManager4
             if (cbConfigurationList.Text == "Select a Configuration" || cbConfigurationList.Text == "None")
                 return;
 
-            Configurations configurationToDelete = new Configurations();
-            configurationToDelete.Product = install.Product;
-            configurationToDelete.ConfigurationName = cbConfigurationList.Text;
-            configurationToDelete.ExtendedModules = SelectedModules(lbExtendedModules);
-            configurationToDelete.CustomModules = SelectedModules(lbCustomModules);
+            Configurations configurationToDelete = new Configurations(install.Product,
+                cbConfigurationList.Text,
+                SelectedModules(lbExtendedModules),
+                SelectedModules(lbCustomModules));
 
             string message = String.Format("Are you sure you want to delete the '{0}' configuration for the '{1}' product? This action cannot be undone."
                 ,configurationToDelete.ConfigurationName
@@ -435,7 +438,7 @@ namespace EnvironmentManager4
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             List<string> defaultPaths = new List<string>
             {
                 settingsModel.BuildManagement.SalesPadx86Directory,
@@ -447,7 +450,7 @@ namespace EnvironmentManager4
                 settingsModel.BuildManagement.WebAPIDirectory
             };
 
-            DirectoryInfo di = new DirectoryInfo(Utilities.GetInstallerFolder());
+            DirectoryInfo di = new DirectoryInfo(Utilities.GetFolder("Installers"));
             foreach (FileInfo file in di.GetFiles())
             {
                 file.Delete();
@@ -471,7 +474,16 @@ namespace EnvironmentManager4
                 existsResult = MessageBox.Show(existsMessage, existsCaption, existsButtons, existsIcon);
                 if (existsResult == DialogResult.Yes)
                 {
-                    Directory.Delete(installPath, true);
+                    try
+                    {
+                        Directory.Delete(installPath, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorHandling.LogException(ex);
+                        ErrorHandling.DisplayExceptionMessage(ex);
+                        return;
+                    }
                 }
                 else
                 {
@@ -548,11 +560,18 @@ namespace EnvironmentManager4
                 {
                     listBox.SetSelected(index, true);
                 }
-                catch
+                catch (Exception e)
                 {
-                    MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an {1} Modules for this build.", dll, type));
+                    ErrorHandling.LogException(e);
+                    ErrorHandling.DisplayExceptionMessage(e);
+                    //MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an {1} Modules for this build.", dll, type));
                 }
             }
+        }
+
+        private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)
+        {
+            Form1.installBuild = null;
         }
     }
 }

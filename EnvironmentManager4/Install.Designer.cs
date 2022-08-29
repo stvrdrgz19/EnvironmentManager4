@@ -60,6 +60,7 @@ namespace EnvironmentManager4
             this.lbCustomModules.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.lbCustomModules.Size = new System.Drawing.Size(274, 199);
             this.lbCustomModules.TabIndex = 34;
+            this.lbCustomModules.TabStop = false;
             // 
             // lbExtendedModules
             // 
@@ -69,13 +70,14 @@ namespace EnvironmentManager4
             this.lbExtendedModules.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.lbExtendedModules.Size = new System.Drawing.Size(274, 199);
             this.lbExtendedModules.TabIndex = 33;
+            this.lbExtendedModules.TabStop = false;
             // 
             // btnCancel
             // 
             this.btnCancel.Location = new System.Drawing.Point(495, 364);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 32;
+            this.btnCancel.TabIndex = 1;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -85,7 +87,7 @@ namespace EnvironmentManager4
             this.btnOK.Location = new System.Drawing.Point(420, 364);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 24;
+            this.btnOK.TabIndex = 0;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -108,7 +110,7 @@ namespace EnvironmentManager4
             this.btnRemoveConfiguration.Location = new System.Drawing.Point(245, 28);
             this.btnRemoveConfiguration.Name = "btnRemoveConfiguration";
             this.btnRemoveConfiguration.Size = new System.Drawing.Size(23, 23);
-            this.btnRemoveConfiguration.TabIndex = 2;
+            this.btnRemoveConfiguration.TabIndex = 9;
             this.btnRemoveConfiguration.UseVisualStyleBackColor = true;
             this.btnRemoveConfiguration.Click += new System.EventHandler(this.btnRemoveConfiguration_Click);
             // 
@@ -118,7 +120,7 @@ namespace EnvironmentManager4
             this.btnAddConfiguration.Location = new System.Drawing.Point(222, 28);
             this.btnAddConfiguration.Name = "btnAddConfiguration";
             this.btnAddConfiguration.Size = new System.Drawing.Size(23, 23);
-            this.btnAddConfiguration.TabIndex = 1;
+            this.btnAddConfiguration.TabIndex = 8;
             this.btnAddConfiguration.UseVisualStyleBackColor = true;
             this.btnAddConfiguration.Click += new System.EventHandler(this.btnAddConfiguration_Click);
             // 
@@ -128,7 +130,7 @@ namespace EnvironmentManager4
             this.cbConfigurationList.Location = new System.Drawing.Point(7, 29);
             this.cbConfigurationList.Name = "cbConfigurationList";
             this.cbConfigurationList.Size = new System.Drawing.Size(213, 21);
-            this.cbConfigurationList.TabIndex = 0;
+            this.cbConfigurationList.TabIndex = 7;
             this.cbConfigurationList.Text = "Select a Configuration";
             this.cbConfigurationList.SelectedIndexChanged += new System.EventHandler(this.cbConfigurationList_SelectedIndexChanged);
             // 
@@ -151,7 +153,7 @@ namespace EnvironmentManager4
             this.checkResetDBVersion.Location = new System.Drawing.Point(132, 44);
             this.checkResetDBVersion.Name = "checkResetDBVersion";
             this.checkResetDBVersion.Size = new System.Drawing.Size(141, 17);
-            this.checkResetDBVersion.TabIndex = 3;
+            this.checkResetDBVersion.TabIndex = 6;
             this.checkResetDBVersion.Text = "Reset Database Version";
             this.checkResetDBVersion.UseVisualStyleBackColor = true;
             // 
@@ -161,7 +163,7 @@ namespace EnvironmentManager4
             this.checkInstallFolder.Location = new System.Drawing.Point(132, 20);
             this.checkInstallFolder.Name = "checkInstallFolder";
             this.checkInstallFolder.Size = new System.Drawing.Size(114, 17);
-            this.checkInstallFolder.TabIndex = 2;
+            this.checkInstallFolder.TabIndex = 4;
             this.checkInstallFolder.Text = "Open Install Folder";
             this.checkInstallFolder.UseVisualStyleBackColor = true;
             // 
@@ -171,7 +173,7 @@ namespace EnvironmentManager4
             this.checkRunDatabaseUpdate.Location = new System.Drawing.Point(3, 44);
             this.checkRunDatabaseUpdate.Name = "checkRunDatabaseUpdate";
             this.checkRunDatabaseUpdate.Size = new System.Drawing.Size(133, 17);
-            this.checkRunDatabaseUpdate.TabIndex = 1;
+            this.checkRunDatabaseUpdate.TabIndex = 5;
             this.checkRunDatabaseUpdate.Text = "Run Database Update";
             this.checkRunDatabaseUpdate.UseVisualStyleBackColor = true;
             // 
@@ -183,7 +185,7 @@ namespace EnvironmentManager4
             this.checkLaunchAfterInstall.Location = new System.Drawing.Point(3, 20);
             this.checkLaunchAfterInstall.Name = "checkLaunchAfterInstall";
             this.checkLaunchAfterInstall.Size = new System.Drawing.Size(117, 17);
-            this.checkLaunchAfterInstall.TabIndex = 0;
+            this.checkLaunchAfterInstall.TabIndex = 3;
             this.checkLaunchAfterInstall.Text = "Launch After Install";
             this.checkLaunchAfterInstall.UseVisualStyleBackColor = true;
             // 
@@ -210,7 +212,7 @@ namespace EnvironmentManager4
             this.tbInstallLocation.Location = new System.Drawing.Point(12, 45);
             this.tbInstallLocation.Name = "tbInstallLocation";
             this.tbInstallLocation.Size = new System.Drawing.Size(556, 20);
-            this.tbInstallLocation.TabIndex = 26;
+            this.tbInstallLocation.TabIndex = 2;
             // 
             // tbSelectedBuild
             // 
@@ -219,6 +221,7 @@ namespace EnvironmentManager4
             this.tbSelectedBuild.ReadOnly = true;
             this.tbSelectedBuild.Size = new System.Drawing.Size(556, 20);
             this.tbSelectedBuild.TabIndex = 31;
+            this.tbSelectedBuild.TabStop = false;
             // 
             // label1
             // 

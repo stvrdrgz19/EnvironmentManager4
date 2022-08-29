@@ -95,22 +95,22 @@ namespace EnvironmentManager4
                     moduleStart = "SalesPad.Module.";
                     break;
                 case "Customer Portal API":
-                    extPath = String.Format(@"{0}\ExtModules", installerPath);
-                    custPath = String.Format(@"{0}\CustomModules", installerPath);
+                    extPath = String.Format(@"{0}\ExtModules\", installerPath);
+                    custPath = String.Format(@"{0}\CustomModules\", installerPath);
                     moduleStart = "SalesPad.GP.RESTv3.";
                     break;
                 case "DataCollection":
-                    custPath = String.Format(@"{0}\CustomModules", installerPath);
+                    custPath = String.Format(@"{0}\CustomModules\", installerPath);
                     moduleStart = "SalesPad.DataCollection.";
                     break;
                 case "SalesPad Mobile":
                     break;
                 case "ShipCenter":
-                    custPath = String.Format(@"{0}\Custom", installerPath);
+                    custPath = String.Format(@"{0}\Custom\", installerPath);
                     moduleStart = "SalesPad.ShipCenter.";
                     break;
                 case "Customer Portal Web":
-                    custPath = String.Format(@"{0}\Plugins", installerPath);
+                    custPath = String.Format(@"{0}\Plugins\", installerPath);
                     break;
             }
 
@@ -160,7 +160,7 @@ namespace EnvironmentManager4
                         break;
                 }
                 string copyFrom = String.Format("{0}{1}", custExtPath, dllName);
-                string copyTo = String.Format(@"{0}\{1}{2}", Utilities.GetDLLsFolder(), moduleStart, dllName);
+                string copyTo = String.Format(@"{0}\{1}{2}", Utilities.GetFolder("Dlls"), moduleStart, dllName);
                 try
                 {
                     File.Copy(copyFrom, copyTo, true);
@@ -185,11 +185,11 @@ namespace EnvironmentManager4
 
         public static void UnzipDLLFiles()
         {
-            string[] toExtract = Directory.GetFiles(Utilities.GetDLLsFolder());
+            string[] toExtract = Directory.GetFiles(Utilities.GetFolder("Dlls"));
             foreach (string dll in toExtract)
             {
                 string dllName = Path.GetFileNameWithoutExtension(dll);
-                string dllTempFolder = Utilities.GetDLLsFolder() + @"\" + dllName;
+                string dllTempFolder = Utilities.GetFolder("Dlls") + @"\" + dllName;
                 Directory.CreateDirectory(dllTempFolder);
                 using (ZipArchive zip = ZipFile.Open(dll, ZipArchiveMode.Read))
                 {
@@ -209,7 +209,7 @@ namespace EnvironmentManager4
 
         public static void CopyDllsFromDirectoriesToInstalledBuild(string installPath)
         {
-            foreach (string dir in Directory.GetDirectories(Utilities.GetDLLsFolder()))
+            foreach (string dir in Directory.GetDirectories(Utilities.GetFolder("Dlls")))
             {
                 foreach (string file in Directory.GetFiles(dir))
                 {
@@ -229,7 +229,7 @@ namespace EnvironmentManager4
 
         public static void CopyDllsToInstalledBuild(string installPath)
         {
-            foreach (string file in Directory.GetFiles(Utilities.GetDLLsFolder()))
+            foreach (string file in Directory.GetFiles(Utilities.GetFolder("Dlls")))
             {
                 string fileName = Path.GetFileName(file);
                 try

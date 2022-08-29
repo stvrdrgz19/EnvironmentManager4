@@ -16,9 +16,37 @@ namespace EnvironmentManager4
         public List<string> ExtendedModules { get; set; }
         public List<string> CustomModules { get; set; }
 
+        public Configurations(string Product, string ConfigurationName, List<string> ExtendedModules, List<String> CustomModules)
+        {
+            this.Product = Product;
+            this.ConfigurationName = ConfigurationName;
+            this.ExtendedModules = ExtendedModules;
+            this.CustomModules = CustomModules;
+        }
+
         public static List<Configurations> GetConfigurations()
         {
-            return JsonConvert.DeserializeObject<List<Configurations>>(File.ReadAllText(Utilities.GetConfigurationsFile()));
+            string configurationsFile = Utilities.GetFile("Configurations.json");
+            if (!File.Exists(configurationsFile))
+                GenerateDefaultConfigurationsFile();
+            return JsonConvert.DeserializeObject<List<Configurations>>(File.ReadAllText(Utilities.GetFile("Configurations.json")));
+        }
+
+        public static void GenerateDefaultConfigurationsFile()
+        {
+            Configurations ediConfiguration = new Configurations("SalesPad GP",
+                "EDI",
+                new List<string> { "SalesPadEDI" },
+                new List<string>());
+            Configurations aaConfiguration = new Configurations("SalesPad GP",
+                "AA",
+                new List<string> { "AutomationAgent", "AutomationAgentService" },
+                new List<string>());
+
+            List<Configurations> configurationList = new List<Configurations> { ediConfiguration, aaConfiguration };
+
+            string json = JsonConvert.SerializeObject(configurationList, Formatting.Indented);
+            File.WriteAllText(Utilities.GetFile("Configurations.json"), json);
         }
 
         public static void GenerateConfigurationsFile(List<Configurations> configurations, bool append = true)
@@ -28,7 +56,7 @@ namespace EnvironmentManager4
                     configurations.AddRange(GetConfigurations());
 
             string json = JsonConvert.SerializeObject(configurations.Distinct(), Formatting.Indented);
-            File.WriteAllText(Utilities.GetConfigurationsFile(), json);
+            File.WriteAllText(Utilities.GetFile("Configurations.json"), json);
         }
 
         public static List<Configurations> GetConfigurationsByProduct(string product)

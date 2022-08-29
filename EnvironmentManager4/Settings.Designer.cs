@@ -72,13 +72,13 @@ namespace EnvironmentManager4
             this.btnSelectBackupDirectory = new System.Windows.Forms.Button();
             this.tbdatabaseBackupDirectory = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkShowWiFiIP = new System.Windows.Forms.CheckBox();
+            this.checkShowVPNIP = new System.Windows.Forms.CheckBox();
+            this.checkShowAlwaysOnTop = new System.Windows.Forms.CheckBox();
+            this.cbDefaultProductVersion = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.cbMode = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.cbDefaultProductVersion = new System.Windows.Forms.ComboBox();
-            this.checkShowAlwaysOnTop = new System.Windows.Forms.CheckBox();
-            this.checkShowVPNIP = new System.Windows.Forms.CheckBox();
-            this.checkShowWiFiIP = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -87,20 +87,20 @@ namespace EnvironmentManager4
             // btnExit
             // 
             this.btnExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnExit.Location = new System.Drawing.Point(428, 613);
+            this.btnExit.Location = new System.Drawing.Point(452, 613);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 23);
-            this.btnExit.TabIndex = 27;
+            this.btnExit.TabIndex = 35;
             this.btnExit.Text = "Exit";
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(353, 613);
+            this.btnSave.Location = new System.Drawing.Point(377, 613);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 26;
+            this.btnSave.TabIndex = 34;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -148,6 +148,7 @@ namespace EnvironmentManager4
             // 
             // btnSelectWebAPIDirectory
             // 
+            this.btnSelectWebAPIDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSelectWebAPIDirectory.Location = new System.Drawing.Point(501, 158);
             this.btnSelectWebAPIDirectory.Name = "btnSelectWebAPIDirectory";
             this.btnSelectWebAPIDirectory.Size = new System.Drawing.Size(24, 22);
@@ -176,6 +177,7 @@ namespace EnvironmentManager4
             // 
             // btnSelectGPWebDirectory
             // 
+            this.btnSelectGPWebDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSelectGPWebDirectory.Location = new System.Drawing.Point(501, 135);
             this.btnSelectGPWebDirectory.Name = "btnSelectGPWebDirectory";
             this.btnSelectGPWebDirectory.Size = new System.Drawing.Size(24, 22);
@@ -204,6 +206,7 @@ namespace EnvironmentManager4
             // 
             // btnSelectShipCenterDirectory
             // 
+            this.btnSelectShipCenterDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSelectShipCenterDirectory.Location = new System.Drawing.Point(501, 112);
             this.btnSelectShipCenterDirectory.Name = "btnSelectShipCenterDirectory";
             this.btnSelectShipCenterDirectory.Size = new System.Drawing.Size(24, 22);
@@ -232,6 +235,7 @@ namespace EnvironmentManager4
             // 
             // btnSelectSalesPadMobileDirectory
             // 
+            this.btnSelectSalesPadMobileDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSelectSalesPadMobileDirectory.Location = new System.Drawing.Point(501, 89);
             this.btnSelectSalesPadMobileDirectory.Name = "btnSelectSalesPadMobileDirectory";
             this.btnSelectSalesPadMobileDirectory.Size = new System.Drawing.Size(24, 22);
@@ -260,6 +264,7 @@ namespace EnvironmentManager4
             // 
             // btnSelectDatacollectionDirectory
             // 
+            this.btnSelectDatacollectionDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSelectDatacollectionDirectory.Location = new System.Drawing.Point(501, 66);
             this.btnSelectDatacollectionDirectory.Name = "btnSelectDatacollectionDirectory";
             this.btnSelectDatacollectionDirectory.Size = new System.Drawing.Size(24, 22);
@@ -288,6 +293,7 @@ namespace EnvironmentManager4
             // 
             // btnSelectx64SPDirectory
             // 
+            this.btnSelectx64SPDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSelectx64SPDirectory.Location = new System.Drawing.Point(501, 43);
             this.btnSelectx64SPDirectory.Name = "btnSelectx64SPDirectory";
             this.btnSelectx64SPDirectory.Size = new System.Drawing.Size(24, 22);
@@ -316,6 +322,7 @@ namespace EnvironmentManager4
             // 
             // btnSelectSPx86Directory
             // 
+            this.btnSelectSPx86Directory.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSelectSPx86Directory.Location = new System.Drawing.Point(501, 20);
             this.btnSelectSPx86Directory.Name = "btnSelectSPx86Directory";
             this.btnSelectSPx86Directory.Size = new System.Drawing.Size(24, 22);
@@ -361,11 +368,11 @@ namespace EnvironmentManager4
             // btnToggleVisibility
             // 
             this.btnToggleVisibility.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnToggleVisibility.Image = global::EnvironmentManager4.Properties.Resources.eyeclosed;
             this.btnToggleVisibility.Location = new System.Drawing.Point(501, 89);
             this.btnToggleVisibility.Name = "btnToggleVisibility";
             this.btnToggleVisibility.Size = new System.Drawing.Size(24, 22);
             this.btnToggleVisibility.TabIndex = 6;
-            this.btnToggleVisibility.Text = "---";
             this.btnToggleVisibility.UseVisualStyleBackColor = true;
             this.btnToggleVisibility.Click += new System.EventHandler(this.btnToggleVisibility_Click);
             // 
@@ -468,6 +475,7 @@ namespace EnvironmentManager4
             this.lbDatabases.Name = "lbDatabases";
             this.lbDatabases.Size = new System.Drawing.Size(348, 108);
             this.lbDatabases.TabIndex = 8;
+            this.lbDatabases.TabStop = false;
             // 
             // label5
             // 
@@ -501,6 +509,7 @@ namespace EnvironmentManager4
             // 
             // btnSelectBackupDirectory
             // 
+            this.btnSelectBackupDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSelectBackupDirectory.Location = new System.Drawing.Point(501, 19);
             this.btnSelectBackupDirectory.Name = "btnSelectBackupDirectory";
             this.btnSelectBackupDirectory.Size = new System.Drawing.Size(24, 22);
@@ -534,6 +543,61 @@ namespace EnvironmentManager4
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Other";
             // 
+            // checkShowWiFiIP
+            // 
+            this.checkShowWiFiIP.AutoSize = true;
+            this.checkShowWiFiIP.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.checkShowWiFiIP.Location = new System.Drawing.Point(11, 111);
+            this.checkShowWiFiIP.Name = "checkShowWiFiIP";
+            this.checkShowWiFiIP.Size = new System.Drawing.Size(192, 17);
+            this.checkShowWiFiIP.TabIndex = 33;
+            this.checkShowWiFiIP.Text = "Show \"WiFi IP\" TextBox and Label";
+            this.checkShowWiFiIP.UseVisualStyleBackColor = true;
+            // 
+            // checkShowVPNIP
+            // 
+            this.checkShowVPNIP.AutoSize = true;
+            this.checkShowVPNIP.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.checkShowVPNIP.Location = new System.Drawing.Point(11, 91);
+            this.checkShowVPNIP.Name = "checkShowVPNIP";
+            this.checkShowVPNIP.Size = new System.Drawing.Size(193, 17);
+            this.checkShowVPNIP.TabIndex = 32;
+            this.checkShowVPNIP.Text = "Show \"VPN IP\" TextBox and Label";
+            this.checkShowVPNIP.UseVisualStyleBackColor = true;
+            // 
+            // checkShowAlwaysOnTop
+            // 
+            this.checkShowAlwaysOnTop.AutoSize = true;
+            this.checkShowAlwaysOnTop.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.checkShowAlwaysOnTop.Location = new System.Drawing.Point(11, 70);
+            this.checkShowAlwaysOnTop.Name = "checkShowAlwaysOnTop";
+            this.checkShowAlwaysOnTop.Size = new System.Drawing.Size(189, 17);
+            this.checkShowAlwaysOnTop.TabIndex = 31;
+            this.checkShowAlwaysOnTop.Text = "Show \"Always On Top\" Checkbox";
+            this.checkShowAlwaysOnTop.UseVisualStyleBackColor = true;
+            // 
+            // cbDefaultProductVersion
+            // 
+            this.cbDefaultProductVersion.FormattingEnabled = true;
+            this.cbDefaultProductVersion.Items.AddRange(new object[] {
+            "x64",
+            "x86",
+            "Pre"});
+            this.cbDefaultProductVersion.Location = new System.Drawing.Point(151, 42);
+            this.cbDefaultProductVersion.Name = "cbDefaultProductVersion";
+            this.cbDefaultProductVersion.Size = new System.Drawing.Size(349, 21);
+            this.cbDefaultProductVersion.TabIndex = 29;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label14.Location = new System.Drawing.Point(9, 46);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(130, 13);
+            this.label14.TabIndex = 26;
+            this.label14.Text = "Default SalesPad Version:";
+            // 
             // cbMode
             // 
             this.cbMode.FormattingEnabled = true;
@@ -556,61 +620,6 @@ namespace EnvironmentManager4
             this.label8.Size = new System.Drawing.Size(37, 13);
             this.label8.TabIndex = 0;
             this.label8.Text = "Mode:";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label14.Location = new System.Drawing.Point(9, 46);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(130, 13);
-            this.label14.TabIndex = 26;
-            this.label14.Text = "Default SalesPad Version:";
-            // 
-            // cbDefaultProductVersion
-            // 
-            this.cbDefaultProductVersion.FormattingEnabled = true;
-            this.cbDefaultProductVersion.Items.AddRange(new object[] {
-            "x64",
-            "x86",
-            "Pre"});
-            this.cbDefaultProductVersion.Location = new System.Drawing.Point(151, 42);
-            this.cbDefaultProductVersion.Name = "cbDefaultProductVersion";
-            this.cbDefaultProductVersion.Size = new System.Drawing.Size(349, 21);
-            this.cbDefaultProductVersion.TabIndex = 29;
-            // 
-            // checkShowAlwaysOnTop
-            // 
-            this.checkShowAlwaysOnTop.AutoSize = true;
-            this.checkShowAlwaysOnTop.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.checkShowAlwaysOnTop.Location = new System.Drawing.Point(11, 70);
-            this.checkShowAlwaysOnTop.Name = "checkShowAlwaysOnTop";
-            this.checkShowAlwaysOnTop.Size = new System.Drawing.Size(189, 17);
-            this.checkShowAlwaysOnTop.TabIndex = 31;
-            this.checkShowAlwaysOnTop.Text = "Show \"Always On Top\" Checkbox";
-            this.checkShowAlwaysOnTop.UseVisualStyleBackColor = true;
-            // 
-            // checkShowVPNIP
-            // 
-            this.checkShowVPNIP.AutoSize = true;
-            this.checkShowVPNIP.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.checkShowVPNIP.Location = new System.Drawing.Point(11, 91);
-            this.checkShowVPNIP.Name = "checkShowVPNIP";
-            this.checkShowVPNIP.Size = new System.Drawing.Size(193, 17);
-            this.checkShowVPNIP.TabIndex = 32;
-            this.checkShowVPNIP.Text = "Show \"VPN IP\" TextBox and Label";
-            this.checkShowVPNIP.UseVisualStyleBackColor = true;
-            // 
-            // checkShowWiFiIP
-            // 
-            this.checkShowWiFiIP.AutoSize = true;
-            this.checkShowWiFiIP.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.checkShowWiFiIP.Location = new System.Drawing.Point(11, 111);
-            this.checkShowWiFiIP.Name = "checkShowWiFiIP";
-            this.checkShowWiFiIP.Size = new System.Drawing.Size(192, 17);
-            this.checkShowWiFiIP.TabIndex = 33;
-            this.checkShowWiFiIP.Text = "Show \"WiFi IP\" TextBox and Label";
-            this.checkShowWiFiIP.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 

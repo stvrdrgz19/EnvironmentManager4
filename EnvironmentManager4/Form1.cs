@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,19 @@ namespace EnvironmentManager4
         public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
         public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
         public const string gpPath = @"C:\Program Files (x86)\Microsoft Dynamics\";
-        public static string newDBBackupName = "";
+        public static string newDBBackupName = "test1";
+        public static LaunchProduct launch;
+        public static UpdateDatabaseDescription udd;
+        public static Install installBuild;
+        public static BuildLog buildLog;
+        public static Settings settingsFormOpen;
+        public static ListAndButtonForm listAndButtonForm;
+        public static DeleteBuilds deleteBuilds;
+        public static DatabaseActivityLog dbLog;
+        public static Notes notes;
+        public static About aboutForm;
+        public static NewDatabaseBackup newBackup;
+        public static NewDatabaseBackup overwriteBackup;
 
         public static void EnableDBControls(bool enable)
         {
@@ -118,8 +131,8 @@ namespace EnvironmentManager4
                 this.Invoke(new EnableDelegate(SetSelectedBackup), new object[] { enable });
                 return;
             }
-            cbDatabaseList.SelectedIndex = cbDatabaseList.FindStringExact(newDBBackupName);
             SettingsReload();
+            cbDatabaseList.SelectedIndex = cbDatabaseList.FindStringExact(newDBBackupName);
         }
 
         private void EnableSQLControls(bool enable)
@@ -134,7 +147,7 @@ namespace EnvironmentManager4
             cbDatabaseList.Items.Clear();
             cbDatabaseList.Text = "Select a Database Backup";
             LoadDatabaseDescription(cbDatabaseList.Text);
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
                 MessageBox.Show("There is no value in the Database Backup Directory Setting. Please set one in Settings.");
@@ -142,7 +155,7 @@ namespace EnvironmentManager4
             }
             if (!Directory.Exists(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
-                MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist."), settingsModel.DbManagement.DatabaseBackupDirectory);
+                MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist.", settingsModel.DbManagement.DatabaseBackupDirectory));
                 return;
             }
             var databases = Directory.GetFiles(settingsModel.DbManagement.DatabaseBackupDirectory).Select(file => Path.GetFileNameWithoutExtension(file));
@@ -164,7 +177,8 @@ namespace EnvironmentManager4
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(String.Format("There was an error loading the description file for the '{0}' database backup file. The error is as follows:\n\n{1}", backup, e.Message));
+                    ErrorHandling.LogException(e);
+                    ErrorHandling.DisplayExceptionMessage(e);
                     tbDBDesc.Text = dbDescDefault;
                 }
             }
@@ -182,7 +196,7 @@ namespace EnvironmentManager4
             lvInstalledSQLServers.Items.Clear();
             List<string> services = SQLServices.InstalledSQLServerInstanceNames();
             services.AddRange(SQLServices.GetSalesPadServices());
-            bool status = false;
+            bool status;
             string serverStatus = "";
             foreach (string service in services)
             {
@@ -213,7 +227,7 @@ namespace EnvironmentManager4
         public void DetermineMode()
         {
             LoadProductList();
-            SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settings = SettingsUtilities.GetSettings();
             cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
             cbAlwaysOnTop.Visible = settings.Other.ShowAlwaysOnTop;
             labelReloadVPNIPAddress.Visible = settings.Other.ShowVPNIP;
@@ -240,23 +254,21 @@ namespace EnvironmentManager4
                 tbSPVPNIPAddress.Location = new Point(386, 563);
             }
 
+            cbProductList.SelectedIndex = cbProductList.FindStringExact("SalesPad GP");
             switch (settings.Other.Mode)
             {
                 case "Standard":
-                    cbProductList.Text = "Select a Product";
                     cbProductList.Enabled = true;
-                    cbSPGPVersion.Enabled = false;
+                    cbSPGPVersion.Enabled = true;
                     btnBuildFolder.Enabled = true;
                     break;
                 case "Kyle":
-                    cbProductList.Text = "Select a Product";
                     cbProductList.Enabled = true;
-                    cbSPGPVersion.Enabled = false;
+                    cbSPGPVersion.Enabled = true;
                     btnBuildFolder.Enabled = false;
                     break;
                 case "SmartBear":
                     cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact("x86");
-                    cbProductList.SelectedIndex = cbProductList.FindStringExact("SalesPad GP");
                     cbProductList.Enabled = false;
                     cbSPGPVersion.Enabled = false;
                     btnBuildFolder.Enabled = false;
@@ -271,6 +283,7 @@ namespace EnvironmentManager4
             {
                 cbProductList.Items.Add(product);
             }
+            cbProductList.SelectedIndex = cbProductList.FindStringExact("SalesPad GP");
         }
 
         private void LoadWifiIP()
@@ -306,19 +319,31 @@ namespace EnvironmentManager4
             LoadSQLServerListView();
             cbSPGPVersion.Enabled = false;
             LoadProductList();
+            if (!Utilities.IsProgramUpToDate())
+            {
+                UpdatePrompt update = new UpdatePrompt();
+                UpdatePrompt.OpenFromStartup = true;
+                update.ShowDialog();
+            }
             return;
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings settings = new Settings();
-            settings.FormClosing += new FormClosingEventHandler(SettingsClose);
-            settings.Show();
+            if (settingsFormOpen == null)
+            {
+                settingsFormOpen = new Settings();
+                settingsFormOpen.FormClosing += new FormClosingEventHandler(SettingsClose);
+                settingsFormOpen.Show();
+            }
+            else
+                settingsFormOpen.BringToFront();
             return;
         }
 
         private void SettingsClose(object sender, FormClosingEventArgs e)
         {
+            settingsFormOpen = null;
             SettingsReload(true);
         }
 
@@ -340,9 +365,10 @@ namespace EnvironmentManager4
                 {
                     Process.Start(gpPath + selectedGPFolder);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("There was an error launching the installed GP folder.");
+                    ErrorHandling.LogException(ex);
+                    ErrorHandling.DisplayExceptionMessage(ex);
                 }
                 return;
             }
@@ -475,7 +501,7 @@ namespace EnvironmentManager4
             result = MessageBox.Show(message, caption, buttons, icon);
             if (result == DialogResult.Yes)
             {
-                SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+                SettingsModel settingsModel = SettingsUtilities.GetSettings();
                 Process.Start(settingsModel.DbManagement.DatabaseBackupDirectory);
             }
             return;
@@ -484,7 +510,7 @@ namespace EnvironmentManager4
         private void btnRestoreDB_Click(object sender, EventArgs e)
         {
             string backupName = cbDatabaseList.Text;
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
             bool continueRestore = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Restore");
             if (continueRestore)
@@ -507,14 +533,42 @@ namespace EnvironmentManager4
 
         private void btnOverwriteDB_Click(object sender, EventArgs e)
         {
-            string backupName = cbDatabaseList.Text;
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
-            string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
-            bool continueOverwrite = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Overwrite");
-            if (continueOverwrite)
+            if (overwriteBackup == null)
             {
-                string message = String.Format(@"Are you sure you want to overwrite the selected backup '{0}'? This action cannot be undone.", backupName);
-                string caption = "OVERWRITE?";
+                string backupName = cbDatabaseList.Text;
+                SettingsModel settingsModel = SettingsUtilities.GetSettings();
+                string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
+                bool continueOverwrite = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Overwrite");
+                if (continueOverwrite)
+                {
+                    string message = String.Format(@"Are you sure you want to overwrite the selected backup '{0}'? This action cannot be undone.", backupName);
+                    string caption = "OVERWRITE?";
+                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                    MessageBoxIcon icon = MessageBoxIcon.Question;
+                    DialogResult result;
+
+                    result = MessageBox.Show(message, caption, buttons, icon);
+                    if (result == DialogResult.Yes)
+                    {
+                        overwriteBackup = new NewDatabaseBackup();
+                        NewDatabaseBackup.existingDatabaseName = backupName;
+                        NewDatabaseBackup.existingDatabaseFile = backupZip;
+                        NewDatabaseBackup.action = "OVERWRITE";
+                        overwriteBackup.Show();
+                    }
+                }
+            }
+            else
+                overwriteBackup.BringToFront();
+            return;
+        }
+
+        private void btnNewDB_Click(object sender, EventArgs e)
+        {
+            if (newBackup == null)
+            {
+                string message = "Are you sure you want to create a new Database Backup?";
+                string caption = "CONFIRM";
                 MessageBoxButtons buttons = MessageBoxButtons.YesNo;
                 MessageBoxIcon icon = MessageBoxIcon.Question;
                 DialogResult result;
@@ -522,38 +576,22 @@ namespace EnvironmentManager4
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
                 {
-                    NewDatabaseBackup newBackup = new NewDatabaseBackup();
-                    NewDatabaseBackup.existingDatabaseName = backupName;
-                    NewDatabaseBackup.existingDatabaseFile = backupZip;
-                    NewDatabaseBackup.action = "OVERWRITE";
+                    newBackup = new NewDatabaseBackup();
+                    NewDatabaseBackup.existingDatabaseName = null;
+                    NewDatabaseBackup.existingDatabaseFile = null;
+                    NewDatabaseBackup.action = "BACKUP";
                     newBackup.Show();
                 }
             }
-            return;
-        }
-
-        private void btnNewDB_Click(object sender, EventArgs e)
-        {
-            string message = "Are you sure you want to create a new Database Backup?";
-            string caption = "CONFIRM";
-            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-            MessageBoxIcon icon = MessageBoxIcon.Question;
-            DialogResult result;
-
-            result = MessageBox.Show(message, caption, buttons, icon);
-            if (result == DialogResult.Yes)
-            {
-                NewDatabaseBackup newBackup = new NewDatabaseBackup();
-                NewDatabaseBackup.action = "BACKUP";
-                newBackup.Show();
-            }
+            else
+                newBackup.BringToFront();
             return;
         }
 
         private void btnDeleteBackup_Click(object sender, EventArgs e)
         {
             string backupName = cbDatabaseList.Text;
-            SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
             bool continueDelete = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Delete");
             if (continueDelete)
@@ -578,109 +616,124 @@ namespace EnvironmentManager4
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                if (Products.ListOfProducts().Contains(cbProductList.Text))
+                if (buildLog == null)
                 {
-                    BuildLog buildLog = new BuildLog();
-                    buildLog.Show();
+                    if (Products.ListOfProducts().Contains(cbProductList.Text))
+                    {
+                        buildLog = new BuildLog();
+                        buildLog.Show();
+                    }
                 }
+                else
+                    buildLog.BringToFront();
                 return;
             }
-            string selectedProduct = cbProductList.Text;
-            string selectedVersion = cbSPGPVersion.Text;
-            if (!Products.ListOfProducts().Contains(selectedProduct))
+            if (installBuild == null)
             {
-                MessageBox.Show("Please select a product from the list to continue.");
-                return;
-            }
-            if (!Utilities.versionList.Contains(selectedVersion))
-            {
-                MessageBox.Show("Please select a version from the list to continue.");
-                return;
-            }
+                string selectedProduct = cbProductList.Text;
+                string selectedVersion = cbSPGPVersion.Text;
+                if (!Products.ListOfProducts().Contains(selectedProduct))
+                {
+                    MessageBox.Show("Please select a product from the list to continue.");
+                    return;
+                }
+                if (!Utilities.versionList.Contains(selectedVersion))
+                {
+                    MessageBox.Show("Please select a version from the list to continue.");
+                    return;
+                }
 
-            Install installBuild = new Install();
-            string path = Clipboard.GetText();
-            GetInstaller getInstaller = new GetInstaller(path, selectedProduct, selectedVersion);
-            Install.install = installBuild.GetInstallerFile(getInstaller);
-            if (Install.install.InstallerPath != "EXIT")
-                installBuild.Show();
-
+                installBuild = new Install();
+                string path = Clipboard.GetText();
+                GetInstaller getInstaller = new GetInstaller(path, selectedProduct, selectedVersion);
+                Install.install = installBuild.GetInstallerFile(getInstaller);
+                if (Install.install.InstallerPath != "EXIT")
+                    installBuild.Show();
+            }
+            else
+                installBuild.BringToFront();
             return;
         }
 
         private void btnLaunchProduct_Click(object sender, EventArgs e)
         {
-            string selectedProduct = cbProductList.Text;
-            string selectedVersion = cbSPGPVersion.Text;
-
-            if (!Products.ListOfProducts().Contains(selectedProduct))
+            if (launch == null)
             {
-                string message = "Please select a product from the list.";
-                string caption = "ERROR";
-                MessageBoxButtons buttons = MessageBoxButtons.OK;
-                MessageBoxIcon icon = MessageBoxIcon.Error;
+                string selectedProduct = cbProductList.Text;
+                string selectedVersion = cbSPGPVersion.Text;
 
-                MessageBox.Show(message, caption, buttons, icon);
-                return;
-            }
-
-            if (!Utilities.versionList.Contains(selectedVersion))
-            {
-                string message = "Please select a version from the list.";
-                string caption = "ERROR";
-                MessageBoxButtons buttons = MessageBoxButtons.OK;
-                MessageBoxIcon icon = MessageBoxIcon.Error;
-
-                MessageBox.Show(message, caption, buttons, icon);
-                return;
-            }
-
-            if (Control.ModifierKeys == Keys.Shift)
-            {
-                string lastInstalledPath = SqliteDataAccess.LastInstalledBuild(selectedProduct, selectedVersion);
-                if (String.IsNullOrWhiteSpace(lastInstalledPath))
+                if (!Products.ListOfProducts().Contains(selectedProduct))
                 {
-                    MessageBox.Show(String.Format("There isn't a last recorded build for the selected product '{0}'", selectedProduct));
+                    string message = "Please select a product from the list.";
+                    string caption = "ERROR";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    MessageBoxIcon icon = MessageBoxIcon.Error;
+
+                    MessageBox.Show(message, caption, buttons, icon);
                     return;
                 }
 
-                string exe = "";
-
-                List<Builds> builds = Builds.GetInstalledBuilds(selectedProduct, selectedVersion);
-                foreach (Builds build in builds)
+                if (!Utilities.versionList.Contains(selectedVersion))
                 {
-                    if (lastInstalledPath == build.InstallPath)
-                        exe = (String.Format(@"{0}\{1}",
-                            lastInstalledPath,
-                            build.Exe));
+                    string message = "Please select a version from the list.";
+                    string caption = "ERROR";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    MessageBoxIcon icon = MessageBoxIcon.Error;
+
+                    MessageBox.Show(message, caption, buttons, icon);
+                    return;
                 }
 
-                string message = String.Format("Are you sure you want to launch {0}?", lastInstalledPath);
-                string caption = "CONFIRM";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                MessageBoxIcon icon = MessageBoxIcon.Question;
-                DialogResult result;
-
-                result = MessageBox.Show(message, caption, buttons, icon);
-                if (result == DialogResult.Yes)
+                if (Control.ModifierKeys == Keys.Shift)
                 {
-                    try
+                    string lastInstalledPath = SqliteDataAccess.LastInstalledBuild(selectedProduct, selectedVersion);
+                    if (String.IsNullOrWhiteSpace(lastInstalledPath))
                     {
-                        Process.Start(exe);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(String.Format("There was an error launching the build listed below\n\n{0}\n\n{1}\n\n{2}", exe, ex.Message, ex.ToString()));
+                        MessageBox.Show(String.Format("There isn't a last recorded build for the selected product '{0}'", selectedProduct));
                         return;
                     }
-                }
-                return;
-            }
 
-            LaunchProduct launch = new LaunchProduct();
-            LaunchProduct.product = selectedProduct;
-            LaunchProduct.version = selectedVersion;
-            launch.Show();
+                    string exe = "";
+
+                    List<Builds> builds = Builds.GetInstalledBuilds(selectedProduct, selectedVersion);
+                    foreach (Builds build in builds)
+                    {
+                        if (lastInstalledPath == build.InstallPath)
+                            exe = (String.Format(@"{0}\{1}",
+                                lastInstalledPath,
+                                build.Exe));
+                    }
+
+                    string message = String.Format("Are you sure you want to launch {0}?", lastInstalledPath);
+                    string caption = "CONFIRM";
+                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                    MessageBoxIcon icon = MessageBoxIcon.Question;
+                    DialogResult result;
+
+                    result = MessageBox.Show(message, caption, buttons, icon);
+                    if (result == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            Process.Start(exe);
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorHandling.LogException(ex);
+                            ErrorHandling.DisplayExceptionMessage(ex);
+                            return;
+                        }
+                    }
+                    return;
+                }
+                //LaunchProduct launch = new LaunchProduct();
+                launch = new LaunchProduct();
+                LaunchProduct.product = selectedProduct;
+                LaunchProduct.version = selectedVersion;
+                launch.Show();
+            }
+            else
+                launch.BringToFront();
             return;
         }
 
@@ -730,7 +783,8 @@ namespace EnvironmentManager4
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format("There was an error opening the build folder '{0}', error below:\n\n{1}\n\n{2}", buildPath, ex.Message, ex.ToString()));
+                ErrorHandling.LogException(ex);
+                ErrorHandling.DisplayExceptionMessage(ex);
                 return;
             }
         }
@@ -756,26 +810,37 @@ namespace EnvironmentManager4
 
         private void labelReloadIPAddress_Click(object sender, EventArgs e)
         {
-            ExceptionForm ef = new ExceptionForm();
-            ef.Show();
-            //LoadWifiIP();
+            LoadWifiIP();
+            //string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            //string assemblyVersionX = Assembly.LoadFile(@"C:\Users\steve.rodriguez\source\repos\EnvironmentManager4\EnvironmentManager4\Properties\AssemblyInfo.cs").GetName().Version.ToString();
+            //string fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+            //string productVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+            //MessageBox.Show(String.Format("{0}\r\n{1]\r\n{2}\r\n{3}", assemblyVersion, assemblyVersionX, fileVersion, productVersion));
+            //MessageBox.Show(String.Format("{0}\r\n{1}\r\n{2}", assemblyVersion, fileVersion, productVersion));
             return;
         }
 
         private void resetDatabaseVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ListAndButtonForm listAndButtonForm = new ListAndButtonForm();
-            ListAndButtonForm.title = "Select Database";
-            ListAndButtonForm.button = "Reset Database Version";
-            listAndButtonForm.FormClosing += new FormClosingEventHandler(ResetDBTextPromptClose);
-            listAndButtonForm.Show();
+            if (listAndButtonForm == null)
+            {
+                listAndButtonForm = new ListAndButtonForm();
+                ListAndButtonForm.title = "Select Database";
+                ListAndButtonForm.button = "Reset Database Version";
+                listAndButtonForm.FormClosing += new FormClosingEventHandler(ResetDBTextPromptClose);
+                listAndButtonForm.Show();
+            }
+            else
+                listAndButtonForm.BringToFront();
+            return;
         }
 
         private void ResetDBTextPromptClose(object sender, FormClosingEventArgs e)
         {
+            listAndButtonForm = null;
             if (!String.IsNullOrWhiteSpace(ListAndButtonForm.output))
             {
-                SettingsModel settingsModel = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+                SettingsModel settingsModel = SettingsUtilities.GetSettings();
                 DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), ListAndButtonForm.output);
             }
             return;
@@ -783,8 +848,13 @@ namespace EnvironmentManager4
 
         private void databaseLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DatabaseActivityLog dbLog = new DatabaseActivityLog();
-            dbLog.Show();
+            if (dbLog == null)
+            {
+                dbLog = new DatabaseActivityLog();
+                dbLog.Show();
+            }
+            else
+                dbLog.BringToFront();
             return;
         }
 
@@ -799,8 +869,13 @@ namespace EnvironmentManager4
 
         private void notesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Notes notes = new Notes();
-            notes.Show();
+            if (notes == null)
+            {
+                notes = new Notes();
+                notes.Show();
+            }
+            else
+                notes.BringToFront();
             return;
         }
 
@@ -827,13 +902,13 @@ namespace EnvironmentManager4
 
         private void generateSettingsFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Utilities.CreateDefaultSettingsFile();
+            //SettingsUtilities.GenerateSettingsFile();
             return;
         }
 
         private void generateCoreModulesFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utilities.CreateCoreModulesFile();
+            CoreModules.GenerateCoreModulesFile();
             return;
         }
 
@@ -842,7 +917,7 @@ namespace EnvironmentManager4
             string selectedProduct = cbProductList.Text;
             if (selectedProduct == "SalesPad GP")
             {
-                SettingsModel settings = JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(Utilities.GetSettingsFile()));
+                SettingsModel settings = SettingsUtilities.GetSettings();
                 cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
                 cbSPGPVersion.Enabled = true;
             }
@@ -856,8 +931,13 @@ namespace EnvironmentManager4
 
         private void deleteBuildInstallsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteBuilds deleteBuilds = new DeleteBuilds();
-            deleteBuilds.Show();
+            if (deleteBuilds == null)
+            {
+                deleteBuilds = new DeleteBuilds();
+                deleteBuilds.Show();
+            }
+            else
+                deleteBuilds.BringToFront();
             return;
         }
 
@@ -873,10 +953,50 @@ namespace EnvironmentManager4
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format("There was an issue opening the file server directory for the '{0}' product. Error is as follows:\n\n{1}",
-                    product,
-                    ex.ToString()));
+                ErrorHandling.LogException(ex);
+                ErrorHandling.DisplayExceptionMessage(ex);
             }
+        }
+
+        private void btnEditDescription_Click(object sender, EventArgs e)
+        {
+            if (udd == null)
+            {
+                SettingsModel settings = SettingsUtilities.GetSettings();
+                if (cbDatabaseList.Text == "Select a Database"
+                    || !File.Exists(String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, cbDatabaseList.Text)))
+                    return;
+
+                DatabaseManagement backupConfig = new DatabaseManagement();
+                backupConfig.BackupName = cbDatabaseList.Text;
+                backupConfig.BackupDescription = tbDBDesc.Text;
+                udd = new UpdateDatabaseDescription();
+                UpdateDatabaseDescription.backupConfig = backupConfig;
+                udd.FormClosing += new FormClosingEventHandler(EditDescriptionClose);
+                udd.Show();
+            }
+            else
+                udd.BringToFront();
+            return;
+        }
+
+        private void EditDescriptionClose(object sender, FormClosingEventArgs e)
+        {
+            udd = null;
+            LoadDatabaseDescription(cbDatabaseList.Text);
+            return;
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (aboutForm == null)
+            {
+                aboutForm = new About();
+                aboutForm.Show();
+            }
+            else
+                aboutForm.BringToFront();
+            return;
         }
     }
 }
