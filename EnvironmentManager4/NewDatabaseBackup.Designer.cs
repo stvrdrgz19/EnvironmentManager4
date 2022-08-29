@@ -80,7 +80,7 @@ namespace EnvironmentManager4
             this.tbDatabaseName.Location = new System.Drawing.Point(10, 29);
             this.tbDatabaseName.Name = "tbDatabaseName";
             this.tbDatabaseName.Size = new System.Drawing.Size(499, 20);
-            this.tbDatabaseName.TabIndex = 7;
+            this.tbDatabaseName.TabIndex = 0;
             // 
             // label1
             // 

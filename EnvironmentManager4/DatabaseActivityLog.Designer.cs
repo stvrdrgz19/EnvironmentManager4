@@ -50,6 +50,7 @@ namespace EnvironmentManager4
             this.lvDatabaseActivityLog.Name = "lvDatabaseActivityLog";
             this.lvDatabaseActivityLog.Size = new System.Drawing.Size(737, 289);
             this.lvDatabaseActivityLog.TabIndex = 1;
+            this.lvDatabaseActivityLog.TabStop = false;
             this.lvDatabaseActivityLog.UseCompatibleStateImageBehavior = false;
             this.lvDatabaseActivityLog.View = System.Windows.Forms.View.Details;
             // 

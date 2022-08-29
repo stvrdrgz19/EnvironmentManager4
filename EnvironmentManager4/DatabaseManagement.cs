@@ -30,7 +30,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an issue resetting the database version for the '{0}' Database.\n\n{1}\n\n{2}", database, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
                 return;
             }
         }
@@ -73,7 +74,9 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error unzipping the selected backup: {0}\n\n{1}", e.Message, e.ToString()));
+                string extraMessage = "The existing unzipped backup will be deleted after this error message window is closed.";
+                ErrorHandling.DisplayExceptionMessage(e, extraMessage);
+                ErrorHandling.LogException(e);
                 if (Directory.Exists(unzippedBackupDirectory))
                     Directory.Delete(unzippedBackupDirectory, true);
                 return;
@@ -97,10 +100,7 @@ namespace EnvironmentManager4
                 }
                 catch (Exception e)
                 {
-                    if (e is SqlException)
-                    {
-                        ErrorHandling.LogException(e);
-                    }
+                    ErrorHandling.LogException(e);
                 }
             }
             try
@@ -109,7 +109,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error deleting the unzipped database backup at '{0}', please try manually deleting this filder.\n\n{1}\n\n{2}", unzippedBackupDirectory, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
             }
 
             //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
@@ -145,7 +146,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error deleting the selected database backup file '{0}'\n\n{1}\n\n{2}", databaseFile, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
             }
         }
 
@@ -159,7 +161,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error creating the directory '{0}', the error is as follows:\n\n{1}\n\n{2}", databaseBackupDirectory, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
                 return;
             }
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
@@ -181,7 +184,7 @@ namespace EnvironmentManager4
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(String.Format("There was an error creating a backup of the '{0}' database. Error is as follows:\n\n{1}\n\n{2}", databaseFile, e.Message, e.ToString()));
+                    ErrorHandling.LogException(e);
                     return;
                 }
             }
@@ -210,7 +213,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error zipping the database backup files to '{0}'. Error is as follows:\n\n{1}\n\n{2}", databaseBackupDirectory + ".zip", e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
                 return;
             }
             try
@@ -219,7 +223,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was a problem deleting the database directory: {0}\n\n{1}\n\n{2}", databaseBackupDirectory, e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
                 return;
             }
 

@@ -27,6 +27,7 @@ namespace EnvironmentManager4
         public static List<Connection> connectionsInMemory = new List<Connection>();
         public static bool connectionModified = false;
         public static bool connected;
+        public static bool hidden;
 
         public void LoadSettings(SettingsModel settingsModel)
         {
@@ -85,7 +86,9 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error loading the Settings File. Error is as follows:\n\n{0}", e.Message));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+                //MessageBox.Show(String.Format("There was an error loading the Settings File. Error is as follows:\n\n{0}", e.Message));
             }
         }
 
@@ -222,7 +225,9 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an issue attempting to save settings. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+                //MessageBox.Show(String.Format("There was an issue attempting to save settings. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
             }
         }
 
@@ -301,14 +306,17 @@ namespace EnvironmentManager4
                 }
                 Connect(true);
             }
-            catch (Exception sqlError)
+            catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error retrieveing existing databases:\n\n{0}\n\n{1}", sqlError.Message, sqlError.ToString()));
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+                //MessageBox.Show(String.Format("There was an error retrieveing existing databases:\n\n{0}\n\n{1}", sqlError.Message, sqlError.ToString()));
             }
         }
 
         private void Settings_Load(object sender, EventArgs e)
         {
+            hidden = true;
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
             LoadSettings(settingsModel);
             SetStartingValues();
@@ -497,16 +505,18 @@ namespace EnvironmentManager4
 
         private void btnToggleVisibility_Click(object sender, EventArgs e)
         {
-            if (btnToggleVisibility.Text == "---")
+            if (hidden)
             {
+                btnToggleVisibility.Image = Properties.Resources.eyeopen;
                 tbSQLServerPW.UseSystemPasswordChar = false;
-                btnToggleVisibility.Text = "0";
+                hidden = false;
                 return;
             }
             else
             {
+                btnToggleVisibility.Image = Properties.Resources.eyeclosed;
                 tbSQLServerPW.UseSystemPasswordChar = true;
-                btnToggleVisibility.Text = "---";
+                hidden = true;
                 return;
             }
         }

@@ -95,22 +95,22 @@ namespace EnvironmentManager4
                     moduleStart = "SalesPad.Module.";
                     break;
                 case "Customer Portal API":
-                    extPath = String.Format(@"{0}\ExtModules", installerPath);
-                    custPath = String.Format(@"{0}\CustomModules", installerPath);
+                    extPath = String.Format(@"{0}\ExtModules\", installerPath);
+                    custPath = String.Format(@"{0}\CustomModules\", installerPath);
                     moduleStart = "SalesPad.GP.RESTv3.";
                     break;
                 case "DataCollection":
-                    custPath = String.Format(@"{0}\CustomModules", installerPath);
+                    custPath = String.Format(@"{0}\CustomModules\", installerPath);
                     moduleStart = "SalesPad.DataCollection.";
                     break;
                 case "SalesPad Mobile":
                     break;
                 case "ShipCenter":
-                    custPath = String.Format(@"{0}\Custom", installerPath);
+                    custPath = String.Format(@"{0}\Custom\", installerPath);
                     moduleStart = "SalesPad.ShipCenter.";
                     break;
                 case "Customer Portal Web":
-                    custPath = String.Format(@"{0}\Plugins", installerPath);
+                    custPath = String.Format(@"{0}\Plugins\", installerPath);
                     break;
             }
 

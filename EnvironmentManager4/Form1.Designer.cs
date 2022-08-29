@@ -44,6 +44,7 @@ namespace EnvironmentManager4
             this.btnLaunchProduct = new System.Windows.Forms.Button();
             this.btnInstallProduct = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnEditDescription = new System.Windows.Forms.Button();
             this.btnDeleteBackup = new System.Windows.Forms.Button();
             this.btnNewDB = new System.Windows.Forms.Button();
             this.btnOverwriteDB = new System.Windows.Forms.Button();
@@ -85,7 +86,6 @@ namespace EnvironmentManager4
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.btnEditDescription = new System.Windows.Forms.Button();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -110,6 +110,7 @@ namespace EnvironmentManager4
             this.tbSPVPNIPAddress.ReadOnly = true;
             this.tbSPVPNIPAddress.Size = new System.Drawing.Size(123, 20);
             this.tbSPVPNIPAddress.TabIndex = 17;
+            this.tbSPVPNIPAddress.TabStop = false;
             this.tbSPVPNIPAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // cbAlwaysOnTop
@@ -140,6 +141,7 @@ namespace EnvironmentManager4
             this.tbWiFiIPAddress.ReadOnly = true;
             this.tbWiFiIPAddress.Size = new System.Drawing.Size(123, 20);
             this.tbWiFiIPAddress.TabIndex = 14;
+            this.tbWiFiIPAddress.TabStop = false;
             this.tbWiFiIPAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // groupBox4
@@ -164,7 +166,7 @@ namespace EnvironmentManager4
             this.btnOpenBuildFolder.Location = new System.Drawing.Point(255, 42);
             this.btnOpenBuildFolder.Name = "btnOpenBuildFolder";
             this.btnOpenBuildFolder.Size = new System.Drawing.Size(125, 23);
-            this.btnOpenBuildFolder.TabIndex = 11;
+            this.btnOpenBuildFolder.TabIndex = 19;
             this.btnOpenBuildFolder.Text = "Open FileServer Folder";
             this.toolTip1.SetToolTip(this.btnOpenBuildFolder, "Opens the default build directory for the selected product");
             this.btnOpenBuildFolder.UseVisualStyleBackColor = true;
@@ -173,10 +175,10 @@ namespace EnvironmentManager4
             // btnBuildFolder
             // 
             this.btnBuildFolder.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnBuildFolder.Location = new System.Drawing.Point(380, 42);
+            this.btnBuildFolder.Location = new System.Drawing.Point(381, 42);
             this.btnBuildFolder.Name = "btnBuildFolder";
             this.btnBuildFolder.Size = new System.Drawing.Size(125, 23);
-            this.btnBuildFolder.TabIndex = 12;
+            this.btnBuildFolder.TabIndex = 20;
             this.btnBuildFolder.Text = "Build Folder";
             this.btnBuildFolder.UseVisualStyleBackColor = true;
             this.btnBuildFolder.Click += new System.EventHandler(this.btnBuildFolder_Click);
@@ -191,7 +193,7 @@ namespace EnvironmentManager4
             this.cbSPGPVersion.Location = new System.Drawing.Point(435, 18);
             this.cbSPGPVersion.Name = "cbSPGPVersion";
             this.cbSPGPVersion.Size = new System.Drawing.Size(68, 21);
-            this.cbSPGPVersion.TabIndex = 1;
+            this.cbSPGPVersion.TabIndex = 16;
             this.cbSPGPVersion.Text = "x86";
             // 
             // cbProductList
@@ -200,7 +202,7 @@ namespace EnvironmentManager4
             this.cbProductList.Location = new System.Drawing.Point(6, 18);
             this.cbProductList.Name = "cbProductList";
             this.cbProductList.Size = new System.Drawing.Size(425, 21);
-            this.cbProductList.TabIndex = 0;
+            this.cbProductList.TabIndex = 15;
             this.toolTip1.SetToolTip(this.cbProductList, "Select a product to install or launch");
             this.cbProductList.SelectedIndexChanged += new System.EventHandler(this.cbProductList_SelectedIndexChanged);
             // 
@@ -210,7 +212,7 @@ namespace EnvironmentManager4
             this.btnLaunchProduct.Location = new System.Drawing.Point(130, 42);
             this.btnLaunchProduct.Name = "btnLaunchProduct";
             this.btnLaunchProduct.Size = new System.Drawing.Size(125, 23);
-            this.btnLaunchProduct.TabIndex = 10;
+            this.btnLaunchProduct.TabIndex = 18;
             this.btnLaunchProduct.Text = "Launch Build";
             this.toolTip1.SetToolTip(this.btnLaunchProduct, "Launch a build for the selected product");
             this.btnLaunchProduct.UseVisualStyleBackColor = true;
@@ -222,7 +224,7 @@ namespace EnvironmentManager4
             this.btnInstallProduct.Location = new System.Drawing.Point(5, 42);
             this.btnInstallProduct.Name = "btnInstallProduct";
             this.btnInstallProduct.Size = new System.Drawing.Size(125, 23);
-            this.btnInstallProduct.TabIndex = 9;
+            this.btnInstallProduct.TabIndex = 17;
             this.btnInstallProduct.Text = "Install";
             this.toolTip1.SetToolTip(this.btnInstallProduct, "Install a build for the selected product");
             this.btnInstallProduct.UseVisualStyleBackColor = true;
@@ -246,13 +248,25 @@ namespace EnvironmentManager4
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Database Management";
             // 
+            // btnEditDescription
+            // 
+            this.btnEditDescription.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.btnEditDescription.Image = ((System.Drawing.Image)(resources.GetObject("btnEditDescription.Image")));
+            this.btnEditDescription.Location = new System.Drawing.Point(458, 19);
+            this.btnEditDescription.Name = "btnEditDescription";
+            this.btnEditDescription.Size = new System.Drawing.Size(23, 23);
+            this.btnEditDescription.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.btnEditDescription, "Edit the description of the selected database backup");
+            this.btnEditDescription.UseVisualStyleBackColor = true;
+            this.btnEditDescription.Click += new System.EventHandler(this.btnEditDescription_Click);
+            // 
             // btnDeleteBackup
             // 
             this.btnDeleteBackup.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnDeleteBackup.Location = new System.Drawing.Point(380, 206);
             this.btnDeleteBackup.Name = "btnDeleteBackup";
             this.btnDeleteBackup.Size = new System.Drawing.Size(125, 23);
-            this.btnDeleteBackup.TabIndex = 8;
+            this.btnDeleteBackup.TabIndex = 14;
             this.btnDeleteBackup.Text = "Delete DB Backup";
             this.btnDeleteBackup.UseVisualStyleBackColor = true;
             this.btnDeleteBackup.Click += new System.EventHandler(this.btnDeleteBackup_Click);
@@ -263,7 +277,7 @@ namespace EnvironmentManager4
             this.btnNewDB.Location = new System.Drawing.Point(255, 206);
             this.btnNewDB.Name = "btnNewDB";
             this.btnNewDB.Size = new System.Drawing.Size(125, 23);
-            this.btnNewDB.TabIndex = 7;
+            this.btnNewDB.TabIndex = 13;
             this.btnNewDB.Text = "New DB Backup";
             this.btnNewDB.UseVisualStyleBackColor = true;
             this.btnNewDB.Click += new System.EventHandler(this.btnNewDB_Click);
@@ -274,7 +288,7 @@ namespace EnvironmentManager4
             this.btnOverwriteDB.Location = new System.Drawing.Point(130, 206);
             this.btnOverwriteDB.Name = "btnOverwriteDB";
             this.btnOverwriteDB.Size = new System.Drawing.Size(125, 23);
-            this.btnOverwriteDB.TabIndex = 6;
+            this.btnOverwriteDB.TabIndex = 12;
             this.btnOverwriteDB.Text = "Overwrite DB";
             this.btnOverwriteDB.UseVisualStyleBackColor = true;
             this.btnOverwriteDB.Click += new System.EventHandler(this.btnOverwriteDB_Click);
@@ -288,6 +302,7 @@ namespace EnvironmentManager4
             this.tbDBDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbDBDesc.Size = new System.Drawing.Size(498, 157);
             this.tbDBDesc.TabIndex = 5;
+            this.tbDBDesc.TabStop = false;
             // 
             // btnRestoreDB
             // 
@@ -295,7 +310,7 @@ namespace EnvironmentManager4
             this.btnRestoreDB.Location = new System.Drawing.Point(5, 206);
             this.btnRestoreDB.Name = "btnRestoreDB";
             this.btnRestoreDB.Size = new System.Drawing.Size(125, 23);
-            this.btnRestoreDB.TabIndex = 4;
+            this.btnRestoreDB.TabIndex = 11;
             this.btnRestoreDB.Text = "Restore DB";
             this.btnRestoreDB.UseVisualStyleBackColor = true;
             this.btnRestoreDB.Click += new System.EventHandler(this.btnRestoreDB_Click);
@@ -307,7 +322,7 @@ namespace EnvironmentManager4
             this.btnDBBackupFolder.Location = new System.Drawing.Point(482, 19);
             this.btnDBBackupFolder.Name = "btnDBBackupFolder";
             this.btnDBBackupFolder.Size = new System.Drawing.Size(23, 23);
-            this.btnDBBackupFolder.TabIndex = 2;
+            this.btnDBBackupFolder.TabIndex = 10;
             this.toolTip1.SetToolTip(this.btnDBBackupFolder, "Open the Settings defined database backup folder");
             this.btnDBBackupFolder.UseVisualStyleBackColor = true;
             this.btnDBBackupFolder.Click += new System.EventHandler(this.btnDBBackupFolder_Click);
@@ -320,7 +335,7 @@ namespace EnvironmentManager4
             this.cbDatabaseList.Location = new System.Drawing.Point(6, 20);
             this.cbDatabaseList.Name = "cbDatabaseList";
             this.cbDatabaseList.Size = new System.Drawing.Size(450, 21);
-            this.cbDatabaseList.TabIndex = 1;
+            this.cbDatabaseList.TabIndex = 8;
             this.cbDatabaseList.Text = "Select a Database";
             this.cbDatabaseList.SelectedIndexChanged += new System.EventHandler(this.cbDatabaseList_SelectedIndexChanged);
             // 
@@ -352,6 +367,7 @@ namespace EnvironmentManager4
             this.lvInstalledSQLServers.Name = "lvInstalledSQLServers";
             this.lvInstalledSQLServers.Size = new System.Drawing.Size(312, 132);
             this.lvInstalledSQLServers.TabIndex = 11;
+            this.lvInstalledSQLServers.TabStop = false;
             this.lvInstalledSQLServers.UseCompatibleStateImageBehavior = false;
             this.lvInstalledSQLServers.View = System.Windows.Forms.View.Details;
             // 
@@ -371,7 +387,7 @@ namespace EnvironmentManager4
             this.btnStopService.Location = new System.Drawing.Point(162, 170);
             this.btnStopService.Name = "btnStopService";
             this.btnStopService.Size = new System.Drawing.Size(157, 23);
-            this.btnStopService.TabIndex = 10;
+            this.btnStopService.TabIndex = 5;
             this.btnStopService.Text = "Stop Service";
             this.btnStopService.UseVisualStyleBackColor = true;
             this.btnStopService.Click += new System.EventHandler(this.btnStopService_Click);
@@ -382,7 +398,7 @@ namespace EnvironmentManager4
             this.btnStartService.Location = new System.Drawing.Point(5, 170);
             this.btnStartService.Name = "btnStartService";
             this.btnStartService.Size = new System.Drawing.Size(157, 23);
-            this.btnStartService.TabIndex = 9;
+            this.btnStartService.TabIndex = 4;
             this.btnStartService.Text = "Start Service";
             this.btnStartService.UseVisualStyleBackColor = true;
             this.btnStartService.Click += new System.EventHandler(this.btnStartService_Click);
@@ -393,7 +409,7 @@ namespace EnvironmentManager4
             this.btnStopAllServices.Location = new System.Drawing.Point(162, 193);
             this.btnStopAllServices.Name = "btnStopAllServices";
             this.btnStopAllServices.Size = new System.Drawing.Size(157, 23);
-            this.btnStopAllServices.TabIndex = 8;
+            this.btnStopAllServices.TabIndex = 7;
             this.btnStopAllServices.Text = "Stop All Services";
             this.btnStopAllServices.UseVisualStyleBackColor = true;
             this.btnStopAllServices.Click += new System.EventHandler(this.btnStopAllServices_Click);
@@ -416,7 +432,7 @@ namespace EnvironmentManager4
             this.btnInstallService.Location = new System.Drawing.Point(5, 193);
             this.btnInstallService.Name = "btnInstallService";
             this.btnInstallService.Size = new System.Drawing.Size(157, 23);
-            this.btnInstallService.TabIndex = 7;
+            this.btnInstallService.TabIndex = 6;
             this.btnInstallService.Text = "Install Service";
             this.btnInstallService.UseVisualStyleBackColor = true;
             this.btnInstallService.Click += new System.EventHandler(this.btnInstallService_Click);
@@ -443,7 +459,7 @@ namespace EnvironmentManager4
             this.btnLaunchGPUtils.Location = new System.Drawing.Point(90, 146);
             this.btnLaunchGPUtils.Name = "btnLaunchGPUtils";
             this.btnLaunchGPUtils.Size = new System.Drawing.Size(85, 23);
-            this.btnLaunchGPUtils.TabIndex = 7;
+            this.btnLaunchGPUtils.TabIndex = 1;
             this.btnLaunchGPUtils.Text = "Launch Utils";
             this.btnLaunchGPUtils.UseVisualStyleBackColor = true;
             this.btnLaunchGPUtils.Click += new System.EventHandler(this.btnLaunchGPUtils_Click);
@@ -454,7 +470,7 @@ namespace EnvironmentManager4
             this.btnLaunchSelectedGP.Location = new System.Drawing.Point(5, 146);
             this.btnLaunchSelectedGP.Name = "btnLaunchSelectedGP";
             this.btnLaunchSelectedGP.Size = new System.Drawing.Size(85, 23);
-            this.btnLaunchSelectedGP.TabIndex = 4;
+            this.btnLaunchSelectedGP.TabIndex = 0;
             this.btnLaunchSelectedGP.Text = "Launch GP";
             this.btnLaunchSelectedGP.UseVisualStyleBackColor = true;
             this.btnLaunchSelectedGP.Click += new System.EventHandler(this.btnLaunchSelectedGP_Click);
@@ -466,7 +482,7 @@ namespace EnvironmentManager4
             this.cbGPListToInstall.Location = new System.Drawing.Point(6, 171);
             this.cbGPListToInstall.Name = "cbGPListToInstall";
             this.cbGPListToInstall.Size = new System.Drawing.Size(168, 21);
-            this.cbGPListToInstall.TabIndex = 3;
+            this.cbGPListToInstall.TabIndex = 2;
             this.cbGPListToInstall.Text = "Select a GP Version To Install";
             // 
             // btnInstallGP
@@ -476,7 +492,7 @@ namespace EnvironmentManager4
             this.btnInstallGP.Location = new System.Drawing.Point(5, 193);
             this.btnInstallGP.Name = "btnInstallGP";
             this.btnInstallGP.Size = new System.Drawing.Size(170, 23);
-            this.btnInstallGP.TabIndex = 2;
+            this.btnInstallGP.TabIndex = 3;
             this.btnInstallGP.Text = "Install GP";
             this.btnInstallGP.UseVisualStyleBackColor = true;
             this.btnInstallGP.Click += new System.EventHandler(this.btnInstallGP_Click);
@@ -488,6 +504,7 @@ namespace EnvironmentManager4
             this.lbGPVersionsInstalled.Name = "lbGPVersionsInstalled";
             this.lbGPVersionsInstalled.Size = new System.Drawing.Size(168, 108);
             this.lbGPVersionsInstalled.TabIndex = 1;
+            this.lbGPVersionsInstalled.TabStop = false;
             // 
             // labelGPInstallationList
             // 
@@ -635,18 +652,7 @@ namespace EnvironmentManager4
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
-            // 
-            // btnEditDescription
-            // 
-            this.btnEditDescription.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.btnEditDescription.Image = ((System.Drawing.Image)(resources.GetObject("btnEditDescription.Image")));
-            this.btnEditDescription.Location = new System.Drawing.Point(458, 19);
-            this.btnEditDescription.Name = "btnEditDescription";
-            this.btnEditDescription.Size = new System.Drawing.Size(23, 23);
-            this.btnEditDescription.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.btnEditDescription, "Edit the description of the selected database backup");
-            this.btnEditDescription.UseVisualStyleBackColor = true;
-            this.btnEditDescription.Click += new System.EventHandler(this.btnEditDescription_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // Form1
             // 

@@ -42,7 +42,7 @@ namespace EnvironmentManager4
             this.btnEdit.Location = new System.Drawing.Point(443, 549);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(75, 23);
-            this.btnEdit.TabIndex = 7;
+            this.btnEdit.TabIndex = 3;
             this.btnEdit.Text = "Edit File";
             this.btnEdit.UseVisualStyleBackColor = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
@@ -52,7 +52,7 @@ namespace EnvironmentManager4
             this.btnAdd.Location = new System.Drawing.Point(368, 549);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
-            this.btnAdd.TabIndex = 6;
+            this.btnAdd.TabIndex = 2;
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
@@ -62,7 +62,7 @@ namespace EnvironmentManager4
             this.btnRefresh.Location = new System.Drawing.Point(2, 549);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(75, 23);
-            this.btnRefresh.TabIndex = 8;
+            this.btnRefresh.TabIndex = 1;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
@@ -74,7 +74,7 @@ namespace EnvironmentManager4
             this.tbAddNotes.Name = "tbAddNotes";
             this.tbAddNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbAddNotes.Size = new System.Drawing.Size(514, 165);
-            this.tbAddNotes.TabIndex = 5;
+            this.tbAddNotes.TabIndex = 0;
             // 
             // tbNotes
             // 
@@ -84,7 +84,7 @@ namespace EnvironmentManager4
             this.tbNotes.ReadOnly = true;
             this.tbNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbNotes.Size = new System.Drawing.Size(514, 377);
-            this.tbNotes.TabIndex = 9;
+            this.tbNotes.TabIndex = 4;
             // 
             // Notes
             // 

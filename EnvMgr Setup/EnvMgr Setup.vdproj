@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_14ABB3D7F8494D0899D763D6E5B12D12"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2188CFB64CB05D695C905FBC88D3137F"
         "OwnerKey" = "8:_021B9A986BF841918CC53951FA409F7A"
         "MsmSig" = "8:_UNDEFINED"
@@ -245,6 +251,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_14ABB3D7F8494D0899D763D6E5B12D12"
+            {
+            "SourcePath" = "8:..\\EnvironmentManager4\\Files\\GetLatestEnvironmentManager.bat"
+            "TargetName" = "8:GetLatestEnvironmentManager.bat"
+            "Tag" = "8:"
+            "Folder" = "8:_FF80ACF8135C468B81892F8DBE3B8D84"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2188CFB64CB05D695C905FBC88D3137F"
@@ -562,15 +588,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Environment Manager"
-        "ProductCode" = "8:{032DC0CC-E921-4271-B0D7-BC59050B69AE}"
-        "PackageCode" = "8:{FEAE719D-B27E-42AB-9CB3-32ECEA563557}"
+        "ProductCode" = "8:{8F5B10D6-7AB0-40C7-AAB3-EA58A221E976}"
+        "PackageCode" = "8:{491AF124-B236-4F82-86B8-BEE593F48A6A}"
         "UpgradeCode" = "8:{D4416156-6E67-4E56-B187-FCE1B44FAAF4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.10"
+        "ProductVersion" = "8:1.0.27"
         "Manufacturer" = "8:Steve Rodriguez"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -586,7 +612,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:"
+        "PostBuildEvent" = "8:set version=0.0.0.0\r\nFOR /F delims^=^\"^ tokens^=2 %%i in ('findstr /b /c:\"[assembly: AssemblyVersion(\" C:\\Users\\steve.rodriguez\\source\\repos\\EnvironmentManager4\\EnvironmentManager4\\Properties\\AssemblyInfo.cs') do (\r\n  set version=%%i\r\n)\r\n\r\nrename \"$(BuiltOuputPath)\" \"Environment Manager v%version%.msi\"\r\n\r\ncopy \"C:\\Users\\steve.rodriguez\\source\\repos\\EnvironmentManager4\\EnvMgr Setup\\Debug\\Environment Manager v%version%.msi\" \"\\\\sp-fileserv-01\\Team QA\\Tools\\Environment Manager\\Installers\\Environment Manager v%version%.msi\""
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"

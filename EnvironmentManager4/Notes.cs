@@ -129,6 +129,7 @@ namespace EnvironmentManager4
                 }
                 return;
             }
+            Form1.notes = null;
         }
     }
 }

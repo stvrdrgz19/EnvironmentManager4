@@ -19,6 +19,7 @@ namespace EnvironmentManager4
             InitializeComponent();
             lvwColumnSorter = new ListViewColumnSorter();
             this.lvInstalledBuilds.ListViewItemSorter = lvwColumnSorter;
+            this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
         private void DeleteBuilds_Load(object sender, EventArgs e)
@@ -116,6 +117,11 @@ namespace EnvironmentManager4
 
             // Perform the sort with these new sort options.
             this.lvInstalledBuilds.Sort();
+        }
+
+        private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)
+        {
+            Form1.deleteBuilds = null;
         }
     }
 }

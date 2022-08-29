@@ -96,14 +96,14 @@ namespace EnvironmentManager4
             this.tbException.ReadOnly = true;
             this.tbException.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbException.Size = new System.Drawing.Size(772, 337);
-            this.tbException.TabIndex = 4;
+            this.tbException.TabIndex = 1;
             // 
             // btnClose
             // 
             this.btnClose.Location = new System.Drawing.Point(714, 421);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
-            this.btnClose.TabIndex = 3;
+            this.btnClose.TabIndex = 0;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);

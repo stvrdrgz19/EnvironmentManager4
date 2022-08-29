@@ -17,6 +17,7 @@ namespace EnvironmentManager4
         public BuildLog()
         {
             InitializeComponent();
+            this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
         List<BuildModel> builds = new List<BuildModel>();
@@ -167,6 +168,11 @@ namespace EnvironmentManager4
                 }
             }
             Clipboard.SetText(selectedBuild);
+        }
+
+        private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)
+        {
+            Form1.buildLog = null;
         }
     }
 }

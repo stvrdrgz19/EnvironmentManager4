@@ -82,6 +82,7 @@ namespace EnvironmentManager4
             this.tbDatabaseName.ReadOnly = true;
             this.tbDatabaseName.Size = new System.Drawing.Size(499, 20);
             this.tbDatabaseName.TabIndex = 3;
+            this.tbDatabaseName.TabStop = false;
             // 
             // label1
             // 

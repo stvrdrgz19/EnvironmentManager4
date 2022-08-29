@@ -55,7 +55,7 @@ namespace EnvironmentManager4
             this.btnLaunch.Location = new System.Drawing.Point(87, 435);
             this.btnLaunch.Name = "btnLaunch";
             this.btnLaunch.Size = new System.Drawing.Size(75, 23);
-            this.btnLaunch.TabIndex = 13;
+            this.btnLaunch.TabIndex = 2;
             this.btnLaunch.Text = "Launch";
             this.btnLaunch.UseVisualStyleBackColor = true;
             this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
@@ -68,7 +68,7 @@ namespace EnvironmentManager4
             this.cbProduct.Location = new System.Drawing.Point(547, 439);
             this.cbProduct.Name = "cbProduct";
             this.cbProduct.Size = new System.Drawing.Size(90, 17);
-            this.cbProduct.TabIndex = 12;
+            this.cbProduct.TabIndex = 3;
             this.cbProduct.Text = "Copy Product";
             this.cbProduct.UseVisualStyleBackColor = true;
             // 
@@ -77,7 +77,7 @@ namespace EnvironmentManager4
             this.btnRefresh.Location = new System.Drawing.Point(9, 435);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(75, 23);
-            this.btnRefresh.TabIndex = 11;
+            this.btnRefresh.TabIndex = 1;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
@@ -90,7 +90,7 @@ namespace EnvironmentManager4
             this.cbDlls.Location = new System.Drawing.Point(643, 439);
             this.cbDlls.Name = "cbDlls";
             this.cbDlls.Size = new System.Drawing.Size(70, 17);
-            this.cbDlls.TabIndex = 10;
+            this.cbDlls.TabIndex = 4;
             this.cbDlls.Text = "Copy Dlls";
             this.cbDlls.UseVisualStyleBackColor = true;
             // 
@@ -99,7 +99,7 @@ namespace EnvironmentManager4
             this.btnCopy.Location = new System.Drawing.Point(719, 435);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(75, 23);
-            this.btnCopy.TabIndex = 9;
+            this.btnCopy.TabIndex = 0;
             this.btnCopy.Text = "Copy";
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
@@ -127,6 +127,7 @@ namespace EnvironmentManager4
             this.lvDlls.Name = "lvDlls";
             this.lvDlls.Size = new System.Drawing.Size(783, 181);
             this.lvDlls.TabIndex = 0;
+            this.lvDlls.TabStop = false;
             this.lvDlls.UseCompatibleStateImageBehavior = false;
             this.lvDlls.View = System.Windows.Forms.View.Details;
             // 
@@ -166,6 +167,7 @@ namespace EnvironmentManager4
             this.lvBuilds.Name = "lvBuilds";
             this.lvBuilds.Size = new System.Drawing.Size(783, 181);
             this.lvBuilds.TabIndex = 0;
+            this.lvBuilds.TabStop = false;
             this.lvBuilds.UseCompatibleStateImageBehavior = false;
             this.lvBuilds.View = System.Windows.Forms.View.Details;
             this.lvBuilds.SelectedIndexChanged += new System.EventHandler(this.lvBuilds_SelectedIndexChanged);

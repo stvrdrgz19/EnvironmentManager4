@@ -42,7 +42,7 @@ namespace EnvironmentManager4
             this.btnCancel.Location = new System.Drawing.Point(203, 77);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 7;
+            this.btnCancel.TabIndex = 2;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -52,7 +52,7 @@ namespace EnvironmentManager4
             this.btnOK.Location = new System.Drawing.Point(126, 77);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 6;
+            this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -62,7 +62,7 @@ namespace EnvironmentManager4
             this.tbText.Location = new System.Drawing.Point(21, 33);
             this.tbText.Name = "tbText";
             this.tbText.Size = new System.Drawing.Size(244, 20);
-            this.tbText.TabIndex = 5;
+            this.tbText.TabIndex = 0;
             // 
             // labelPrompt
             // 

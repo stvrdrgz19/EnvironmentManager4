@@ -31,14 +31,14 @@ namespace EnvironmentManager4
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeleteBuilds));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lvInstalledBuilds = new System.Windows.Forms.ListView();
+            this.chInstallPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chDateModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cbVersion = new System.Windows.Forms.ComboBox();
             this.cbProducts = new System.Windows.Forms.ComboBox();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnSelectNone = new System.Windows.Forms.Button();
             this.btnSelectAll = new System.Windows.Forms.Button();
-            this.lvInstalledBuilds = new System.Windows.Forms.ListView();
-            this.chInstallPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chDateModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,6 +58,32 @@ namespace EnvironmentManager4
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Builds";
             // 
+            // lvInstalledBuilds
+            // 
+            this.lvInstalledBuilds.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chInstallPath,
+            this.chDateModified});
+            this.lvInstalledBuilds.FullRowSelect = true;
+            this.lvInstalledBuilds.GridLines = true;
+            this.lvInstalledBuilds.HideSelection = false;
+            this.lvInstalledBuilds.Location = new System.Drawing.Point(7, 48);
+            this.lvInstalledBuilds.Name = "lvInstalledBuilds";
+            this.lvInstalledBuilds.Size = new System.Drawing.Size(663, 148);
+            this.lvInstalledBuilds.TabIndex = 14;
+            this.lvInstalledBuilds.TabStop = false;
+            this.lvInstalledBuilds.UseCompatibleStateImageBehavior = false;
+            this.lvInstalledBuilds.View = System.Windows.Forms.View.Details;
+            // 
+            // chInstallPath
+            // 
+            this.chInstallPath.Text = "Install Path";
+            this.chInstallPath.Width = 500;
+            // 
+            // chDateModified
+            // 
+            this.chDateModified.Text = "Date Modified";
+            this.chDateModified.Width = 159;
+            // 
             // cbVersion
             // 
             this.cbVersion.FormattingEnabled = true;
@@ -67,7 +93,7 @@ namespace EnvironmentManager4
             this.cbVersion.Location = new System.Drawing.Point(549, 20);
             this.cbVersion.Name = "cbVersion";
             this.cbVersion.Size = new System.Drawing.Size(121, 21);
-            this.cbVersion.TabIndex = 13;
+            this.cbVersion.TabIndex = 1;
             this.cbVersion.Text = "x86";
             this.cbVersion.SelectedIndexChanged += new System.EventHandler(this.cbVersion_SelectedIndexChanged);
             // 
@@ -82,7 +108,7 @@ namespace EnvironmentManager4
             this.cbProducts.Location = new System.Drawing.Point(7, 20);
             this.cbProducts.Name = "cbProducts";
             this.cbProducts.Size = new System.Drawing.Size(538, 21);
-            this.cbProducts.TabIndex = 12;
+            this.cbProducts.TabIndex = 0;
             this.cbProducts.Text = "Select a Product...";
             this.cbProducts.SelectedIndexChanged += new System.EventHandler(this.cbProducts_SelectedIndexChanged);
             // 
@@ -92,7 +118,7 @@ namespace EnvironmentManager4
             this.btnDelete.Location = new System.Drawing.Point(450, 196);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(221, 23);
-            this.btnDelete.TabIndex = 11;
+            this.btnDelete.TabIndex = 4;
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
@@ -103,7 +129,7 @@ namespace EnvironmentManager4
             this.btnSelectNone.Location = new System.Drawing.Point(228, 196);
             this.btnSelectNone.Name = "btnSelectNone";
             this.btnSelectNone.Size = new System.Drawing.Size(221, 23);
-            this.btnSelectNone.TabIndex = 2;
+            this.btnSelectNone.TabIndex = 3;
             this.btnSelectNone.Text = "Select None";
             this.btnSelectNone.UseVisualStyleBackColor = true;
             this.btnSelectNone.Click += new System.EventHandler(this.btnSelectNone_Click);
@@ -114,35 +140,10 @@ namespace EnvironmentManager4
             this.btnSelectAll.Location = new System.Drawing.Point(6, 196);
             this.btnSelectAll.Name = "btnSelectAll";
             this.btnSelectAll.Size = new System.Drawing.Size(221, 23);
-            this.btnSelectAll.TabIndex = 1;
+            this.btnSelectAll.TabIndex = 2;
             this.btnSelectAll.Text = "Select All";
             this.btnSelectAll.UseVisualStyleBackColor = true;
             this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
-            // 
-            // lvInstalledBuilds
-            // 
-            this.lvInstalledBuilds.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chInstallPath,
-            this.chDateModified});
-            this.lvInstalledBuilds.FullRowSelect = true;
-            this.lvInstalledBuilds.GridLines = true;
-            this.lvInstalledBuilds.HideSelection = false;
-            this.lvInstalledBuilds.Location = new System.Drawing.Point(7, 48);
-            this.lvInstalledBuilds.Name = "lvInstalledBuilds";
-            this.lvInstalledBuilds.Size = new System.Drawing.Size(663, 148);
-            this.lvInstalledBuilds.TabIndex = 14;
-            this.lvInstalledBuilds.UseCompatibleStateImageBehavior = false;
-            this.lvInstalledBuilds.View = System.Windows.Forms.View.Details;
-            // 
-            // chInstallPath
-            // 
-            this.chInstallPath.Text = "Install Path";
-            this.chInstallPath.Width = 500;
-            // 
-            // chDateModified
-            // 
-            this.chDateModified.Text = "Date Modified";
-            this.chDateModified.Width = 159;
             // 
             // DeleteBuilds
             // 

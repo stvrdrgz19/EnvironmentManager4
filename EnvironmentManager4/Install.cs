@@ -20,6 +20,7 @@ namespace EnvironmentManager4
         public Install()
         {
             InitializeComponent();
+            this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
         public static Installer install = new Installer();
@@ -229,7 +230,8 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                MessageBox.Show(String.Format("There was an error logging the build installation. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
+                ErrorHandling.DisplayExceptionMessage(e);
+                //MessageBox.Show(String.Format("There was an error logging the build installation. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
             }
 
             try
@@ -238,7 +240,9 @@ namespace EnvironmentManager4
             }
             catch (Exception deleteError)
             {
-                MessageBox.Show(String.Format("There was an error deleting the installer file at {0}, error is as follows:\n\n{1}\n\n{2}", tempInstaller, deleteError.Message, deleteError.ToString()));
+                ErrorHandling.LogException(deleteError);
+                ErrorHandling.DisplayExceptionMessage(deleteError);
+                //MessageBox.Show(String.Format("There was an error deleting the installer file at {0}, error is as follows:\n\n{1}\n\n{2}", tempInstaller, deleteError.Message, deleteError.ToString()));
             }
 
             //==========================================================================================================================================================================================
@@ -476,6 +480,7 @@ namespace EnvironmentManager4
                     }
                     catch (Exception ex)
                     {
+                        ErrorHandling.LogException(ex);
                         ErrorHandling.DisplayExceptionMessage(ex);
                         return;
                     }
@@ -555,11 +560,18 @@ namespace EnvironmentManager4
                 {
                     listBox.SetSelected(index, true);
                 }
-                catch
+                catch (Exception e)
                 {
-                    MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an {1} Modules for this build.", dll, type));
+                    ErrorHandling.LogException(e);
+                    ErrorHandling.DisplayExceptionMessage(e);
+                    //MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an {1} Modules for this build.", dll, type));
                 }
             }
+        }
+
+        private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)
+        {
+            Form1.installBuild = null;
         }
     }
 }

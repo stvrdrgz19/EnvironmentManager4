@@ -2,12 +2,14 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,7 +41,7 @@ namespace EnvironmentManager4
         public static string GetFile(string fileName)
         {
             if (DevEnvironment())
-                return String.Format(@"{0}\Files\{1}", @"C:\Program Files (x86)\EnvMgr", fileName);
+                return String.Format(@"{0}\Files\{1}", @"C:\Program Files (x86)\Environment Manager", fileName);
             else
                 return String.Format(@"{0}\Files\{1}", Environment.CurrentDirectory, fileName);
         }
@@ -47,7 +49,7 @@ namespace EnvironmentManager4
         public static string GetFolder(string folderName)
         {
             if (DevEnvironment())
-                return String.Format(@"{0}\{1}", @"C:\Program Files (x86)\EnvMgr", folderName);
+                return String.Format(@"{0}\{1}", @"C:\Program Files (x86)\Environment Manager", folderName);
             else
                 return String.Format(@"{0}\{1}", Environment.CurrentDirectory, folderName);
         }
@@ -125,6 +127,67 @@ namespace EnvironmentManager4
                         return reader.ReadToEnd();
                 }
             }
+        }
+
+        public static string GetAppVersion()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        }
+
+        public static string GetLatestVersion()
+        {
+            var directory = @"\\sp-fileserv-01\Team QA\Tools\Environment Manager\Installers";
+            string pattern = "*.msi";
+            string version;
+            try
+            {
+                var dirInfo = new DirectoryInfo(directory);
+                var file = (from f in dirInfo.GetFiles(pattern) orderby f.LastWriteTime descending select f).First();
+
+                version = file.ToString().Substring(21, file.ToString().Length - 25);
+            }
+            catch (Exception e)
+            {
+                string extraMessage = "Possibly not connected to the SalesPad Network or VPN.";
+                ErrorHandling.DisplayExceptionMessage(e, extraMessage);
+                ErrorHandling.LogException(e, extraMessage);
+                version = "Unable to Connect";
+            }
+            return version;
+        }
+
+        public static bool IsProgramUpToDate()
+        {
+            string latestVersion = GetLatestVersion();
+            if (GetAppVersion() == latestVersion || latestVersion == "Unable to Connect")
+                return true;
+            else
+                return false;
+        }
+
+        public static string GetUpdateFile()
+        {
+            return @"\\sp-fileserv-01\Team QA\Tools\Environment Manager\Utility Scripts\GetLatestEnvironmentManagerAdmin.bat.lnk";
+        }
+
+        public static string GetProjectLink()
+        {
+            return "https://github.com/stvrdrgz19/EnvironmentManager4/projects/1";
+        }
+
+        public static string GetWikiLink()
+        {
+            return "https://github.com/stvrdrgz19/EnvironmentManager4/wiki";
+        }
+
+        public static string GetRepoLink()
+        {
+            return "https://github.com/stvrdrgz19/EnvironmentManager4";
+        }
+
+        public static string GetChangeLogLink()
+        {
+            return "https://github.com/stvrdrgz19/EnvironmentManager4/wiki/Change-Log";
         }
 
         //=======================================================[ ENCRYPTION ]========================================================
@@ -215,7 +278,7 @@ namespace EnvironmentManager4
 
     public class ErrorHandling
     {
-        public static void LogException(Exception e)
+        public static void LogException(Exception e, string extraMessage = null)
         {
             string logFile = Utilities.GetFile("Log.txt");
             DateTime logTime = DateTime.Now;
@@ -229,6 +292,11 @@ namespace EnvironmentManager4
                     sw.WriteLine(String.Format("Exception Source: {0}",e.Source));
                     sw.WriteLine(String.Format("Exception Target Site: {0}",e.TargetSite));
                     sw.WriteLine("");
+                    if (!String.IsNullOrEmpty(extraMessage))
+                    {
+                        sw.WriteLine(extraMessage);
+                        sw.WriteLine("");
+                    }
                     sw.WriteLine("STACK TRACE");
                     sw.WriteLine(e.StackTrace);
                     sw.WriteLine("");
@@ -244,6 +312,11 @@ namespace EnvironmentManager4
                     sw.WriteLine(String.Format("Exception Source: {0}", e.Source));
                     sw.WriteLine(String.Format("Exception Target Site: {0}", e.TargetSite));
                     sw.WriteLine("");
+                    if (!String.IsNullOrEmpty(extraMessage))
+                    {
+                        sw.WriteLine(extraMessage);
+                        sw.WriteLine("");
+                    }
                     sw.WriteLine("STACK TRACE");
                     sw.WriteLine(e.StackTrace);
                     sw.WriteLine("");
@@ -251,11 +324,14 @@ namespace EnvironmentManager4
             }
         }
 
-        public static void DisplayExceptionMessage(Exception e)
+        public static void DisplayExceptionMessage(Exception e, string extraMessage = null)
         {
             ExceptionForm form = new ExceptionForm();
             ExceptionForm.exception = e;
-            form.Show();
+            ExceptionForm.extraMessage = extraMessage;
+            form.ShowDialog();
+            //var dialogResult = form.ShowDialog();
+            //form.Show();
         }
     }
 }
