@@ -159,8 +159,12 @@ namespace EnvironmentManager4
                         dllName = String.Format("");
                         break;
                 }
+                string copyTo = "";
                 string copyFrom = String.Format("{0}{1}", custExtPath, dllName);
-                string copyTo = String.Format(@"{0}\{1}{2}", Utilities.GetFolder("Dlls"), moduleStart, dllName);
+                if (product == "DataCollection")
+                    copyTo = String.Format(@"{0}\{1}", Utilities.GetFolder("Dlls"), dllName);
+                else
+                    copyTo = String.Format(@"{0}\{1}{2}", Utilities.GetFolder("Dlls"), moduleStart, dllName);
                 try
                 {
                     File.Copy(copyFrom, copyTo, true);

@@ -30,7 +30,20 @@ namespace EnvironmentManager4
         public static string[] LoadDllList(string path)
         {
             string[] coreModules = CoreModules.GetCoreModules(product);
-            string[] dllList = Directory.GetFiles(path, "SalesPad.Module.*.dll").Select(file => Path.GetFileName(file)).ToArray();
+            string filter = "";
+            switch(product)
+            {
+                case "SalesPad GP":
+                    filter = "SalesPad.Module.";
+                    break;
+                case "DataCollection":
+                    filter = "SalesPad.DataCollection.";
+                    break;
+                case "Shipcenter":
+                    filter = "SalesPad.ShipCenter.";
+                    break;
+            }
+            string[] dllList = Directory.GetFiles(path, String.Format("{0}*.dll", filter)).Select(file => Path.GetFileName(file)).ToArray();
             return dllList.Except(coreModules).ToArray();
         }
 

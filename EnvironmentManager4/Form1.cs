@@ -649,6 +649,8 @@ namespace EnvironmentManager4
                 Install.install = installBuild.GetInstallerFile(getInstaller);
                 if (Install.install.InstallerPath != "EXIT")
                     installBuild.Show();
+                else
+                    installBuild = null;
             }
             else
                 installBuild.BringToFront();
