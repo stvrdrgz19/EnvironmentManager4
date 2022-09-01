@@ -629,7 +629,7 @@ namespace EnvironmentManager4
             // 
             this.generateCoreModulesFileToolStripMenuItem.Name = "generateCoreModulesFileToolStripMenuItem";
             this.generateCoreModulesFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.generateCoreModulesFileToolStripMenuItem.Text = "Generate Core Modules File";
+            this.generateCoreModulesFileToolStripMenuItem.Text = "Regenerate Core Modules File";
             this.generateCoreModulesFileToolStripMenuItem.Click += new System.EventHandler(this.generateCoreModulesFileToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem

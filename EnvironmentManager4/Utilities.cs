@@ -30,6 +30,15 @@ namespace EnvironmentManager4
             "Pre"
         };
 
+        public static void UpdateEnvironment()
+        {
+            string newVersion = "1.0.30.0";
+            int currentVersion = Int32.Parse(GetAppVersion().Replace(".", ""));
+            int updateVersion = Int32.Parse(newVersion.Replace(".", ""));
+            if (currentVersion <= updateVersion)
+                CoreModules.GenerateCoreModulesFile();
+        }
+
         public static bool DevEnvironment()
         {
             if (Environment.CurrentDirectory == @"C:\Users\steve.rodriguez\source\repos\EnvironmentManager4\EnvironmentManager4\bin\Debug")

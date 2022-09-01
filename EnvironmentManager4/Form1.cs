@@ -304,8 +304,8 @@ namespace EnvironmentManager4
                 directoryCompareToolStripMenuItem.Visible = false;
                 trimSOLTickets.Visible = false;
                 generateSettingsFileToolStripMenuItem.Visible = false;
-                generateCoreModulesFileToolStripMenuItem.Visible = false;
-                //deleteBuildInstallsToolStripMenuItem.Visible = false;
+                //generateCoreModulesFileToolStripMenuItem.Visible = false;
+                //Utilities.UpdateEnvironment();
             }
         }
 
