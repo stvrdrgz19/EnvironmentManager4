@@ -252,35 +252,22 @@ namespace EnvironmentManager4
 
     public class Products
     {
-        public string SalesPad { get; set; }
-        public string DataCollection { get; set; }
-        public string SalesPadMobile { get; set; }
-        public string ShipCenter { get; set; }
-        public string WebAPI { get; set; }
-        public string GPWeb { get; set; }
-
-        public static Products GetProductNames()
-        {
-            Products products = new Products();
-            products.SalesPad = "SalesPad GP";
-            products.DataCollection = "DataCollection";
-            products.SalesPadMobile = "SalesPad Mobile";
-            products.ShipCenter = "ShipCenter";
-            products.WebAPI = "Customer Portal Web";
-            products.GPWeb = "Customer Portal API";
-            return products;
-        }
+        public const string SalesPad = "SalesPad";
+        public const string DataCollection = "Inventory Control";
+        public const string SalesPadMobile = "SalesPad Mobile";
+        public const string ShipCenter = "ShipCenter";
+        public const string WebAPI = "Customer Portal Web";
+        public const string GPWeb = "Customer Portal API";
 
         public static List<string> ListOfProducts()
         {
             List<string> productsList = new List<string>();
-            Products products = GetProductNames();
-            productsList.Add(products.SalesPad);
-            productsList.Add(products.DataCollection);
-            productsList.Add(products.SalesPadMobile);
-            productsList.Add(products.ShipCenter);
-            //productsList.Add(products.WebAPI);
-            //productsList.Add(products.GPWeb);
+            productsList.Add(SalesPad);
+            productsList.Add(DataCollection);
+            productsList.Add(SalesPadMobile);
+            productsList.Add(ShipCenter);
+            //productsList.Add(WebAPI);
+            //productsList.Add(GPWeb);
             return productsList;
         }
     }

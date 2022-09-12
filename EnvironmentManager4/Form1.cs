@@ -283,7 +283,7 @@ namespace EnvironmentManager4
             {
                 cbProductList.Items.Add(product);
             }
-            cbProductList.SelectedIndex = cbProductList.FindStringExact("SalesPad GP");
+            cbProductList.SelectedIndex = cbProductList.FindStringExact(Products.SalesPad);
         }
 
         private void LoadWifiIP()
@@ -298,6 +298,7 @@ namespace EnvironmentManager4
 
         private void ConfigureEnvironment(string machine)
         {
+            labelVersion.Text = String.Format("v{0}", Utilities.GetAppVersion());
             if (machine != "STEVERODRIGUEZ")
             {
                 notesToolStripMenuItem.Visible = false;

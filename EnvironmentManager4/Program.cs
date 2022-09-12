@@ -19,6 +19,7 @@ namespace EnvironmentManager4
             Application.Run(new Form1());
         }
     }
+
     public class GetInstaller
     {
         public string Path { get; set; }

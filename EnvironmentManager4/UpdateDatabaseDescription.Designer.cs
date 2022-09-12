@@ -40,6 +40,7 @@ namespace EnvironmentManager4
             // 
             // btnCancel
             // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(435, 235);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
@@ -97,6 +98,7 @@ namespace EnvironmentManager4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(520, 269);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -106,6 +108,7 @@ namespace EnvironmentManager4
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "UpdateDatabaseDescription";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

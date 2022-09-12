@@ -164,7 +164,7 @@ namespace EnvironmentManager4
             {
                 foreach (ListViewItem item in lvDlls.Items)
                 {
-                    selectedBuild += "\n" + item.SubItems[1].Text + ": " + item.Text;
+                    selectedBuild += "\n" + item.SubItems[1].Text + ": " + Modules.TrimVersionAndExtension(item.Text, lvBuilds.SelectedItems[0].SubItems[3].Text);
                 }
             }
             Clipboard.SetText(selectedBuild);

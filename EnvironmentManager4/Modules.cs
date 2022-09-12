@@ -72,6 +72,17 @@ namespace EnvironmentManager4
             return version;
         }
 
+        public static string TrimVersionAndExtension(string dll, string product)
+        {
+            if (product == "SalesPad GP")
+            {
+                string dllWithoutExt = dll.Substring(0, dll.LastIndexOf('.'));
+                return dllWithoutExt.Substring(0, dllWithoutExt.LastIndexOf('.'));
+            }
+            else
+                return dll.Substring(0, dll.LastIndexOf('.'));
+        }
+
         public static void GetDLLs(string product, string installerPath, string version, string startTime, List<string> custDlls = null, List<string> extDlls = null)
         {
             string extPath = "";
