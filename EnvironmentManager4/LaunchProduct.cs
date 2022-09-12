@@ -39,8 +39,11 @@ namespace EnvironmentManager4
                 case "DataCollection":
                     filter = "SalesPad.DataCollection.";
                     break;
-                case "Shipcenter":
+                case "ShipCenter":
                     filter = "SalesPad.ShipCenter.";
+                    break;
+                case "SalesPad Mobile":
+                    filter = "NOMODULES";
                     break;
             }
             string[] dllList = Directory.GetFiles(path, String.Format("{0}*.dll", filter)).Select(file => Path.GetFileName(file)).ToArray();

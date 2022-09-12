@@ -86,6 +86,7 @@ namespace EnvironmentManager4
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.labelVersion = new System.Windows.Forms.Label();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -175,7 +176,7 @@ namespace EnvironmentManager4
             // btnBuildFolder
             // 
             this.btnBuildFolder.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnBuildFolder.Location = new System.Drawing.Point(381, 42);
+            this.btnBuildFolder.Location = new System.Drawing.Point(380, 42);
             this.btnBuildFolder.Name = "btnBuildFolder";
             this.btnBuildFolder.Size = new System.Drawing.Size(125, 23);
             this.btnBuildFolder.TabIndex = 20;
@@ -190,7 +191,7 @@ namespace EnvironmentManager4
             "x86",
             "x64",
             "Pre"});
-            this.cbSPGPVersion.Location = new System.Drawing.Point(435, 18);
+            this.cbSPGPVersion.Location = new System.Drawing.Point(436, 18);
             this.cbSPGPVersion.Name = "cbSPGPVersion";
             this.cbSPGPVersion.Size = new System.Drawing.Size(68, 21);
             this.cbSPGPVersion.TabIndex = 16;
@@ -654,11 +655,22 @@ namespace EnvironmentManager4
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // labelVersion
+            // 
+            this.labelVersion.AutoSize = true;
+            this.labelVersion.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.labelVersion.Location = new System.Drawing.Point(14, 566);
+            this.labelVersion.Name = "labelVersion";
+            this.labelVersion.Size = new System.Drawing.Size(35, 13);
+            this.labelVersion.TabIndex = 19;
+            this.labelVersion.Text = "label1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(520, 587);
+            this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.labelReloadVPNIPAddress);
             this.Controls.Add(this.tbSPVPNIPAddress);
             this.Controls.Add(this.cbAlwaysOnTop);
@@ -747,6 +759,7 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnOpenBuildFolder;
         private System.Windows.Forms.Button btnEditDescription;
+        private System.Windows.Forms.Label labelVersion;
     }
 }
 
