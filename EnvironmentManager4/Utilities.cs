@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -29,15 +30,6 @@ namespace EnvironmentManager4
             "x64",
             "Pre"
         };
-
-        public static void UpdateEnvironment()
-        {
-            string newVersion = "1.0.30.0";
-            int currentVersion = Int32.Parse(GetAppVersion().Replace(".", ""));
-            int updateVersion = Int32.Parse(newVersion.Replace(".", ""));
-            if (currentVersion <= updateVersion)
-                CoreModules.GenerateCoreModulesFile();
-        }
 
         public static bool DevEnvironment()
         {
@@ -328,6 +320,55 @@ namespace EnvironmentManager4
             form.ShowDialog();
             //var dialogResult = form.ShowDialog();
             //form.Show();
+        }
+    }
+
+    public class RegUtilities
+    {
+        public const int CoreModulesVersion = 1;
+        public const int ConfigurationsVersion = 1;
+
+        /// <summary>
+        /// Call this on startup - generate registry values if none exist
+        /// </summary>
+        public static void GenerateRegistryEntries()
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Environment Manager");
+            if (key == null)
+                CreateRegistryEntries();
+        }
+
+        public static void CreateRegistryEntries()
+        {
+            //Create the Environment Manager Subkey
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\Environment Manager");
+
+            //Store the values
+            key.SetValue("Core Modules Version", 0);
+            key.SetValue("Configurations Version", 0);
+            key.Close();
+        }
+
+        public static void CheckForUpdates()
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Environment Manager", true);
+            int savedCoreModulesVersion = (int)key.GetValue("Core Modules Version");
+            int savedConfigurationsVersion = (int)key.GetValue("Configurations Version");
+
+            //check if core modules file needs updating
+            if (savedCoreModulesVersion != CoreModulesVersion)
+            {
+                CoreModules.UpdateCoreModulesFile();
+                key.SetValue("Core Modules Version", CoreModulesVersion);
+            }
+
+            //check if configurations file needs updating
+            if (savedConfigurationsVersion != ConfigurationsVersion)
+            {
+                Configurations.UpdateConfigurationsFile();
+                key.SetValue("Configurations Version", ConfigurationsVersion);
+            }
+            key.Close();
         }
     }
 }

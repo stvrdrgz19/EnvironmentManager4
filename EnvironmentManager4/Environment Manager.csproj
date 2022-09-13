@@ -234,9 +234,6 @@
     <Content Include="Files\Icons\ico24.ico" />
     <Content Include="Files\Icons\ico4.ico" />
     <Content Include="Files\Log.txt" />
-    <Content Include="Files\CoreModules.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="UpdatePrompt.resx">
       <DependentUpon>UpdatePrompt.cs</DependentUpon>
     </EmbeddedResource>
@@ -244,7 +241,6 @@
       <DependentUpon>UpdateDatabaseDescription.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
-    <None Include="Files\Configurations.json" />
     <None Include="Files\GetLatestEnvironmentManager.bat" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

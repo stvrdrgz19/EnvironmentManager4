@@ -59,7 +59,7 @@ namespace EnvironmentManager4
             ProductInfo pi = new ProductInfo();
             switch (product)
             {
-                case "SalesPad GP":
+                case Products.SalesPad:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\";
                     pi.ProductExecutables = new List<string> { "SalesPad.exe" };
                     pi.DirectoryFilters = new List<string> { "SalesPad.Desktop",
@@ -92,7 +92,7 @@ namespace EnvironmentManager4
                             break;
                     }
                     break;
-                case "DataCollection":
+                case Products.DataCollection:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\Ares\DataCollection\";
                     pi.ProductExecutables = new List<string> { "DataCollection Extended Warehouse.exe",
                         "SalesPad Inventory Manager Extended Warehouse.exe",
@@ -110,7 +110,7 @@ namespace EnvironmentManager4
                             break;
                     }
                     break;
-                case "SalesPad Mobile":
+                case Products.SalesPadMobile:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\Ares\Mobile-Server\";
                     pi.ProductExecutables = new List<string> { "SalesPad.GP.Mobile.Server.exe" };
                     pi.DirectoryFilters = new List<string> { "SalesPad.GP.Mobile.Server",
@@ -125,7 +125,7 @@ namespace EnvironmentManager4
                             break;
                     }
                     break;
-                case "ShipCenter":
+                case Products.ShipCenter:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\ShipCenter\";
                     pi.ProductExecutables = new List<string> { "SalesPad.ShipCenter.exe" };
                     pi.DirectoryFilters = new List<string> { "ShipCenter",
@@ -140,10 +140,10 @@ namespace EnvironmentManager4
                             break;
                     }
                     break;
-                case "Customer Portal Web":
+                case Products.GPWeb:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\Web-Portal\GP";
                     break;
-                case "Customer Portal API":
+                case Products.WebAPI:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\SalesPad.WebApi";
                     break;
             }

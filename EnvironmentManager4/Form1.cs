@@ -254,7 +254,7 @@ namespace EnvironmentManager4
                 tbSPVPNIPAddress.Location = new Point(386, 563);
             }
 
-            cbProductList.SelectedIndex = cbProductList.FindStringExact("SalesPad GP");
+            cbProductList.SelectedIndex = cbProductList.FindStringExact(Products.SalesPad);
             switch (settings.Other.Mode)
             {
                 case "Standard":
@@ -306,7 +306,8 @@ namespace EnvironmentManager4
                 trimSOLTickets.Visible = false;
                 generateSettingsFileToolStripMenuItem.Visible = false;
                 //generateCoreModulesFileToolStripMenuItem.Visible = false;
-                //Utilities.UpdateEnvironment();
+                CoreModules.UpdateCoreModulesFile();
+                Configurations.UpdateConfigurationsFile();
             }
         }
 
@@ -326,6 +327,8 @@ namespace EnvironmentManager4
                 UpdatePrompt.OpenFromStartup = true;
                 update.ShowDialog();
             }
+            RegUtilities.GenerateRegistryEntries();
+            RegUtilities.CheckForUpdates();
             return;
         }
 
@@ -911,14 +914,15 @@ namespace EnvironmentManager4
 
         private void generateCoreModulesFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CoreModules.GenerateCoreModulesFile();
+            //CoreModules.GenerateCoreModulesFile();
+            CoreModules.UpdateCoreModulesFile();
             return;
         }
 
         private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedProduct = cbProductList.Text;
-            if (selectedProduct == "SalesPad GP")
+            if (selectedProduct == Products.SalesPad)
             {
                 SettingsModel settings = SettingsUtilities.GetSettings();
                 cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);

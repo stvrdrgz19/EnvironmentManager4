@@ -33,16 +33,16 @@ namespace EnvironmentManager4
             string filter = "";
             switch(product)
             {
-                case "SalesPad GP":
+                case Products.SalesPad:
                     filter = "SalesPad.Module.";
                     break;
-                case "DataCollection":
+                case Products.DataCollection:
                     filter = "SalesPad.DataCollection.";
                     break;
-                case "ShipCenter":
+                case Products.ShipCenter:
                     filter = "SalesPad.ShipCenter.";
                     break;
-                case "SalesPad Mobile":
+                case Products.SalesPadMobile:
                     filter = "NOMODULES";
                     break;
             }
