@@ -32,13 +32,31 @@ namespace EnvironmentManager4
             return JsonConvert.DeserializeObject<List<Configurations>>(File.ReadAllText(Utilities.GetFile("Configurations.json")));
         }
 
+        public static void UpdateConfigurationsFile()
+        {
+            List<Configurations> existingConfigurations = GetConfigurations();
+            List<Configurations> newConfigurations = new List<Configurations>();
+            foreach (Configurations configuration in existingConfigurations)
+            {
+                switch (configuration.Product)
+                {
+                    case "SalesPad GP":
+                        configuration.Product = Products.SalesPad;
+                        break;
+                }
+                newConfigurations.Add(configuration);
+            }
+            string json = JsonConvert.SerializeObject(newConfigurations.Distinct(), Formatting.Indented);
+            File.WriteAllText(Utilities.GetFile("Configurations.json"), json);
+        }
+
         public static void GenerateDefaultConfigurationsFile()
         {
-            Configurations ediConfiguration = new Configurations("SalesPad GP",
+            Configurations ediConfiguration = new Configurations(Products.SalesPad,
                 "EDI",
                 new List<string> { "SalesPadEDI" },
                 new List<string>());
-            Configurations aaConfiguration = new Configurations("SalesPad GP",
+            Configurations aaConfiguration = new Configurations(Products.SalesPad,
                 "AA",
                 new List<string> { "AutomationAgent", "AutomationAgentService" },
                 new List<string>());

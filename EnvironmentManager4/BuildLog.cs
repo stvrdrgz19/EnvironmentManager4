@@ -77,59 +77,6 @@ namespace EnvironmentManager4
             return;
         }
 
-        private void btnLaunch_Click(object sender, EventArgs e)
-        {
-            string product = lvBuilds.SelectedItems[0].SubItems[3].Text;
-            string selectedBuild = lvBuilds.SelectedItems[0].Text;
-            string executable = "";
-            switch (product)
-            {
-                case "SalesPad GP":
-                    executable = @"\SalesPad.exe";
-                    break;
-                case "DataCollection":
-                    executable = @"\DataCollection Extended Warehouse.exe";
-                    break;
-                case "Inventory Manager":
-                    executable = @"\SalesPad Inventory Manager Extended Warehouse.exe";
-                    break;
-                case "SalesPad Mobile":
-                    executable = @"\SalesPad.GP.Mobile.Server.exe";
-                    break;
-                case "ShipCenter":
-                    executable = @"\SalesPad.ShipCenter.exe";
-                    break;
-            }
-
-            string productPath = String.Format(@"{0}{1}", selectedBuild, executable);
-
-            if (product == "SalesPad GP" || product == "SalesPad Mobile" || product == "ShipCenter")
-            {
-                if (File.Exists(productPath))
-                {
-                    try
-                    {
-                        Process.Start(productPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(String.Format("There was an error launching {0}, the error is as follows:\n\n{1}", productPath, ex.Message));
-                        return;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(String.Format("The selected build is no longer installed:\n\n{0}", productPath));
-                }
-                return;
-            }
-
-            if (product == "DataCollection" || product == "Inventory Manager")
-            {
-                //SalesPad Inventory Manager Extended Warehouse.exe
-            }
-        }
-
         private void btnCopy_Click(object sender, EventArgs e)
         {
             if (lvBuilds.SelectedItems.Count <= 0)
@@ -145,16 +92,16 @@ namespace EnvironmentManager4
             {
                 switch (product)
                 {
-                    case "SalesPad GP":
+                    case Products.SalesPad:
                         product = "Desktop: ";
                         break;
-                    case "DataCollection":
+                    case Products.DataCollection:
                         product = "Console: ";
                         break;
-                    case "SalesPad Mobile":
+                    case Products.SalesPadMobile:
                         product = "Console: ";
                         break;
-                    case "ShipCenter":
+                    case Products.ShipCenter:
                         product = "ShipCenter: ";
                         break;
                 }

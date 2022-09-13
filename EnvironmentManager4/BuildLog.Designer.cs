@@ -30,7 +30,6 @@ namespace EnvironmentManager4
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BuildLog));
-            this.btnLaunch = new System.Windows.Forms.Button();
             this.cbProduct = new System.Windows.Forms.CheckBox();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.cbDlls = new System.Windows.Forms.CheckBox();
@@ -48,17 +47,6 @@ namespace EnvironmentManager4
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnLaunch
-            // 
-            this.btnLaunch.Enabled = false;
-            this.btnLaunch.Location = new System.Drawing.Point(87, 435);
-            this.btnLaunch.Name = "btnLaunch";
-            this.btnLaunch.Size = new System.Drawing.Size(75, 23);
-            this.btnLaunch.TabIndex = 2;
-            this.btnLaunch.Text = "Launch";
-            this.btnLaunch.UseVisualStyleBackColor = true;
-            this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
             // 
             // cbProduct
             // 
@@ -197,7 +185,6 @@ namespace EnvironmentManager4
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 460);
-            this.Controls.Add(this.btnLaunch);
             this.Controls.Add(this.cbProduct);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.cbDlls);
@@ -219,8 +206,6 @@ namespace EnvironmentManager4
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnLaunch;
         private System.Windows.Forms.CheckBox cbProduct;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.CheckBox cbDlls;

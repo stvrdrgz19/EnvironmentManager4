@@ -22,9 +22,20 @@ namespace EnvironmentManager4
             this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
+        private static void LoadProductList(ComboBox cbProducts)
+        {
+            cbProducts.Items.Clear();
+            foreach (string product in Products.ListOfProducts())
+            {
+                cbProducts.Items.Add(product);
+            }
+            cbProducts.SelectedIndex = cbProducts.FindStringExact(Products.SalesPad);
+        }
+
         private void DeleteBuilds_Load(object sender, EventArgs e)
         {
             this.lvInstalledBuilds.ColumnClick += new ColumnClickEventHandler(ColumnClick);
+            LoadProductList(cbProducts);
         }
 
         private void btnSelectAll_Click(object sender, EventArgs e)
@@ -72,12 +83,12 @@ namespace EnvironmentManager4
         private void cbProducts_SelectedIndexChanged(object sender, EventArgs e)
         {
             string product = cbProducts.Text;
-            if (product != "SalesPad GP")
+            if (product != Products.SalesPad)
             {
                 cbVersion.Text = "x86";
                 cbVersion.Enabled = false;
             }
-            else if (product == "SalesPad GP")
+            else if (product == Products.SalesPad)
             {
                 if (cbVersion.Enabled == false)
                 {

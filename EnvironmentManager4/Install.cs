@@ -35,7 +35,7 @@ namespace EnvironmentManager4
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                if (getInstaller.Product == "SalesPad GP")
+                if (getInstaller.Product == Products.SalesPad)
                 {
                     switch (getInstaller.Version)
                     {
@@ -96,23 +96,23 @@ namespace EnvironmentManager4
 
         public void LoadInstallPath()
         {
-            if (install.Product == "Customer Portal Web" || install.Product == "Customer Portal API")
+            if (install.Product == Products.GPWeb || install.Product == Products.WebAPI)
             {
                 return;
             }
             int charCount = 0;
             switch (install.Product)
             {
-                case "SalesPad GP":
+                case Products.SalesPad:
                     charCount = 43;
                     break;
-                case "DataCollection":
+                case Products.DataCollection:
                     charCount = 51;
                     break;
-                case "SalesPad Mobile":
+                case Products.SalesPadMobile:
                     charCount = 50;
                     break;
-                case "ShipCenter":
+                case Products.ShipCenter:
                     charCount = 42;
                     break;
             }
@@ -148,12 +148,12 @@ namespace EnvironmentManager4
         {
             string extModulesPath = "";
             string custModulesPath = "";
-            if (product == "DataCollection" || product == "ShipCenter" || product == "Customer Portal Web" || product == "SalesPad Mobile")
+            if (product == Products.DataCollection || product == Products.ShipCenter || product == Products.GPWeb || product == Products.SalesPadMobile)
             {
                 lbExtendedModules.Enabled = false;
                 checkRunDatabaseUpdate.Enabled = false;
             }
-            if (product == "SalesPad Mobile")
+            if (product == Products.SalesPadMobile)
             {
                 lbCustomModules.Enabled = false;
                 cbConfigurationList.Enabled = false;
@@ -162,7 +162,7 @@ namespace EnvironmentManager4
             }
             switch (product)
             {
-                case "SalesPad GP":
+                case Products.SalesPad:
                     switch (productVersion)
                     {
                         case "x64":
@@ -176,19 +176,19 @@ namespace EnvironmentManager4
                             break;
                     }
                     break;
-                case "Customer Portal API":
+                case Products.WebAPI:
                     extModulesPath = String.Format(@"{0}\ExtModules", installerPath);
                     custModulesPath = String.Format(@"{0}\CustomModules", installerPath);
                     break;
-                case "DataCollection":
+                case Products.DataCollection:
                     custModulesPath = String.Format(@"{0}\CustomModules", installerPath);
                     break;
-                case "SalesPad Mobile":
+                case Products.SalesPadMobile:
                     break;
-                case "ShipCenter":
+                case Products.ShipCenter:
                     custModulesPath = String.Format(@"{0}\Custom", installerPath);
                     break;
-                case "Customer Portal Web":
+                case Products.GPWeb:
                     custModulesPath = String.Format(@"{0}\Plugins", installerPath);
                     break;
             }
@@ -272,7 +272,7 @@ namespace EnvironmentManager4
             //  UNZIP DLLS IF THERE ARE ANY
             if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
             {
-                if (install.Product == "DataCollection")
+                if (install.Product == Products.DataCollection)
                 {
                     Modules.CopyDllsToInstalledBuild(installPath);
                 }
@@ -344,12 +344,12 @@ namespace EnvironmentManager4
 
         private void Install_Load(object sender, EventArgs e)
         {
-            if (install.Product != "SalesPad GP")
+            if (install.Product != Products.SalesPad)
             {
                 checkResetDBVersion.Enabled = false;
                 checkRunDatabaseUpdate.Enabled = false;
             }
-            if (install.Product == "SalesPad Mobile")
+            if (install.Product == Products.SalesPadMobile)
             {
                 cbConfigurationList.Enabled = false;
                 btnAddConfiguration.Enabled = false;

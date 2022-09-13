@@ -1,22 +1,66 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace EnvironmentManager4
 {
     public class CoreModules
     {
         public string Product { get; set; }
+        public ProductKey Key { get; set; }
         public List<string> CoreModulesList { get; set; }
+        public enum ProductKey
+        {
+            SalesPad,
+            DataCollection,
+            SalesPadMobile,
+            ShipCenter
+        }
 
-        public CoreModules(string Product, List<string> CoreModulesList)
+        public CoreModules(string Product, ProductKey Key, List<string> CoreModulesList)
         {
             this.Product = Product;
+            this.Key = Key;
             this.CoreModulesList = CoreModulesList;
+        }
+
+        public static void UpdateCoreModulesFile()
+        {
+            string coreModulesFile = Utilities.GetFile("CoreModules.json");
+            if (!File.Exists(coreModulesFile))
+            {
+                GenerateCoreModulesFile();
+                return;
+            }
+            List<CoreModules> newCoreModules = new List<CoreModules>();
+            List<CoreModules> coreModulesList = JsonConvert.DeserializeObject<List<CoreModules>>(File.ReadAllText(coreModulesFile));
+            foreach (CoreModules moduleList in coreModulesList)
+            {
+                switch (moduleList.Key)
+                {
+                    case ProductKey.SalesPad:
+                        moduleList.Product = Products.SalesPad;
+                        break;
+                    case ProductKey.DataCollection:
+                        moduleList.Product = Products.DataCollection;
+                        break;
+                    case ProductKey.SalesPadMobile:
+                        moduleList.Product = Products.SalesPadMobile;
+                        break;
+                    case ProductKey.ShipCenter:
+                        moduleList.Product = Products.ShipCenter;
+                        break;
+                }
+                newCoreModules.Add(moduleList);
+            }
+            string json = JsonConvert.SerializeObject(newCoreModules, Formatting.Indented);
+            File.WriteAllText(String.Format(@"{0}\Files\CoreModules.json", Environment.CurrentDirectory), json);
         }
 
         public static string[] GetCoreModules(string product)
@@ -173,10 +217,10 @@ namespace EnvironmentManager4
 
             List<CoreModules> coreModules = new List<CoreModules>
             {
-                new CoreModules("SalesPad GP", salesPadCoreModules),
-                new CoreModules("DataCollection", dataCollectionCoreModules),
-                new CoreModules("SalesPad Mobile", salesPadMobileCoreModules),
-                new CoreModules("ShipCenter", shipCenterCoreModules)
+                new CoreModules(Products.SalesPad, ProductKey.SalesPad, salesPadCoreModules),
+                new CoreModules(Products.DataCollection, ProductKey.DataCollection, dataCollectionCoreModules),
+                new CoreModules(Products.SalesPadMobile, ProductKey.SalesPadMobile, salesPadMobileCoreModules),
+                new CoreModules(Products.ShipCenter, ProductKey.ShipCenter, shipCenterCoreModules)
             };
 
             string json = JsonConvert.SerializeObject(coreModules, Formatting.Indented);

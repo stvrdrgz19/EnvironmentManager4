@@ -16,28 +16,28 @@ namespace EnvironmentManager4
             List<string> dllList = new List<string>();
             switch (product)
             {
-                case "SalesPad GP":
+                case Products.SalesPad:
                     switch (version)
                     {
                         case "x64":
                         case "x86":
-                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, "SalesPad GP").ToString())).TrimEnd('.')));
+                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, Products.SalesPad).ToString())).TrimEnd('.')));
                             break;
                         case "Pre":
-                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, "SalesPad GP").ToString())).TrimEnd('.')));
+                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, Products.SalesPad).ToString())).TrimEnd('.')));
                             break;
                     }
                     break;
-                case "DataCollection":
+                case Products.DataCollection:
                     dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(24, Path.GetFileName(file).Substring(24).IndexOf(".dll"))));
                     break;
-                case "ShipCenter":
-                    dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(20, Path.GetFileNameWithoutExtension(file).Substring(20).IndexOf(TrimVersion(buildPath, "ShipCenter").ToString())).TrimEnd('.')));
+                case Products.ShipCenter:
+                    dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(20, Path.GetFileNameWithoutExtension(file).Substring(20).IndexOf(TrimVersion(buildPath, Products.ShipCenter).ToString())).TrimEnd('.')));
                     break;
-                case "Customer Portal Web":
+                case Products.GPWeb:
                     dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file)));
                     break;
-                case "Customer Portal API":
+                case Products.WebAPI:
                     dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file.Replace(GetVersionNum(installer), "")).Substring(19)));
                     break;
             }
@@ -49,10 +49,10 @@ namespace EnvironmentManager4
             int charCount = 0;
             switch (product)
             {
-                case "SalesPad GP":
+                case Products.SalesPad:
                     charCount = 3;
                     break;
-                case "ShipCenter":
+                case Products.ShipCenter:
                     charCount = 4;
                     break;
             }
@@ -74,7 +74,7 @@ namespace EnvironmentManager4
 
         public static string TrimVersionAndExtension(string dll, string product)
         {
-            if (product == "SalesPad GP")
+            if (product == Products.SalesPad)
             {
                 string dllWithoutExt = dll.Substring(0, dll.LastIndexOf('.'));
                 return dllWithoutExt.Substring(0, dllWithoutExt.LastIndexOf('.'));
@@ -90,7 +90,7 @@ namespace EnvironmentManager4
             string moduleStart = "";
             switch (product)
             {
-                case "SalesPad GP":
+                case Products.SalesPad:
                     switch (version)
                     {
                         case "x64":
@@ -105,22 +105,22 @@ namespace EnvironmentManager4
                     }
                     moduleStart = "SalesPad.Module.";
                     break;
-                case "Customer Portal API":
+                case Products.WebAPI:
                     extPath = String.Format(@"{0}\ExtModules\", installerPath);
                     custPath = String.Format(@"{0}\CustomModules\", installerPath);
                     moduleStart = "SalesPad.GP.RESTv3.";
                     break;
-                case "DataCollection":
+                case Products.DataCollection:
                     custPath = String.Format(@"{0}\CustomModules\", installerPath);
                     moduleStart = "SalesPad.DataCollection.";
                     break;
-                case "SalesPad Mobile":
+                case Products.SalesPadMobile:
                     break;
-                case "ShipCenter":
+                case Products.ShipCenter:
                     custPath = String.Format(@"{0}\Custom\", installerPath);
                     moduleStart = "SalesPad.ShipCenter.";
                     break;
-                case "Customer Portal Web":
+                case Products.GPWeb:
                     custPath = String.Format(@"{0}\Plugins\", installerPath);
                     break;
             }
@@ -143,7 +143,7 @@ namespace EnvironmentManager4
             {
                 switch (product)
                 {
-                    case "SalesPad GP":
+                    case Products.SalesPad:
                         switch (version)
                         {
                             case "x64":
@@ -155,18 +155,18 @@ namespace EnvironmentManager4
                                 break;
                         }
                         break;
-                    case "Customer Portal API":
+                    case Products.WebAPI:
                         dllName = String.Format("");
                         break;
-                    case "DataCollection":
+                    case Products.DataCollection:
                         dllName = String.Format("{0}{1}.dll", moduleStart, dll);
                         break;
-                    case "SalesPad Mobile":
+                    case Products.SalesPadMobile:
                         break;
-                    case "ShipCenter":
+                    case Products.ShipCenter:
                         dllName = String.Format("{0}{1}.{2}.Zip", moduleStart, dll, Modules.TrimVersion(installerPath, product));
                         break;
-                    case "Customer Portal Web":
+                    case Products.GPWeb:
                         dllName = String.Format("");
                         break;
                 }
