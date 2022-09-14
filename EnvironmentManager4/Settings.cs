@@ -227,7 +227,7 @@ namespace EnvironmentManager4
             {
                 ErrorHandling.LogException(e);
                 ErrorHandling.DisplayExceptionMessage(e);
-                //MessageBox.Show(String.Format("There was an issue attempting to save settings. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
+                return;
             }
         }
 
@@ -371,14 +371,9 @@ namespace EnvironmentManager4
             return;
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnSaveExit_Click(object sender, EventArgs e)
         {
             SaveSettings(GetSettingsValues());
-            return;
-        }
-
-        private void btnExit_Click(object sender, EventArgs e)
-        {
             this.Close();
             return;
         }

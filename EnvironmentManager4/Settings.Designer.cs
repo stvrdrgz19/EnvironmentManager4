@@ -30,8 +30,6 @@ namespace EnvironmentManager4
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
-            this.btnExit = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label9 = new System.Windows.Forms.Label();
             this.btnSelectWebAPIDirectory = new System.Windows.Forms.Button();
@@ -79,31 +77,11 @@ namespace EnvironmentManager4
             this.label14 = new System.Windows.Forms.Label();
             this.cbMode = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.btnSaveExit = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnExit
-            // 
-            this.btnExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnExit.Location = new System.Drawing.Point(452, 613);
-            this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(75, 23);
-            this.btnExit.TabIndex = 35;
-            this.btnExit.Text = "Exit";
-            this.btnExit.UseVisualStyleBackColor = true;
-            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
-            // 
-            // btnSave
-            // 
-            this.btnSave.Location = new System.Drawing.Point(377, 613);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 34;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // groupBox2
             // 
@@ -621,15 +599,26 @@ namespace EnvironmentManager4
             this.label8.TabIndex = 0;
             this.label8.Text = "Mode:";
             // 
+            // btnSaveExit
+            // 
+            this.btnSaveExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnSaveExit.Location = new System.Drawing.Point(452, 613);
+            this.btnSaveExit.Name = "btnSaveExit";
+            this.btnSaveExit.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveExit.TabIndex = 34;
+            this.btnSaveExit.Text = "Save && Exit";
+            this.btnSaveExit.UseVisualStyleBackColor = true;
+            this.btnSaveExit.Click += new System.EventHandler(this.btnSaveExit_Click);
+            // 
             // Settings
             // 
+            this.AcceptButton = this.btnSaveExit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnExit;
+            this.CancelButton = this.btnSaveExit;
             this.ClientSize = new System.Drawing.Size(537, 639);
+            this.Controls.Add(this.btnSaveExit);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.btnExit);
-            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -650,9 +639,6 @@ namespace EnvironmentManager4
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnExit;
-        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnSelectx64SPDirectory;
@@ -700,5 +686,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.CheckBox checkShowAlwaysOnTop;
         private System.Windows.Forms.ComboBox cbDefaultProductVersion;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button btnSaveExit;
     }
 }
