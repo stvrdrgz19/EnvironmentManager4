@@ -47,19 +47,40 @@ namespace EnvironmentManager4
         public static NewDatabaseBackup newBackup;
         public static NewDatabaseBackup overwriteBackup;
 
+        public static void EnableWaitCursor(bool enable)
+        {
+            if (form != null)
+                form.WaitCursor(enable);
+        }
+
+        private void WaitCursor(bool enable)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new EnableDelegate(WaitCursor), new object[] { enable });
+                return;
+            }
+            if (enable)
+            {
+                this.Cursor = Cursors.WaitCursor;
+                tbDBDesc.Cursor = Cursors.WaitCursor;
+                tbSPVPNIPAddress.Cursor = Cursors.WaitCursor;
+                tbWiFiIPAddress.Cursor = Cursors.WaitCursor;
+            }
+            else
+            {
+                this.Cursor = Cursors.Default;
+                tbDBDesc.Cursor = Cursors.Default;
+                tbSPVPNIPAddress.Cursor = Cursors.Default;
+                tbWiFiIPAddress.Cursor = Cursors.Default;
+            }
+        }
+
         public static void EnableDBControls(bool enable)
         {
             if (form != null)
             {
                 form.EnableButton(enable);
-            }
-            if (enable)
-            {
-                //form.Cursor = Cursors.Default;
-            }
-            if (!enable)
-            {
-                //form.Cursor = Cursors.WaitCursor;
             }
         }
 

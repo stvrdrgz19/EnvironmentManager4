@@ -206,6 +206,8 @@ namespace EnvironmentManager4
 
             //Disable Install button on form1.
             Form1.EnableInstallButton(false);
+            //Update cursor to use the waiting cursor
+            Form1.EnableWaitCursor(true);
 
             string startTime = DateTime.Now.ToString();
 
@@ -231,7 +233,6 @@ namespace EnvironmentManager4
             catch (Exception e)
             {
                 ErrorHandling.DisplayExceptionMessage(e);
-                //MessageBox.Show(String.Format("There was an error logging the build installation. Error is as follows:\n\n{0}\n\n{1}", e.Message, e.ToString()));
             }
 
             try
@@ -242,7 +243,6 @@ namespace EnvironmentManager4
             {
                 ErrorHandling.LogException(deleteError);
                 ErrorHandling.DisplayExceptionMessage(deleteError);
-                //MessageBox.Show(String.Format("There was an error deleting the installer file at {0}, error is as follows:\n\n{1}\n\n{2}", tempInstaller, deleteError.Message, deleteError.ToString()));
             }
 
             //==========================================================================================================================================================================================
@@ -317,6 +317,7 @@ namespace EnvironmentManager4
                 build.LaunchBuild();
             }
             Form1.EnableInstallButton(true);
+            Form1.EnableWaitCursor(false);
         }
 
         private void LoadConfigurations(string product)

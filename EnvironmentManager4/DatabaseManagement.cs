@@ -60,6 +60,8 @@ namespace EnvironmentManager4
         {
             //DISABLE DATABASE CONTROLS
             Form1.EnableDBControls(false);
+            //Update cursor to use the waiting cursor
+            Form1.EnableWaitCursor(true);
 
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
@@ -79,6 +81,7 @@ namespace EnvironmentManager4
                 ErrorHandling.LogException(e);
                 if (Directory.Exists(unzippedBackupDirectory))
                     Directory.Delete(unzippedBackupDirectory, true);
+                Form1.EnableWaitCursor(false);
                 return;
             }
             foreach (string databaseFile in settingsModel.DbManagement.Databases)
@@ -116,6 +119,8 @@ namespace EnvironmentManager4
             //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
             DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "RESTORED", backupName);
             SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
+            Form1.EnableWaitCursor(false);
+            Form1.EnableDBControls(true);
 
             string message = String.Format(@"Backup '{0}' was successfully restored.", backupName);
             string caption = "SUCCESS";
@@ -123,7 +128,6 @@ namespace EnvironmentManager4
             MessageBoxIcon icon = MessageBoxIcon.Exclamation;
 
             MessageBox.Show(message, caption, buttons, icon);
-            Form1.EnableDBControls(true);
         }
 
         public static void DeleteDatabase(string backupName, string databaseFile, bool log, bool message)
@@ -155,6 +159,8 @@ namespace EnvironmentManager4
         {
             //DISABLE DATABASE CONTROLS
             Form1.EnableDBControls(false);
+            //Update cursor to use the waiting cursor
+            Form1.EnableWaitCursor(true);
             try
             {
                 Directory.CreateDirectory(databaseBackupDirectory);
@@ -163,12 +169,14 @@ namespace EnvironmentManager4
             {
                 ErrorHandling.LogException(e);
                 ErrorHandling.DisplayExceptionMessage(e);
+                Form1.EnableWaitCursor(false);
                 return;
             }
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
             {
                 MessageBox.Show("SQL Server/Databases aren't configured in Settings. Please ensure a SQL Server connection is established and databases are selected in Settings.");
+                Form1.EnableWaitCursor(false);
                 return;
             }
             foreach (string databaseFile in settingsModel.DbManagement.Databases)
@@ -185,6 +193,7 @@ namespace EnvironmentManager4
                 catch (Exception e)
                 {
                     ErrorHandling.LogException(e);
+                    Form1.EnableWaitCursor(false);
                     return;
                 }
             }
@@ -215,6 +224,7 @@ namespace EnvironmentManager4
             {
                 ErrorHandling.LogException(e);
                 ErrorHandling.DisplayExceptionMessage(e);
+                Form1.EnableWaitCursor(false);
                 return;
             }
             try
@@ -225,6 +235,7 @@ namespace EnvironmentManager4
             {
                 ErrorHandling.LogException(e);
                 ErrorHandling.DisplayExceptionMessage(e);
+                Form1.EnableWaitCursor(false);
                 return;
             }
 
@@ -242,6 +253,7 @@ namespace EnvironmentManager4
             Form1.EnableDBControls(true);
             Form1.newDBBackupName = databaseName;
             Form1.SetStaticBackup(true);
+            Form1.EnableWaitCursor(false);
 
             string message = String.Format("The database backup '{0}' has been {1} successfully.", databaseName, actionLabel);
             string caption = "SUCCESS";
