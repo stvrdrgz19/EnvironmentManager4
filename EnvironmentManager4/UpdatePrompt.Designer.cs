@@ -34,7 +34,7 @@ namespace EnvironmentManager4
             this.tbText = new System.Windows.Forms.TextBox();
             this.btnYes = new System.Windows.Forms.Button();
             this.btnNo = new System.Windows.Forms.Button();
-            this.checkViewChangelog = new System.Windows.Forms.CheckBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -92,29 +92,30 @@ namespace EnvironmentManager4
             this.btnNo.UseVisualStyleBackColor = true;
             this.btnNo.Click += new System.EventHandler(this.btnNo_Click);
             // 
-            // checkViewChangelog
+            // linkLabel1
             // 
-            this.checkViewChangelog.AutoSize = true;
-            this.checkViewChangelog.Location = new System.Drawing.Point(56, 105);
-            this.checkViewChangelog.Name = "checkViewChangelog";
-            this.checkViewChangelog.Size = new System.Drawing.Size(103, 17);
-            this.checkViewChangelog.TabIndex = 4;
-            this.checkViewChangelog.Text = "View Changelog";
-            this.checkViewChangelog.UseVisualStyleBackColor = true;
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(54, 106);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(84, 13);
+            this.linkLabel1.TabIndex = 4;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "View Changelog";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // Update
+            // UpdatePrompt
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(390, 133);
-            this.Controls.Add(this.checkViewChangelog);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.btnNo);
             this.Controls.Add(this.btnYes);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Update";
+            this.Name = "UpdatePrompt";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CONFIRM";
@@ -135,6 +136,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Button btnYes;
         private System.Windows.Forms.Button btnNo;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.CheckBox checkViewChangelog;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
