@@ -36,12 +36,8 @@ namespace EnvironmentManager4
 
         private void btnYes_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(Utilities.GetFile("GetLatestEnvironmentManager.bat"));
-            if (checkViewChangelog.Checked)
-                Process.Start(Utilities.GetChangeLogLink());
             ProcessStartInfo info = new ProcessStartInfo(Utilities.GetFile("GetLatestEnvironmentManager.bat"));
             Process.Start(info);
-            //Process.Start(Utilities.GetFile("GetLatestEnvironmentManager.bat"));
             this.Close();
             return;
         }
@@ -49,6 +45,13 @@ namespace EnvironmentManager4
         private void btnNo_Click(object sender, EventArgs e)
         {
             this.Close();
+            return;
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.linkLabel1.LinkVisited = true;
+            Process.Start(Utilities.GetChangeLogLink());
             return;
         }
     }
