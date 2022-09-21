@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -16,6 +17,52 @@ namespace EnvironmentManager4
     {
         public string BackupName { get; set; }
         public string BackupDescription { get; set; }
+        public const string dbDescLine1 = "===============================================================================";
+        public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
+        public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
+        public static UpdateDatabaseDescription udd;
+
+        public static void LoadDatabaseList(ComboBox cb, TextBox tb)
+        {
+            cb.Items.Clear();
+            cb.Text = "Select a Database Backup";
+            LoadDatabaseDescription(cb, tb);
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
+            if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.DatabaseBackupDirectory))
+            {
+                MessageBox.Show("There is no value in the Database Backup Directory Setting. Please set one in Settings.");
+                return;
+            }
+            if (!Directory.Exists(settingsModel.DbManagement.DatabaseBackupDirectory))
+            {
+                MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist.", settingsModel.DbManagement.DatabaseBackupDirectory));
+                return;
+            }
+            var databases = Directory.GetFiles(settingsModel.DbManagement.DatabaseBackupDirectory).Select(file => Path.GetFileNameWithoutExtension(file));
+            cb.Items.AddRange(databases.ToArray());
+        }
+
+        public static void LoadDatabaseDescription(ComboBox cb, TextBox tb)
+        {
+            string backup = cb.Text;
+            if (backup == "Select a Database Backup")
+            {
+                tb.Text = dbDescDefault;
+            }
+            else
+            {
+                try
+                {
+                    tb.Text = Utilities.GetDatabaseDescription(backup);
+                }
+                catch (Exception e)
+                {
+                    ErrorHandling.LogException(e);
+                    ErrorHandling.DisplayExceptionMessage(e);
+                    tb.Text = dbDescDefault;
+                }
+            }
+        }
 
         public static void ResetDatabaseVersion(string username, string password, string database = "TWO")
         {
@@ -33,6 +80,22 @@ namespace EnvironmentManager4
                 ErrorHandling.LogException(e);
                 ErrorHandling.DisplayExceptionMessage(e);
                 return;
+            }
+        }
+
+        public static void LaunchDBBackupFolder()
+        {
+            string message = "Are you sure you want to open the database backup folder?";
+            string caption = "CONFIRM";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            MessageBoxIcon icon = MessageBoxIcon.Question;
+            DialogResult result;
+
+            result = MessageBox.Show(message, caption, buttons, icon);
+            if (result == DialogResult.Yes)
+            {
+                SettingsModel settingsModel = SettingsUtilities.GetSettings();
+                Process.Start(settingsModel.DbManagement.DatabaseBackupDirectory);
             }
         }
 
