@@ -269,6 +269,7 @@ namespace EnvironmentManager4
             this.btnDeleteBackup.Size = new System.Drawing.Size(125, 23);
             this.btnDeleteBackup.TabIndex = 14;
             this.btnDeleteBackup.Text = "Delete DB Backup";
+            this.toolTip1.SetToolTip(this.btnDeleteBackup, "Delete the selected database backup.");
             this.btnDeleteBackup.UseVisualStyleBackColor = true;
             this.btnDeleteBackup.Click += new System.EventHandler(this.btnDeleteBackup_Click);
             // 
@@ -280,6 +281,7 @@ namespace EnvironmentManager4
             this.btnNewDB.Size = new System.Drawing.Size(125, 23);
             this.btnNewDB.TabIndex = 13;
             this.btnNewDB.Text = "New DB Backup";
+            this.toolTip1.SetToolTip(this.btnNewDB, "Create a new database backup.");
             this.btnNewDB.UseVisualStyleBackColor = true;
             this.btnNewDB.Click += new System.EventHandler(this.btnNewDB_Click);
             // 
@@ -291,6 +293,7 @@ namespace EnvironmentManager4
             this.btnOverwriteDB.Size = new System.Drawing.Size(125, 23);
             this.btnOverwriteDB.TabIndex = 12;
             this.btnOverwriteDB.Text = "Overwrite DB";
+            this.toolTip1.SetToolTip(this.btnOverwriteDB, "Overwrite the selected backup using your current environment.");
             this.btnOverwriteDB.UseVisualStyleBackColor = true;
             this.btnOverwriteDB.Click += new System.EventHandler(this.btnOverwriteDB_Click);
             // 
@@ -313,6 +316,7 @@ namespace EnvironmentManager4
             this.btnRestoreDB.Size = new System.Drawing.Size(125, 23);
             this.btnRestoreDB.TabIndex = 11;
             this.btnRestoreDB.Text = "Restore DB";
+            this.toolTip1.SetToolTip(this.btnRestoreDB, "Restore the selected database backup.");
             this.btnRestoreDB.UseVisualStyleBackColor = true;
             this.btnRestoreDB.Click += new System.EventHandler(this.btnRestoreDB_Click);
             // 
@@ -337,7 +341,7 @@ namespace EnvironmentManager4
             this.cbDatabaseList.Name = "cbDatabaseList";
             this.cbDatabaseList.Size = new System.Drawing.Size(450, 21);
             this.cbDatabaseList.TabIndex = 8;
-            this.cbDatabaseList.Text = "Select a Database";
+            this.toolTip1.SetToolTip(this.cbDatabaseList, "Select a database backup to work with.");
             this.cbDatabaseList.SelectedIndexChanged += new System.EventHandler(this.cbDatabaseList_SelectedIndexChanged);
             // 
             // groupBox2
@@ -369,6 +373,7 @@ namespace EnvironmentManager4
             this.lvInstalledSQLServers.Size = new System.Drawing.Size(312, 132);
             this.lvInstalledSQLServers.TabIndex = 11;
             this.lvInstalledSQLServers.TabStop = false;
+            this.toolTip1.SetToolTip(this.lvInstalledSQLServers, "List of installed SQL and SalesPad Services.");
             this.lvInstalledSQLServers.UseCompatibleStateImageBehavior = false;
             this.lvInstalledSQLServers.View = System.Windows.Forms.View.Details;
             // 
@@ -390,6 +395,7 @@ namespace EnvironmentManager4
             this.btnStopService.Size = new System.Drawing.Size(157, 23);
             this.btnStopService.TabIndex = 5;
             this.btnStopService.Text = "Stop Service";
+            this.toolTip1.SetToolTip(this.btnStopService, "Stop Selected Service.");
             this.btnStopService.UseVisualStyleBackColor = true;
             this.btnStopService.Click += new System.EventHandler(this.btnStopService_Click);
             // 
@@ -401,6 +407,7 @@ namespace EnvironmentManager4
             this.btnStartService.Size = new System.Drawing.Size(157, 23);
             this.btnStartService.TabIndex = 4;
             this.btnStartService.Text = "Start Service";
+            this.toolTip1.SetToolTip(this.btnStartService, "Start Selected Service.");
             this.btnStartService.UseVisualStyleBackColor = true;
             this.btnStartService.Click += new System.EventHandler(this.btnStartService_Click);
             // 
@@ -412,6 +419,7 @@ namespace EnvironmentManager4
             this.btnStopAllServices.Size = new System.Drawing.Size(157, 23);
             this.btnStopAllServices.TabIndex = 7;
             this.btnStopAllServices.Text = "Stop All Services";
+            this.toolTip1.SetToolTip(this.btnStopAllServices, "Stop all services in the list.");
             this.btnStopAllServices.UseVisualStyleBackColor = true;
             this.btnStopAllServices.Click += new System.EventHandler(this.btnStopAllServices_Click);
             // 
@@ -435,6 +443,7 @@ namespace EnvironmentManager4
             this.btnInstallService.Size = new System.Drawing.Size(157, 23);
             this.btnInstallService.TabIndex = 6;
             this.btnInstallService.Text = "Install Service";
+            this.toolTip1.SetToolTip(this.btnInstallService, "Install a service.");
             this.btnInstallService.UseVisualStyleBackColor = true;
             this.btnInstallService.Click += new System.EventHandler(this.btnInstallService_Click);
             // 
@@ -462,6 +471,7 @@ namespace EnvironmentManager4
             this.btnLaunchGPUtils.Size = new System.Drawing.Size(85, 23);
             this.btnLaunchGPUtils.TabIndex = 1;
             this.btnLaunchGPUtils.Text = "Launch Utils";
+            this.toolTip1.SetToolTip(this.btnLaunchGPUtils, "Launch GP Utils for the selected installed GP Instance.");
             this.btnLaunchGPUtils.UseVisualStyleBackColor = true;
             this.btnLaunchGPUtils.Click += new System.EventHandler(this.btnLaunchGPUtils_Click);
             // 
@@ -473,6 +483,8 @@ namespace EnvironmentManager4
             this.btnLaunchSelectedGP.Size = new System.Drawing.Size(85, 23);
             this.btnLaunchSelectedGP.TabIndex = 0;
             this.btnLaunchSelectedGP.Text = "Launch GP";
+            this.toolTip1.SetToolTip(this.btnLaunchSelectedGP, "Launch GP for the selected installed instance.\r\n\r\nShift-Clicking will launch the " +
+        "selected installs folder.");
             this.btnLaunchSelectedGP.UseVisualStyleBackColor = true;
             this.btnLaunchSelectedGP.Click += new System.EventHandler(this.btnLaunchSelectedGP_Click);
             // 
@@ -506,6 +518,7 @@ namespace EnvironmentManager4
             this.lbGPVersionsInstalled.Size = new System.Drawing.Size(168, 108);
             this.lbGPVersionsInstalled.TabIndex = 1;
             this.lbGPVersionsInstalled.TabStop = false;
+            this.toolTip1.SetToolTip(this.lbGPVersionsInstalled, "List of installed Dynamics GP Instances");
             // 
             // labelGPInstallationList
             // 

@@ -29,10 +29,9 @@ namespace EnvironmentManager4
             form = this;
         }
 
-        public const string dbDescLine1 = "===============================================================================";
-        public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
-        public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
-        public const string gpPath = @"C:\Program Files (x86)\Microsoft Dynamics\";
+        //public const string dbDescLine1 = "===============================================================================";
+        //public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
+        //public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
         public static string newDBBackupName = "test1";
         public static LaunchProduct launch;
         public static UpdateDatabaseDescription udd;
@@ -123,8 +122,7 @@ namespace EnvironmentManager4
         public void SettingsReload(bool settingsChange = false)
         {
             cbDatabaseList.Text = "Select a Database Backup";
-            LoadDatabaseList();
-            LoadDatabaseDescription(cbDatabaseList.Text);
+            DatabaseManagement.LoadDatabaseList(cbDatabaseList, tbDBDesc);
             if (settingsChange)
             {
                 DetermineMode();
@@ -154,95 +152,6 @@ namespace EnvironmentManager4
             }
             SettingsReload();
             cbDatabaseList.SelectedIndex = cbDatabaseList.FindStringExact(newDBBackupName);
-        }
-
-        private void EnableSQLControls(bool enable)
-        {
-            btnStartService.Enabled = enable;
-            btnStopService.Enabled = enable;
-            btnStopAllServices.Enabled = enable;
-        }
-
-        public void LoadDatabaseList()
-        {
-            cbDatabaseList.Items.Clear();
-            cbDatabaseList.Text = "Select a Database Backup";
-            LoadDatabaseDescription(cbDatabaseList.Text);
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.DatabaseBackupDirectory))
-            {
-                MessageBox.Show("There is no value in the Database Backup Directory Setting. Please set one in Settings.");
-                return;
-            }
-            if (!Directory.Exists(settingsModel.DbManagement.DatabaseBackupDirectory))
-            {
-                MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist.", settingsModel.DbManagement.DatabaseBackupDirectory));
-                return;
-            }
-            var databases = Directory.GetFiles(settingsModel.DbManagement.DatabaseBackupDirectory).Select(file => Path.GetFileNameWithoutExtension(file));
-            cbDatabaseList.Items.AddRange(databases.ToArray());
-        }
-
-        public void LoadDatabaseDescription(string backup)
-        {
-            tbDBDesc.Clear();
-            if (backup == "Select a Database Backup")
-            {
-                tbDBDesc.Text = dbDescDefault;
-            }
-            else
-            {
-                try
-                {
-                    tbDBDesc.Text = Utilities.GetDatabaseDescription(backup);
-                }
-                catch (Exception e)
-                {
-                    ErrorHandling.LogException(e);
-                    ErrorHandling.DisplayExceptionMessage(e);
-                    tbDBDesc.Text = dbDescDefault;
-                }
-            }
-        }
-
-        public void LoadGPInstalls()
-        {
-            lbGPVersionsInstalled.Items.Clear();
-            var gpFolderList = Directory.GetDirectories(gpPath).Select(folder => folder.Remove(0, gpPath.Length));
-            lbGPVersionsInstalled.Items.AddRange(gpFolderList.ToArray());
-        }
-
-        public void LoadSQLServerListView()
-        {
-            lvInstalledSQLServers.Items.Clear();
-            List<string> services = SQLServices.InstalledSQLServerInstanceNames();
-            services.AddRange(SQLServices.GetSalesPadServices());
-            bool status;
-            string serverStatus = "";
-            foreach (string service in services)
-            {
-                if (SQLServices.IsSQLService(service))
-                    status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(service));
-                else
-                    status = SQLServices.IsServiceRunning(service);
-                ListViewItem item = new ListViewItem(service);
-                switch (status)
-                {
-                    case true:
-                        item.ForeColor = Color.Green;
-                        item.Font = new Font(this.Font, FontStyle.Bold);
-                        serverStatus = "RUNNING";
-                        break;
-                    case false:
-                        item.ForeColor = Color.Gray;
-                        item.Font = new Font(this.Font, FontStyle.Italic);
-                        serverStatus = "NOT RUNNING";
-                        break;
-                }
-                item.SubItems.Add(serverStatus);
-                lvInstalledSQLServers.Items.Add(item);
-            }
-            Utilities.ResizeListViewColumnWidth(lvInstalledSQLServers, 6, 0);
         }
 
         public void DetermineMode()
@@ -336,10 +245,10 @@ namespace EnvironmentManager4
         {
             ConfigureEnvironment(Environment.MachineName);
             SettingsReload(true);
-            LoadGPInstalls();
+            GPManagement.LoadGPInsatlls(lbGPVersionsInstalled);
             LoadWifiIP();
             LoadVPNIP();
-            LoadSQLServerListView();
+            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers);
             cbSPGPVersion.Enabled = false;
             LoadProductList();
             if (!Utilities.IsProgramUpToDate())
@@ -374,43 +283,18 @@ namespace EnvironmentManager4
 
         private void labelGPInstallationList_Click(object sender, EventArgs e)
         {
-            LoadGPInstalls();
+            GPManagement.LoadGPInsatlls(lbGPVersionsInstalled);
         }
 
         private void btnLaunchSelectedGP_Click(object sender, EventArgs e)
         {
-            string selectedGPFolder = lbGPVersionsInstalled.Text;
-            if (String.IsNullOrWhiteSpace(selectedGPFolder))
-            {
-                return;
-            }
-            if (Control.ModifierKeys == Keys.Shift)
-            {
-                try
-                {
-                    Process.Start(gpPath + selectedGPFolder);
-                }
-                catch (Exception ex)
-                {
-                    ErrorHandling.LogException(ex);
-                    ErrorHandling.DisplayExceptionMessage(ex);
-                }
-                return;
-            }
-            string selectedGP = lbGPVersionsInstalled.Text;
-            Process.Start(gpPath + selectedGP + "\\Dynamics.exe", "\"" + gpPath + selectedGP + "\\DYNAMICS.SET\"");
+            GPManagement.LaunchGP(lbGPVersionsInstalled.Text);
             return;
         }
 
         private void btnLaunchGPUtils_Click(object sender, EventArgs e)
         {
-            string selectedGPFolder = lbGPVersionsInstalled.Text;
-            if (String.IsNullOrWhiteSpace(selectedGPFolder))
-            {
-                return;
-            }
-            string selectedGP = lbGPVersionsInstalled.Text;
-            Process.Start(gpPath + selectedGP + "\\DynUtils.exe", "\"" + gpPath + selectedGP + "\\DYNUTILS.SET\"");
+            GPManagement.LaunchGPUtilities(lbGPVersionsInstalled.Text);
             return;
         }
 
@@ -422,58 +306,23 @@ namespace EnvironmentManager4
 
         private void labelSQLVersions_Click(object sender, EventArgs e)
         {
-            LoadSQLServerListView();
+            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers);
             return;
         }
 
         private void btnStartService_Click(object sender, EventArgs e)
         {
-            if (lvInstalledSQLServers.SelectedItems.Count > 0)
-            {
-                EnableSQLControls(false);
-                string selectedService = lvInstalledSQLServers.SelectedItems[0].Text;
-                bool isSQLService = SQLServices.IsSQLService(selectedService);
-                if (isSQLService)
-                {
-                    bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(selectedService));
-                    if (!status)
-                        SQLServices.StartSQLServer(SQLServices.FormatServiceName(selectedService));
-                }
-                else
-                {
-                    bool status = SQLServices.IsServiceRunning(selectedService);
-                    if (!status)
-                        SQLServices.StartSQLServer(selectedService);
-                }
-                LoadSQLServerListView();
-                EnableSQLControls(true);
-            }
+            ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
+            ServiceManagement.UpdateServices("Start", lvInstalledSQLServers);
+            ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
             return;
         }
 
         private void btnStopService_Click(object sender, EventArgs e)
         {
-            if (lvInstalledSQLServers.SelectedItems.Count > 0)
-            {
-                EnableSQLControls(false);
-                string selectedService = lvInstalledSQLServers.SelectedItems[0].Text;
-                bool isSQLService = SQLServices.IsSQLService(selectedService);
-                if (isSQLService)
-                {
-                    bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(selectedService));
-                    if (status)
-                        SQLServices.StopSQLServer(SQLServices.FormatServiceName(selectedService));
-                }
-                else
-                {
-                    bool status = SQLServices.IsServiceRunning(selectedService);
-                    if (status)
-                        SQLServices.StopSQLServer(selectedService);
-
-                }
-                LoadSQLServerListView();
-                EnableSQLControls(true);
-            }
+            ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
+            ServiceManagement.UpdateServices("Stop", lvInstalledSQLServers);
+            ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
             return;
         }
 
@@ -484,51 +333,15 @@ namespace EnvironmentManager4
 
         private void btnStopAllServices_Click(object sender, EventArgs e)
         {
-            List<string> installedSQLServices = new List<string>();
-            foreach (ListViewItem service in lvInstalledSQLServers.Items)
-            {
-                installedSQLServices.Add(service.Text);
-            }
-            if (installedSQLServices.Count != 0)
-            {
-                EnableSQLControls(false);
-                foreach (string service in installedSQLServices)
-                {
-                    bool isSQLService = SQLServices.IsSQLService(service);
-                    if (isSQLService)
-                    {
-                        bool status = SQLServices.IsServiceRunning(SQLServices.FormatServiceName(service));
-                        if (status)
-                            SQLServices.StopSQLServer(SQLServices.FormatServiceName(service));
-                    }
-                    else
-                    {
-                        bool status = SQLServices.IsServiceRunning(service);
-                        if (status)
-                            SQLServices.StopSQLServer(service);
-
-                    }
-                }
-                LoadSQLServerListView();
-                EnableSQLControls(true);
-            }
+            ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
+            ServiceManagement.UpdateServices("StopAll", lvInstalledSQLServers);
+            ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
             return;
         }
 
         private void btnDBBackupFolder_Click(object sender, EventArgs e)
         {
-            string message = "Are you sure you want to open the database backup folder?";
-            string caption = "CONFIRM";
-            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-            MessageBoxIcon icon = MessageBoxIcon.Question;
-            DialogResult result;
-
-            result = MessageBox.Show(message, caption, buttons, icon);
-            if (result == DialogResult.Yes)
-            {
-                SettingsModel settingsModel = SettingsUtilities.GetSettings();
-                Process.Start(settingsModel.DbManagement.DatabaseBackupDirectory);
-            }
+            DatabaseManagement.LaunchDBBackupFolder();
             return;
         }
 
@@ -924,7 +737,7 @@ namespace EnvironmentManager4
 
         private void cbDatabaseList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadDatabaseDescription(cbDatabaseList.Text);
+            DatabaseManagement.LoadDatabaseDescription(cbDatabaseList, tbDBDesc);
         }
 
         private void generateSettingsFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1011,7 +824,7 @@ namespace EnvironmentManager4
         private void EditDescriptionClose(object sender, FormClosingEventArgs e)
         {
             udd = null;
-            LoadDatabaseDescription(cbDatabaseList.Text);
+            DatabaseManagement.LoadDatabaseDescription(cbDatabaseList, tbDBDesc);
             return;
         }
 

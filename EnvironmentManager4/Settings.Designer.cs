@@ -29,6 +29,7 @@ namespace EnvironmentManager4
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -78,6 +79,7 @@ namespace EnvironmentManager4
             this.cbMode = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.btnSaveExit = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -351,6 +353,7 @@ namespace EnvironmentManager4
             this.btnToggleVisibility.Name = "btnToggleVisibility";
             this.btnToggleVisibility.Size = new System.Drawing.Size(24, 22);
             this.btnToggleVisibility.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.btnToggleVisibility, "Toggle SQL Server password visibility");
             this.btnToggleVisibility.UseVisualStyleBackColor = true;
             this.btnToggleVisibility.Click += new System.EventHandler(this.btnToggleVisibility_Click);
             // 
@@ -362,6 +365,7 @@ namespace EnvironmentManager4
             this.btnDeleteConnection.Name = "btnDeleteConnection";
             this.btnDeleteConnection.Size = new System.Drawing.Size(24, 23);
             this.btnDeleteConnection.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.btnDeleteConnection, "Delete the selected SQL Server connection");
             this.btnDeleteConnection.UseVisualStyleBackColor = true;
             this.btnDeleteConnection.Click += new System.EventHandler(this.btnDeleteConnection_Click);
             // 
@@ -395,6 +399,7 @@ namespace EnvironmentManager4
             this.btnConnect.Size = new System.Drawing.Size(75, 23);
             this.btnConnect.TabIndex = 7;
             this.btnConnect.Text = "Connect";
+            this.toolTip1.SetToolTip(this.btnConnect, "Connect or disconnect to/from the selected connection");
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
@@ -407,6 +412,7 @@ namespace EnvironmentManager4
             this.cbConnections.Name = "cbConnections";
             this.cbConnections.Size = new System.Drawing.Size(348, 21);
             this.cbConnections.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.cbConnections, "SQL Server");
             this.cbConnections.SelectedIndexChanged += new System.EventHandler(this.cbConnections_SelectedIndexChanged);
             // 
             // label13
@@ -436,6 +442,7 @@ namespace EnvironmentManager4
             this.tbSQLServerPW.Name = "tbSQLServerPW";
             this.tbSQLServerPW.Size = new System.Drawing.Size(348, 20);
             this.tbSQLServerPW.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.tbSQLServerPW, "Password for the selected SQL Server");
             this.tbSQLServerPW.UseSystemPasswordChar = true;
             // 
             // tbSQLServerUN
@@ -445,6 +452,7 @@ namespace EnvironmentManager4
             this.tbSQLServerUN.Name = "tbSQLServerUN";
             this.tbSQLServerUN.Size = new System.Drawing.Size(348, 20);
             this.tbSQLServerUN.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.tbSQLServerUN, "Username for the selected SQL Server");
             // 
             // lbDatabases
             // 
@@ -454,6 +462,7 @@ namespace EnvironmentManager4
             this.lbDatabases.Size = new System.Drawing.Size(348, 108);
             this.lbDatabases.TabIndex = 8;
             this.lbDatabases.TabStop = false;
+            this.toolTip1.SetToolTip(this.lbDatabases, "List of databases");
             // 
             // label5
             // 
@@ -493,6 +502,7 @@ namespace EnvironmentManager4
             this.btnSelectBackupDirectory.Size = new System.Drawing.Size(24, 22);
             this.btnSelectBackupDirectory.TabIndex = 1;
             this.btnSelectBackupDirectory.Text = "...";
+            this.toolTip1.SetToolTip(this.btnSelectBackupDirectory, "Select a database backup directory");
             this.btnSelectBackupDirectory.UseVisualStyleBackColor = true;
             this.btnSelectBackupDirectory.Click += new System.EventHandler(this.btnSelectBackupDirectory_Click);
             // 
@@ -503,6 +513,7 @@ namespace EnvironmentManager4
             this.tbdatabaseBackupDirectory.Name = "tbdatabaseBackupDirectory";
             this.tbdatabaseBackupDirectory.Size = new System.Drawing.Size(348, 20);
             this.tbdatabaseBackupDirectory.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.tbdatabaseBackupDirectory, "The directory you use to store your zipped database backups");
             // 
             // groupBox3
             // 
@@ -687,5 +698,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ComboBox cbDefaultProductVersion;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button btnSaveExit;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
