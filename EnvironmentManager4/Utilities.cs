@@ -248,8 +248,8 @@ namespace EnvironmentManager4
         public const string DataCollection = "Inventory Control";
         public const string SalesPadMobile = "SalesPad Mobile";
         public const string ShipCenter = "ShipCenter";
-        public const string WebAPI = "Customer Portal Web";
-        public const string GPWeb = "Customer Portal API";
+        public const string WebAPI = "Customer Portal API";
+        public const string GPWeb = "Customer Portal Web";
 
         public static List<string> ListOfProducts()
         {
@@ -258,8 +258,8 @@ namespace EnvironmentManager4
             productsList.Add(DataCollection);
             productsList.Add(SalesPadMobile);
             productsList.Add(ShipCenter);
-            //productsList.Add(WebAPI);
-            //productsList.Add(GPWeb);
+            productsList.Add(WebAPI);
+            productsList.Add(GPWeb);
             return productsList;
         }
     }
