@@ -258,8 +258,8 @@ namespace EnvironmentManager4
             productsList.Add(DataCollection);
             productsList.Add(SalesPadMobile);
             productsList.Add(ShipCenter);
-            productsList.Add(WebAPI);
-            productsList.Add(GPWeb);
+            //productsList.Add(WebAPI);
+            //productsList.Add(GPWeb);
             return productsList;
         }
     }
