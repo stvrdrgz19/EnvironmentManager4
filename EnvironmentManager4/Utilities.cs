@@ -245,7 +245,7 @@ namespace EnvironmentManager4
     public class Products
     {
         public const string SalesPad = "SalesPad";
-        public const string DataCollection = "Inventory Control";
+        public const string DataCollection = "Inventory Manager";
         public const string SalesPadMobile = "SalesPad Mobile";
         public const string ShipCenter = "ShipCenter";
         public const string WebAPI = "Customer Portal API";
