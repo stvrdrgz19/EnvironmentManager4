@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Dapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -324,6 +325,29 @@ namespace EnvironmentManager4
             MessageBoxIcon icon = MessageBoxIcon.Exclamation;
 
             MessageBox.Show(message, caption, buttons, icon);
+        }
+
+        public static List<string> RetrieveSQLDatabases()
+        {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            List<string> databaseList = new List<string>();
+            string script = @"SELECT name FROM master.dbo.sysdatabases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb', 'toolbox')";
+            try
+            {
+                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};",
+                    settings.DbManagement.Connection, settings.DbManagement.SQLServerUserName,
+                    Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword))));
+                var sqlQuery = sqlCon.Query<string>(script).AsList();
+
+                foreach (string database in sqlQuery)
+                    databaseList.Add(database);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+            }
+            return databaseList;
         }
     }
 }

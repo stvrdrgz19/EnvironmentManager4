@@ -310,7 +310,6 @@ namespace EnvironmentManager4
             {
                 ErrorHandling.LogException(e);
                 ErrorHandling.DisplayExceptionMessage(e);
-                //MessageBox.Show(String.Format("There was an error retrieveing existing databases:\n\n{0}\n\n{1}", sqlError.Message, sqlError.ToString()));
             }
         }
 

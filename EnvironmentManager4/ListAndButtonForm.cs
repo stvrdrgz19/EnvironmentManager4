@@ -25,12 +25,12 @@ namespace EnvironmentManager4
 
         public void LoadDatabases()
         {
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            foreach (string databaseFile in settingsModel.DbManagement.Databases)
+            List<string> databaseList = DatabaseManagement.RetrieveSQLDatabases();
+            foreach (string database in databaseList)
             {
-                if (!databaseFile.Contains("DYNAMICS"))
+                if (!database.Contains("DYNAMICS"))
                 {
-                    listBox1.Items.Add(databaseFile);
+                    listBox1.Items.Add(database);
                 }
             }
         }
