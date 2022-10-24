@@ -128,11 +128,14 @@ namespace EnvironmentManager4
             Form1.EnableWaitCursor(true);
 
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
+            //Look for a saved connection
+            if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
             {
-                MessageBox.Show("SQL Server/Databases aren't configured in Settings. Please ensure a SQL Server connection is established and databases are selected in Settings.");
+                MessageBox.Show("SQL Server is not configured in Settings. Please ensure a SQL Server connection is established in Settings.");
                 return;
             }
+
+            //unzip backup file
             string unzippedBackupDirectory = String.Format(@"{0}\{1}", Path.GetDirectoryName(backupZipFile), Path.GetFileNameWithoutExtension(backupZipFile));
             try
             {
@@ -148,12 +151,22 @@ namespace EnvironmentManager4
                 Form1.EnableWaitCursor(false);
                 return;
             }
-            foreach (string databaseFile in settingsModel.DbManagement.Databases)
+
+            //get a list of databases from the file to restore
+            List<string> databaseFiles = new List<string>();
+            foreach (string database in Directory.GetFiles(unzippedBackupDirectory))
+            {
+                string name = Path.GetFileNameWithoutExtension(database);
+                if (name != "Description")
+                    databaseFiles.Add(name);
+            }
+
+            foreach (string databaseFile in databaseFiles)
             {
                 string script = String.Format(@"ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; RESTORE DATABASE {0} FROM DISK='{1}\{2}\{0}.bak' WITH FILE = 1, NOUNLOAD, REPLACE; ALTER DATABASE {0} SET MULTI_USER;"
-                    ,databaseFile
-                    ,Path.GetDirectoryName(backupZipFile)
-                    ,Path.GetFileNameWithoutExtension(backupZipFile));
+                    , databaseFile
+                    , Path.GetDirectoryName(backupZipFile)
+                    , Path.GetFileNameWithoutExtension(backupZipFile));
 
                 try
                 {
@@ -236,14 +249,17 @@ namespace EnvironmentManager4
                 Form1.EnableWaitCursor(false);
                 return;
             }
+
+            //Check for a saved connection
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            if (settingsModel.DbManagement.Databases.Count <= 0 || String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
+            if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
             {
-                MessageBox.Show("SQL Server/Databases aren't configured in Settings. Please ensure a SQL Server connection is established and databases are selected in Settings.");
+                MessageBox.Show("SQL Server is not configured in Settings. Please ensure a SQL Server connection is established in Settings.");
                 Form1.EnableWaitCursor(false);
                 return;
             }
-            foreach (string databaseFile in settingsModel.DbManagement.Databases)
+
+            foreach (string databaseFile in RetrieveSQLDatabases())
             {
                 string script = String.Format(@"BACKUP DATABASE {0} TO DISK='{1}\{2}\{0}.bak' WITH INIT", databaseFile, settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
 
@@ -304,7 +320,7 @@ namespace EnvironmentManager4
             }
 
             string actionLabel = "";
-            switch(action)
+            switch (action)
             {
                 case "BACKUP":
                     actionLabel = "created";
@@ -338,9 +354,7 @@ namespace EnvironmentManager4
                     settings.DbManagement.Connection, settings.DbManagement.SQLServerUserName,
                     Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword))));
                 var sqlQuery = sqlCon.Query<string>(script).AsList();
-
-                foreach (string database in sqlQuery)
-                    databaseList.Add(database);
+                databaseList.AddRange(sqlCon.Query<string>(script).AsList());
             }
             catch (Exception e)
             {

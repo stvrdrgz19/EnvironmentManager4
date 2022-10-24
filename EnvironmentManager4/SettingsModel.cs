@@ -22,7 +22,6 @@ namespace EnvironmentManager4
         public List<Connection> ConnectionsList { get; set; }
         public string SQLServerUserName { get; set; }
         public string SQLServerPassword { get; set; }
-        public List<string> Databases { get; set; }
         public bool Connected { get; set; }
     }
 
@@ -76,7 +75,6 @@ namespace EnvironmentManager4
                 ConnectionsList = connectionList,
                 SQLServerUserName = "",
                 SQLServerPassword = "",
-                Databases = dbList,
                 Connected = false
             };
 

@@ -25,8 +25,6 @@ namespace EnvironmentManager4
 
         public static SettingsModel startingSettings = new SettingsModel();
         public static List<Connection> connectionsInMemory = new List<Connection>();
-        public static bool connectionModified = false;
-        public static bool connected;
         public static bool hidden;
 
         public void LoadSettings(SettingsModel settingsModel)
@@ -34,7 +32,6 @@ namespace EnvironmentManager4
             try
             {
                 cbConnections.Items.Clear();
-                lbDatabases.Items.Clear();
 
                 tbdatabaseBackupDirectory.Text = settingsModel.DbManagement.DatabaseBackupDirectory;
                 cbConnections.Text = settingsModel.DbManagement.Connection;
@@ -51,7 +48,6 @@ namespace EnvironmentManager4
                     if (!connectionNames.Contains(connectionList.ConnectionName))
                         connectionsInMemory.Add(connectionList);
                 }
-                //connectionsInMemory.AddRange(settingsModel.DbManagement.ConnectionsList);
 
                 foreach (Connection conn in connectionsLists)
                 {
@@ -60,12 +56,6 @@ namespace EnvironmentManager4
 
                 tbSQLServerUN.Text = settingsModel.DbManagement.SQLServerUserName;
                 tbSQLServerPW.Text = Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword));
-                foreach (string item in settingsModel.DbManagement.Databases)
-                {
-                    lbDatabases.Items.Add(item);
-                }
-
-                Connect(settingsModel.DbManagement.Connected);
 
                 //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
                 tbSalesPadx86Directory.Text = settingsModel.BuildManagement.SalesPadx86Directory;
@@ -88,18 +78,11 @@ namespace EnvironmentManager4
             {
                 ErrorHandling.LogException(e);
                 ErrorHandling.DisplayExceptionMessage(e);
-                //MessageBox.Show(String.Format("There was an error loading the Settings File. Error is as follows:\n\n{0}", e.Message));
             }
         }
 
         public SettingsModel GetSettingsValues()
         {
-            List<string> dbList = new List<string>();
-            foreach (string item in lbDatabases.Items)
-            {
-                dbList.Add(item);
-            }
-
             var dbManagement = new DbManagement
             {
                 DatabaseBackupDirectory = tbdatabaseBackupDirectory.Text,
@@ -107,8 +90,6 @@ namespace EnvironmentManager4
                 ConnectionsList = connectionsInMemory,
                 SQLServerUserName = tbSQLServerUN.Text,
                 SQLServerPassword = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text)),
-                Databases = dbList,
-                Connected = connected
             };
 
             var buildManagement = new BuildManagement
@@ -141,34 +122,9 @@ namespace EnvironmentManager4
             return settings;
         }
 
-        public void Connect(bool tf)
-        {
-            switch (tf)
-            {
-                case true:
-                    connected = true;
-                    btnConnect.Text = "Disconnect";
-                    btnDeleteConnection.Enabled = false;
-                    btnToggleVisibility.Enabled = false;
-                    tf = false;
-                    break;
-                case false:
-                    connected = false;
-                    btnConnect.Text = "Connect";
-                    btnDeleteConnection.Enabled = true;
-                    btnToggleVisibility.Enabled = true;
-                    tf = true;
-                    break;
-            }
-            cbConnections.Enabled = tf;
-            tbSQLServerUN.Enabled = tf;
-            tbSQLServerPW.Enabled = tf;
-        }
-
         private void SetStartingValues()
         {
             startingSettings = GetSettingsValues();
-            connectionModified = false;
         }
 
         public static bool UnsavedChanges(SettingsModel currentSettings)
@@ -197,16 +153,6 @@ namespace EnvironmentManager4
             var otherVariances = other1.Compare(other2);
             var otherProperties = otherVariances.Aggregate(string.Empty, (a, next) => $"{ a }\r\n\t{ next.PropertyName }: { next.valA } | { next.valB }");
             if (otherProperties.Count() != 0)
-                unsavedChanges = true;
-
-            //DBLIST
-            List<string> dbList1 = currentSettings.DbManagement.Databases;
-            List<string> dbList2 = startingSettings.DbManagement.Databases;
-            bool equal = dbList1.SequenceEqual(dbList2);
-            if (!equal)
-                unsavedChanges = true;
-
-            if (connectionModified)
                 unsavedChanges = true;
 
             return unsavedChanges;
@@ -277,39 +223,13 @@ namespace EnvironmentManager4
 
         public bool DoesConnectionExist(string connectionName)
         {
-            List<string> connectionList = new List<string>();
-            foreach (string connection in cbConnections.Items)
-            {
-                connectionList.Add(connection);
-            }
-            if (connectionList.Contains(connectionName))
+            if (cbConnections.Items.Contains(connectionName))
             {
                 return true;
             }
             else
             {
                 return false;
-            }
-        }
-
-        private void ConnectToSQLDatabase()
-        {
-            string script = @"SELECT name FROM master.dbo.sysdatabases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb', 'toolbox')";
-            try
-            {
-                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", cbConnections.Text, tbSQLServerUN.Text, tbSQLServerPW.Text));
-                var sqlQuery = sqlCon.Query<string>(script).AsList();
-                lbDatabases.Items.Clear();
-                foreach (string database in sqlQuery)
-                {
-                    lbDatabases.Items.Add(database);
-                }
-                Connect(true);
-            }
-            catch (Exception e)
-            {
-                ErrorHandling.LogException(e);
-                ErrorHandling.DisplayExceptionMessage(e);
             }
         }
 
@@ -385,36 +305,23 @@ namespace EnvironmentManager4
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            connectionModified = true;
-            if (connected)
+            //Check if the connection exists - stop if it does
+            if (DoesConnectionExist(cbConnections.Text))
             {
-                //Disconnecting...
-                Connect(false);
+                return;
             }
-            else
-            {
-                //Connecting...
-                //Add new connection (Name + un/pw) to the ConnectionList list
-                ConnectToSQLDatabase();
 
-                //Check if the connection exists - stop if it does
-                if (DoesConnectionExist(cbConnections.Text))
-                {
-                    return;
-                }
+            //Place the current connection info into a ConnectionList class
+            Connection conn = new Connection();
+            conn.ConnectionName = cbConnections.Text;
+            conn.ConnectionUN = tbSQLServerUN.Text;
+            conn.ConnectionPW = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text));
 
-                //Place the current connection info into a ConnectionList class
-                Connection conn = new Connection();
-                conn.ConnectionName = cbConnections.Text;
-                conn.ConnectionUN = tbSQLServerUN.Text;
-                conn.ConnectionPW = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text));
+            //Add the new connection to the list to be saved
+            connectionsInMemory.Add(conn);
 
-                //Add the new connection to the list to be saved
-                connectionsInMemory.Add(conn);
-
-                //Add the new connection name to the combobox
-                cbConnections.Items.Add(cbConnections.Text);
-            }
+            //Add the new connection name to the combobox
+            cbConnections.Items.Add(cbConnections.Text);
             return;
         }
 
@@ -429,19 +336,6 @@ namespace EnvironmentManager4
                     tbSQLServerPW.Text = Utilities.ToInsecureString(Utilities.DecryptString(conn.ConnectionPW));
                 }
             }
-            return;
-        }
-
-        private void btnReload_Click(object sender, EventArgs e)
-        {
-            ConnectToSQLDatabase();
-            return;
-        }
-
-        private void btnRemove_Click_1(object sender, EventArgs e)
-        {
-            int indx = lbDatabases.SelectedIndex;
-            lbDatabases.Items.RemoveAt(indx);
             return;
         }
 

@@ -56,16 +56,12 @@ namespace EnvironmentManager4
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnToggleVisibility = new System.Windows.Forms.Button();
             this.btnDeleteConnection = new System.Windows.Forms.Button();
-            this.btnRemove = new System.Windows.Forms.Button();
-            this.btnReload = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.cbConnections = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.tbSQLServerPW = new System.Windows.Forms.TextBox();
             this.tbSQLServerUN = new System.Windows.Forms.TextBox();
-            this.lbDatabases = new System.Windows.Forms.ListBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSelectBackupDirectory = new System.Windows.Forms.Button();
@@ -109,7 +105,7 @@ namespace EnvironmentManager4
             this.groupBox2.Controls.Add(this.btnSelectSPx86Directory);
             this.groupBox2.Controls.Add(this.tbSalesPadx86Directory);
             this.groupBox2.ForeColor = System.Drawing.Color.Blue;
-            this.groupBox2.Location = new System.Drawing.Point(2, 281);
+            this.groupBox2.Location = new System.Drawing.Point(2, 147);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(532, 188);
             this.groupBox2.TabIndex = 5;
@@ -323,16 +319,12 @@ namespace EnvironmentManager4
             // 
             this.groupBox1.Controls.Add(this.btnToggleVisibility);
             this.groupBox1.Controls.Add(this.btnDeleteConnection);
-            this.groupBox1.Controls.Add(this.btnRemove);
-            this.groupBox1.Controls.Add(this.btnReload);
             this.groupBox1.Controls.Add(this.btnConnect);
             this.groupBox1.Controls.Add(this.cbConnections);
             this.groupBox1.Controls.Add(this.label13);
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.tbSQLServerPW);
             this.groupBox1.Controls.Add(this.tbSQLServerUN);
-            this.groupBox1.Controls.Add(this.lbDatabases);
-            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.btnSelectBackupDirectory);
@@ -340,7 +332,7 @@ namespace EnvironmentManager4
             this.groupBox1.ForeColor = System.Drawing.Color.Blue;
             this.groupBox1.Location = new System.Drawing.Point(2, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(532, 275);
+            this.groupBox1.Size = new System.Drawing.Size(532, 140);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Database Management";
@@ -369,36 +361,14 @@ namespace EnvironmentManager4
             this.btnDeleteConnection.UseVisualStyleBackColor = true;
             this.btnDeleteConnection.Click += new System.EventHandler(this.btnDeleteConnection_Click);
             // 
-            // btnRemove
-            // 
-            this.btnRemove.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnRemove.Location = new System.Drawing.Point(425, 247);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(75, 23);
-            this.btnRemove.TabIndex = 10;
-            this.btnRemove.Text = "Remove";
-            this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click_1);
-            // 
-            // btnReload
-            // 
-            this.btnReload.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnReload.Location = new System.Drawing.Point(350, 247);
-            this.btnReload.Name = "btnReload";
-            this.btnReload.Size = new System.Drawing.Size(75, 23);
-            this.btnReload.TabIndex = 9;
-            this.btnReload.Text = "Reload";
-            this.btnReload.UseVisualStyleBackColor = true;
-            this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
-            // 
             // btnConnect
             // 
             this.btnConnect.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnConnect.Location = new System.Drawing.Point(425, 111);
+            this.btnConnect.Location = new System.Drawing.Point(375, 111);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(75, 23);
+            this.btnConnect.Size = new System.Drawing.Size(125, 23);
             this.btnConnect.TabIndex = 7;
-            this.btnConnect.Text = "Connect";
+            this.btnConnect.Text = "Save Connection";
             this.toolTip1.SetToolTip(this.btnConnect, "Connect or disconnect to/from the selected connection");
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
@@ -454,26 +424,6 @@ namespace EnvironmentManager4
             this.tbSQLServerUN.TabIndex = 4;
             this.toolTip1.SetToolTip(this.tbSQLServerUN, "Username for the selected SQL Server");
             // 
-            // lbDatabases
-            // 
-            this.lbDatabases.FormattingEnabled = true;
-            this.lbDatabases.Location = new System.Drawing.Point(151, 138);
-            this.lbDatabases.Name = "lbDatabases";
-            this.lbDatabases.Size = new System.Drawing.Size(348, 108);
-            this.lbDatabases.TabIndex = 8;
-            this.lbDatabases.TabStop = false;
-            this.toolTip1.SetToolTip(this.lbDatabases, "List of databases");
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label5.Location = new System.Drawing.Point(7, 141);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "Databases:";
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -525,7 +475,7 @@ namespace EnvironmentManager4
             this.groupBox3.Controls.Add(this.cbMode);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.ForeColor = System.Drawing.Color.Blue;
-            this.groupBox3.Location = new System.Drawing.Point(2, 476);
+            this.groupBox3.Location = new System.Drawing.Point(2, 342);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(533, 135);
             this.groupBox3.TabIndex = 8;
@@ -613,7 +563,7 @@ namespace EnvironmentManager4
             // btnSaveExit
             // 
             this.btnSaveExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnSaveExit.Location = new System.Drawing.Point(452, 613);
+            this.btnSaveExit.Location = new System.Drawing.Point(427, 483);
             this.btnSaveExit.Name = "btnSaveExit";
             this.btnSaveExit.Size = new System.Drawing.Size(75, 23);
             this.btnSaveExit.TabIndex = 34;
@@ -627,7 +577,7 @@ namespace EnvironmentManager4
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnSaveExit;
-            this.ClientSize = new System.Drawing.Size(537, 639);
+            this.ClientSize = new System.Drawing.Size(537, 512);
             this.Controls.Add(this.btnSaveExit);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -658,8 +608,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Button btnSelectSPx86Directory;
         private System.Windows.Forms.TextBox tbSalesPadx86Directory;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ListBox lbDatabases;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSelectBackupDirectory;
@@ -687,8 +635,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.TextBox tbSQLServerPW;
         private System.Windows.Forms.TextBox tbSQLServerUN;
         private System.Windows.Forms.ComboBox cbConnections;
-        private System.Windows.Forms.Button btnRemove;
-        private System.Windows.Forms.Button btnReload;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnDeleteConnection;
         private System.Windows.Forms.Button btnToggleVisibility;
