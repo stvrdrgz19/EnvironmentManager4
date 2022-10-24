@@ -64,6 +64,7 @@ namespace EnvironmentManager4
             this.tbDatabaseDescription.Location = new System.Drawing.Point(10, 71);
             this.tbDatabaseDescription.Multiline = true;
             this.tbDatabaseDescription.Name = "tbDatabaseDescription";
+            this.tbDatabaseDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbDatabaseDescription.Size = new System.Drawing.Size(499, 158);
             this.tbDatabaseDescription.TabIndex = 0;
             // 
