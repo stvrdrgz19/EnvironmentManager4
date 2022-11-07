@@ -56,6 +56,11 @@ namespace EnvironmentManager4
 
                 tbSQLServerUN.Text = settingsModel.DbManagement.SQLServerUserName;
                 tbSQLServerPW.Text = Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword));
+                checkResetDatabase.Checked = settingsModel.DbManagement.ResetDatabaseAfterRestore;
+                if (cbDBToReset.Items.Contains(settingsModel.DbManagement.DBToRestore))
+                    cbDBToReset.SelectedIndex = cbDBToReset.FindStringExact(settingsModel.DbManagement.DBToRestore);
+                else
+                    cbDBToReset.Text = settingsModel.DbManagement.DBToRestore;
 
                 //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
                 tbSalesPadx86Directory.Text = settingsModel.BuildManagement.SalesPadx86Directory;
@@ -90,6 +95,8 @@ namespace EnvironmentManager4
                 ConnectionsList = connectionsInMemory,
                 SQLServerUserName = tbSQLServerUN.Text,
                 SQLServerPassword = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text)),
+                ResetDatabaseAfterRestore = checkResetDatabase.Checked,
+                DBToRestore = cbDBToReset.Text
             };
 
             var buildManagement = new BuildManagement
@@ -233,9 +240,15 @@ namespace EnvironmentManager4
             }
         }
 
+        public void PopulateDatabaseList()
+        {
+            cbDBToReset.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
+        }
+
         private void Settings_Load(object sender, EventArgs e)
         {
             hidden = true;
+            PopulateDatabaseList();
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
             LoadSettings(settingsModel);
             SetStartingValues();

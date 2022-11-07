@@ -76,6 +76,9 @@ namespace EnvironmentManager4
             this.label8 = new System.Windows.Forms.Label();
             this.btnSaveExit = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.checkResetDatabase = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cbDBToReset = new System.Windows.Forms.ComboBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -105,7 +108,7 @@ namespace EnvironmentManager4
             this.groupBox2.Controls.Add(this.btnSelectSPx86Directory);
             this.groupBox2.Controls.Add(this.tbSalesPadx86Directory);
             this.groupBox2.ForeColor = System.Drawing.Color.Blue;
-            this.groupBox2.Location = new System.Drawing.Point(2, 147);
+            this.groupBox2.Location = new System.Drawing.Point(2, 213);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(532, 188);
             this.groupBox2.TabIndex = 5;
@@ -317,6 +320,9 @@ namespace EnvironmentManager4
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbDBToReset);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.checkResetDatabase);
             this.groupBox1.Controls.Add(this.btnToggleVisibility);
             this.groupBox1.Controls.Add(this.btnDeleteConnection);
             this.groupBox1.Controls.Add(this.btnConnect);
@@ -332,7 +338,7 @@ namespace EnvironmentManager4
             this.groupBox1.ForeColor = System.Drawing.Color.Blue;
             this.groupBox1.Location = new System.Drawing.Point(2, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(532, 140);
+            this.groupBox1.Size = new System.Drawing.Size(532, 204);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Database Management";
@@ -391,9 +397,9 @@ namespace EnvironmentManager4
             this.label13.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label13.Location = new System.Drawing.Point(7, 94);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(74, 13);
+            this.label13.Size = new System.Drawing.Size(80, 13);
             this.label13.TabIndex = 14;
-            this.label13.Text = "SQLPassword";
+            this.label13.Text = "SQL Password:";
             // 
             // label12
             // 
@@ -475,7 +481,7 @@ namespace EnvironmentManager4
             this.groupBox3.Controls.Add(this.cbMode);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.ForeColor = System.Drawing.Color.Blue;
-            this.groupBox3.Location = new System.Drawing.Point(2, 342);
+            this.groupBox3.Location = new System.Drawing.Point(2, 408);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(533, 135);
             this.groupBox3.TabIndex = 8;
@@ -486,7 +492,7 @@ namespace EnvironmentManager4
             // 
             this.checkShowWiFiIP.AutoSize = true;
             this.checkShowWiFiIP.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.checkShowWiFiIP.Location = new System.Drawing.Point(11, 111);
+            this.checkShowWiFiIP.Location = new System.Drawing.Point(10, 111);
             this.checkShowWiFiIP.Name = "checkShowWiFiIP";
             this.checkShowWiFiIP.Size = new System.Drawing.Size(192, 17);
             this.checkShowWiFiIP.TabIndex = 33;
@@ -497,7 +503,7 @@ namespace EnvironmentManager4
             // 
             this.checkShowVPNIP.AutoSize = true;
             this.checkShowVPNIP.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.checkShowVPNIP.Location = new System.Drawing.Point(11, 91);
+            this.checkShowVPNIP.Location = new System.Drawing.Point(10, 91);
             this.checkShowVPNIP.Name = "checkShowVPNIP";
             this.checkShowVPNIP.Size = new System.Drawing.Size(193, 17);
             this.checkShowVPNIP.TabIndex = 32;
@@ -508,7 +514,7 @@ namespace EnvironmentManager4
             // 
             this.checkShowAlwaysOnTop.AutoSize = true;
             this.checkShowAlwaysOnTop.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.checkShowAlwaysOnTop.Location = new System.Drawing.Point(11, 70);
+            this.checkShowAlwaysOnTop.Location = new System.Drawing.Point(10, 70);
             this.checkShowAlwaysOnTop.Name = "checkShowAlwaysOnTop";
             this.checkShowAlwaysOnTop.Size = new System.Drawing.Size(189, 17);
             this.checkShowAlwaysOnTop.TabIndex = 31;
@@ -531,7 +537,7 @@ namespace EnvironmentManager4
             // 
             this.label14.AutoSize = true;
             this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label14.Location = new System.Drawing.Point(9, 46);
+            this.label14.Location = new System.Drawing.Point(6, 46);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(130, 13);
             this.label14.TabIndex = 26;
@@ -554,7 +560,7 @@ namespace EnvironmentManager4
             // 
             this.label8.AutoSize = true;
             this.label8.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label8.Location = new System.Drawing.Point(9, 23);
+            this.label8.Location = new System.Drawing.Point(6, 23);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(37, 13);
             this.label8.TabIndex = 0;
@@ -563,7 +569,7 @@ namespace EnvironmentManager4
             // btnSaveExit
             // 
             this.btnSaveExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnSaveExit.Location = new System.Drawing.Point(427, 483);
+            this.btnSaveExit.Location = new System.Drawing.Point(427, 549);
             this.btnSaveExit.Name = "btnSaveExit";
             this.btnSaveExit.Size = new System.Drawing.Size(75, 23);
             this.btnSaveExit.TabIndex = 34;
@@ -571,13 +577,42 @@ namespace EnvironmentManager4
             this.btnSaveExit.UseVisualStyleBackColor = true;
             this.btnSaveExit.Click += new System.EventHandler(this.btnSaveExit_Click);
             // 
+            // checkResetDatabase
+            // 
+            this.checkResetDatabase.AutoSize = true;
+            this.checkResetDatabase.ForeColor = System.Drawing.Color.Black;
+            this.checkResetDatabase.Location = new System.Drawing.Point(10, 143);
+            this.checkResetDatabase.Name = "checkResetDatabase";
+            this.checkResetDatabase.Size = new System.Drawing.Size(199, 17);
+            this.checkResetDatabase.TabIndex = 15;
+            this.checkResetDatabase.Text = "Run sppResetDatabase after restore";
+            this.checkResetDatabase.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.Black;
+            this.label5.Location = new System.Drawing.Point(7, 166);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(94, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Database to reset:";
+            // 
+            // cbDBToReset
+            // 
+            this.cbDBToReset.FormattingEnabled = true;
+            this.cbDBToReset.Location = new System.Drawing.Point(151, 163);
+            this.cbDBToReset.Name = "cbDBToReset";
+            this.cbDBToReset.Size = new System.Drawing.Size(348, 21);
+            this.cbDBToReset.TabIndex = 17;
+            // 
             // Settings
             // 
             this.AcceptButton = this.btnSaveExit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnSaveExit;
-            this.ClientSize = new System.Drawing.Size(537, 512);
+            this.ClientSize = new System.Drawing.Size(537, 575);
             this.Controls.Add(this.btnSaveExit);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -645,5 +680,8 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button btnSaveExit;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ComboBox cbDBToReset;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox checkResetDatabase;
     }
 }

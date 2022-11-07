@@ -199,6 +199,9 @@ namespace EnvironmentManager4
             Form1.EnableWaitCursor(false);
             Form1.EnableDBControls(true);
 
+            if (settingsModel.DbManagement.ResetDatabaseAfterRestore)
+                ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), settingsModel.DbManagement.DBToRestore);
+
             string message = String.Format(@"Backup '{0}' was successfully restored.", backupName);
             string caption = "SUCCESS";
             MessageBoxButtons buttons = MessageBoxButtons.OK;
@@ -353,7 +356,6 @@ namespace EnvironmentManager4
                 SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};",
                     settings.DbManagement.Connection, settings.DbManagement.SQLServerUserName,
                     Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword))));
-                var sqlQuery = sqlCon.Query<string>(script).AsList();
                 databaseList.AddRange(sqlCon.Query<string>(script).AsList());
             }
             catch (Exception e)
@@ -362,6 +364,20 @@ namespace EnvironmentManager4
                 ErrorHandling.DisplayExceptionMessage(e);
             }
             return databaseList;
+        }
+
+        public static List<string> GetCompanyDatabases()
+        {
+            List<string> databaseList = DatabaseManagement.RetrieveSQLDatabases();
+            List<string> companyDatabaseList = new List<string>();
+            foreach (string database in databaseList)
+            {
+                if (!database.Contains("DYNAMICS"))
+                {
+                    companyDatabaseList.Add(database);
+                }
+            }
+            return companyDatabaseList;
         }
     }
 }

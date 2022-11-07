@@ -25,14 +25,8 @@ namespace EnvironmentManager4
 
         public void LoadDatabases()
         {
-            List<string> databaseList = DatabaseManagement.RetrieveSQLDatabases();
-            foreach (string database in databaseList)
-            {
-                if (!database.Contains("DYNAMICS"))
-                {
-                    listBox1.Items.Add(database);
-                }
-            }
+            listBox1.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
+            return;
         }
 
         private void ListAndButtonForm_Load(object sender, EventArgs e)
