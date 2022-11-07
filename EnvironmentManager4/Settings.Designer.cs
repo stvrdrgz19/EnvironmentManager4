@@ -54,6 +54,9 @@ namespace EnvironmentManager4
             this.btnSelectSPx86Directory = new System.Windows.Forms.Button();
             this.tbSalesPadx86Directory = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbDBToReset = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.checkResetDatabase = new System.Windows.Forms.CheckBox();
             this.btnToggleVisibility = new System.Windows.Forms.Button();
             this.btnDeleteConnection = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
@@ -76,9 +79,6 @@ namespace EnvironmentManager4
             this.label8 = new System.Windows.Forms.Label();
             this.btnSaveExit = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.checkResetDatabase = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.cbDBToReset = new System.Windows.Forms.ComboBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -343,6 +343,36 @@ namespace EnvironmentManager4
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Database Management";
             // 
+            // cbDBToReset
+            // 
+            this.cbDBToReset.FormattingEnabled = true;
+            this.cbDBToReset.Location = new System.Drawing.Point(151, 163);
+            this.cbDBToReset.Name = "cbDBToReset";
+            this.cbDBToReset.Size = new System.Drawing.Size(348, 21);
+            this.cbDBToReset.TabIndex = 17;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.Black;
+            this.label5.Location = new System.Drawing.Point(7, 166);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(139, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Database to Reset/Update:";
+            // 
+            // checkResetDatabase
+            // 
+            this.checkResetDatabase.AutoSize = true;
+            this.checkResetDatabase.ForeColor = System.Drawing.Color.Black;
+            this.checkResetDatabase.Location = new System.Drawing.Point(10, 143);
+            this.checkResetDatabase.Name = "checkResetDatabase";
+            this.checkResetDatabase.Size = new System.Drawing.Size(199, 17);
+            this.checkResetDatabase.TabIndex = 15;
+            this.checkResetDatabase.Text = "Run sppResetDatabase after restore";
+            this.checkResetDatabase.UseVisualStyleBackColor = true;
+            this.checkResetDatabase.CheckedChanged += new System.EventHandler(this.checkResetDatabase_CheckedChanged);
+            // 
             // btnToggleVisibility
             // 
             this.btnToggleVisibility.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -576,36 +606,6 @@ namespace EnvironmentManager4
             this.btnSaveExit.Text = "Save && Exit";
             this.btnSaveExit.UseVisualStyleBackColor = true;
             this.btnSaveExit.Click += new System.EventHandler(this.btnSaveExit_Click);
-            // 
-            // checkResetDatabase
-            // 
-            this.checkResetDatabase.AutoSize = true;
-            this.checkResetDatabase.ForeColor = System.Drawing.Color.Black;
-            this.checkResetDatabase.Location = new System.Drawing.Point(10, 143);
-            this.checkResetDatabase.Name = "checkResetDatabase";
-            this.checkResetDatabase.Size = new System.Drawing.Size(199, 17);
-            this.checkResetDatabase.TabIndex = 15;
-            this.checkResetDatabase.Text = "Run sppResetDatabase after restore";
-            this.checkResetDatabase.UseVisualStyleBackColor = true;
-            this.checkResetDatabase.CheckedChanged += new System.EventHandler(this.checkResetDatabase_CheckedChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.Black;
-            this.label5.Location = new System.Drawing.Point(7, 166);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(94, 13);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Database to reset:";
-            // 
-            // cbDBToReset
-            // 
-            this.cbDBToReset.FormattingEnabled = true;
-            this.cbDBToReset.Location = new System.Drawing.Point(151, 163);
-            this.cbDBToReset.Name = "cbDBToReset";
-            this.cbDBToReset.Size = new System.Drawing.Size(348, 21);
-            this.cbDBToReset.TabIndex = 17;
             // 
             // Settings
             // 
