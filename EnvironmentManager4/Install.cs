@@ -318,34 +318,37 @@ namespace EnvironmentManager4
 
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (resetDatabaseVersion)
-            {
-                DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)));
-            }
+                DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), settingsModel.DbManagement.DBToRestore);
 
             if (runDatabaseUpdate)
             {
                 if (!resetDatabaseVersion)
-                {
-                    DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)));
-                }
+                    DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), settingsModel.DbManagement.DBToRestore);
+
                 Process dbUpdate = new Process();
                 dbUpdate.StartInfo.FileName = installPath + @"\SalesPad.exe";
-                dbUpdate.StartInfo.Arguments = @"/dbUpdate /userfields /conn=TWO";      //write sql to pull databases and prompt user for which database to update. Maybe prompt before installation
+                //dbUpdate.StartInfo.Arguments = @"/dbUpdate /userfields /conn=TWO";      //write sql to pull databases and prompt user for which database to update. Maybe prompt before installation
+                dbUpdate.StartInfo.Arguments = String.Format(@"/dbUpdate /userfields /conn={0}", settingsModel.DbManagement.DBToRestore);      //write sql to pull databases and prompt user for which database to update. Maybe prompt before installation
                 dbUpdate.StartInfo.UseShellExecute = false;
-                dbUpdate.Start();
-                dbUpdate.WaitForExit();
+                try
+                {
+                    dbUpdate.Start();
+                    dbUpdate.WaitForExit();
+                }
+                catch (Exception e)
+                {
+                    ErrorHandling.LogException(e);
+                    ErrorHandling.DisplayExceptionMessage(e);
+                }
             }
             this.Cursor = Cursors.Default;
 
             if (openInstallFolder)
-            {
                 build.LaunchInstalledFolder();
-            }
 
             if (launchAfterInstall)
-            {
                 build.LaunchBuild();
-            }
+
             Form1.EnableInstallButton(true);
             Form1.EnableWaitCursor(false);
         }
@@ -357,19 +360,15 @@ namespace EnvironmentManager4
             cbConfigurationList.Items.Add("None");
             List<Configurations> configurations = Configurations.GetConfigurations();
             foreach (Configurations config in configurations)
-            {
                 if (config.Product == product)
                     cbConfigurationList.Items.Add(config.ConfigurationName);
-            }
         }
 
         private List<string> SelectedModules(ListBox lb)
         {
             List<string> selectedModules = new List<string>();
             foreach (string dll in lb.SelectedItems)
-            {
                 selectedModules.Add(dll);
-            }
             return selectedModules;
         }
 
@@ -440,9 +439,7 @@ namespace EnvironmentManager4
         private void AddConfigurationClose(object sender, FormClosingEventArgs e)
         {
             if (String.IsNullOrWhiteSpace(TextPrompt.output))
-            {
                 return;
-            }
             LoadConfigurations(install.Product);
         }
 
@@ -493,9 +490,7 @@ namespace EnvironmentManager4
             //clear out any saved installers from previous installations
             DirectoryInfo di = new DirectoryInfo(Utilities.GetFolder("Installers"));
             foreach (FileInfo file in di.GetFiles())
-            {
                 file.Delete();
-            }
 
             //check if the selected install path is a base install path - reject
             string installPath = tbInstallLocation.Text;
@@ -538,14 +533,11 @@ namespace EnvironmentManager4
             //add any selected custom/extended modules to the install
             List<string> selectedExtendedModules = new List<string>();
             foreach (string dll in lbExtendedModules.SelectedItems)
-            {
                 selectedExtendedModules.Add(dll);
-            }
+
             List<string> selectedCustomModules = new List<string>();
             foreach (string dll in lbCustomModules.SelectedItems)
-            {
                 selectedCustomModules.Add(dll);
-            }
 
             //run the installation
             Thread installBuild = new Thread(() => InstallBuild(installPath, selectedExtendedModules, selectedCustomModules, checkLaunchAfterInstall.Checked, checkInstallFolder.Checked, checkRunDatabaseUpdate.Checked, checkResetDBVersion.Checked));
