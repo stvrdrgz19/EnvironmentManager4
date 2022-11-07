@@ -62,6 +62,9 @@ namespace EnvironmentManager4
                 else
                     cbDBToReset.Text = settingsModel.DbManagement.DBToRestore;
 
+                if (!settingsModel.DbManagement.ResetDatabaseAfterRestore)
+                    cbDBToReset.Enabled = false;
+
                 //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
                 tbSalesPadx86Directory.Text = settingsModel.BuildManagement.SalesPadx86Directory;
                 tbSalesPadx64Directory.Text = settingsModel.BuildManagement.SalesPadx64Directory;
@@ -439,6 +442,14 @@ namespace EnvironmentManager4
                 if (unsavedResult == DialogResult.Cancel)
                     e.Cancel = true;
             }
+        }
+
+        private void checkResetDatabase_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkResetDatabase.Checked)
+                cbDBToReset.Enabled = true;
+            else
+                cbDBToReset.Enabled = false;
         }
     }
 }

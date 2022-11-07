@@ -587,6 +587,7 @@ namespace EnvironmentManager4
             this.checkResetDatabase.TabIndex = 15;
             this.checkResetDatabase.Text = "Run sppResetDatabase after restore";
             this.checkResetDatabase.UseVisualStyleBackColor = true;
+            this.checkResetDatabase.CheckedChanged += new System.EventHandler(this.checkResetDatabase_CheckedChanged);
             // 
             // label5
             // 
