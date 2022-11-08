@@ -58,7 +58,7 @@ namespace EnvironmentManager4
             this.chStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnStopService = new System.Windows.Forms.Button();
             this.btnStartService = new System.Windows.Forms.Button();
-            this.btnStopAllServices = new System.Windows.Forms.Button();
+            this.btnRestartService = new System.Windows.Forms.Button();
             this.labelSQLVersions = new System.Windows.Forms.Label();
             this.btnInstallService = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -349,7 +349,7 @@ namespace EnvironmentManager4
             this.groupBox2.Controls.Add(this.lvInstalledSQLServers);
             this.groupBox2.Controls.Add(this.btnStopService);
             this.groupBox2.Controls.Add(this.btnStartService);
-            this.groupBox2.Controls.Add(this.btnStopAllServices);
+            this.groupBox2.Controls.Add(this.btnRestartService);
             this.groupBox2.Controls.Add(this.labelSQLVersions);
             this.groupBox2.Controls.Add(this.btnInstallService);
             this.groupBox2.ForeColor = System.Drawing.Color.Blue;
@@ -394,7 +394,7 @@ namespace EnvironmentManager4
             this.btnStopService.Name = "btnStopService";
             this.btnStopService.Size = new System.Drawing.Size(157, 23);
             this.btnStopService.TabIndex = 5;
-            this.btnStopService.Text = "Stop Service";
+            this.btnStopService.Text = "Stop Service(s)";
             this.toolTip1.SetToolTip(this.btnStopService, "Stop Selected Service.");
             this.btnStopService.UseVisualStyleBackColor = true;
             this.btnStopService.Click += new System.EventHandler(this.btnStopService_Click);
@@ -406,22 +406,22 @@ namespace EnvironmentManager4
             this.btnStartService.Name = "btnStartService";
             this.btnStartService.Size = new System.Drawing.Size(157, 23);
             this.btnStartService.TabIndex = 4;
-            this.btnStartService.Text = "Start Service";
+            this.btnStartService.Text = "Start Service(s)";
             this.toolTip1.SetToolTip(this.btnStartService, "Start Selected Service.");
             this.btnStartService.UseVisualStyleBackColor = true;
             this.btnStartService.Click += new System.EventHandler(this.btnStartService_Click);
             // 
-            // btnStopAllServices
+            // btnRestartService
             // 
-            this.btnStopAllServices.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnStopAllServices.Location = new System.Drawing.Point(162, 193);
-            this.btnStopAllServices.Name = "btnStopAllServices";
-            this.btnStopAllServices.Size = new System.Drawing.Size(157, 23);
-            this.btnStopAllServices.TabIndex = 7;
-            this.btnStopAllServices.Text = "Stop All Services";
-            this.toolTip1.SetToolTip(this.btnStopAllServices, "Stop all services in the list.");
-            this.btnStopAllServices.UseVisualStyleBackColor = true;
-            this.btnStopAllServices.Click += new System.EventHandler(this.btnStopAllServices_Click);
+            this.btnRestartService.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnRestartService.Location = new System.Drawing.Point(162, 193);
+            this.btnRestartService.Name = "btnRestartService";
+            this.btnRestartService.Size = new System.Drawing.Size(157, 23);
+            this.btnRestartService.TabIndex = 7;
+            this.btnRestartService.Text = "Restart Service(s)";
+            this.toolTip1.SetToolTip(this.btnRestartService, "Stop all services in the list.");
+            this.btnRestartService.UseVisualStyleBackColor = true;
+            this.btnRestartService.Click += new System.EventHandler(this.btnStopAllServices_Click);
             // 
             // labelSQLVersions
             // 
@@ -742,7 +742,7 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ColumnHeader chStatus;
         private System.Windows.Forms.Button btnStopService;
         private System.Windows.Forms.Button btnStartService;
-        private System.Windows.Forms.Button btnStopAllServices;
+        private System.Windows.Forms.Button btnRestartService;
         private System.Windows.Forms.Label labelSQLVersions;
         private System.Windows.Forms.Button btnInstallService;
         private System.Windows.Forms.GroupBox groupBox1;

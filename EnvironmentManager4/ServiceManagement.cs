@@ -115,6 +115,28 @@ namespace EnvironmentManager4
 
         public static void UpdateServices(string status, ListView lv)
         {
+            for (int i = 0; i < lv.SelectedItems.Count; i++)
+            {
+                string service = lv.SelectedItems[i].Text;
+                switch (status)
+                {
+                    case "Start":
+                        StartService(service);
+                        break;
+                    case "Stop":
+                        StopService(service);
+                        break;
+                    case "Restart":
+                        StopService(service);
+                        StartService(service);
+                        break;
+                }
+            }
+            PopulateSQLServerList(lv);
+        }
+
+        public static void UpdateServices2(string status, ListView lv)
+        {
             if (status == "Start")
             {
                 //Do nothing if there are no services selected

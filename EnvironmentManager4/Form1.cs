@@ -22,10 +22,13 @@ namespace EnvironmentManager4
         private delegate void EnableDelegate(bool enable);
         //https://www.py4u.net/discuss/717463
         //https://www.codegrepper.com/code-examples/csharp/c%23+edit+form+controls+from+another+class
+        private ListViewColumnSorter lvwColumnSorter;
 
         public Form1()
         {
             InitializeComponent();
+            lvwColumnSorter = new ListViewColumnSorter();
+            this.lvInstalledSQLServers.ListViewItemSorter = lvwColumnSorter;
             form = this;
         }
 
@@ -259,6 +262,7 @@ namespace EnvironmentManager4
             }
             RegUtilities.GenerateRegistryEntries();
             RegUtilities.CheckForUpdates();
+            this.lvInstalledSQLServers.ColumnClick += new ColumnClickEventHandler(ColumnClick);
             return;
         }
 
@@ -312,17 +316,23 @@ namespace EnvironmentManager4
 
         private void btnStartService_Click(object sender, EventArgs e)
         {
-            ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
+            if (lvInstalledSQLServers.SelectedItems.Count == 0)
+                return;
+
+            ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnRestartService, btnInstallService);
             ServiceManagement.UpdateServices("Start", lvInstalledSQLServers);
-            ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
+            ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnRestartService, btnInstallService);
             return;
         }
 
         private void btnStopService_Click(object sender, EventArgs e)
         {
-            ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
+            if (lvInstalledSQLServers.SelectedItems.Count == 0)
+                return;
+
+            ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnRestartService, btnInstallService);
             ServiceManagement.UpdateServices("Stop", lvInstalledSQLServers);
-            ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
+            ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnRestartService, btnInstallService);
             return;
         }
 
@@ -333,9 +343,12 @@ namespace EnvironmentManager4
 
         private void btnStopAllServices_Click(object sender, EventArgs e)
         {
-            ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
-            ServiceManagement.UpdateServices("StopAll", lvInstalledSQLServers);
-            ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnStopAllServices, btnInstallService);
+            if (lvInstalledSQLServers.SelectedItems.Count == 0)
+                return;
+
+            ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnRestartService, btnInstallService);
+            ServiceManagement.UpdateServices("Restart", lvInstalledSQLServers);
+            ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnRestartService, btnInstallService);
             return;
         }
 
@@ -838,6 +851,31 @@ namespace EnvironmentManager4
             else
                 aboutForm.BringToFront();
             return;
+        }
+
+        private void ColumnClick(object o, ColumnClickEventArgs e)
+        {
+            if (e.Column == lvwColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                if (lvwColumnSorter.Order == SortOrder.Ascending)
+                {
+                    lvwColumnSorter.Order = SortOrder.Descending;
+                }
+                else
+                {
+                    lvwColumnSorter.Order = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                lvwColumnSorter.SortColumn = e.Column;
+                lvwColumnSorter.Order = SortOrder.Ascending;
+            }
+
+            // Perform the sort with these new sort options.
+            this.lvInstalledSQLServers.Sort();
         }
     }
 }
