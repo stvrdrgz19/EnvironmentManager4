@@ -58,9 +58,6 @@ namespace EnvironmentManager4
                     ZipArchiveEntry description = updateArchive.CreateEntry("Description.txt");
                     using (StreamWriter writer = new StreamWriter(description.Open()))
                     {
-                        writer.WriteLine("===============================================================================");
-                        writer.WriteLine(String.Format("{0} - {1}", "UPDATING DESCRIPTION", backupConfig.BackupName));
-                        writer.WriteLine(DateTime.Now);
                         writer.Write(newDesc);
                     }
                 }

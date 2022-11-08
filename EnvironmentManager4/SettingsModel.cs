@@ -22,8 +22,8 @@ namespace EnvironmentManager4
         public List<Connection> ConnectionsList { get; set; }
         public string SQLServerUserName { get; set; }
         public string SQLServerPassword { get; set; }
-        public List<string> Databases { get; set; }
-        public bool Connected { get; set; }
+        public bool ResetDatabaseAfterRestore { get; set; }
+        public string DBToRestore { get; set; }
     }
 
     public class BuildManagement
@@ -76,8 +76,8 @@ namespace EnvironmentManager4
                 ConnectionsList = connectionList,
                 SQLServerUserName = "",
                 SQLServerPassword = "",
-                Databases = dbList,
-                Connected = false
+                ResetDatabaseAfterRestore = false,
+                DBToRestore = ""
             };
 
             var buildManagement = new BuildManagement

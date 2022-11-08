@@ -25,14 +25,8 @@ namespace EnvironmentManager4
 
         public void LoadDatabases()
         {
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            foreach (string databaseFile in settingsModel.DbManagement.Databases)
-            {
-                if (!databaseFile.Contains("DYNAMICS"))
-                {
-                    listBox1.Items.Add(databaseFile);
-                }
-            }
+            listBox1.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
+            return;
         }
 
         private void ListAndButtonForm_Load(object sender, EventArgs e)

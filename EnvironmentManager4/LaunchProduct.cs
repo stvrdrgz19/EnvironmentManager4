@@ -79,20 +79,13 @@ namespace EnvironmentManager4
         private void CopyLabels_Click(object sender, EventArgs e)
         {
             if (SelectedBuildDLLs.SelectedItems.Count == 0)
-            {
                 return;
-            }
-            List<string> selectedDLLList = new List<string>();
+
             StringBuilder builder = new StringBuilder();
 
             foreach (string dll in SelectedBuildDLLs.SelectedItems)
-            {
-                selectedDLLList.Add(dll);
-            }
-            foreach (string str in selectedDLLList)
-            {
-                builder.Append(str.ToString()).AppendLine();
-            }
+                builder.Append(dll.ToString()).AppendLine();
+
             try
             {
                 Clipboard.SetText(builder.ToString());
@@ -102,6 +95,7 @@ namespace EnvironmentManager4
                 MessageBox.Show("Please select DLLs to copy.");
                 return;
             }
+
             string copyMessage = "The following dll's have been copied to the clipboard: \n\n" + builder.ToString();
             string copyCaption = "COPIED";
             MessageBoxButtons copyButton = MessageBoxButtons.OK;
@@ -113,7 +107,30 @@ namespace EnvironmentManager4
 
         private void RemoveDLLs_Click(object sender, EventArgs e)
         {
+            string selectedBuild = lvInstalledBuilds.SelectedItems[0].Text;
+            if (SelectedBuildDLLs.SelectedItems.Count == 0)
+                return;
 
+            StringBuilder builder = new StringBuilder();
+
+            foreach (string dll in SelectedBuildDLLs.SelectedItems)
+                builder.Append(dll.ToString()).AppendLine();
+
+            string message = String.Format("Are you sure you want to delete the following dll(s)? This is irreversible and could cause issues with the selected build.\n\n{0}", builder.ToString());
+            string caption = "CONFIRM";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            MessageBoxIcon icon = MessageBoxIcon.Exclamation;
+            DialogResult result;
+
+            result = MessageBox.Show(message, caption, buttons, icon);
+            if (result == DialogResult.Yes)
+            {
+                foreach (string dll in SelectedBuildDLLs.SelectedItems)
+                    File.Delete(String.Format(@"{0}\{1}", selectedBuild, dll));
+                SelectedBuildDLLs.Items.Clear();
+                SelectedBuildDLLs.Items.AddRange(LoadDllList(lvInstalledBuilds.SelectedItems[0].Text));
+            }
+            return;
         }
 
         private void lvInstalledBuilds_SelectedIndexChanged(object sender, EventArgs e)

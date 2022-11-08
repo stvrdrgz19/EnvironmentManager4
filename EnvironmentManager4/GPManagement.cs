@@ -17,7 +17,11 @@ namespace EnvironmentManager4
         {
             lb.Items.Clear();
             var gpFolderList = Directory.GetDirectories(gpInstallPath).Select(folder => folder.Remove(0, gpInstallPath.Length));
-            lb.Items.AddRange(gpFolderList.ToArray());
+            foreach (string folder in gpFolderList)
+            {
+                if (folder != "Business Analyzer")
+                    lb.Items.Add(folder);
+            }
         }
 
         public static void LaunchGP(string gp)

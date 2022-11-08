@@ -109,7 +109,6 @@ namespace EnvironmentManager4
             // 
             // RemoveDLLs
             // 
-            this.RemoveDLLs.Enabled = false;
             this.RemoveDLLs.ForeColor = System.Drawing.SystemColors.ControlText;
             this.RemoveDLLs.Location = new System.Drawing.Point(342, 174);
             this.RemoveDLLs.Name = "RemoveDLLs";
