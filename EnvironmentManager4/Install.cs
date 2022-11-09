@@ -327,8 +327,7 @@ namespace EnvironmentManager4
 
                 Process dbUpdate = new Process();
                 dbUpdate.StartInfo.FileName = installPath + @"\SalesPad.exe";
-                //dbUpdate.StartInfo.Arguments = @"/dbUpdate /userfields /conn=TWO";      //write sql to pull databases and prompt user for which database to update. Maybe prompt before installation
-                dbUpdate.StartInfo.Arguments = String.Format(@"/dbUpdate /userfields /conn={0}", settingsModel.DbManagement.DBToRestore);      //write sql to pull databases and prompt user for which database to update. Maybe prompt before installation
+                dbUpdate.StartInfo.Arguments = String.Format(@"/dbUpdate /userfields /conn={0}", settingsModel.DbManagement.DBToRestore);
                 dbUpdate.StartInfo.UseShellExecute = false;
                 try
                 {
