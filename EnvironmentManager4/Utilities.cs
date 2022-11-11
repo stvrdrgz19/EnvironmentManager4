@@ -328,6 +328,11 @@ namespace EnvironmentManager4
         public const int CoreModulesVersion = 1;
         public const int ConfigurationsVersion = 1;
 
+        public static RegistryKey GetEnvMgrRegKey()
+        {
+            return Registry.CurrentUser.OpenSubKey(@"Software\Environment Manager", true);
+        }
+
         /// <summary>
         /// Call this on startup - generate registry values if none exist
         /// </summary>
@@ -341,7 +346,7 @@ namespace EnvironmentManager4
         public static void CreateRegistryEntries()
         {
             //Create the Environment Manager Subkey
-            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\Environment Manager");
+            RegistryKey key = GetEnvMgrRegKey();
 
             //Store the values
             key.SetValue("Core Modules Version", 0);
@@ -351,7 +356,7 @@ namespace EnvironmentManager4
 
         public static void CheckForUpdates()
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Environment Manager", true);
+            RegistryKey key = GetEnvMgrRegKey();
             int savedCoreModulesVersion = (int)key.GetValue("Core Modules Version");
             int savedConfigurationsVersion = (int)key.GetValue("Configurations Version");
 
