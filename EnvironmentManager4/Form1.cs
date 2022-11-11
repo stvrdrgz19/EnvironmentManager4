@@ -594,12 +594,18 @@ namespace EnvironmentManager4
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                foreach (Control c in this.Controls)
+                if (Environment.MachineName == "STEVERODRIGUEZ")
                 {
-                    MessageBox.Show(c.Name);
+                    StringBuilder builder = new StringBuilder();
+                    foreach (Control c in this.Controls)
+                    {
+                        builder.Append(c.Name).AppendLine();
+                    }
+                    MessageBox.Show(builder.ToString());
                 }
                 return;
             }
+
             string product = cbProductList.Text;
             string version = cbSPGPVersion.Text;
             if (!Products.ListOfProducts().Contains(product))
