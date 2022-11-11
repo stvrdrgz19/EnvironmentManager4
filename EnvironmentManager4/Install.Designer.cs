@@ -181,8 +181,6 @@ namespace EnvironmentManager4
             // checkLaunchAfterInstall
             // 
             this.checkLaunchAfterInstall.AutoSize = true;
-            this.checkLaunchAfterInstall.Checked = true;
-            this.checkLaunchAfterInstall.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkLaunchAfterInstall.Location = new System.Drawing.Point(3, 20);
             this.checkLaunchAfterInstall.Name = "checkLaunchAfterInstall";
             this.checkLaunchAfterInstall.Size = new System.Drawing.Size(117, 17);

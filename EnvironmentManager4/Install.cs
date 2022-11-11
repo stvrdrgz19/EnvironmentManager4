@@ -371,8 +371,35 @@ namespace EnvironmentManager4
             return selectedModules;
         }
 
+        private void InstallOptionsOnLoad()
+        {
+            RegUtilities.CheckForInstallRegistryEntries();
+            RegistryEntries reg = new RegistryEntries();
+            reg._product = install.Product;
+            if (reg.LaunchAfterInstall == "true")
+                checkLaunchAfterInstall.Checked = true;
+            else
+                checkLaunchAfterInstall.Checked = false;
+
+            if (reg.OpenInstallFolder == "true")
+                checkInstallFolder.Checked = true;
+            else
+                checkInstallFolder.Checked = false;
+
+            if (reg.RunDatabaseUpdate == "true")
+                checkRunDatabaseUpdate.Checked = true;
+            else
+                checkRunDatabaseUpdate.Checked = false;
+
+            if (reg.ResetDatabaseVersion == "true")
+                checkResetDBVersion.Checked = true;
+            else
+                checkResetDBVersion.Checked = false;
+        }
+
         private void Install_Load(object sender, EventArgs e)
         {
+            InstallOptionsOnLoad();
             if (install.Product != Products.SalesPad)
             {
                 checkResetDBVersion.Enabled = false;
@@ -527,6 +554,10 @@ namespace EnvironmentManager4
                     return;
                 }
             }
+
+            //save the install options
+            SaveInstallOptions(checkLaunchAfterInstall.Checked, checkInstallFolder.Checked, checkRunDatabaseUpdate.Checked, checkResetDBVersion.Checked);
+
             this.Close();
 
             //add any selected custom/extended modules to the install
@@ -542,6 +573,16 @@ namespace EnvironmentManager4
             Thread installBuild = new Thread(() => InstallBuild(installPath, selectedExtendedModules, selectedCustomModules, checkLaunchAfterInstall.Checked, checkInstallFolder.Checked, checkRunDatabaseUpdate.Checked, checkResetDBVersion.Checked));
             installBuild.Start();
             return;
+        }
+
+        private void SaveInstallOptions(bool launchAfterInstall, bool openInstallFolder, bool runDatabaseUpdate, bool resetDatabaseVersion)
+        {
+            RegistryEntries reg = new RegistryEntries();
+            reg._product = install.Product;
+            reg.LaunchAfterInstall = launchAfterInstall.ToString().ToLower();
+            reg.OpenInstallFolder = openInstallFolder.ToString().ToLower();
+            reg.RunDatabaseUpdate = runDatabaseUpdate.ToString().ToLower();
+            reg.ResetDatabaseVersion = resetDatabaseVersion.ToString().ToLower();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -600,7 +641,6 @@ namespace EnvironmentManager4
                 {
                     ErrorHandling.LogException(e);
                     ErrorHandling.DisplayExceptionMessage(e);
-                    //MessageBox.Show(String.Format(@"The dll '{0}' does not exist as an {1} Modules for this build.", dll, type));
                 }
             }
         }
