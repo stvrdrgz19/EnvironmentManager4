@@ -803,6 +803,11 @@ namespace EnvironmentManager4
 
         private void btnOpenBuildFolder_Click(object sender, EventArgs e)
         {
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                //
+                return;
+            }
             string product = cbProductList.Text;
             if (String.IsNullOrWhiteSpace(product) || product == "Select a Product")
                 return;

@@ -39,8 +39,13 @@ namespace EnvironmentManager4
                 MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist.", settingsModel.DbManagement.DatabaseBackupDirectory));
                 return;
             }
-            var databases = Directory.GetFiles(settingsModel.DbManagement.DatabaseBackupDirectory).Select(file => Path.GetFileNameWithoutExtension(file));
-            cb.Items.AddRange(databases.ToArray());
+
+            IEnumerable<string> results =
+                from database in Directory.GetFiles(settingsModel.DbManagement.DatabaseBackupDirectory)
+                where Path.GetFileName(database).Contains("zip")
+                select Path.GetFileNameWithoutExtension(database);
+
+            cb.Items.AddRange(results.ToArray());
         }
 
         public static void LoadDatabaseDescription(ComboBox cb, TextBox tb)

@@ -145,6 +145,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegistryEntries.cs" />
     <Compile Include="ServiceManagement.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>

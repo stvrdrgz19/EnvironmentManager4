@@ -251,7 +251,7 @@ namespace EnvironmentManager4
         public const string WebAPI = "Customer Portal API";
         public const string GPWeb = "Customer Portal Web";
 
-        public static List<string> ListOfProducts()
+    public static List<string> ListOfProducts()
         {
             List<string> productsList = new List<string>();
             productsList.Add(SalesPad);
@@ -328,6 +328,16 @@ namespace EnvironmentManager4
         public const int CoreModulesVersion = 1;
         public const int ConfigurationsVersion = 1;
 
+        public static RegistryKey GetEnvMgrRegKey()
+        {
+            return Registry.CurrentUser.OpenSubKey(@"Software\Environment Manager", true);
+        }
+
+        public static RegistryKey GetInstallSubRegKey(string product)
+        {
+            return Registry.CurrentUser.OpenSubKey(String.Format(@"Software\Environment Manager\Install\{0}", product), true);
+        }
+
         /// <summary>
         /// Call this on startup - generate registry values if none exist
         /// </summary>
@@ -341,7 +351,8 @@ namespace EnvironmentManager4
         public static void CreateRegistryEntries()
         {
             //Create the Environment Manager Subkey
-            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\Environment Manager");
+            Registry.CurrentUser.CreateSubKey(@"Software\Environment Manager");
+            RegistryKey key = GetEnvMgrRegKey();
 
             //Store the values
             key.SetValue("Core Modules Version", 0);
@@ -351,7 +362,7 @@ namespace EnvironmentManager4
 
         public static void CheckForUpdates()
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Environment Manager", true);
+            RegistryKey key = GetEnvMgrRegKey();
             int savedCoreModulesVersion = (int)key.GetValue("Core Modules Version");
             int savedConfigurationsVersion = (int)key.GetValue("Configurations Version");
 
@@ -369,6 +380,27 @@ namespace EnvironmentManager4
                 key.SetValue("Configurations Version", ConfigurationsVersion);
             }
             key.Close();
+        }
+
+        public static void CheckForInstallRegistryEntries()
+        {
+            RegistryKey spKey = Registry.CurrentUser.OpenSubKey(String.Format(@"Software\Environment Manager\Install\{0}", Products.SalesPad));
+            if (spKey == null)
+                GenerateInstallOptionEntries();
+        }
+
+        public static void GenerateInstallOptionEntries()
+        {
+            foreach (string product in Products.ListOfProducts())
+            {
+                Registry.CurrentUser.CreateSubKey(String.Format(@"Software\Environment Manager\Install\{0}", product));
+                RegistryKey key = GetInstallSubRegKey(product);
+                key.SetValue(RegistryEntries._LaunchAfterInstall, "false");
+                key.SetValue(RegistryEntries._OpenInstallFolder, "false");
+                key.SetValue(RegistryEntries._RunDatabaseUpdate, "false");
+                key.SetValue(RegistryEntries._ResetDatabaseVersion, "false");
+                key.Close();
+            }
         }
     }
 }
