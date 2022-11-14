@@ -395,10 +395,10 @@ namespace EnvironmentManager4
             {
                 Registry.CurrentUser.CreateSubKey(String.Format(@"Software\Environment Manager\Install\{0}", product));
                 RegistryKey key = GetInstallSubRegKey(product);
-                key.SetValue("Launch After Install", "false");
-                key.SetValue("Open Install Folder", "false");
-                key.SetValue("Run Database Update", "false");
-                key.SetValue("Reset Database Version", "false");
+                key.SetValue(RegistryEntries._LaunchAfterInstall, "false");
+                key.SetValue(RegistryEntries._OpenInstallFolder, "false");
+                key.SetValue(RegistryEntries._RunDatabaseUpdate, "false");
+                key.SetValue(RegistryEntries._ResetDatabaseVersion, "false");
                 key.Close();
             }
         }

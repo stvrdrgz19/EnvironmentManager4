@@ -805,20 +805,7 @@ namespace EnvironmentManager4
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                MessageBox.Show(cbAlwaysOnTop.Checked.ToString());
-                //RegistryEntries reg = new RegistryEntries();
-                ////reg.SPLaunchAfterInstall = "true";
-                ////reg.SPOpenInstallFolder = "true";
-                ////reg.SPRunDatabaseUpdate = "true";
-                ////reg.SPResetDatabaseVersion = "true";
-
-                //StringBuilder builder = new StringBuilder();
-                //builder.Append(String.Format("Launch - {0}", reg.SPLaunchAfterInstall.ToString())).AppendLine();
-                //builder.Append(String.Format("Open - {0}", reg.SPOpenInstallFolder.ToString())).AppendLine();
-                //builder.Append(String.Format("Update - {0}", reg.SPRunDatabaseUpdate.ToString())).AppendLine();
-                //builder.Append(String.Format("Reset - {0}", reg.SPResetDatabaseVersion.ToString())).AppendLine();
-
-                //MessageBox.Show(builder.ToString());
+                //
                 return;
             }
             string product = cbProductList.Text;

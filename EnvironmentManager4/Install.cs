@@ -397,6 +397,16 @@ namespace EnvironmentManager4
                 checkResetDBVersion.Checked = false;
         }
 
+        private void SaveInstallOptions(bool launchAfterInstall, bool openInstallFolder, bool runDatabaseUpdate, bool resetDatabaseVersion)
+        {
+            RegistryEntries reg = new RegistryEntries();
+            reg._product = install.Product;
+            reg.LaunchAfterInstall = launchAfterInstall.ToString().ToLower();
+            reg.OpenInstallFolder = openInstallFolder.ToString().ToLower();
+            reg.RunDatabaseUpdate = runDatabaseUpdate.ToString().ToLower();
+            reg.ResetDatabaseVersion = resetDatabaseVersion.ToString().ToLower();
+        }
+
         private void Install_Load(object sender, EventArgs e)
         {
             InstallOptionsOnLoad();
@@ -573,16 +583,6 @@ namespace EnvironmentManager4
             Thread installBuild = new Thread(() => InstallBuild(installPath, selectedExtendedModules, selectedCustomModules, checkLaunchAfterInstall.Checked, checkInstallFolder.Checked, checkRunDatabaseUpdate.Checked, checkResetDBVersion.Checked));
             installBuild.Start();
             return;
-        }
-
-        private void SaveInstallOptions(bool launchAfterInstall, bool openInstallFolder, bool runDatabaseUpdate, bool resetDatabaseVersion)
-        {
-            RegistryEntries reg = new RegistryEntries();
-            reg._product = install.Product;
-            reg.LaunchAfterInstall = launchAfterInstall.ToString().ToLower();
-            reg.OpenInstallFolder = openInstallFolder.ToString().ToLower();
-            reg.RunDatabaseUpdate = runDatabaseUpdate.ToString().ToLower();
-            reg.ResetDatabaseVersion = resetDatabaseVersion.ToString().ToLower();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
