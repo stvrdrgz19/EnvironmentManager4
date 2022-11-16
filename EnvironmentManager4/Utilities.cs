@@ -238,9 +238,27 @@ namespace EnvironmentManager4
             }
             return returnValue;
         }
+
+        public static string[] GetFilesFromDirectoryByExtension(string path, string extension = "zip")
+        {
+            IEnumerable<string> results =
+                from x in Directory.GetFiles(path)
+                where Path.GetFileName(x).Contains(extension)
+                select Path.GetFileNameWithoutExtension(x);
+
+            return results.ToArray();
+        }
+
+        public static string[] GetFilesFromDirectoryByExtensions(string path, string[] extensions)
+        {
+            List<string> results = new List<string>();
+            foreach (string extension in extensions)
+            {
+                results.AddRange(GetFilesFromDirectoryByExtension(path, extension));
+            }
+            return results.ToArray();
+        }
     }
-
-
 
     public class Products
     {
@@ -251,7 +269,7 @@ namespace EnvironmentManager4
         public const string WebAPI = "Customer Portal API";
         public const string GPWeb = "Customer Portal Web";
 
-    public static List<string> ListOfProducts()
+        public static List<string> ListOfProducts()
         {
             List<string> productsList = new List<string>();
             productsList.Add(SalesPad);
@@ -318,8 +336,6 @@ namespace EnvironmentManager4
             ExceptionForm.exception = e;
             ExceptionForm.extraMessage = extraMessage;
             form.ShowDialog();
-            //var dialogResult = form.ShowDialog();
-            //form.Show();
         }
     }
 

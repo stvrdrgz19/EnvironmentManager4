@@ -490,17 +490,14 @@ namespace EnvironmentManager4
             // 
             // cbGPListToInstall
             // 
-            this.cbGPListToInstall.Enabled = false;
             this.cbGPListToInstall.FormattingEnabled = true;
             this.cbGPListToInstall.Location = new System.Drawing.Point(6, 171);
             this.cbGPListToInstall.Name = "cbGPListToInstall";
             this.cbGPListToInstall.Size = new System.Drawing.Size(168, 21);
             this.cbGPListToInstall.TabIndex = 2;
-            this.cbGPListToInstall.Text = "Select a GP Version To Install";
             // 
             // btnInstallGP
             // 
-            this.btnInstallGP.Enabled = false;
             this.btnInstallGP.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnInstallGP.Location = new System.Drawing.Point(5, 193);
             this.btnInstallGP.Name = "btnInstallGP";

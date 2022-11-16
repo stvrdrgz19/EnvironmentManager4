@@ -183,7 +183,8 @@ namespace EnvironmentManager4
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(String.Format("There was an error copying '{0}' from {1} to {2}, error is as follows:\n\n{3}\n\n{4}", dll, copyFrom, copyTo, e.Message, e.ToString()));
+                    ErrorHandling.DisplayExceptionMessage(e);
+                    ErrorHandling.LogException(e);
                     return;
                 }
                 DllModel dllModel = new DllModel(SqliteDataAccess.GetLastParentId(), dllName, type, version, startTime);
@@ -193,7 +194,8 @@ namespace EnvironmentManager4
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(String.Format("There was an error logging the dll {0} to the sqlite database, error is as follows:\n\n{1}\n\n{2}", dllName, e.Message, e.ToString()));
+                    ErrorHandling.DisplayExceptionMessage(e);
+                    ErrorHandling.LogException(e);
                 }
             }
         }
@@ -214,7 +216,8 @@ namespace EnvironmentManager4
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(String.Format("An error was encountered while trying to extract {0}. Exception message is as follows:\n\n{1}", dllName, e.Message));
+                        ErrorHandling.DisplayExceptionMessage(e);
+                        ErrorHandling.LogException(e);
                     }
                     zip.Dispose();
                 }
@@ -235,7 +238,8 @@ namespace EnvironmentManager4
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(String.Format("An error was encountered while trying to copy {0} to {1}. Exception message is as follows:\n\n{2}", fileName, installPath, e.Message));
+                        ErrorHandling.DisplayExceptionMessage(e);
+                        ErrorHandling.LogException(e);
                     }
                 }
                 Directory.Delete(dir, true);
@@ -254,7 +258,8 @@ namespace EnvironmentManager4
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(String.Format("An error was encountered while trying to copy {0} to {1}. Exception message is as follows:\n\n{2}", fileName, installPath, e.Message));
+                    ErrorHandling.DisplayExceptionMessage(e);
+                    ErrorHandling.LogException(e);
                 }
             }
         }

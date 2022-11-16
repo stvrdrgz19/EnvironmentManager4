@@ -121,6 +121,31 @@ namespace EnvironmentManager4
             }
             btnInstallProduct.Enabled = enable;
         }
+
+        public static void EnableGPInstallButton(bool enable)
+        {
+            if (form != null)
+            {
+                form.EnableGPInstall(enable);
+            }
+        }
+
+        private void EnableGPInstall(bool enable)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new EnableDelegate(EnableGPInstall), new object[] { enable });
+                return;
+            }
+            btnInstallGP.Enabled = enable;
+            if (enable)
+                ReloadGPListNotStatic();
+        }
+
+        public void ReloadGPListNotStatic()
+        {
+            GPManagement.LoadGPInsatlls(lbGPVersionsInstalled);
+        }
         
         public void SettingsReload(bool settingsChange = false)
         {
@@ -249,6 +274,7 @@ namespace EnvironmentManager4
             ConfigureEnvironment(Environment.MachineName);
             SettingsReload(true);
             GPManagement.LoadGPInsatlls(lbGPVersionsInstalled);
+            GPManagement.LoadAvailableGPs(cbGPListToInstall);
             LoadWifiIP();
             LoadVPNIP();
             ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers);
@@ -304,7 +330,28 @@ namespace EnvironmentManager4
 
         private void btnInstallGP_Click(object sender, EventArgs e)
         {
-            //InstallGP();
+            string selectedGP = cbGPListToInstall.Text;
+            List<string> installedGPs = new List<string>();
+            foreach (string gp in lbGPVersionsInstalled.Items)
+                installedGPs.Add(gp);
+
+            if (installedGPs.Contains(selectedGP))
+            {
+                string message = String.Format("The selected gp '{0}' is already installed. Do you want to overwrite the existing installation with a fresh one?", selectedGP);
+                string caption = "OVERWRITE?";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                MessageBoxIcon icon = MessageBoxIcon.Question;
+                DialogResult result;
+
+                result = MessageBox.Show(message, caption, buttons, icon);
+                if (result == DialogResult.No)
+                    return;
+                else
+                    GPManagement.DeleteGPInstall(String.Format("{0}{1}", GPManagement.gpInstallPath, selectedGP));
+            }
+
+            Thread installGP = new Thread(() => GPManagement.InstallGP(selectedGP));
+            installGP.Start();
             return;
         }
 
@@ -806,6 +853,9 @@ namespace EnvironmentManager4
             if (Control.ModifierKeys == Keys.Shift)
             {
                 //
+                FileInfo fi = new FileInfo(@"C:\DatabaseBackups\GP2016\NEWSP.zip");
+                long size = fi.Length;
+                MessageBox.Show(String.Format("File size in bytes: {0}", size));
                 return;
             }
             string product = cbProductList.Text;
