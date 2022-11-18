@@ -23,7 +23,6 @@ namespace EnvironmentManager4
     {
 
         //Setup File Video - https://www.youtube.com/watch?v=tiHBwAp_Kz4&t=179s
-
         public static List<string> versionList = new List<string>
         {
             "x86",
@@ -80,15 +79,17 @@ namespace EnvironmentManager4
             return ip;
         }
 
-        public static void ResizeListViewColumnWidth(ListView lv, int maxRowCount, int colIndx)
+        public static void ResizeListViewColumnWidthForScrollBar(ListView lv, int maxRowCount, int colIndx)
         {
             int count = lv.Items.Count;
             int maxW = lv.Columns[colIndx].Width;
             if (count > maxRowCount)
-                lv.Columns[colIndx].Width = maxW-17;
+            {
+                lv.Columns[colIndx].Width = maxW - 17;
+            }
         }
 
-        public static void ResizeUpdateableListViewColumnWidth(ListView lv, int maxRowCount, int colIndx, int colDefaultWidth)
+        public static void ResizeUpdateableListViewColumnWidthForScrollBar(ListView lv, int maxRowCount, int colIndx, int colDefaultWidth)
         {
             int count = lv.Items.Count;
             if (count > maxRowCount)

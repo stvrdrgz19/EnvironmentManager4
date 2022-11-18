@@ -32,9 +32,6 @@ namespace EnvironmentManager4
             form = this;
         }
 
-        //public const string dbDescLine1 = "===============================================================================";
-        //public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
-        //public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
         public static string newDBBackupName = "test1";
         public static LaunchProduct launch;
         public static UpdateDatabaseDescription udd;
@@ -48,6 +45,7 @@ namespace EnvironmentManager4
         public static About aboutForm;
         public static NewDatabaseBackup newBackup;
         public static NewDatabaseBackup overwriteBackup;
+        public static List<ListViewProperties> lvProperties = new List<ListViewProperties>();
 
         public static void EnableWaitCursor(bool enable)
         {
@@ -277,7 +275,8 @@ namespace EnvironmentManager4
             GPManagement.LoadAvailableGPs(cbGPListToInstall);
             LoadWifiIP();
             LoadVPNIP();
-            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers);
+            lvProperties = ListViewProperties.RetrieveListViewProperties(lvInstalledSQLServers);
+            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers, lvProperties);
             cbSPGPVersion.Enabled = false;
             LoadProductList();
             if (!Utilities.IsProgramUpToDate())
@@ -357,7 +356,7 @@ namespace EnvironmentManager4
 
         private void labelSQLVersions_Click(object sender, EventArgs e)
         {
-            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers);
+            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers, lvProperties);
             return;
         }
 
@@ -367,7 +366,7 @@ namespace EnvironmentManager4
                 return;
 
             ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnRestartService, btnInstallService);
-            ServiceManagement.UpdateServices("Start", lvInstalledSQLServers);
+            ServiceManagement.UpdateServices("Start", lvInstalledSQLServers, lvProperties);
             ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnRestartService, btnInstallService);
             return;
         }
@@ -378,7 +377,7 @@ namespace EnvironmentManager4
                 return;
 
             ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnRestartService, btnInstallService);
-            ServiceManagement.UpdateServices("Stop", lvInstalledSQLServers);
+            ServiceManagement.UpdateServices("Stop", lvInstalledSQLServers, lvProperties);
             ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnRestartService, btnInstallService);
             return;
         }
@@ -394,7 +393,7 @@ namespace EnvironmentManager4
                 return;
 
             ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnRestartService, btnInstallService);
-            ServiceManagement.UpdateServices("Restart", lvInstalledSQLServers);
+            ServiceManagement.UpdateServices("Restart", lvInstalledSQLServers, lvProperties);
             ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnRestartService, btnInstallService);
             return;
         }

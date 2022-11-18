@@ -25,9 +25,11 @@ namespace EnvironmentManager4
             btn.Enabled = tf;
         }
 
-        public static void PopulateSQLServerList(ListView lv)
+        public static void PopulateSQLServerList(ListView lv, List<ListViewProperties> lvp)
         {
             lv.Items.Clear();
+            ListViewProperties.UpdateListViewProperties(lvp);
+
             List<string> services = InstalledSQLServerInstanceNames();
             services.AddRange(GetSalesPadServices());
             string serverStatus = "";
@@ -56,7 +58,7 @@ namespace EnvironmentManager4
                 item.SubItems.Add(serverStatus);
                 lv.Items.Add(item);
             }
-            Utilities.ResizeListViewColumnWidth(lv, 6, 0);
+            Utilities.ResizeListViewColumnWidthForScrollBar(lv, 6, 0);
         }
 
         public static bool IsSQLService(string service)
@@ -113,7 +115,7 @@ namespace EnvironmentManager4
             return serverList;
         }
 
-        public static void UpdateServices(string status, ListView lv)
+        public static void UpdateServices(string status, ListView lv, List<ListViewProperties> lvp)
         {
             for (int i = 0; i < lv.SelectedItems.Count; i++)
             {
@@ -132,41 +134,7 @@ namespace EnvironmentManager4
                         break;
                 }
             }
-            PopulateSQLServerList(lv);
-        }
-
-        public static void UpdateServices2(string status, ListView lv)
-        {
-            if (status == "Start")
-            {
-                //Do nothing if there are no services selected
-                if (lv.SelectedItems.Count == 0)
-                    return;
-
-                //Selected service
-                string service = lv.SelectedItems[0].Text;
-                StartService(service);
-            }
-            if (status == "Stop")
-            {
-                //Do nothing if there are no services selected
-                if (lv.SelectedItems.Count == 0)
-                    return;
-
-                //Selected service
-                string service = lv.SelectedItems[0].Text;
-                StopService(service);
-            }
-            if (status == "StopAll")
-            {
-                //Collection of all of the services
-                List<string> services = new List<string>();
-                foreach (ListViewItem service in lv.Items)
-                    services.Add(service.Text);
-                foreach (string service in services)
-                    StopService(service);
-            }
-            PopulateSQLServerList(lv);
+            PopulateSQLServerList(lv, lvp);
         }
 
         public static void StartService(string service)

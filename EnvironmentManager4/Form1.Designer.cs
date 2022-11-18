@@ -432,6 +432,7 @@ namespace EnvironmentManager4
             this.labelSQLVersions.Size = new System.Drawing.Size(51, 13);
             this.labelSQLVersions.TabIndex = 3;
             this.labelSQLVersions.Text = "Services:";
+            this.toolTip1.SetToolTip(this.labelSQLVersions, "Clicking on this label reloads the Services table.");
             this.labelSQLVersions.Click += new System.EventHandler(this.labelSQLVersions_Click);
             // 
             // btnInstallService
