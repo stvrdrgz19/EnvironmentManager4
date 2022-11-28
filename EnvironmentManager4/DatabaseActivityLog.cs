@@ -20,9 +20,8 @@ namespace EnvironmentManager4
 
         private void ReloadDatabaseActivityLog()
         {
-            List<DatabaseActivityLogModel> databaseActivity = new List<DatabaseActivityLogModel>();
             lvDatabaseActivityLog.Items.Clear();
-            databaseActivity = SqliteDataAccess.LoadDatabaseActivity();
+            List<DatabaseActivityLogModel> databaseActivity = SqliteDataAccess.LoadDatabaseActivity();
             foreach (var activity in databaseActivity)
             {
                 ListViewItem item1 = new ListViewItem(activity.TimeStamp);
@@ -30,7 +29,7 @@ namespace EnvironmentManager4
                 item1.SubItems.Add(activity.Backup);
                 lvDatabaseActivityLog.Items.Add(item1);
             }
-            Utilities.ResizeListViewColumnWidth(lvDatabaseActivityLog, 15, 2);
+            Utilities.ResizeListViewColumnWidthForScrollBar(lvDatabaseActivityLog, 15, 2);
         }
 
         private void DatabaseActivityLog_Load(object sender, EventArgs e)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace EnvironmentManager4
     public class GPManagement
     {
         public static string gpInstallPath = @"C:\Program Files (x86)\Microsoft Dynamics\";
+        public static string availableGPsPath = @"\\sp-fileserv-01\Shares\Autotesting\VM Setup\Microsoft Dynamics\";
 
         public static void LoadGPInsatlls(ListBox lb)
         {
@@ -22,6 +24,13 @@ namespace EnvironmentManager4
                 if (folder != "Business Analyzer")
                     lb.Items.Add(folder);
             }
+        }
+
+        public static void LoadAvailableGPs(ComboBox cb)
+        {
+            cb.Items.Clear();
+            cb.Text = "Select a GP Version to Install";
+            cb.Items.AddRange(Utilities.GetFilesFromDirectoryByExtension(availableGPsPath, "zip"));
         }
 
         public static void LaunchGP(string gp)
@@ -60,6 +69,48 @@ namespace EnvironmentManager4
                 String.Format(@"{0}{1}\DynUtils.exe", gpInstallPath, gp),
                 String.Format(@"""{0}{1}\DYNUTILS.SET""", gpInstallPath, gp)
                 );
+        }
+
+        public static void DeleteGPInstall(string path)
+        {
+            Directory.Delete(path, true);
+        }
+
+        public static void InstallGP(string selectedGP)
+        {
+            Form1.EnableGPInstallButton(false);
+
+            //Build paths
+            string newGP = String.Format("{0}{1}.zip", availableGPsPath, selectedGP);
+            string newPath = String.Format(@"{0}\{1}.zip", Utilities.GetFolder("DLLs"), selectedGP);
+            string destination = String.Format("{0}{1}", gpInstallPath, selectedGP);
+
+            //Copy the zipped build to the DLLs directory to extract
+            File.Copy(newGP, newPath);
+
+            //unzip the file to the dynamics path
+            using (ZipArchive zip = ZipFile.Open(newPath, ZipArchiveMode.Read))
+            {
+                try
+                {
+                    zip.ExtractToDirectory(destination);
+                }
+                catch (Exception e)
+                {
+                    ErrorHandling.DisplayExceptionMessage(e);
+                    ErrorHandling.LogException(e);
+                    zip.Dispose();
+                    File.Delete(newPath);
+                    Form1.EnableGPInstallButton(true);
+                    return;
+                }
+            }
+
+            //reload the gp path listbox
+            Form1.EnableGPInstallButton(true);
+
+            //delete the zipped file
+            File.Delete(newPath);
         }
     }
 }

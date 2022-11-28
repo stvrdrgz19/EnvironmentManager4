@@ -20,13 +20,16 @@ namespace EnvironmentManager4
             this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
-        List<BuildModel> builds = new List<BuildModel>();
-        List<DllModel> dlls = new List<DllModel>();
+        public static List<BuildModel> builds = new List<BuildModel>();
+        public static List<DllModel> dlls = new List<DllModel>();
+        public static List<ListViewProperties> lvp = new List<ListViewProperties>();
+        public static List<ListViewProperties> lvpDlls = new List<ListViewProperties>();
 
-        private void LoadBuildLog()
+        private void LoadBuildLog(List<ListViewProperties> lvp)
         {
             lvBuilds.Items.Clear();
             lvDlls.Items.Clear();
+            ListViewProperties.UpdateListViewProperties(lvp);
             builds = SqliteDataAccess.LoadBuilds();
             foreach (var build in builds)
             {
@@ -36,20 +39,23 @@ namespace EnvironmentManager4
                 item1.SubItems.Add(build.Product);
                 lvBuilds.Items.Add(item1);
             }
-            Utilities.ResizeListViewColumnWidth(lvBuilds, 9, 0);
+            Utilities.ResizeListViewColumnWidthForScrollBar(lvBuilds, 9, 0);
             this.lvBuilds.Items[0].Focused = true;
             this.lvBuilds.Items[0].Selected = true;
         }
 
         private void BuildLog_Load(object sender, EventArgs e)
         {
-            LoadBuildLog();
+            lvp = ListViewProperties.RetrieveListViewProperties(lvBuilds);
+            lvpDlls = ListViewProperties.RetrieveListViewProperties(lvDlls);
+            LoadBuildLog(lvp);
             return;
         }
 
         private void lvBuilds_SelectedIndexChanged(object sender, EventArgs e)
         {
             lvDlls.Items.Clear();
+            ListViewProperties.UpdateListViewProperties(lvpDlls);
             string entryDate = "";
             ListView.SelectedListViewItemCollection build = this.lvBuilds.SelectedItems;
             foreach (ListViewItem item in build)
@@ -67,13 +73,13 @@ namespace EnvironmentManager4
                 item1.SubItems.Add(dll.Type);
                 lvDlls.Items.Add(item1);
             }
-            Utilities.ResizeListViewColumnWidth(lvDlls, 9, 1);
+            Utilities.ResizeListViewColumnWidthForScrollBar(lvDlls, 9, 1);
             return;
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            LoadBuildLog();
+            LoadBuildLog(lvp);
             return;
         }
 

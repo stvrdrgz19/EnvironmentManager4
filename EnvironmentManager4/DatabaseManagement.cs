@@ -40,12 +40,7 @@ namespace EnvironmentManager4
                 return;
             }
 
-            IEnumerable<string> results =
-                from database in Directory.GetFiles(settingsModel.DbManagement.DatabaseBackupDirectory)
-                where Path.GetFileName(database).Contains("zip")
-                select Path.GetFileNameWithoutExtension(database);
-
-            cb.Items.AddRange(results.ToArray());
+            cb.Items.AddRange(Utilities.GetFilesFromDirectoryByExtension(settingsModel.DbManagement.DatabaseBackupDirectory, "zip"));
         }
 
         public static void LoadDatabaseDescription(ComboBox cb, TextBox tb)
