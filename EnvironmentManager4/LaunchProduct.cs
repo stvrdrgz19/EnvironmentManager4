@@ -169,7 +169,7 @@ namespace EnvironmentManager4
 
         private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
-            Form1.launch = null;
+            Form1.s_Launch = null;
         }
     }
 }

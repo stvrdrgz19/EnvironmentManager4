@@ -18,39 +18,39 @@ namespace EnvironmentManager4
 {
     public partial class Form1 : Form
     {
-        private static Form1 form = null;
+        private static Form1 s_form = null;
         private delegate void EnableDelegate(bool enable);
         //https://www.py4u.net/discuss/717463
         //https://www.codegrepper.com/code-examples/csharp/c%23+edit+form+controls+from+another+class
-        private ListViewColumnSorter lvwColumnSorter;
+        private ListViewColumnSorter _lvwColumnSorter;
 
         public Form1()
         {
             InitializeComponent();
-            lvwColumnSorter = new ListViewColumnSorter();
-            this.lvInstalledSQLServers.ListViewItemSorter = lvwColumnSorter;
-            form = this;
+            _lvwColumnSorter = new ListViewColumnSorter();
+            this.lvInstalledSQLServers.ListViewItemSorter = _lvwColumnSorter;
+            s_form = this;
         }
 
-        public static string newDBBackupName = "test1";
-        public static LaunchProduct launch;
-        public static UpdateDatabaseDescription udd;
-        public static Install installBuild;
-        public static BuildLog buildLog;
-        public static Settings settingsFormOpen;
-        public static ListAndButtonForm listAndButtonForm;
-        public static DeleteBuilds deleteBuilds;
-        public static DatabaseActivityLog dbLog;
-        public static Notes notes;
-        public static About aboutForm;
-        public static NewDatabaseBackup newBackup;
-        public static NewDatabaseBackup overwriteBackup;
-        public static List<ListViewProperties> lvProperties = new List<ListViewProperties>();
+        public static string s_NewDBBackupName = "test1";
+        public static LaunchProduct s_Launch;
+        public static UpdateDatabaseDescription s_Udd;
+        public static Install s_InstallBuild;
+        public static BuildLog s_BuildLog;
+        public static Settings s_SettingsFormOpen;
+        public static ListAndButtonForm s_ListAndButtonForm;
+        public static DeleteBuilds s_DeleteBuilds;
+        public static DatabaseActivityLog s_DbLog;
+        public static Notes s_Notes;
+        public static About s_AboutForm;
+        public static NewDatabaseBackup s_NewBackup;
+        public static NewDatabaseBackup s_OverwriteBackup;
+        public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
 
         public static void EnableWaitCursor(bool enable)
         {
-            if (form != null)
-                form.WaitCursor(enable);
+            if (s_form != null)
+                s_form.WaitCursor(enable);
         }
 
         private void WaitCursor(bool enable)
@@ -78,10 +78,8 @@ namespace EnvironmentManager4
 
         public static void EnableDBControls(bool enable)
         {
-            if (form != null)
-            {
-                form.EnableButton(enable);
-            }
+            if (s_form != null)
+                s_form.EnableButton(enable);
         }
 
         private void EnableButton(bool enable)
@@ -104,10 +102,8 @@ namespace EnvironmentManager4
 
         public static void EnableInstallButton(bool enable)
         {
-            if (form != null)
-            {
-                form.EnableInstall(enable);
-            }
+            if (s_form != null)
+                s_form.EnableInstall(enable);
         }
 
         private void EnableInstall(bool enable)
@@ -122,10 +118,8 @@ namespace EnvironmentManager4
 
         public static void EnableGPInstallButton(bool enable)
         {
-            if (form != null)
-            {
-                form.EnableGPInstall(enable);
-            }
+            if (s_form != null)
+                s_form.EnableGPInstall(enable);
         }
 
         private void EnableGPInstall(bool enable)
@@ -165,8 +159,8 @@ namespace EnvironmentManager4
 
         public static void SetStaticBackup(bool enable)
         {
-            if (form != null)
-                form.SetSelectedBackup(enable);
+            if (s_form != null)
+                s_form.SetSelectedBackup(enable);
         }
 
         public void SetSelectedBackup(bool enable)
@@ -177,7 +171,7 @@ namespace EnvironmentManager4
                 return;
             }
             SettingsReload();
-            cbDatabaseList.SelectedIndex = cbDatabaseList.FindStringExact(newDBBackupName);
+            cbDatabaseList.SelectedIndex = cbDatabaseList.FindStringExact(s_NewDBBackupName);
         }
 
         public void DetermineMode()
@@ -275,8 +269,8 @@ namespace EnvironmentManager4
             GPManagement.LoadAvailableGPs(cbGPListToInstall);
             LoadWifiIP();
             LoadVPNIP();
-            lvProperties = ListViewProperties.RetrieveListViewProperties(lvInstalledSQLServers);
-            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers, lvProperties);
+            s_LvProperties = ListViewProperties.RetrieveListViewProperties(lvInstalledSQLServers);
+            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers, s_LvProperties);
             cbSPGPVersion.Enabled = false;
             LoadProductList();
             if (!Utilities.IsProgramUpToDate())
@@ -293,20 +287,20 @@ namespace EnvironmentManager4
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (settingsFormOpen == null)
+            if (s_SettingsFormOpen == null)
             {
-                settingsFormOpen = new Settings();
-                settingsFormOpen.FormClosing += new FormClosingEventHandler(SettingsClose);
-                settingsFormOpen.Show();
+                s_SettingsFormOpen = new Settings();
+                s_SettingsFormOpen.FormClosing += new FormClosingEventHandler(SettingsClose);
+                s_SettingsFormOpen.Show();
             }
             else
-                settingsFormOpen.BringToFront();
+                s_SettingsFormOpen.BringToFront();
             return;
         }
 
         private void SettingsClose(object sender, FormClosingEventArgs e)
         {
-            settingsFormOpen = null;
+            s_SettingsFormOpen = null;
             SettingsReload(true);
         }
 
@@ -356,7 +350,7 @@ namespace EnvironmentManager4
 
         private void labelSQLVersions_Click(object sender, EventArgs e)
         {
-            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers, lvProperties);
+            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers, s_LvProperties);
             return;
         }
 
@@ -366,7 +360,7 @@ namespace EnvironmentManager4
                 return;
 
             ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnRestartService, btnInstallService);
-            ServiceManagement.UpdateServices("Start", lvInstalledSQLServers, lvProperties);
+            ServiceManagement.UpdateServices("Start", lvInstalledSQLServers, s_LvProperties);
             ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnRestartService, btnInstallService);
             return;
         }
@@ -377,7 +371,7 @@ namespace EnvironmentManager4
                 return;
 
             ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnRestartService, btnInstallService);
-            ServiceManagement.UpdateServices("Stop", lvInstalledSQLServers, lvProperties);
+            ServiceManagement.UpdateServices("Stop", lvInstalledSQLServers, s_LvProperties);
             ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnRestartService, btnInstallService);
             return;
         }
@@ -393,7 +387,7 @@ namespace EnvironmentManager4
                 return;
 
             ServiceManagement.EnableSQLControls(false, btnStartService, btnStopService, btnRestartService, btnInstallService);
-            ServiceManagement.UpdateServices("Restart", lvInstalledSQLServers, lvProperties);
+            ServiceManagement.UpdateServices("Restart", lvInstalledSQLServers, s_LvProperties);
             ServiceManagement.EnableSQLControls(true, btnStartService, btnStopService, btnRestartService, btnInstallService);
             return;
         }
@@ -430,7 +424,7 @@ namespace EnvironmentManager4
 
         private void btnOverwriteDB_Click(object sender, EventArgs e)
         {
-            if (overwriteBackup == null)
+            if (s_OverwriteBackup == null)
             {
                 string backupName = cbDatabaseList.Text;
                 SettingsModel settingsModel = SettingsUtilities.GetSettings();
@@ -447,22 +441,22 @@ namespace EnvironmentManager4
                     result = MessageBox.Show(message, caption, buttons, icon);
                     if (result == DialogResult.Yes)
                     {
-                        overwriteBackup = new NewDatabaseBackup();
+                        s_OverwriteBackup = new NewDatabaseBackup();
                         NewDatabaseBackup.existingDatabaseName = backupName;
                         NewDatabaseBackup.existingDatabaseFile = backupZip;
                         NewDatabaseBackup.action = "OVERWRITE";
-                        overwriteBackup.Show();
+                        s_OverwriteBackup.Show();
                     }
                 }
             }
             else
-                overwriteBackup.BringToFront();
+                s_OverwriteBackup.BringToFront();
             return;
         }
 
         private void btnNewDB_Click(object sender, EventArgs e)
         {
-            if (newBackup == null)
+            if (s_NewBackup == null)
             {
                 string message = "Are you sure you want to create a new Database Backup?";
                 string caption = "CONFIRM";
@@ -473,15 +467,15 @@ namespace EnvironmentManager4
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
                 {
-                    newBackup = new NewDatabaseBackup();
+                    s_NewBackup = new NewDatabaseBackup();
                     NewDatabaseBackup.existingDatabaseName = null;
                     NewDatabaseBackup.existingDatabaseFile = null;
                     NewDatabaseBackup.action = "BACKUP";
-                    newBackup.Show();
+                    s_NewBackup.Show();
                 }
             }
             else
-                newBackup.BringToFront();
+                s_NewBackup.BringToFront();
             return;
         }
 
@@ -513,19 +507,19 @@ namespace EnvironmentManager4
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                if (buildLog == null)
+                if (s_BuildLog == null)
                 {
                     if (Products.ListOfProducts().Contains(cbProductList.Text))
                     {
-                        buildLog = new BuildLog();
-                        buildLog.Show();
+                        s_BuildLog = new BuildLog();
+                        s_BuildLog.Show();
                     }
                 }
                 else
-                    buildLog.BringToFront();
+                    s_BuildLog.BringToFront();
                 return;
             }
-            if (installBuild == null)
+            if (s_InstallBuild == null)
             {
                 string selectedProduct = cbProductList.Text;
                 string selectedVersion = cbSPGPVersion.Text;
@@ -540,23 +534,23 @@ namespace EnvironmentManager4
                     return;
                 }
 
-                installBuild = new Install();
+                s_InstallBuild = new Install();
                 string path = Clipboard.GetText();
                 GetInstaller getInstaller = new GetInstaller(path, selectedProduct, selectedVersion);
-                Install.install = installBuild.GetInstallerFile(getInstaller);
+                Install.install = s_InstallBuild.GetInstallerFile(getInstaller);
                 if (Install.install.InstallerPath != "EXIT")
-                    installBuild.Show();
+                    s_InstallBuild.Show();
                 else
-                    installBuild = null;
+                    s_InstallBuild = null;
             }
             else
-                installBuild.BringToFront();
+                s_InstallBuild.BringToFront();
             return;
         }
 
         private void btnLaunchProduct_Click(object sender, EventArgs e)
         {
-            if (launch == null)
+            if (s_Launch == null)
             {
                 string selectedProduct = cbProductList.Text;
                 string selectedVersion = cbSPGPVersion.Text;
@@ -626,13 +620,13 @@ namespace EnvironmentManager4
                     return;
                 }
                 //LaunchProduct launch = new LaunchProduct();
-                launch = new LaunchProduct();
+                s_Launch = new LaunchProduct();
                 LaunchProduct.product = selectedProduct;
                 LaunchProduct.version = selectedVersion;
-                launch.Show();
+                s_Launch.Show();
             }
             else
-                launch.BringToFront();
+                s_Launch.BringToFront();
             return;
         }
 
@@ -642,12 +636,13 @@ namespace EnvironmentManager4
             {
                 if (Environment.MachineName == "STEVERODRIGUEZ")
                 {
-                    StringBuilder builder = new StringBuilder();
-                    foreach (Control c in this.Controls)
-                    {
-                        builder.Append(c.Name).AppendLine();
-                    }
-                    MessageBox.Show(builder.ToString());
+                    CoreModules.GenerateCoreModulesFile();
+                    //StringBuilder builder = new StringBuilder();
+                    //foreach (Control c in this.Controls)
+                    //{
+                    //    builder.Append(c.Name).AppendLine();
+                    //}
+                    //MessageBox.Show(builder.ToString());
                 }
                 return;
             }
@@ -727,22 +722,22 @@ namespace EnvironmentManager4
 
         private void resetDatabaseVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (listAndButtonForm == null)
+            if (s_ListAndButtonForm == null)
             {
-                listAndButtonForm = new ListAndButtonForm();
+                s_ListAndButtonForm = new ListAndButtonForm();
                 ListAndButtonForm.title = "Select Database";
                 ListAndButtonForm.button = "Reset Database Version";
-                listAndButtonForm.FormClosing += new FormClosingEventHandler(ResetDBTextPromptClose);
-                listAndButtonForm.Show();
+                s_ListAndButtonForm.FormClosing += new FormClosingEventHandler(ResetDBTextPromptClose);
+                s_ListAndButtonForm.Show();
             }
             else
-                listAndButtonForm.BringToFront();
+                s_ListAndButtonForm.BringToFront();
             return;
         }
 
         private void ResetDBTextPromptClose(object sender, FormClosingEventArgs e)
         {
-            listAndButtonForm = null;
+            s_ListAndButtonForm = null;
             if (!String.IsNullOrWhiteSpace(ListAndButtonForm.output))
             {
                 SettingsModel settingsModel = SettingsUtilities.GetSettings();
@@ -753,13 +748,13 @@ namespace EnvironmentManager4
 
         private void databaseLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dbLog == null)
+            if (s_DbLog == null)
             {
-                dbLog = new DatabaseActivityLog();
-                dbLog.Show();
+                s_DbLog = new DatabaseActivityLog();
+                s_DbLog.Show();
             }
             else
-                dbLog.BringToFront();
+                s_DbLog.BringToFront();
             return;
         }
 
@@ -774,13 +769,13 @@ namespace EnvironmentManager4
 
         private void notesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (notes == null)
+            if (s_Notes == null)
             {
-                notes = new Notes();
-                notes.Show();
+                s_Notes = new Notes();
+                s_Notes.Show();
             }
             else
-                notes.BringToFront();
+                s_Notes.BringToFront();
             return;
         }
 
@@ -837,13 +832,13 @@ namespace EnvironmentManager4
 
         private void deleteBuildInstallsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (deleteBuilds == null)
+            if (s_DeleteBuilds == null)
             {
-                deleteBuilds = new DeleteBuilds();
-                deleteBuilds.Show();
+                s_DeleteBuilds = new DeleteBuilds();
+                s_DeleteBuilds.Show();
             }
             else
-                deleteBuilds.BringToFront();
+                s_DeleteBuilds.BringToFront();
             return;
         }
 
@@ -874,7 +869,7 @@ namespace EnvironmentManager4
 
         private void btnEditDescription_Click(object sender, EventArgs e)
         {
-            if (udd == null)
+            if (s_Udd == null)
             {
                 SettingsModel settings = SettingsUtilities.GetSettings();
                 if (cbDatabaseList.Text == "Select a Database"
@@ -884,54 +879,50 @@ namespace EnvironmentManager4
                 DatabaseManagement backupConfig = new DatabaseManagement();
                 backupConfig.BackupName = cbDatabaseList.Text;
                 backupConfig.BackupDescription = tbDBDesc.Text;
-                udd = new UpdateDatabaseDescription();
+                s_Udd = new UpdateDatabaseDescription();
                 UpdateDatabaseDescription.backupConfig = backupConfig;
-                udd.FormClosing += new FormClosingEventHandler(EditDescriptionClose);
-                udd.Show();
+                s_Udd.FormClosing += new FormClosingEventHandler(EditDescriptionClose);
+                s_Udd.Show();
             }
             else
-                udd.BringToFront();
+                s_Udd.BringToFront();
             return;
         }
 
         private void EditDescriptionClose(object sender, FormClosingEventArgs e)
         {
-            udd = null;
+            s_Udd = null;
             DatabaseManagement.LoadDatabaseDescription(cbDatabaseList, tbDBDesc);
             return;
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (aboutForm == null)
+            if (s_AboutForm == null)
             {
-                aboutForm = new About();
-                aboutForm.Show();
+                s_AboutForm = new About();
+                s_AboutForm.Show();
             }
             else
-                aboutForm.BringToFront();
+                s_AboutForm.BringToFront();
             return;
         }
 
         private void ColumnClick(object o, ColumnClickEventArgs e)
         {
-            if (e.Column == lvwColumnSorter.SortColumn)
+            if (e.Column == _lvwColumnSorter.SortColumn)
             {
                 // Reverse the current sort direction for this column.
-                if (lvwColumnSorter.Order == SortOrder.Ascending)
-                {
-                    lvwColumnSorter.Order = SortOrder.Descending;
-                }
+                if (_lvwColumnSorter.Order == SortOrder.Ascending)
+                    _lvwColumnSorter.Order = SortOrder.Descending;
                 else
-                {
-                    lvwColumnSorter.Order = SortOrder.Ascending;
-                }
+                    _lvwColumnSorter.Order = SortOrder.Ascending;
             }
             else
             {
                 // Set the column number that is to be sorted; default to ascending.
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
+                _lvwColumnSorter.SortColumn = e.Column;
+                _lvwColumnSorter.Order = SortOrder.Ascending;
             }
 
             // Perform the sort with these new sort options.

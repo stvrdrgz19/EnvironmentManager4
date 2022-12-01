@@ -99,9 +99,9 @@ namespace EnvironmentManager4
         private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
             if (action == "OVERWRITE")
-                Form1.overwriteBackup = null;
+                Form1.s_OverwriteBackup = null;
             else
-                Form1.newBackup = null;
+                Form1.s_NewBackup = null;
         }
     }
 }

@@ -40,7 +40,7 @@ namespace EnvironmentManager4
 
         private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
-            Form1.dbLog = null;
+            Form1.s_DbLog = null;
         }
     }
 }

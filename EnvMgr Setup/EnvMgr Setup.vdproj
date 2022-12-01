@@ -27,12 +27,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_14ABB3D7F8494D0899D763D6E5B12D12"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_2188CFB64CB05D695C905FBC88D3137F"
         "OwnerKey" = "8:_021B9A986BF841918CC53951FA409F7A"
         "MsmSig" = "8:_UNDEFINED"
@@ -251,26 +245,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_14ABB3D7F8494D0899D763D6E5B12D12"
-            {
-            "SourcePath" = "8:..\\EnvironmentManager4\\Files\\GetLatestEnvironmentManager.bat"
-            "TargetName" = "8:GetLatestEnvironmentManager.bat"
-            "Tag" = "8:"
-            "Folder" = "8:_FF80ACF8135C468B81892F8DBE3B8D84"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2188CFB64CB05D695C905FBC88D3137F"

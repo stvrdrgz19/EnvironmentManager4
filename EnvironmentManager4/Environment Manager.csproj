@@ -130,7 +130,6 @@
       <DependentUpon>ListAndButtonForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ListViewColumnSorter.cs" />
-    <Compile Include="ListViewModel.cs" />
     <Compile Include="ListViewProperties.cs" />
     <Compile Include="Modules.cs" />
     <Compile Include="NewDatabaseBackup.cs">

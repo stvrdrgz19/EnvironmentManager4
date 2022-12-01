@@ -76,7 +76,7 @@ namespace EnvironmentManager4
 
         private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
-            Form1.aboutForm = null;
+            Form1.s_AboutForm = null;
         }
     }
 }

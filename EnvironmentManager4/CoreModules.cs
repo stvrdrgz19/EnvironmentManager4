@@ -23,6 +23,8 @@ namespace EnvironmentManager4
             ShipCenter
         }
 
+        private const int Version = 1;
+
         public CoreModules(string Product, ProductKey Key, List<string> CoreModulesList)
         {
             this.Product = Product;
@@ -223,8 +225,18 @@ namespace EnvironmentManager4
                 new CoreModules(Products.ShipCenter, ProductKey.ShipCenter, shipCenterCoreModules)
             };
 
-            string json = JsonConvert.SerializeObject(coreModules, Formatting.Indented);
+            CoreModulesFile cmFile = new CoreModulesFile();
+            cmFile.Version = Version;
+            cmFile.CoreModulesList = coreModules;
+
+            string json = JsonConvert.SerializeObject(cmFile, Formatting.Indented);
             File.WriteAllText(String.Format(@"{0}\Files\CoreModules.json", Environment.CurrentDirectory), json);
         }
+    }
+
+    public class CoreModulesFile
+    {
+        public int Version { get; set; }
+        public List<CoreModules> CoreModulesList { get; set; }
     }
 }

@@ -647,7 +647,7 @@ namespace EnvironmentManager4
 
         private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)
         {
-            Form1.installBuild = null;
+            Form1.s_InstallBuild = null;
         }
     }
 }

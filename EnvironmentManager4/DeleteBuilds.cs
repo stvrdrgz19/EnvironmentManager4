@@ -132,7 +132,7 @@ namespace EnvironmentManager4
 
         private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)
         {
-            Form1.deleteBuilds = null;
+            Form1.s_DeleteBuilds = null;
         }
     }
 }
