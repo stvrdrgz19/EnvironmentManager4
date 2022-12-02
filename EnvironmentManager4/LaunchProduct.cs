@@ -29,7 +29,7 @@ namespace EnvironmentManager4
 
         public static string[] LoadDllList(string path)
         {
-            string[] coreModules = CoreModules.GetCoreModules(product);
+            string[] coreModules = CoreModules.GetCoreModulesByProduct(product);
             string filter = "";
             switch(product)
             {

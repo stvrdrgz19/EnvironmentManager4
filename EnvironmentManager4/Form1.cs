@@ -256,7 +256,6 @@ namespace EnvironmentManager4
                 trimSOLTickets.Visible = false;
                 generateSettingsFileToolStripMenuItem.Visible = false;
                 //generateCoreModulesFileToolStripMenuItem.Visible = false;
-                CoreModules.UpdateCoreModulesFile();
                 Configurations.UpdateConfigurationsFile();
             }
         }
@@ -279,8 +278,6 @@ namespace EnvironmentManager4
                 UpdatePrompt.OpenFromStartup = true;
                 update.ShowDialog();
             }
-            RegUtilities.GenerateRegistryEntries();
-            RegUtilities.CheckForUpdates();
             this.lvInstalledSQLServers.ColumnClick += new ColumnClickEventHandler(ColumnClick);
             return;
         }
@@ -636,7 +633,6 @@ namespace EnvironmentManager4
             {
                 if (Environment.MachineName == "STEVERODRIGUEZ")
                 {
-                    CoreModules.GenerateCoreModulesFile();
                     //StringBuilder builder = new StringBuilder();
                     //foreach (Control c in this.Controls)
                     //{
@@ -809,7 +805,6 @@ namespace EnvironmentManager4
         private void generateCoreModulesFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //CoreModules.GenerateCoreModulesFile();
-            CoreModules.UpdateCoreModulesFile();
             return;
         }
 

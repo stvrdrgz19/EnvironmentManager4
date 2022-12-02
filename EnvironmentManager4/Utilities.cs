@@ -342,61 +342,9 @@ namespace EnvironmentManager4
 
     public class RegUtilities
     {
-        public const int CoreModulesVersion = 1;
-        public const int ConfigurationsVersion = 1;
-
-        public static RegistryKey GetEnvMgrRegKey()
-        {
-            return Registry.CurrentUser.OpenSubKey(@"Software\Environment Manager", true);
-        }
-
         public static RegistryKey GetInstallSubRegKey(string product)
         {
             return Registry.CurrentUser.OpenSubKey(String.Format(@"Software\Environment Manager\Install\{0}", product), true);
-        }
-
-        /// <summary>
-        /// Call this on startup - generate registry values if none exist
-        /// </summary>
-        public static void GenerateRegistryEntries()
-        {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Environment Manager");
-            if (key == null)
-                CreateRegistryEntries();
-        }
-
-        public static void CreateRegistryEntries()
-        {
-            //Create the Environment Manager Subkey
-            Registry.CurrentUser.CreateSubKey(@"Software\Environment Manager");
-            RegistryKey key = GetEnvMgrRegKey();
-
-            //Store the values
-            key.SetValue("Core Modules Version", 0);
-            key.SetValue("Configurations Version", 0);
-            key.Close();
-        }
-
-        public static void CheckForUpdates()
-        {
-            RegistryKey key = GetEnvMgrRegKey();
-            int savedCoreModulesVersion = (int)key.GetValue("Core Modules Version");
-            int savedConfigurationsVersion = (int)key.GetValue("Configurations Version");
-
-            //check if core modules file needs updating
-            if (savedCoreModulesVersion != CoreModulesVersion)
-            {
-                CoreModules.UpdateCoreModulesFile();
-                key.SetValue("Core Modules Version", CoreModulesVersion);
-            }
-
-            //check if configurations file needs updating
-            if (savedConfigurationsVersion != ConfigurationsVersion)
-            {
-                Configurations.UpdateConfigurationsFile();
-                key.SetValue("Configurations Version", ConfigurationsVersion);
-            }
-            key.Close();
         }
 
         public static void CheckForInstallRegistryEntries()

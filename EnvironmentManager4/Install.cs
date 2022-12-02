@@ -410,6 +410,7 @@ namespace EnvironmentManager4
         private void Install_Load(object sender, EventArgs e)
         {
             InstallOptionsOnLoad();
+
             if (install.Product != Products.SalesPad)
             {
                 checkResetDBVersion.Enabled = false;
