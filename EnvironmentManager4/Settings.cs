@@ -256,6 +256,7 @@ namespace EnvironmentManager4
             hidden = true;
             PopulateDatabaseList();
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
+            SettingsUtilities.UpdateSettingsFile(settingsModel);
             LoadSettings(settingsModel);
             SetStartingValues();
             ToggleModeExecute();

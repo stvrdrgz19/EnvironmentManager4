@@ -73,10 +73,26 @@ namespace EnvironmentManager4
             return GetSettings().Version;
         }
 
-        public static void UpdateSettingsFile()
+        public static void UpdateSettingsFile(SettingsModel settings)
         {
             if (SettingsVersion != GetSettingsVersion())
-                GenerateSettingsFile();
+                MigrateSettings(settings);
+        }
+
+        public static void MigrateSettings(SettingsModel settings)
+        {
+            settings.Version = SettingsVersion;
+
+            string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+            try
+            {
+                File.WriteAllText(Utilities.GetFile("Settings.json"), json);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.DisplayExceptionMessage(e);
+                return;
+            }
         }
 
         public static void GenerateSettingsFile()
