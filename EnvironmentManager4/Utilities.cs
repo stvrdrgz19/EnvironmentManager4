@@ -294,6 +294,7 @@ namespace EnvironmentManager4
                 using (StreamWriter sw = File.CreateText(logFile))
                 {
                     sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
+                    sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
                     sw.WriteLine(String.Format("Exception Message: {0}", e.Message));
                     sw.WriteLine(String.Format("Exception Type: {0}",e.GetType().ToString()));
                     sw.WriteLine(String.Format("Exception Source: {0}",e.Source));
@@ -314,6 +315,7 @@ namespace EnvironmentManager4
                 using (StreamWriter sw = File.AppendText(logFile))
                 {
                     sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
+                    sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
                     sw.WriteLine(String.Format("Exception Message: {0}", e.Message));
                     sw.WriteLine(String.Format("Exception Type: {0}",e.GetType().ToString()));
                     sw.WriteLine(String.Format("Exception Source: {0}", e.Source));
