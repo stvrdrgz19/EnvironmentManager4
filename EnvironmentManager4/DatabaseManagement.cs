@@ -334,7 +334,7 @@ namespace EnvironmentManager4
             }
 
             Form1.EnableDBControls(true);
-            Form1.newDBBackupName = databaseName;
+            Form1.s_NewDBBackupName = databaseName;
             Form1.SetStaticBackup(true);
             Form1.EnableWaitCursor(false);
 

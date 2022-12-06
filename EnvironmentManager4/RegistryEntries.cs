@@ -19,13 +19,13 @@ namespace EnvironmentManager4
         {
             get
             {
-                RegistryKey _key = RegUtilities.GetInstallSubRegKey(_product);
-                return (string)_key.GetValue(_LaunchAfterInstall);
+                RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
+                return (string)key.GetValue(_LaunchAfterInstall);
             }
             set
             {
-                RegistryKey _key = RegUtilities.GetInstallSubRegKey(_product);
-                _key.SetValue(_LaunchAfterInstall, value);
+                RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
+                key.SetValue(_LaunchAfterInstall, value);
             }
         }
 
@@ -33,13 +33,13 @@ namespace EnvironmentManager4
         {
             get
             {
-                RegistryKey _key = RegUtilities.GetInstallSubRegKey(_product);
-                return (string)_key.GetValue(_OpenInstallFolder);
+                RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
+                return (string)key.GetValue(_OpenInstallFolder);
             }
             set
             {
-                RegistryKey _key = RegUtilities.GetInstallSubRegKey(_product);
-                _key.SetValue(_OpenInstallFolder, value);
+                RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
+                key.SetValue(_OpenInstallFolder, value);
             }
         }
 
@@ -47,13 +47,13 @@ namespace EnvironmentManager4
         {
             get
             {
-                RegistryKey _key = RegUtilities.GetInstallSubRegKey(_product);
-                return (string)_key.GetValue(_RunDatabaseUpdate);
+                RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
+                return (string)key.GetValue(_RunDatabaseUpdate);
             }
             set
             {
-                RegistryKey _key = RegUtilities.GetInstallSubRegKey(_product);
-                _key.SetValue(_RunDatabaseUpdate, value);
+                RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
+                key.SetValue(_RunDatabaseUpdate, value);
             }
         }
 
@@ -61,13 +61,13 @@ namespace EnvironmentManager4
         {
             get
             {
-                RegistryKey _key = RegUtilities.GetInstallSubRegKey(_product);
-                return (string)_key.GetValue(_ResetDatabaseVersion);
+                RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
+                return (string)key.GetValue(_ResetDatabaseVersion);
             }
             set
             {
-                RegistryKey _key = RegUtilities.GetInstallSubRegKey(_product);
-                _key.SetValue(_ResetDatabaseVersion, value);
+                RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
+                key.SetValue(_ResetDatabaseVersion, value);
             }
         }
     }

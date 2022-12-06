@@ -410,6 +410,7 @@ namespace EnvironmentManager4
         private void Install_Load(object sender, EventArgs e)
         {
             InstallOptionsOnLoad();
+
             if (install.Product != Products.SalesPad)
             {
                 checkResetDBVersion.Enabled = false;
@@ -647,7 +648,7 @@ namespace EnvironmentManager4
 
         private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)
         {
-            Form1.installBuild = null;
+            Form1.s_InstallBuild = null;
         }
     }
 }

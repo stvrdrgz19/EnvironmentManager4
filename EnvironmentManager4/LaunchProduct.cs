@@ -29,7 +29,7 @@ namespace EnvironmentManager4
 
         public static string[] LoadDllList(string path)
         {
-            string[] coreModules = CoreModules.GetCoreModules(product);
+            string[] coreModules = CoreModules.GetCoreModulesByProduct(product);
             string filter = "";
             switch(product)
             {
@@ -169,7 +169,7 @@ namespace EnvironmentManager4
 
         private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
-            Form1.launch = null;
+            Form1.s_Launch = null;
         }
     }
 }

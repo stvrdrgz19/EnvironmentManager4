@@ -25,6 +25,7 @@ namespace EnvironmentManager4
 
         public static SettingsModel startingSettings = new SettingsModel();
         public static List<Connection> connectionsInMemory = new List<Connection>();
+        public static int s_Version;
         public static bool hidden;
 
         public void LoadSettings(SettingsModel settingsModel)
@@ -33,6 +34,7 @@ namespace EnvironmentManager4
             {
                 cbConnections.Items.Clear();
 
+                s_Version = settingsModel.Version;
                 tbdatabaseBackupDirectory.Text = settingsModel.DbManagement.DatabaseBackupDirectory;
                 cbConnections.Text = settingsModel.DbManagement.Connection;
 
@@ -124,6 +126,7 @@ namespace EnvironmentManager4
 
             var settings = new SettingsModel
             {
+                Version = s_Version,
                 DbManagement = dbManagement,
                 BuildManagement = buildManagement,
                 Other = other
@@ -253,6 +256,7 @@ namespace EnvironmentManager4
             hidden = true;
             PopulateDatabaseList();
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
+            SettingsUtilities.UpdateSettingsFile(settingsModel);
             LoadSettings(settingsModel);
             SetStartingValues();
             ToggleModeExecute();

@@ -10,6 +10,7 @@ namespace EnvironmentManager4
 {
     public class SettingsModel
     {
+        public int Version { get; set; }
         public DbManagement DbManagement { get; set; }
         public BuildManagement BuildManagement { get; set; }
         public Other Other { get; set; }
@@ -55,18 +56,47 @@ namespace EnvironmentManager4
 
     public class SettingsUtilities
     {
+        //Increment this when a settings migration needs to happen due to the file structure changing
+        public const int SettingsVersion = 1;
+
         public static SettingsModel GetSettings()
         {
             string settingsFile = Utilities.GetFile("Settings.json");
             if (!File.Exists(settingsFile))
-                GenerateSettingsFile(settingsFile);
+                GenerateSettingsFile();
 
             return JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(settingsFile));
         }
 
-        public static void GenerateSettingsFile(string path)
+        public static int GetSettingsVersion()
         {
-            List<string> dbList = new List<string>();
+            return GetSettings().Version;
+        }
+
+        public static void UpdateSettingsFile(SettingsModel settings)
+        {
+            if (SettingsVersion != GetSettingsVersion())
+                MigrateSettings(settings);
+        }
+
+        public static void MigrateSettings(SettingsModel settings)
+        {
+            settings.Version = SettingsVersion;
+
+            string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+            try
+            {
+                File.WriteAllText(Utilities.GetFile("Settings.json"), json);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.DisplayExceptionMessage(e);
+                return;
+            }
+        }
+
+        public static void GenerateSettingsFile()
+        {
             List<Connection> connectionList = new List<Connection>();
 
             var dbManagement = new DbManagement
@@ -102,6 +132,7 @@ namespace EnvironmentManager4
 
             var settings = new SettingsModel
             {
+                Version = SettingsVersion,
                 DbManagement = dbManagement,
                 BuildManagement = buildManagement,
                 Other = other
@@ -110,7 +141,7 @@ namespace EnvironmentManager4
             string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
             try
             {
-                File.WriteAllText(path, json);
+                File.WriteAllText(Utilities.GetFile("Settings.json"), json);
             }
             catch (Exception e)
             {

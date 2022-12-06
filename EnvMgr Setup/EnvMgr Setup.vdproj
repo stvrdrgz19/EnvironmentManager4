@@ -27,12 +27,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_14ABB3D7F8494D0899D763D6E5B12D12"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_2188CFB64CB05D695C905FBC88D3137F"
         "OwnerKey" = "8:_021B9A986BF841918CC53951FA409F7A"
         "MsmSig" = "8:_UNDEFINED"
@@ -41,12 +35,6 @@
         {
         "MsmKey" = "8:_40CA802051BD41E7EFB62EBD2CEDC556"
         "OwnerKey" = "8:_021B9A986BF841918CC53951FA409F7A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4B1B526348864F19BC1468EE03D5CFE0"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -253,26 +241,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_14ABB3D7F8494D0899D763D6E5B12D12"
-            {
-            "SourcePath" = "8:..\\EnvironmentManager4\\Files\\GetLatestEnvironmentManager.bat"
-            "TargetName" = "8:GetLatestEnvironmentManager.bat"
-            "Tag" = "8:"
-            "Folder" = "8:_FF80ACF8135C468B81892F8DBE3B8D84"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2188CFB64CB05D695C905FBC88D3137F"
             {
             "AssemblyRegister" = "3:1"
@@ -333,26 +301,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4B1B526348864F19BC1468EE03D5CFE0"
-            {
-            "SourcePath" = "8:..\\EnvironmentManager4\\Files\\Icons\\EnvMgr.ico"
-            "TargetName" = "8:EnvMgr.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_FF80ACF8135C468B81892F8DBE3B8D84"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_681C0F9E643BCD6C6219CA9F53F50558"
@@ -606,7 +554,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:_4B1B526348864F19BC1468EE03D5CFE0"
+        "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -720,7 +668,7 @@
             "Target" = "8:_021B9A986BF841918CC53951FA409F7A"
             "Folder" = "8:_BFA8204B0767424EADF7E82AA8489177"
             "WorkingFolder" = "8:_CE7D4ABD192C4D13A054AD8590FA406E"
-            "Icon" = "8:_4B1B526348864F19BC1468EE03D5CFE0"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_82C1B7FA1ADB4492B1EA6438E7D01138"
@@ -734,7 +682,7 @@
             "Target" = "8:_021B9A986BF841918CC53951FA409F7A"
             "Folder" = "8:_304E83B45FAF429B95FE84FE744B585A"
             "WorkingFolder" = "8:_CE7D4ABD192C4D13A054AD8590FA406E"
-            "Icon" = "8:_4B1B526348864F19BC1468EE03D5CFE0"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
         }
