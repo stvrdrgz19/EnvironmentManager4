@@ -98,6 +98,7 @@
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
     </Compile>
     <Compile Include="DllModel.cs" />
+    <Compile Include="ErrorHandling.cs" />
     <Compile Include="ExceptionForm.cs">
       <SubType>Form</SubType>
     </Compile>

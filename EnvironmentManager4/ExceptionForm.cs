@@ -14,6 +14,7 @@ namespace EnvironmentManager4
     {
         public static Exception exception;
         public static string extraMessage;
+        public static bool dbUpdateFail;
         public ExceptionForm()
         {
             InitializeComponent();
@@ -22,6 +23,12 @@ namespace EnvironmentManager4
 
         private void ExceptionForm_Load(object sender, EventArgs e)
         {
+            if (dbUpdateFail)
+            {
+                textBox1.Text = @"The database update failed. This message is also being logged to the Log.txt file in the ..\EnvMgr\Files directory.";
+                tbException.Text = extraMessage;
+                return;
+            }
             if (!String.IsNullOrEmpty(extraMessage))
             {
                 tbException.Text = String.Format("Exception Message: {0}\r\nException Type: {1}\r\nException Source: {2}\r\nException Traget Site: {3}\r\n\r\n{4}\r\n\r\nSTACK TRACE\r\n{5}",

@@ -322,6 +322,9 @@ namespace EnvironmentManager4
 
             if (runDatabaseUpdate)
             {
+                //if log exists, delete log
+                ErrorHandling.DeleteLogFiles();
+
                 if (!resetDatabaseVersion)
                     DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), settingsModel.DbManagement.DBToRestore);
 
@@ -333,6 +336,12 @@ namespace EnvironmentManager4
                 {
                     dbUpdate.Start();
                     dbUpdate.WaitForExit();
+                    //check for pass/fail log
+                    if (ErrorHandling.IsThereAFailLog())
+                    {
+                        ErrorHandling.DisplayDatabaseUpdateFailure();
+                        ErrorHandling.LogDatabaseUpdateFailure();
+                    }
                 }
                 catch (Exception e)
                 {

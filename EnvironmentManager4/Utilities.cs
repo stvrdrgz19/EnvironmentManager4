@@ -54,6 +54,14 @@ namespace EnvironmentManager4
                 return String.Format(@"{0}\{1}", Environment.CurrentDirectory, folderName);
         }
 
+        public static string GetCurrentDirectory()
+        {
+            if (DevEnvironment())
+                return @"C:\Program Files (x86)\Environment Manager";
+            else
+                return Environment.CurrentDirectory;
+        }
+
         public static string GetIP(string networkName)
         {
             string ip = "";
@@ -151,8 +159,8 @@ namespace EnvironmentManager4
             catch (Exception e)
             {
                 string extraMessage = "Possibly not connected to the SalesPad Network or VPN.";
-                ErrorHandling.DisplayExceptionMessage(e, extraMessage);
-                ErrorHandling.LogException(e, extraMessage);
+                ErrorHandling.DisplayExceptionMessage(e, false, extraMessage);
+                ErrorHandling.LogException(e, false, extraMessage);
                 version = "Unable to Connect";
             }
             return version;
@@ -283,64 +291,9 @@ namespace EnvironmentManager4
         }
     }
 
-    public class ErrorHandling
-    {
-        public static void LogException(Exception e, string extraMessage = null)
-        {
-            string logFile = Utilities.GetFile("Log.txt");
-            DateTime logTime = DateTime.Now;
-            if (!File.Exists(logFile))
-            {
-                using (StreamWriter sw = File.CreateText(logFile))
-                {
-                    sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
-                    sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
-                    sw.WriteLine(String.Format("Exception Message: {0}", e.Message));
-                    sw.WriteLine(String.Format("Exception Type: {0}",e.GetType().ToString()));
-                    sw.WriteLine(String.Format("Exception Source: {0}",e.Source));
-                    sw.WriteLine(String.Format("Exception Target Site: {0}",e.TargetSite));
-                    sw.WriteLine("");
-                    if (!String.IsNullOrEmpty(extraMessage))
-                    {
-                        sw.WriteLine(extraMessage);
-                        sw.WriteLine("");
-                    }
-                    sw.WriteLine("STACK TRACE");
-                    sw.WriteLine(e.StackTrace);
-                    sw.WriteLine("");
-                }
-            }
-            else
-            {
-                using (StreamWriter sw = File.AppendText(logFile))
-                {
-                    sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
-                    sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
-                    sw.WriteLine(String.Format("Exception Message: {0}", e.Message));
-                    sw.WriteLine(String.Format("Exception Type: {0}",e.GetType().ToString()));
-                    sw.WriteLine(String.Format("Exception Source: {0}", e.Source));
-                    sw.WriteLine(String.Format("Exception Target Site: {0}", e.TargetSite));
-                    sw.WriteLine("");
-                    if (!String.IsNullOrEmpty(extraMessage))
-                    {
-                        sw.WriteLine(extraMessage);
-                        sw.WriteLine("");
-                    }
-                    sw.WriteLine("STACK TRACE");
-                    sw.WriteLine(e.StackTrace);
-                    sw.WriteLine("");
-                }
-            }
-        }
-
-        public static void DisplayExceptionMessage(Exception e, string extraMessage = null)
-        {
-            ExceptionForm form = new ExceptionForm();
-            ExceptionForm.exception = e;
-            ExceptionForm.extraMessage = extraMessage;
-            form.ShowDialog();
-        }
-    }
+    //public class ErrorHandling
+    //{
+    //}
 
     public class RegUtilities
     {

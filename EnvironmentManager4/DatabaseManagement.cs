@@ -144,7 +144,7 @@ namespace EnvironmentManager4
             catch (Exception e)
             {
                 string extraMessage = "The existing unzipped backup will be deleted after this error message window is closed.";
-                ErrorHandling.DisplayExceptionMessage(e, extraMessage);
+                ErrorHandling.DisplayExceptionMessage(e, false, extraMessage);
                 ErrorHandling.LogException(e);
                 if (Directory.Exists(unzippedBackupDirectory))
                     Directory.Delete(unzippedBackupDirectory, true);
