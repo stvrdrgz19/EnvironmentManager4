@@ -46,15 +46,11 @@ namespace EnvironmentManager4
                 foreach (Connection connectionInMemory in connectionsInMemory)
                     connectionNames.Add(connectionInMemory.ConnectionName);
                 foreach (Connection connectionList in settingsModel.DbManagement.ConnectionsList)
-                {
                     if (!connectionNames.Contains(connectionList.ConnectionName))
                         connectionsInMemory.Add(connectionList);
-                }
 
                 foreach (Connection conn in connectionsLists)
-                {
                     cbConnections.Items.Add(conn.ConnectionName);
-                }
 
                 tbSQLServerUN.Text = settingsModel.DbManagement.SQLServerUserName;
                 tbSQLServerPW.Text = Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword));
@@ -195,14 +191,7 @@ namespace EnvironmentManager4
             using (FolderBrowserDialog folderBrowser = new FolderBrowserDialog())
             {
                 folderBrowser.SelectedPath = selectedPath;
-                if (folderBrowser.ShowDialog() == DialogResult.OK)
-                {
-                    return folderBrowser.SelectedPath;
-                }
-                else
-                {
-                    return selectedPath;
-                }
+                return folderBrowser.ShowDialog() == DialogResult.OK ? folderBrowser.SelectedPath : selectedPath;
             }
         }
 
@@ -225,25 +214,14 @@ namespace EnvironmentManager4
         public void ToggleModeExecute()
         {
             if (cbMode.Text == "Standard" || cbMode.Text == "Kyle")
-            {
                 ToggleMode(true);
-            }
             if (cbMode.Text == "SmartBear")
-            {
                 ToggleMode(false);
-            }
         }
 
         public bool DoesConnectionExist(string connectionName)
         {
-            if (cbConnections.Items.Contains(connectionName))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return cbConnections.Items.Contains(connectionName) ? true : false;
         }
 
         public void PopulateDatabaseList()
@@ -327,9 +305,7 @@ namespace EnvironmentManager4
         {
             //Check if the connection exists - stop if it does
             if (DoesConnectionExist(cbConnections.Text))
-            {
                 return;
-            }
 
             //Place the current connection info into a ConnectionList class
             Connection conn = new Connection();
@@ -369,9 +345,8 @@ namespace EnvironmentManager4
             //Add all existing connection names to a list to be checked
             List<string> connectionNames = new List<string>();
             foreach (Connection connection in connectionsInMemory)
-            {
                 connectionNames.Add(connection.ConnectionName);
-            }
+
             //Make sure the connection is actually a saved connection before attempting to delete
             if (!connectionNames.Contains(selectedConnection))
             {
@@ -387,9 +362,7 @@ namespace EnvironmentManager4
             result = MessageBox.Show(message, caption, buttons, icon);
 
             if (result == DialogResult.No)
-            {
                 return;
-            }
 
             int count = connectionsInMemory.Count();
             var json = File.ReadAllText(Utilities.GetFile("Settings.json"));
@@ -450,10 +423,7 @@ namespace EnvironmentManager4
 
         private void checkResetDatabase_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkResetDatabase.Checked)
-                cbDBToReset.Enabled = true;
-            else
-                cbDBToReset.Enabled = false;
+            cbDBToReset.Enabled = checkResetDatabase.Checked ? true : false;
         }
     }
 }

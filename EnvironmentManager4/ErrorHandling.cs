@@ -13,30 +13,9 @@ namespace EnvironmentManager4
         {
             string logFile = Utilities.GetFile("Log.txt");
             DateTime logTime = DateTime.Now;
-            if (!File.Exists(logFile))
+            using (FileStream stream = File.Open(logFile, FileMode.OpenOrCreate))
             {
-                using (StreamWriter sw = File.CreateText(logFile))
-                {
-                    sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
-                    sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
-                    sw.WriteLine(String.Format("Exception Message: {0}", e.Message));
-                    sw.WriteLine(String.Format("Exception Type: {0}", e.GetType().ToString()));
-                    sw.WriteLine(String.Format("Exception Source: {0}", e.Source));
-                    sw.WriteLine(String.Format("Exception Target Site: {0}", e.TargetSite));
-                    sw.WriteLine("");
-                    if (!String.IsNullOrEmpty(extraMessage))
-                    {
-                        sw.WriteLine(extraMessage);
-                        sw.WriteLine("");
-                    }
-                    sw.WriteLine("STACK TRACE");
-                    sw.WriteLine(e.StackTrace);
-                    sw.WriteLine("");
-                }
-            }
-            else
-            {
-                using (StreamWriter sw = File.AppendText(logFile))
+                using (StreamWriter sw = new StreamWriter(stream))
                 {
                     sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
                     sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
@@ -69,18 +48,10 @@ namespace EnvironmentManager4
         {
             string logFile = Utilities.GetFile("Log.txt");
             DateTime logTime = DateTime.Now;
-            if (!File.Exists(logFile))
+
+            using (FileStream stream = File.Open(logFile, FileMode.OpenOrCreate))
             {
-                using (StreamWriter sw = File.CreateText(logFile))
-                {
-                    sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
-                    sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
-                    sw.WriteLine(GetLogContents());
-                }
-            }
-            else
-            {
-                using (StreamWriter sw = File.AppendText(logFile))
+                using (StreamWriter sw = new StreamWriter(stream))
                 {
                     sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
                     sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
@@ -101,20 +72,20 @@ namespace EnvironmentManager4
         {
             foreach (string file in Directory.GetFiles(Utilities.GetCurrentDirectory()))
             {
-                if (file.Contains("pass_log_"))
-                    File.Delete(file);
-                if (file.Contains("fail_log_"))
+                if (file.Contains("pass_log_") || file.Contains("fail_log_"))
                     File.Delete(file);
             }
         }
 
         public static bool IsThereAFailLog()
         {
-            bool tf = false;
-            foreach (string file in Directory.GetFiles(Utilities.GetCurrentDirectory()))
-                if (file.Contains("fail_log_"))
-                    tf = true;
-            return tf;
+            return Directory.GetFiles(Utilities.GetCurrentDirectory()).Any(s => s.Contains("fail_log_"));
+
+            //bool tf = false;
+            //foreach (string file in Directory.GetFiles(Utilities.GetCurrentDirectory()))
+            //    if (file.Contains("fail_log_"))
+            //        tf = true;
+            //return tf;
         }
 
         private static string GetLogContents()
