@@ -251,12 +251,7 @@ namespace EnvironmentManager4
             labelVersion.Text = String.Format("v{0}", Utilities.GetAppVersion());
             if (machine != "STEVERODRIGUEZ")
             {
-                notesToolStripMenuItem.Visible = false;
-                directoryCompareToolStripMenuItem.Visible = false;
-                trimSOLTickets.Visible = false;
-                generateSettingsFileToolStripMenuItem.Visible = false;
-                //generateCoreModulesFileToolStripMenuItem.Visible = false;
-                Configurations.UpdateConfigurationsFile();
+                //Configurations.UpdateConfigurationsFile();
             }
         }
 
@@ -777,13 +772,9 @@ namespace EnvironmentManager4
 
         private void directoryCompareToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Directory Compare is not currently hooked up to Environment Manager.");
+            DirectoryCompare dc = new DirectoryCompare();
+            dc.Show();
             return;
-        }
-
-        private void trimSOLTickets_Click(object sender, EventArgs e)
-        {
-            //
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -794,18 +785,6 @@ namespace EnvironmentManager4
         private void cbDatabaseList_SelectedIndexChanged(object sender, EventArgs e)
         {
             DatabaseManagement.LoadDatabaseDescription(cbDatabaseList, tbDBDesc);
-        }
-
-        private void generateSettingsFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //SettingsUtilities.GenerateSettingsFile();
-            return;
-        }
-
-        private void generateCoreModulesFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //CoreModules.GenerateCoreModulesFile();
-            return;
         }
 
         private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)

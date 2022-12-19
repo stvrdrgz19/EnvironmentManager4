@@ -80,6 +80,18 @@ namespace EnvironmentManager4
             return ip;
         }
 
+        public static string GetDirectory(string selectedPath = @"C:\")
+        {
+            if (String.IsNullOrWhiteSpace(selectedPath))
+                selectedPath = @"C:\";
+
+            using (FolderBrowserDialog folderBrowser = new FolderBrowserDialog())
+            {
+                folderBrowser.SelectedPath = selectedPath;
+                return folderBrowser.ShowDialog() == DialogResult.OK ? folderBrowser.SelectedPath : selectedPath;
+            }
+        }
+
         public static void ResizeListViewColumnWidthForScrollBar(ListView lv, int maxRowCount, int colIndx)
         {
             int count = lv.Items.Count;

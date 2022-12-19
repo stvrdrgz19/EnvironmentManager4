@@ -98,6 +98,12 @@
     <Compile Include="DeleteBuilds.Designer.cs">
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
     </Compile>
+    <Compile Include="DirectoryCompare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DirectoryCompare.Designer.cs">
+      <DependentUpon>DirectoryCompare.cs</DependentUpon>
+    </Compile>
     <Compile Include="DllModel.cs" />
     <Compile Include="ErrorHandling.cs" />
     <Compile Include="ExceptionForm.cs">
@@ -190,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DeleteBuilds.resx">
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DirectoryCompare.resx">
+      <DependentUpon>DirectoryCompare.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ExceptionForm.resx">
       <DependentUpon>ExceptionForm.cs</DependentUpon>
