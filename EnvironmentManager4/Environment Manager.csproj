@@ -37,6 +37,7 @@
   <PropertyGroup>
     <ApplicationIcon>EnvMgr.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
@@ -98,6 +99,7 @@
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
     </Compile>
     <Compile Include="DllModel.cs" />
+    <Compile Include="ErrorHandling.cs" />
     <Compile Include="ExceptionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -226,6 +228,7 @@
     <EmbeddedResource Include="TextPrompt.resx">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="EnvironmentManager.ico" />
     <Content Include="EnvMgr.ico" />
     <Content Include="Files\Icons\Edb.png" />
     <Content Include="Files\Icons\EnvMgr.ico" />
