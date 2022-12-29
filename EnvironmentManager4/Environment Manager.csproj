@@ -35,8 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>EnvMgr.ico</ApplicationIcon>
+    <ApplicationIcon>Files\Icons\EnvMgr.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -164,6 +165,12 @@
     </Compile>
     <Compile Include="SettingsModel.cs" />
     <Compile Include="SqliteDataAccess.cs" />
+    <Compile Include="TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextPrompt.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -234,6 +241,9 @@
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TextPrompt.resx">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </EmbeddedResource>
@@ -241,6 +251,7 @@
     <Content Include="EnvMgr.ico" />
     <Content Include="Files\Icons\Edb.png" />
     <Content Include="Files\Icons\EnvMgr.ico" />
+    <None Include="Files\Icons\EnvMgr.png" />
     <Content Include="Files\Icons\eyeclosed.png" />
     <Content Include="Files\Icons\eyeopen.png" />
     <Content Include="Files\Icons\ico1402.ico" />

@@ -252,7 +252,7 @@
             "SourcePath" = "8:..\\EnvironmentManager4\\EnvMgr.ico"
             "TargetName" = "8:EnvMgr.ico"
             "Tag" = "8:"
-            "Folder" = "8:_FF80ACF8135C468B81892F8DBE3B8D84"
+            "Folder" = "8:_CD935A73B25C43FE906F6249FF2A3835"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -542,6 +542,17 @@
                     "Property" = "8:_5C9B0CFFE88544038D9614EE70146A9D"
                         "Folders"
                         {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_CD935A73B25C43FE906F6249FF2A3835"
+                            {
+                            "Name" = "8:Icons"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_323F460A1A084646BBDBB24A62DBEE15"
+                                "Folders"
+                                {
+                                }
+                            }
                         }
                     }
                 }
@@ -563,7 +574,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Environment Manager"
         "ProductCode" = "8:{72B076D2-24B9-4267-8A7E-9EACA1CA968C}"
-        "PackageCode" = "8:{0DE0DF21-5BFE-47C7-8127-8BED1A693612}"
+        "PackageCode" = "8:{2EA14063-80CE-4467-B88F-7D9A1C0122F0}"
         "UpgradeCode" = "8:{D4416156-6E67-4E56-B187-FCE1B44FAAF4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -694,7 +705,7 @@
             "Target" = "8:_021B9A986BF841918CC53951FA409F7A"
             "Folder" = "8:_BFA8204B0767424EADF7E82AA8489177"
             "WorkingFolder" = "8:_CE7D4ABD192C4D13A054AD8590FA406E"
-            "Icon" = "8:"
+            "Icon" = "8:_172E0BDDFFC34C40BE89BDC1B9FA28FB"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_82C1B7FA1ADB4492B1EA6438E7D01138"
@@ -708,7 +719,7 @@
             "Target" = "8:_021B9A986BF841918CC53951FA409F7A"
             "Folder" = "8:_304E83B45FAF429B95FE84FE744B585A"
             "WorkingFolder" = "8:_CE7D4ABD192C4D13A054AD8590FA406E"
-            "Icon" = "8:"
+            "Icon" = "8:_172E0BDDFFC34C40BE89BDC1B9FA28FB"
             "Feature" = "8:"
             }
         }

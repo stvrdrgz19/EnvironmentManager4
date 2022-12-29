@@ -628,6 +628,8 @@ namespace EnvironmentManager4
             {
                 if (Environment.MachineName == "STEVERODRIGUEZ")
                 {
+                    TestForm tf = new TestForm();
+                    tf.Show();
                     //StringBuilder builder = new StringBuilder();
                     //foreach (Control c in this.Controls)
                     //{

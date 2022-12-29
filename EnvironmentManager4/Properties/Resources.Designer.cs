@@ -63,16 +63,6 @@ namespace EnvironmentManager4.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Edb {
-            get {
-                object obj = ResourceManager.GetObject("Edb", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap EnvMgr {
             get {
                 object obj = ResourceManager.GetObject("EnvMgr", resourceCulture);

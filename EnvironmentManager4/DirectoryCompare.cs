@@ -196,9 +196,9 @@ namespace EnvironmentManager4
 
             Clipboard.SetText(builder.ToString());
 
-            string message = String.Format("({0}) files were copied to the clipboard.", count);
+            string message = String.Format("({0}) file names were copied to the clipboard.", count);
             if (count <= 10)
-                message = String.Format("The following ({0}) file(s) were copied to the clipboard:\n\n{1}", count, builder.ToString());
+                message = String.Format("The following ({0}) file names were copied to the clipboard:\n\n{1}", count, builder.ToString());
             string caption = "COPIED";
             MessageBoxButtons buttons = MessageBoxButtons.OK;
             MessageBoxIcon icon = MessageBoxIcon.Exclamation;
