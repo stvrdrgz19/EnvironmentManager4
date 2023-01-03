@@ -528,9 +528,8 @@ namespace EnvironmentManager4
 
                 s_InstallBuild = new Install();
                 string path = Clipboard.GetText();
-                GetInstaller getInstaller = new GetInstaller(path, selectedProduct, selectedVersion);
-                Install.install = s_InstallBuild.GetInstallerFile(getInstaller);
-                if (Install.install.InstallerPath != "EXIT")
+                Install.install = Installer.GetInstallerFile(path, selectedProduct, selectedVersion);
+                if (Install.install.Executable != "EXIT")
                     s_InstallBuild.Show();
                 else
                     s_InstallBuild = null;
@@ -630,12 +629,6 @@ namespace EnvironmentManager4
                 {
                     TestForm tf = new TestForm();
                     tf.Show();
-                    //StringBuilder builder = new StringBuilder();
-                    //foreach (Control c in this.Controls)
-                    //{
-                    //    builder.Append(c.Name).AppendLine();
-                    //}
-                    //MessageBox.Show(builder.ToString());
                 }
                 return;
             }

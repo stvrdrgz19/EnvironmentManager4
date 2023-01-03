@@ -11,6 +11,15 @@ namespace EnvironmentManager4
 {
     public class Modules
     {
+        public string ModuleName { get; set; }
+        public string ModulePath { get; set; }
+        public List<ModuleFileContents> ModuleContents { get; set; }
+
+        public static void LoadModulesLists(ListBox lbExtended, ListBox lbCustom, string executable, string product, string version)
+        {
+
+        }
+
         public static string[] RetrieveDLLs(string modulePath, string buildPath, string product, string installer, string version)
         {
             List<string> dllList = new List<string>();
@@ -81,6 +90,11 @@ namespace EnvironmentManager4
             }
             else
                 return dll.Substring(0, dll.LastIndexOf('.'));
+        }
+
+        public static void GetFullDLLs(string path, string product, string version)
+        {
+
         }
 
         public static void GetDLLs(string product, string installerPath, string version, string startTime, List<string> custDlls = null, List<string> extDlls = null)
@@ -263,5 +277,11 @@ namespace EnvironmentManager4
                 }
             }
         }
+    }
+
+    public class ModuleFileContents
+    {
+        public string ModuleName { get; set; }
+        public string FileName { get; set; }
     }
 }

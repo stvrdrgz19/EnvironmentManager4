@@ -50,6 +50,7 @@ namespace EnvironmentManager4
     {
         public string InstallDirectory { get; set; }
         public string FileserverDirectory { get; set; }
+        public string ModuleNaming { get; set; }
         public List<string> ProductExecutables { get; set; }
         public List<string> DirectoryFilters { get; set; }
 
@@ -61,6 +62,7 @@ namespace EnvironmentManager4
             {
                 case Products.SalesPad:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\";
+                    pi.ModuleNaming = "SalesPad.Module.";
                     pi.ProductExecutables = new List<string> { "SalesPad.exe" };
                     pi.DirectoryFilters = new List<string> { "SalesPad.Desktop",
                         settings.BuildManagement.SalesPadx86Directory.Substring(settings.BuildManagement.SalesPadx86Directory.LastIndexOf('\\')+1),
@@ -94,6 +96,7 @@ namespace EnvironmentManager4
                     break;
                 case Products.DataCollection:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\Ares\DataCollection\";
+                    pi.ModuleNaming = "SalesPad.DataCollection.";
                     pi.ProductExecutables = new List<string> { "DataCollection Extended Warehouse.exe",
                         "SalesPad Inventory Manager Extended Warehouse.exe",
                         "SalesPad Inventory Manager.exe" };
@@ -127,6 +130,7 @@ namespace EnvironmentManager4
                     break;
                 case Products.ShipCenter:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\ShipCenter\";
+                    pi.ModuleNaming = "SalesPad.ShipCenter.";
                     pi.ProductExecutables = new List<string> { "SalesPad.ShipCenter.exe" };
                     pi.DirectoryFilters = new List<string> { "ShipCenter",
                         settings.BuildManagement.ShipCenterDirectory.Substring(settings.BuildManagement.ShipCenterDirectory.LastIndexOf('\\')+1)};
@@ -145,6 +149,7 @@ namespace EnvironmentManager4
                     break;
                 case Products.WebAPI:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\SalesPad.WebApi";
+                    pi.ModuleNaming = "SalesPad.GP.RESTv3.";
                     break;
             }
             return pi;

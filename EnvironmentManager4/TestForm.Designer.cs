@@ -35,7 +35,7 @@ namespace EnvironmentManager4
             // lvBuilds
             // 
             this.lvBuilds.FullRowSelect = true;
-            this.lvBuilds.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvBuilds.GridLines = true;
             this.lvBuilds.HideSelection = false;
             this.lvBuilds.Location = new System.Drawing.Point(13, 55);
             this.lvBuilds.Name = "lvBuilds";

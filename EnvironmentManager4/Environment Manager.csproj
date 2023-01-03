@@ -126,6 +126,8 @@
     <Compile Include="Install.Designer.cs">
       <DependentUpon>Install.cs</DependentUpon>
     </Compile>
+    <Compile Include="Installer.cs" />
+    <Compile Include="InstallProperties.cs" />
     <Compile Include="LaunchProduct.cs">
       <SubType>Form</SubType>
     </Compile>
