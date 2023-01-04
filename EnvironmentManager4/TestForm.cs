@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -55,6 +56,8 @@ namespace EnvironmentManager4
 
         public void LoadModules()
         {
+            lvBuilds.Items.Clear();
+            lvBuilds.Columns.Clear();
             lvBuilds.Columns.Add("ModuleName", -2);
             lvBuilds.Columns.Add("FileName", -2);
 
@@ -80,12 +83,64 @@ namespace EnvironmentManager4
             }
         }
 
+        public void LoadInstalledModules()
+        {
+            string path = @"C:\Program Files\SalesPad.Desktop\Release\5.2.38 T\InstallProperties.envprop";
+
+            InstallProperties ip = JsonConvert.DeserializeObject<InstallProperties>(File.ReadAllText(path));
+
+            lvBuilds.Items.Clear();
+            lvBuilds.Columns.Clear();
+            lvBuilds.Columns.Add("DLL", -2);
+
+            ip.CustomDLLs.AddRange(ip.ExtendedDLLs);
+
+            foreach (DLLFileModel dll in ip.CustomDLLs)
+            {
+                ListViewItem item = new ListViewItem(dll.CoreDLL);
+                lvBuilds.Items.Add(item);
+            }
+        }
+
+        public void LoadInstalledModulesFiles()
+        {
+            string path = @"C:\Program Files\SalesPad.Desktop\Release\5.2.38 T\InstallProperties.envprop";
+
+            InstallProperties ip = JsonConvert.DeserializeObject<InstallProperties>(File.ReadAllText(path));
+
+            lvBuilds.Items.Clear();
+            lvBuilds.Columns.Clear();
+            lvBuilds.Columns.Add("DLL", 350);
+            lvBuilds.Columns.Add("File", 350);
+
+            ip.CustomDLLs.AddRange(ip.ExtendedDLLs);
+
+            foreach (DLLFileModel dll in ip.CustomDLLs)
+            {
+                foreach (string file in dll.Files)
+                {
+                    ListViewItem item = new ListViewItem(dll.CoreDLL);
+                    item.SubItems.Add(file);
+                    lvBuilds.Items.Add(item);
+                }
+            }
+        }
+
         private void TestForm_Load(object sender, EventArgs e)
         {
-            LoadModules();
-            //lvBuilds.Columns.Add("Results", -2);
-            //foreach (string file in Directory.GetFiles(String.Format("{0}{1}", buildPath, "Features"), "SalesPad.Desktop.Setup.*X64.exe", SearchOption.AllDirectories))
-            //    lvBuilds.Items.Add(file.Replace(Path.GetFileName(file), "").Substring(0, file.Replace(Path.GetFileName(file), "").Count()-1));
+            //LoadModules();
+            return;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            LoadInstalledModules();
+            return;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            LoadInstalledModulesFiles();
             return;
         }
     }

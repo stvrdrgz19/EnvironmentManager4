@@ -50,6 +50,47 @@ namespace EnvironmentManager4
             return dllList.Except(coreModules).ToArray();
         }
 
+        private void DeleteDLLFiles(string path, List<string> selectedDLLs)
+        {
+            InstallProperties startingIP = InstallProperties.RetrieveInstallProperties(path);
+            InstallProperties newIP = InstallProperties.RetrieveInstallProperties(path);
+
+            if (InstallProperties.DoesInstallHaveProperties(path))
+            {
+                List<DLLFileModel> customDLLs = InstallProperties.RetrieveInstalledDLLsFromProperties(path, true);
+                List<DLLFileModel> extendedDLLs = InstallProperties.RetrieveInstalledDLLsFromProperties(path, false);
+
+                if (customDLLs.Count > 0)
+                    for (int i = customDLLs.Count() - 1; i > -1; i--)
+                        if (selectedDLLs.Contains(customDLLs[i].CoreDLL))
+                        {
+                            selectedDLLs.RemoveAt(selectedDLLs.IndexOf(customDLLs[i].CoreDLL));
+                            foreach (string file in customDLLs[i].Files)
+                                File.Delete(String.Format(@"{0}\{1}", path, file));
+                            newIP.CustomDLLs.RemoveAt(i);
+                        }
+
+                if (extendedDLLs.Count > 0)
+                    for (int i = extendedDLLs.Count() - 1; i > -1; i--)
+                        if (selectedDLLs.Contains(extendedDLLs[i].CoreDLL))
+                        {
+                            selectedDLLs.RemoveAt(selectedDLLs.IndexOf(extendedDLLs[i].CoreDLL));
+                            foreach (string file in extendedDLLs[i].Files)
+                                File.Delete(String.Format(@"{0}\{1}", path, file));
+                            newIP.ExtendedDLLs.RemoveAt(i);
+                        }
+
+                foreach (string file in selectedDLLs)
+                    File.Delete(String.Format(@"{0}\{1}", path, file));
+
+                if (startingIP != newIP)
+                    InstallProperties.WritePropertiesFile(newIP);
+            }
+            else
+                foreach (string dll in selectedDLLs)
+                    File.Delete(String.Format(@"{0}\{1}", path, dll));
+        }
+
         private void LaunchProduct_Load(object sender, EventArgs e)
         {
             this.Text = String.Format(@"Launch {0} {1}", product, version);
@@ -125,8 +166,11 @@ namespace EnvironmentManager4
             result = MessageBox.Show(message, caption, buttons, icon);
             if (result == DialogResult.Yes)
             {
+                List<string> selectedDLLs = new List<string>();
                 foreach (string dll in SelectedBuildDLLs.SelectedItems)
-                    File.Delete(String.Format(@"{0}\{1}", selectedBuild, dll));
+                    selectedDLLs.Add(dll);
+                DeleteDLLFiles(lvInstalledBuilds.SelectedItems[0].Text, selectedDLLs);
+
                 SelectedBuildDLLs.Items.Clear();
                 SelectedBuildDLLs.Items.AddRange(LoadDllList(lvInstalledBuilds.SelectedItems[0].Text));
             }

@@ -34,7 +34,6 @@ namespace EnvironmentManager4
                 DLLFileModel dllConfig = new DLLFileModel();
                 List<string> fileList = new List<string>();
 
-                //string path = String.Format(@"{0}\{1}\{2}\{3}.zip", buildPath, type, version, dll);
                 string path = String.Format(@"{0}\{1}\{2}", buildPath, type, version);
                 string[] files = Directory.GetFiles(path, String.Format("{0}{1}.*", pi.ModuleNaming, dll));
 
@@ -47,11 +46,33 @@ namespace EnvironmentManager4
                     }
                 }
 
-                dllConfig.CoreDLL = dll;
+                dllConfig.CoreDLL = ConvertDLLNameToFile(dll, product, version);
                 dllConfig.Files = fileList;
                 dllList.Add(dllConfig);
             }
             return dllList;
+        }
+
+        public static string ConvertDLLNameToFile(string input, string product, string version)
+        {
+            ProductInfo pi = ProductInfo.GetProductInfo(product, version);
+            return String.Format("{0}{1}.dll", pi.ModuleNaming, input);
+        }
+
+        public static bool DoesInstallHaveProperties(string path)
+        {
+            return File.Exists(String.Format(@"{0}\InstallProperties.envprop", path)) ? true : false;
+        }
+
+        public static InstallProperties RetrieveInstallProperties(string path)
+        {
+            return JsonConvert.DeserializeObject<InstallProperties>(File.ReadAllText(String.Format(@"{0}\InstallProperties.envprop", path))); ;
+        }
+
+        public static List<DLLFileModel> RetrieveInstalledDLLsFromProperties(string path, bool custom)
+        {
+            InstallProperties ip = JsonConvert.DeserializeObject<InstallProperties>(File.ReadAllText(String.Format(@"{0}\InstallProperties.envprop", path)));
+            return custom ? ip.CustomDLLs : ip.ExtendedDLLs;
         }
     }
 

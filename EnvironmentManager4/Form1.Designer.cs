@@ -296,6 +296,7 @@ namespace EnvironmentManager4
             // 
             // tbDBDesc
             // 
+            this.tbDBDesc.BackColor = System.Drawing.Color.AliceBlue;
             this.tbDBDesc.Location = new System.Drawing.Point(6, 46);
             this.tbDBDesc.Multiline = true;
             this.tbDBDesc.Name = "tbDBDesc";
