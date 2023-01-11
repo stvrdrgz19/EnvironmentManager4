@@ -85,7 +85,7 @@ namespace EnvironmentManager4
 
         public void LoadInstalledModules()
         {
-            string path = @"C:\Program Files\SalesPad.Desktop\Release\5.2.38 T\InstallProperties.envprop";
+            string path = @"C:\Program Files\SalesPad.Desktop\master\5.2.39.18 EP\InstallProperties.envprop";
 
             InstallProperties ip = JsonConvert.DeserializeObject<InstallProperties>(File.ReadAllText(path));
 

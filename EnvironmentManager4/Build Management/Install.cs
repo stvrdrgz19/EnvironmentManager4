@@ -294,6 +294,7 @@ namespace EnvironmentManager4
                 case Products.DataCollection:
                     lbExtendedModules.Enabled = false;
                     checkRunDatabaseUpdate.Enabled = false;
+                    extModulesPath = null;
                     custModulesPath = String.Format(@"{0}\CustomModules", installerDirectory);
                     break;
                 case Products.SalesPadMobile:
@@ -303,10 +304,13 @@ namespace EnvironmentManager4
                     cbConfigurationList.Enabled = false;
                     btnAddConfiguration.Enabled = false;
                     btnRemoveConfiguration.Enabled = false;
+                    extModulesPath = null;
+                    custModulesPath = null;
                     break;
                 case Products.ShipCenter:
                     lbExtendedModules.Enabled = false;
                     checkRunDatabaseUpdate.Enabled = false;
+                    extModulesPath = null;
                     custModulesPath = String.Format(@"{0}\Custom", installerDirectory);
                     break;
                 case Products.WebAPI:
@@ -316,6 +320,7 @@ namespace EnvironmentManager4
                 case Products.GPWeb:
                     lbExtendedModules.Enabled = false;
                     checkRunDatabaseUpdate.Enabled = false;
+                    extModulesPath = null;
                     custModulesPath = String.Format(@"{0}\Plugins", installerDirectory);
                     break;
             }
@@ -520,6 +525,7 @@ namespace EnvironmentManager4
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            install = null;
             this.Close();
         }
 

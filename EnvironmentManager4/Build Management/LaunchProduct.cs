@@ -50,6 +50,21 @@ namespace EnvironmentManager4
             return dllList.Except(coreModules).ToArray();
         }
 
+        public static void RemoveTheThings(List<DLLFileModel> dllsFromFile, List<string> selectedDLLs, InstallProperties ip, string path)
+        {
+            if (dllsFromFile.Count > 0)
+                for (int i = dllsFromFile.Count() - 1; i > -1; i--)
+                {
+                    if (selectedDLLs.Contains(dllsFromFile[i].CoreDLL))
+                    {
+                        selectedDLLs.RemoveAt(selectedDLLs.IndexOf(dllsFromFile[i].CoreDLL));
+                        foreach (string file in dllsFromFile[i].Files)
+                            File.Delete(String.Format(@"{0}\{1}", path, file));
+                        ip.CustomDLLs.RemoveAt(i);
+                    }
+                }
+        }
+
         private void DeleteDLLFiles(string path, List<string> selectedDLLs)
         {
             InstallProperties startingIP = InstallProperties.RetrieveInstallProperties(path);
@@ -60,25 +75,8 @@ namespace EnvironmentManager4
                 List<DLLFileModel> customDLLs = InstallProperties.RetrieveInstalledDLLsFromProperties(path, true);
                 List<DLLFileModel> extendedDLLs = InstallProperties.RetrieveInstalledDLLsFromProperties(path, false);
 
-                if (customDLLs.Count > 0)
-                    for (int i = customDLLs.Count() - 1; i > -1; i--)
-                        if (selectedDLLs.Contains(customDLLs[i].CoreDLL))
-                        {
-                            selectedDLLs.RemoveAt(selectedDLLs.IndexOf(customDLLs[i].CoreDLL));
-                            foreach (string file in customDLLs[i].Files)
-                                File.Delete(String.Format(@"{0}\{1}", path, file));
-                            newIP.CustomDLLs.RemoveAt(i);
-                        }
-
-                if (extendedDLLs.Count > 0)
-                    for (int i = extendedDLLs.Count() - 1; i > -1; i--)
-                        if (selectedDLLs.Contains(extendedDLLs[i].CoreDLL))
-                        {
-                            selectedDLLs.RemoveAt(selectedDLLs.IndexOf(extendedDLLs[i].CoreDLL));
-                            foreach (string file in extendedDLLs[i].Files)
-                                File.Delete(String.Format(@"{0}\{1}", path, file));
-                            newIP.ExtendedDLLs.RemoveAt(i);
-                        }
+                RemoveTheThings(customDLLs, selectedDLLs, newIP, path);
+                RemoveTheThings(extendedDLLs, selectedDLLs, newIP, path);
 
                 foreach (string file in selectedDLLs)
                     File.Delete(String.Format(@"{0}\{1}", path, file));

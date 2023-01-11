@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EnvironmentManager4
@@ -41,18 +34,14 @@ namespace EnvironmentManager4
         private void btnSelectAll_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in lvInstalledBuilds.Items)
-            {
                 item.Selected = true;
-            }
             return;
         }
 
         private void btnSelectNone_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in lvInstalledBuilds.Items)
-            {
                 item.Selected = false;
-            }
             return;
         }
 
@@ -71,9 +60,7 @@ namespace EnvironmentManager4
                 if (result == DialogResult.Yes)
                 {
                     foreach (ListViewItem item in lvInstalledBuilds.SelectedItems)
-                    {
                         Directory.Delete(item.Text, true);
-                    }
                     Builds.PopulateBuildLists(lvInstalledBuilds, cbProducts.Text, cbVersion.Text);
                 }
             }
@@ -91,9 +78,7 @@ namespace EnvironmentManager4
             else if (product == Products.SalesPad)
             {
                 if (cbVersion.Enabled == false)
-                {
                     cbVersion.Enabled = true;
-                }
             }
             Builds.PopulateBuildLists(lvInstalledBuilds, product, cbVersion.Text);
             return;
@@ -111,13 +96,9 @@ namespace EnvironmentManager4
             {
                 // Reverse the current sort direction for this column.
                 if (lvwColumnSorter.Order == SortOrder.Ascending)
-                {
                     lvwColumnSorter.Order = SortOrder.Descending;
-                }
                 else
-                {
                     lvwColumnSorter.Order = SortOrder.Ascending;
-                }
             }
             else
             {

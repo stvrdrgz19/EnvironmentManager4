@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EnvironmentManager4
@@ -29,9 +27,12 @@ namespace EnvironmentManager4
             string configurationsFile = Utilities.GetFile("Configurations.json");
             if (!File.Exists(configurationsFile))
                 GenerateDefaultConfigurationsFile();
-            return JsonConvert.DeserializeObject<List<Configurations>>(File.ReadAllText(Utilities.GetFile("Configurations.json")));
+            return JsonConvert.DeserializeObject<List<Configurations>>(File.ReadAllText(configurationsFile));
         }
 
+        /// <summary>
+        /// This method can be used to update fields in the configurations file (eg. Product Name change)
+        /// </summary>
         public static void UpdateConfigurationsFile()
         {
             List<Configurations> existingConfigurations = GetConfigurations();
@@ -82,23 +83,21 @@ namespace EnvironmentManager4
             List<Configurations> productConfigurations = new List<Configurations>();
             List<Configurations> configurations = GetConfigurations();
             foreach (Configurations configuration in configurations)
-            {
                 if (configuration.Product == product)
                     productConfigurations.Add(configuration);
-            }
             return productConfigurations;
         }
 
-        public static void DeleteConfiguration(Configurations configuration)
+        public static void DeleteConfiguration(Configurations configurationToDelete)
         {
-            List<Configurations> configurations = GetConfigurations();
+            List<Configurations> existingConfigurations = GetConfigurations();
             int i = 0;
 
-            foreach (Configurations config in configurations.ToList())
+            foreach (Configurations configuration in existingConfigurations.ToList())
             {
-                if (config.Product == configuration.Product && config.ConfigurationName == configuration.ConfigurationName)
+                if (configuration.Product == configurationToDelete.Product && configuration.ConfigurationName == configurationToDelete.ConfigurationName)
                 {
-                    configurations.RemoveAt(i);
+                    existingConfigurations.RemoveAt(i);
                     break;
                 }
                 else
@@ -106,20 +105,19 @@ namespace EnvironmentManager4
                     i++;
                 }
             }
-
-            GenerateConfigurationsFile(configurations, false);
+            GenerateConfigurationsFile(existingConfigurations, false);
         }
 
-        public static void SaveConfiguration(Configurations configuration)
+        public static void SaveConfiguration(Configurations newConfiguration)
         {
-            List<Configurations> configurations = GetConfigurations();
-            foreach (Configurations config in configurations.ToList())
+            List<Configurations> existingConfigurations = GetConfigurations();
+            foreach (Configurations existingConfiguration in existingConfigurations.ToList())
             {
-                if (configuration.Product == config.Product && configuration.ConfigurationName == config.ConfigurationName)
+                if (newConfiguration.Product == existingConfiguration.Product && newConfiguration.ConfigurationName == existingConfiguration.ConfigurationName)
                 {
                     string message = String.Format("A Configuration named '{0}' already exists for the '{1}' product."
-                        ,configuration.ConfigurationName
-                        ,configuration.Product);
+                        , newConfiguration.ConfigurationName
+                        , newConfiguration.Product);
                     string caption = "DUPLICATE";
                     MessageBoxButtons buttons = MessageBoxButtons.OK;
                     MessageBoxIcon icon = MessageBoxIcon.Exclamation;
@@ -127,9 +125,9 @@ namespace EnvironmentManager4
                     MessageBox.Show(message, caption, buttons, icon);
                     return;
                 }
-                configurations.Add(configuration);
+                existingConfigurations.Add(newConfiguration);
             }
-            GenerateConfigurationsFile(configurations, false);
+            GenerateConfigurationsFile(existingConfigurations, false);
         }
     }
 }

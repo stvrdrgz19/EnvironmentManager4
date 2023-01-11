@@ -63,29 +63,22 @@ namespace EnvironmentManager4
 
         public static bool IsSQLService(string service)
         {
-            bool tf = false;
-            if (service.Contains("SQL"))
-                tf = true;
-            return tf;
+            return service.Contains("SQL") ? true: false;
         }
 
         public static bool IsServiceRunning(string service)
         {
-            bool status = false;
             ServiceController selectedService = new ServiceController(service);
             try
             {
-                if (selectedService.Status.Equals(ServiceControllerStatus.Running))
-                {
-                    status = true;
-                }
+                return selectedService.Status.Equals(ServiceControllerStatus.Running) ? true : false;
             }
             catch
             {
-                status = false;
+                return false;
             }
-            return status;
         }
+
         public static List<string> InstalledSQLServerInstanceNames()
         {
             List<string> sqlServerList = new List<string>();
@@ -94,9 +87,7 @@ namespace EnvironmentManager4
             {
                 RegistryKey instanceKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL", false);
                 if (instanceKey != null)
-                {
                     sqlServerList.AddRange(instanceKey.GetValueNames());
-                }
             }
             Environment.SpecialFolder.ApplicationData.ToString();
             return sqlServerList;
@@ -106,12 +97,8 @@ namespace EnvironmentManager4
             List<string> serverList = new List<string>();
             ServiceController[] services = ServiceController.GetServices();
             foreach (ServiceController service in services)
-            {
                 if (service.DisplayName.Contains("SalesPad"))
-                {
                     serverList.Add(service.DisplayName);
-                }
-            }
             return serverList;
         }
 

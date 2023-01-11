@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace EnvironmentManager4
 {
@@ -14,11 +11,6 @@ namespace EnvironmentManager4
         public string ModuleName { get; set; }
         public string ModulePath { get; set; }
         public List<ModuleFileContents> ModuleContents { get; set; }
-
-        public static void LoadModulesLists(ListBox lbExtended, ListBox lbCustom, string executable, string product, string version)
-        {
-
-        }
 
         public static string[] RetrieveDLLs(string modulePath, string buildPath, string product, string installer, string version)
         {
@@ -140,14 +132,10 @@ namespace EnvironmentManager4
             }
 
             if (custDlls.Count > 0)
-            {
                 CopyDllsFromBuild(custDlls, product, moduleStart, installerPath, custPath, startTime, "Custom DLL", version);
-            }
 
             if (extDlls.Count > 0)
-            {
                 CopyDllsFromBuild(extDlls, product, moduleStart, installerPath, extPath, startTime, "Extended DLL", version);
-            }
         }
 
         public static void CopyDllsFromBuild(List<string> dllList, string product, string moduleStart, string installerPath, string custExtPath, string startTime, string type, string version = null)

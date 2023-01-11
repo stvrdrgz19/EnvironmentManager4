@@ -1,51 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
 
 namespace EnvironmentManager4
 {
-    public class BuildModel
-    {
-        public int Id { get; set; }
-        public string Path { get; set; }
-        public string Version { get; set; }
-        public string EntryDate { get; set; }
-        public string Product { get; set; }
-        public string InstallPath { get; set; }
-
-        public BuildModel(string Path, string Version, string EntryDate, string Product, string InstallPath)
-        {
-            this.Path = Path;
-            this.Version = Version;
-            this.EntryDate = EntryDate;
-            this.Product = Product;
-            this.InstallPath = InstallPath;
-        }
-
-        public void LaunchBuild()
-        {
-            List<Builds> builds = Builds.GetInstalledBuilds(this.Product, this.Version);
-            foreach (Builds build in builds)
-            {
-                if (this.InstallPath == build.InstallPath)
-                    Process.Start(String.Format(@"{0}\{1}",
-                        this.InstallPath,
-                        build.Exe));
-            }
-        }
-
-        public void LaunchInstalledFolder()
-        {
-            Process.Start(this.InstallPath);
-        }
-    }
-
     public class ProductInfo
     {
         public string InstallDirectory { get; set; }
@@ -153,68 +109,6 @@ namespace EnvironmentManager4
                     break;
             }
             return pi;
-        }
-    }
-
-    public class Builds
-    {
-        public string InstallPath { get; set; }
-        public string Exe { get; set; }
-        public DateTime ModifiedDate { get; set; }
-        public Builds(string path, string exe, DateTime modifiedDate)
-        {
-            this.InstallPath = path;
-            this.Exe = exe;
-            this.ModifiedDate = modifiedDate;
-        }
-
-        public static List<Builds> GetInstalledBuilds(string product, string version)
-        {
-            List<Builds> builds = new List<Builds>();
-            ProductInfo pi = ProductInfo.GetProductInfo(product, version);
-            foreach (string exe in pi.ProductExecutables)
-            {
-                List<string> paths = new List<string>();
-                foreach (string filter in pi.DirectoryFilters)
-                {
-                    string[] dirs = Directory.GetDirectories(pi.InstallDirectory, String.Format("{0}*", filter));
-                    foreach (string dir in dirs)
-                    {
-                        paths.AddRange(Directory.GetFiles(dir,
-                            String.Format("*{0}", exe),
-                            SearchOption.AllDirectories));
-                    }
-
-                    foreach (string path in paths)
-                    {
-                        bool contains = builds.Any(p => p.InstallPath == Path.GetDirectoryName(path));
-                        if (!contains)
-                            builds.Add(new Builds(Path.GetDirectoryName(path),
-                                exe,
-                                Directory.GetLastWriteTime(Path.GetDirectoryName(path))));
-                    }
-                }
-            }
-            return builds;
-        }
-
-        public static void PopulateBuildLists(ListView lv, string product, string version)
-        {
-            lv.Items.Clear();
-            List<Builds> builds = GetInstalledBuilds(product, version);
-            builds.Sort(delegate (Builds x, Builds y)
-            {
-                return x.ModifiedDate.CompareTo(y.ModifiedDate);
-            });
-            builds.Reverse();
-
-            foreach (Builds build in builds)
-            {
-                ListViewItem item = new ListViewItem(build.InstallPath);
-                item.SubItems.Add(build.ModifiedDate.ToString());
-                lv.Items.Add(item);
-            }
-            Utilities.ResizeUpdateableListViewColumnWidthForScrollBar(lv, 7, 0, 500);
         }
     }
 }
