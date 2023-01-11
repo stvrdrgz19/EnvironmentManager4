@@ -22,12 +22,12 @@ namespace EnvironmentManager4
         {
             lvDatabaseActivityLog.Items.Clear();
             List<DatabaseActivityLogModel> databaseActivity = SqliteDataAccess.LoadDatabaseActivity();
-            foreach (var activity in databaseActivity)
+            foreach (var entry in databaseActivity)
             {
-                ListViewItem item1 = new ListViewItem(activity.TimeStamp);
-                item1.SubItems.Add(activity.Action);
-                item1.SubItems.Add(activity.Backup);
-                lvDatabaseActivityLog.Items.Add(item1);
+                ListViewItem row = new ListViewItem(entry.TimeStamp);
+                row.SubItems.Add(entry.Action);
+                row.SubItems.Add(entry.Backup);
+                lvDatabaseActivityLog.Items.Add(row);
             }
             Utilities.ResizeListViewColumnWidthForScrollBar(lvDatabaseActivityLog, 15, 2);
         }

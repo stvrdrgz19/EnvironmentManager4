@@ -99,15 +99,15 @@
     <Compile Include="Build Management\BuildModel.cs" />
     <Compile Include="Build Management\Configurations.cs" />
     <Compile Include="Build Management\CoreModules.cs" />
-    <Compile Include="Builds.cs" />
-    <Compile Include="DatabaseActivityLog.cs">
+    <Compile Include="Build Management\Builds.cs" />
+    <Compile Include="Database Management\DatabaseActivityLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DatabaseActivityLog.Designer.cs">
+    <Compile Include="Database Management\DatabaseActivityLog.Designer.cs">
       <DependentUpon>DatabaseActivityLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseActivityLogModel.cs" />
-    <Compile Include="DatabaseManagement.cs" />
+    <Compile Include="Database Management\DatabaseActivityLogModel.cs" />
+    <Compile Include="Database Management\DatabaseManagement.cs" />
     <Compile Include="Build Management\DeleteBuilds.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,7 +134,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="GPManagement.cs" />
+    <Compile Include="Dynamics Management\GPManagement.cs" />
     <Compile Include="Build Management\Install.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,10 +158,10 @@
     <Compile Include="ListViewColumnSorter.cs" />
     <Compile Include="ListViewProperties.cs" />
     <Compile Include="Build Management\Modules.cs" />
-    <Compile Include="NewDatabaseBackup.cs">
+    <Compile Include="Database Management\NewDatabaseBackup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewDatabaseBackup.Designer.cs">
+    <Compile Include="Database Management\NewDatabaseBackup.Designer.cs">
       <DependentUpon>NewDatabaseBackup.cs</DependentUpon>
     </Compile>
     <Compile Include="Notes.cs">
@@ -174,7 +174,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryEntries.cs" />
-    <Compile Include="ServiceManagement.cs" />
+    <Compile Include="Service Management\ServiceManagement.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -201,10 +201,10 @@
     <Compile Include="UpdatePrompt.Designer.cs">
       <DependentUpon>UpdatePrompt.cs</DependentUpon>
     </Compile>
-    <Compile Include="UpdateDatabaseDescription.cs">
+    <Compile Include="Database Management\UpdateDatabaseDescription.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpdateDatabaseDescription.Designer.cs">
+    <Compile Include="Database Management\UpdateDatabaseDescription.Designer.cs">
       <DependentUpon>UpdateDatabaseDescription.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities.cs" />
@@ -216,7 +216,7 @@
     <EmbeddedResource Include="Build Management\BuildLog.resx">
       <DependentUpon>BuildLog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DatabaseActivityLog.resx">
+    <EmbeddedResource Include="Database Management\DatabaseActivityLog.resx">
       <DependentUpon>DatabaseActivityLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Build Management\DeleteBuilds.resx">
@@ -240,7 +240,7 @@
     <EmbeddedResource Include="ListAndButtonForm.resx">
       <DependentUpon>ListAndButtonForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewDatabaseBackup.resx">
+    <EmbeddedResource Include="Database Management\NewDatabaseBackup.resx">
       <DependentUpon>NewDatabaseBackup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Notes.resx">
@@ -282,7 +282,7 @@
     <EmbeddedResource Include="UpdatePrompt.resx">
       <DependentUpon>UpdatePrompt.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UpdateDatabaseDescription.resx">
+    <EmbeddedResource Include="Database Management\UpdateDatabaseDescription.resx">
       <DependentUpon>UpdateDatabaseDescription.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />

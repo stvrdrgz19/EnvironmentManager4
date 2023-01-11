@@ -18,6 +18,8 @@ namespace EnvironmentManager4
     {
         public string BackupName { get; set; }
         public string BackupDescription { get; set; }
+        public List<string> Databases { get; set; }
+        public string BackupLocation { get; set; }
         public const string dbDescLine1 = "===============================================================================";
         public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
         public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
@@ -120,6 +122,43 @@ namespace EnvironmentManager4
             return true;
         }
 
+        public static void UnzipBackup(SettingsModel settings, string backupName)
+        {
+            string zipFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
+            string unzipDirectory = String.Format(@"{0}\{1}", Path.GetDirectoryName(zipFile), Path.GetFileNameWithoutExtension(zipFile));
+            try
+            {
+                ZipFile.ExtractToDirectory(zipFile, unzipDirectory);
+            }
+            catch (Exception e)
+            {
+                string extraMessage = "The existing unzipped backup will be deleted after this error message window is closed.";
+                ErrorHandling.DisplayExceptionMessage(e, false, extraMessage);
+                ErrorHandling.LogException(e);
+                if (Directory.Exists(unzipDirectory))
+                    Directory.Delete(unzipDirectory, true);
+                Form1.EnableWaitCursor(false);
+                return;
+            }
+        }
+
+        public static void RestoreDatabase2(string backupName)
+        {
+            Form1.EnableDBControls(false);
+            Form1.EnableWaitCursor(true);
+            SettingsModel settings = SettingsUtilities.GetSettings();
+
+            if (!IsSQLConnectionStoredInSettings(settings))
+            {
+                MessageBox.Show("SQL Server is not configured in Settings. Please ensure a SQL Server connection is established in Settings.");
+                Form1.EnableDBControls(true);
+                Form1.EnableWaitCursor(false);
+                return;
+            }
+
+            UnzipBackup(settings, backupName);
+        }
+
         public static void RestoreDatabase(string backupName, string backupZipFile)
         {
             //DISABLE DATABASE CONTROLS
@@ -217,9 +256,7 @@ namespace EnvironmentManager4
                 File.Delete(databaseFile);
 
                 if (message)
-                {
                     MessageBox.Show(String.Format("Database '{0}' was successfully deleted.", backupName));
-                }
 
                 if (log)
                 {
@@ -235,15 +272,57 @@ namespace EnvironmentManager4
             }
         }
 
-        public static void NewDatabase(string databaseName, string newDatabaseDescription, string databaseBackupDirectory, string action, string existingDatabaseDescription)
+        public static bool IsSQLConnectionStoredInSettings(SettingsModel settings)
         {
-            //DISABLE DATABASE CONTROLS
-            Form1.EnableDBControls(false);
-            //Update cursor to use the waiting cursor
-            Form1.EnableWaitCursor(true);
+            if (String.IsNullOrWhiteSpace(settings.DbManagement.Connection) ||
+                String.IsNullOrWhiteSpace(settings.DbManagement.SQLServerUserName) ||
+                String.IsNullOrWhiteSpace(settings.DbManagement.SQLServerPassword))
+                return false;
+            else
+                return true;
+        }
+
+        public void BackupDatabases(SettingsModel settings)
+        {
+            foreach (string database in this.Databases)
+                BackupDatabase(database, this.BackupName, settings);
+        }
+
+        public static void BackupDatabase(string databaseFile, string backupName, SettingsModel settings)
+        {
+            string script = String.Format(@"BACKUP DATABASE {2} TO DISK='{0}\{1}\{2}.bak' WITH INIT", settings.DbManagement.DatabaseBackupDirectory, backupName, databaseFile);
+
+            SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settings.DbManagement.Connection, settings.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword))));
+            SqlDataAdapter newDBScript = new SqlDataAdapter(script, sqlCon);
+            DataTable newDBTable = new DataTable();
             try
             {
-                Directory.CreateDirectory(databaseBackupDirectory);
+                newDBScript.Fill(newDBTable);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+                Form1.EnableWaitCursor(false);
+                return;
+            }
+        }
+
+        public void CreateDatabaseDescriptionFile(string action)
+        {
+            using (StreamWriter writer = File.AppendText(String.Format(@"{0}\Description.txt", this.BackupLocation)))
+            {
+                writer.WriteLine("===============================================================================");
+                writer.WriteLine(String.Format("{0} - {1}", action, this.BackupName));
+                writer.WriteLine(DateTime.Now);
+                writer.Write(this.BackupDescription);
+            }
+        }
+
+        public void ZipBackupFolderAndRemove()
+        {
+            try
+            {
+                ZipFile.CreateFromDirectory(this.BackupLocation, String.Format("{0}.zip", this.BackupLocation));
             }
             catch (Exception e)
             {
@@ -252,75 +331,53 @@ namespace EnvironmentManager4
                 Form1.EnableWaitCursor(false);
                 return;
             }
+            try
+            {
+                Directory.Delete(this.BackupLocation, true);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+                Form1.EnableWaitCursor(false);
+                return;
+            }
+        }
+
+        public static void NewDatabase(DatabaseManagement databaseBackup, string action)
+        {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            Form1.EnableDBControls(false);
+            Form1.EnableWaitCursor(true);
 
             //Check for a saved connection
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
+            if (!IsSQLConnectionStoredInSettings(settings))
             {
                 MessageBox.Show("SQL Server is not configured in Settings. Please ensure a SQL Server connection is established in Settings.");
                 Form1.EnableWaitCursor(false);
                 return;
             }
 
-            foreach (string databaseFile in RetrieveSQLDatabases())
+            try
             {
-                string script = String.Format(@"BACKUP DATABASE {0} TO DISK='{1}\{2}\{0}.bak' WITH INIT", databaseFile, settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
-
-                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settingsModel.DbManagement.Connection, settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword))));
-                SqlDataAdapter newDBScript = new SqlDataAdapter(script, sqlCon);
-                DataTable newDBTable = new DataTable();
-                try
-                {
-                    newDBScript.Fill(newDBTable);
-                }
-                catch (Exception e)
-                {
-                    ErrorHandling.LogException(e);
-                    Form1.EnableWaitCursor(false);
-                    return;
-                }
+                Directory.CreateDirectory(databaseBackup.BackupLocation);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+                Form1.EnableWaitCursor(false);
+                return;
             }
 
-            using (StreamWriter sw = File.AppendText(databaseBackupDirectory + @"\Description.txt"))
-            {
-                sw.WriteLine("===============================================================================");
-                sw.WriteLine(String.Format("{0} - {1}", action, databaseName));
-                sw.WriteLine(DateTime.Now);
-                if (!String.IsNullOrWhiteSpace(existingDatabaseDescription))
-                {
-                    sw.WriteLine(newDatabaseDescription);
-                    sw.Write(existingDatabaseDescription);
-                }
-                else
-                    sw.Write(newDatabaseDescription);
-            }
+            databaseBackup.BackupDatabases(settings);
+            databaseBackup.CreateDatabaseDescriptionFile(action);
 
             //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
-            DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), action, databaseName);
+            DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), action, databaseBackup.BackupName);
             SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
 
-            try
-            {
-                ZipFile.CreateFromDirectory(databaseBackupDirectory, databaseBackupDirectory + ".zip");
-            }
-            catch (Exception e)
-            {
-                ErrorHandling.LogException(e);
-                ErrorHandling.DisplayExceptionMessage(e);
-                Form1.EnableWaitCursor(false);
-                return;
-            }
-            try
-            {
-                Directory.Delete(databaseBackupDirectory, true);
-            }
-            catch (Exception e)
-            {
-                ErrorHandling.LogException(e);
-                ErrorHandling.DisplayExceptionMessage(e);
-                Form1.EnableWaitCursor(false);
-                return;
-            }
+            databaseBackup.ZipBackupFolderAndRemove();
 
             string actionLabel = "";
             switch (action)
@@ -334,11 +391,11 @@ namespace EnvironmentManager4
             }
 
             Form1.EnableDBControls(true);
-            Form1.s_NewDBBackupName = databaseName;
+            Form1.s_NewDBBackupName = databaseBackup.BackupName;
             Form1.SetStaticBackup(true);
             Form1.EnableWaitCursor(false);
 
-            string message = String.Format("The database backup '{0}' has been {1} successfully.", databaseName, actionLabel);
+            string message = String.Format("The database backup '{0}' has been {1} successfully.", databaseBackup.BackupName, actionLabel);
             string caption = "SUCCESS";
             MessageBoxButtons buttons = MessageBoxButtons.OK;
             MessageBoxIcon icon = MessageBoxIcon.Exclamation;

@@ -42,8 +42,7 @@ namespace EnvironmentManager4
         private void btnOK_Click(object sender, EventArgs e)
         {
             string databaseName = tbDatabaseName.Text;
-            string newDatabaseDescription = tbDatabaseDescription.Text;
-            string existingDatabaseDescription = "";
+            string databaseDescription = tbDatabaseDescription.Text;
             if (String.IsNullOrWhiteSpace(databaseName))
             {
                 MessageBox.Show("Please enter a database name to continue.");
@@ -54,14 +53,23 @@ namespace EnvironmentManager4
             {
                 if (File.Exists(existingDatabaseFile))
                 {
-                    existingDatabaseDescription = Utilities.GetDatabaseDescription(databaseName);
+                    databaseDescription = String.Format("{0}\n\n{1}", databaseDescription, Utilities.GetDatabaseDescription(databaseName));
                     DatabaseManagement.DeleteDatabase(databaseName, existingDatabaseFile, false, false);
                 }
             }
-            
+
+            List<string> databases = DatabaseManagement.RetrieveSQLDatabases();
+
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
             string databaseBackup = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
             string databaseBackupDirectory = String.Format(@"{0}\{1}", settingsModel.DbManagement.DatabaseBackupDirectory, databaseName);
+
+            DatabaseManagement backup = new DatabaseManagement();
+            backup.BackupName = databaseName;
+            backup.BackupDescription = databaseDescription;
+            backup.BackupLocation = databaseBackupDirectory;
+            backup.Databases = databases;
+
             if (File.Exists(databaseBackup))
             {
                 string message = String.Format("A database backup with the name '{0}' already exists. Do you want to overwrite the existing backup with the current dataset?", databaseName);
@@ -72,21 +80,18 @@ namespace EnvironmentManager4
 
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
-                {
                     DatabaseManagement.DeleteDatabase(databaseName, databaseBackup, true, false);
-                }
                 else if (result == DialogResult.No)
-                {
                     return;
-                }
                 else if (result == DialogResult.Cancel)
                 {
                     this.Close();
                     return;
                 }
             }
-            Thread newDatabaseBackup = new Thread(() => DatabaseManagement.NewDatabase(databaseName, newDatabaseDescription, databaseBackupDirectory, action, existingDatabaseDescription));
-            newDatabaseBackup.Start();
+
+            Thread BackupDatabase = new Thread(() => DatabaseManagement.NewDatabase(backup, action));
+            BackupDatabase.Start();
             this.Close();
             return;
         }
