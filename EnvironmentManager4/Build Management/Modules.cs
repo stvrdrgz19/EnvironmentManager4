@@ -84,11 +84,6 @@ namespace EnvironmentManager4
                 return dll.Substring(0, dll.LastIndexOf('.'));
         }
 
-        public static void GetFullDLLs(string path, string product, string version)
-        {
-
-        }
-
         public static void GetDLLs(string product, string installerPath, string version, string startTime, List<string> custDlls = null, List<string> extDlls = null)
         {
             string extPath = "";

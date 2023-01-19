@@ -80,12 +80,6 @@ namespace EnvironmentManager4
         public static bool IsThereAFailLog()
         {
             return Directory.GetFiles(Utilities.GetCurrentDirectory()).Any(s => s.Contains("fail_log_"));
-
-            //bool tf = false;
-            //foreach (string file in Directory.GetFiles(Utilities.GetCurrentDirectory()))
-            //    if (file.Contains("fail_log_"))
-            //        tf = true;
-            //return tf;
         }
 
         private static string GetLogContents()

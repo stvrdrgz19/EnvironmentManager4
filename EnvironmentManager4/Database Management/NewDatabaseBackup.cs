@@ -54,7 +54,7 @@ namespace EnvironmentManager4
                 if (File.Exists(existingDatabaseFile))
                 {
                     databaseDescription = String.Format("{0}\n\n{1}", databaseDescription, Utilities.GetDatabaseDescription(databaseName));
-                    DatabaseManagement.DeleteDatabase(databaseName, existingDatabaseFile, false, false);
+                    DatabaseManagement.DeleteDatabaseBackup(databaseName, existingDatabaseFile, false, false);
                 }
             }
 
@@ -80,7 +80,7 @@ namespace EnvironmentManager4
 
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
-                    DatabaseManagement.DeleteDatabase(databaseName, databaseBackup, true, false);
+                    DatabaseManagement.DeleteDatabaseBackup(databaseName, databaseBackup, true, false);
                 else if (result == DialogResult.No)
                     return;
                 else if (result == DialogResult.Cancel)

@@ -122,10 +122,8 @@ namespace EnvironmentManager4
             return true;
         }
 
-        public static void UnzipBackup(SettingsModel settings, string backupName)
+        public static void UnzipBackup(string zipFile, string unzipDirectory)
         {
-            string zipFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
-            string unzipDirectory = String.Format(@"{0}\{1}", Path.GetDirectoryName(zipFile), Path.GetFileNameWithoutExtension(zipFile));
             try
             {
                 ZipFile.ExtractToDirectory(zipFile, unzipDirectory);
@@ -142,7 +140,50 @@ namespace EnvironmentManager4
             }
         }
 
-        public static void RestoreDatabase2(string backupName)
+        public static List<string> DatabaseFilesFromBackup(string unzipDirectory)
+        {
+            List<string> databaseFiles = new List<string>();
+            foreach (string database in Directory.GetFiles(unzipDirectory))
+            {
+                string name = Path.GetFileNameWithoutExtension(database);
+                if (name != "Description")
+                    databaseFiles.Add(name);
+            }
+            return databaseFiles;
+        }
+
+        public static void RestoreDatabases(List<string> databaseFiles, string zipFile, SettingsModel settings)
+        {
+            foreach (string databaseFile in databaseFiles)
+            {
+                RestoreDatabase(databaseFile, zipFile, settings);
+            }
+        }
+
+        public static void RestoreDatabase(string databaseFile, string zipFile, SettingsModel settings)
+        {
+            string script = String.Format(@"ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; RESTORE DATABASE {0} FROM DISK='{1}\{2}\{0}.bak' WITH FILE = 1, NOUNLOAD, REPLACE; ALTER DATABASE {0} SET MULTI_USER;"
+                , databaseFile
+                , Path.GetDirectoryName(zipFile)
+                , Path.GetFileNameWithoutExtension(zipFile));
+
+            try
+            {
+                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};",
+                    settings.DbManagement.Connection,
+                    settings.DbManagement.SQLServerUserName,
+                    Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword))));
+                SqlDataAdapter restoreScript = new SqlDataAdapter(script, sqlCon);
+                DataTable restoreTable = new DataTable();
+                restoreScript.Fill(restoreTable);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+            }
+        }
+
+        public static void Restore(string backupName)
         {
             Form1.EnableDBControls(false);
             Form1.EnableWaitCursor(true);
@@ -156,75 +197,17 @@ namespace EnvironmentManager4
                 return;
             }
 
-            UnzipBackup(settings, backupName);
-        }
+            string zipFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
+            string unzipDirectory = String.Format(@"{0}\{1}", Path.GetDirectoryName(zipFile), Path.GetFileNameWithoutExtension(zipFile));
 
-        public static void RestoreDatabase(string backupName, string backupZipFile)
-        {
-            //DISABLE DATABASE CONTROLS
-            Form1.EnableDBControls(false);
-            //Update cursor to use the waiting cursor
-            Form1.EnableWaitCursor(true);
+            UnzipBackup(zipFile, unzipDirectory);
+            List<string> databaseFiles = DatabaseFilesFromBackup(unzipDirectory);
+            RestoreDatabases(databaseFiles, zipFile, settings);
 
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            //Look for a saved connection
-            if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.Connection))
-            {
-                MessageBox.Show("SQL Server is not configured in Settings. Please ensure a SQL Server connection is established in Settings.");
-                return;
-            }
-
-            //unzip backup file
-            string unzippedBackupDirectory = String.Format(@"{0}\{1}", Path.GetDirectoryName(backupZipFile), Path.GetFileNameWithoutExtension(backupZipFile));
+            //delete unzipped backup
             try
             {
-                ZipFile.ExtractToDirectory(backupZipFile, unzippedBackupDirectory);
-            }
-            catch (Exception e)
-            {
-                string extraMessage = "The existing unzipped backup will be deleted after this error message window is closed.";
-                ErrorHandling.DisplayExceptionMessage(e, false, extraMessage);
-                ErrorHandling.LogException(e);
-                if (Directory.Exists(unzippedBackupDirectory))
-                    Directory.Delete(unzippedBackupDirectory, true);
-                Form1.EnableWaitCursor(false);
-                return;
-            }
-
-            //get a list of databases from the file to restore
-            List<string> databaseFiles = new List<string>();
-            foreach (string database in Directory.GetFiles(unzippedBackupDirectory))
-            {
-                string name = Path.GetFileNameWithoutExtension(database);
-                if (name != "Description")
-                    databaseFiles.Add(name);
-            }
-
-            foreach (string databaseFile in databaseFiles)
-            {
-                string script = String.Format(@"ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; RESTORE DATABASE {0} FROM DISK='{1}\{2}\{0}.bak' WITH FILE = 1, NOUNLOAD, REPLACE; ALTER DATABASE {0} SET MULTI_USER;"
-                    , databaseFile
-                    , Path.GetDirectoryName(backupZipFile)
-                    , Path.GetFileNameWithoutExtension(backupZipFile));
-
-                try
-                {
-                    SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};",
-                        settingsModel.DbManagement.Connection,
-                        settingsModel.DbManagement.SQLServerUserName,
-                        Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword))));
-                    SqlDataAdapter restoreScript = new SqlDataAdapter(script, sqlCon);
-                    DataTable restoreTable = new DataTable();
-                    restoreScript.Fill(restoreTable);
-                }
-                catch (Exception e)
-                {
-                    ErrorHandling.LogException(e);
-                }
-            }
-            try
-            {
-                Directory.Delete(unzippedBackupDirectory, true);
+                Directory.Delete(unzipDirectory, true);
             }
             catch (Exception e)
             {
@@ -238,8 +221,8 @@ namespace EnvironmentManager4
             Form1.EnableWaitCursor(false);
             Form1.EnableDBControls(true);
 
-            if (settingsModel.DbManagement.ResetDatabaseAfterRestore)
-                ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), settingsModel.DbManagement.DBToRestore);
+            if (settings.DbManagement.ResetDatabaseAfterRestore)
+                ResetDatabaseVersion(settings.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword)), settings.DbManagement.DBToRestore);
 
             string message = String.Format(@"Backup '{0}' was successfully restored.", backupName);
             string caption = "SUCCESS";
@@ -249,7 +232,7 @@ namespace EnvironmentManager4
             MessageBox.Show(message, caption, buttons, icon);
         }
 
-        public static void DeleteDatabase(string backupName, string databaseFile, bool log, bool message)
+        public static void DeleteDatabaseBackup(string backupName, string databaseFile, bool log, bool message)
         {
             try
             {

@@ -20,7 +20,7 @@ namespace EnvironmentManager4
         public static Installer GetInstallerFile(string path, string product, string version)
         {
             //Retrieve information based on the selected product
-            ProductInfo pi = ProductInfo.GetProductInfo(product, version, true);
+            ProductInfo pi = ProductInfo.GetProductInfo(product, version);
             Installer installer = new Installer();
             string initialDir = pi.FileserverDirectory;
             installer.Product = product;

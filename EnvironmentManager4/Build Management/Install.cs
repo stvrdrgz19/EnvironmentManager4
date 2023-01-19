@@ -29,31 +29,50 @@ namespace EnvironmentManager4
 
         public void CalculateInstallPath()
         {
-            ProductInfo pi = ProductInfo.GetProductInfo(install.Product, install.Version, true);
+            SettingsModel settings = SettingsUtilities.GetSettings();
 
             int charCount = 0;
+            string path = null;
             if (install.Product == Products.WebAPI)
+            {
                 tbInstallLocation.Text = @"C:\inetpub\wwwroot\SalesPadWebAPI";
+                path = settings.BuildManagement.WebAPIDirectory;
+            }
             else if (install.Product == Products.GPWeb)
+            {
                 tbInstallLocation.Text = @"C:\inetpub\wwwroot\SalesPadWebPortal";
+                path = settings.BuildManagement.GPWebDirectory;
+            }
             else
             {
                 switch (install.Product)
                 {
                     case Products.SalesPad:
                         charCount = 43;
+                        switch (install.Version)
+                        {
+                            case "x64":
+                                path = settings.BuildManagement.SalesPadx64Directory;
+                                break;
+                            case "x86":
+                                path = settings.BuildManagement.SalesPadx86Directory;
+                                break;
+                        }
                         break;
                     case Products.DataCollection:
                         charCount = 51;
+                        path = settings.BuildManagement.DataCollectionDirectory;
                         break;
                     case Products.SalesPadMobile:
                         charCount = 50;
+                        path = settings.BuildManagement.SalesPadMobileDirectory;
                         break;
                     case Products.ShipCenter:
                         charCount = 42;
+                        path = settings.BuildManagement.ShipCenterDirectory;
                         break;
                 }
-                tbInstallLocation.Text = GetInstallPath(pi.InstallDirectory, Path.GetDirectoryName(install.Executable), charCount);
+                tbInstallLocation.Text = GetInstallPath(path, Path.GetDirectoryName(install.Executable), charCount);
             }
         }
 

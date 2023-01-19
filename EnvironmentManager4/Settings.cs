@@ -232,9 +232,9 @@ namespace EnvironmentManager4
         private void Settings_Load(object sender, EventArgs e)
         {
             hidden = true;
-            PopulateDatabaseList();
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
             SettingsUtilities.UpdateSettingsFile(settingsModel);
+            PopulateDatabaseList();
             LoadSettings(settingsModel);
             SetStartingValues();
             ToggleModeExecute();

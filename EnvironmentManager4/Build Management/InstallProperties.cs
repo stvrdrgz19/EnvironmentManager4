@@ -31,16 +31,40 @@ namespace EnvironmentManager4
                 DLLFileModel dllConfig = new DLLFileModel();
                 List<string> fileList = new List<string>();
 
-                string path = String.Format(@"{0}\{1}\{2}", buildPath, type, version);
+                string path = "";
+                switch (product)
+                {
+                    case Products.SalesPad:
+                        path = String.Format(@"{0}\{1}\{2}", buildPath, type, version);
+                        break;
+                    case Products.DataCollection:
+                        path = String.Format(@"{0}\{1}", buildPath, type);
+                        break;
+                    case Products.SalesPadMobile:
+                        path = "";
+                        break;
+                    case Products.ShipCenter:
+                        path = String.Format(@"{0}\Custom", buildPath);
+                        break;
+                    case Products.WebAPI:
+                        path = String.Format(@"{0}\{1}", buildPath, type);
+                        break;
+                    case Products.GPWeb:
+                        path = String.Format(@"{0}\plugins", buildPath);
+                        break;
+                }
+
                 string[] files = Directory.GetFiles(path, String.Format("{0}{1}.*", pi.ModuleNaming, dll));
 
                 foreach (string file in files)
                 {
-                    using (ZipArchive archive = ZipFile.OpenRead(file))
-                    {
-                        foreach (ZipArchiveEntry entry in archive.Entries)
-                            fileList.Add(entry.Name);
-                    }
+                    string extension = Path.GetExtension(file);
+                    if (extension == ".Zip")
+                        using (ZipArchive archive = ZipFile.OpenRead(file))
+                        {
+                            foreach (ZipArchiveEntry entry in archive.Entries)
+                                fileList.Add(entry.Name);
+                        }
                 }
 
                 dllConfig.CoreDLL = ConvertDLLNameToFile(dll, product, version);
