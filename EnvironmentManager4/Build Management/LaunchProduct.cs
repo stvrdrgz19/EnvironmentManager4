@@ -50,23 +50,25 @@ namespace EnvironmentManager4
             return dllList.Except(coreModules).ToArray();
         }
 
-        public static void RemoveTheThings(List<DLLFileModel> dllsFromFile, List<string> selectedDLLs, InstallProperties ip, string path)
+        public static void RemoveDLLsFromInstallPropertiesFile(List<DLLFileModel> dllsFromFile, List<string> dllsToRemove, InstallProperties ip, string path, string type)
         {
             if (dllsFromFile.Count > 0)
                 for (int i = dllsFromFile.Count() - 1; i > -1; i--)
                 {
-                    if (selectedDLLs.Contains(dllsFromFile[i].CoreDLL))
+                    if (dllsToRemove.Contains(dllsFromFile[i].CoreDLL))
                     {
-                        selectedDLLs.RemoveAt(selectedDLLs.IndexOf(dllsFromFile[i].CoreDLL));
+                        dllsToRemove.RemoveAt(dllsToRemove.IndexOf(dllsFromFile[i].CoreDLL));
                         foreach (string file in dllsFromFile[i].Files)
                             File.Delete(String.Format(@"{0}\{1}", path, file));
-                        try
+
+                        switch (type)
                         {
-                            ip.CustomDLLs.RemoveAt(i);
-                        }
-                        catch (Exception e)
-                        {
-                            ErrorHandling.LogException(e);
+                            case "custom":
+                                ip.CustomDLLs.RemoveAt(i);
+                                break;
+                            case "extended":
+                                ip.ExtendedDLLs.RemoveAt(i);
+                                break;
                         }
                     }
                 }
@@ -82,8 +84,8 @@ namespace EnvironmentManager4
                 List<DLLFileModel> customDLLs = InstallProperties.RetrieveInstalledDLLsFromProperties(path, true);
                 List<DLLFileModel> extendedDLLs = InstallProperties.RetrieveInstalledDLLsFromProperties(path, false);
 
-                RemoveTheThings(customDLLs, selectedDLLs, newIP, path);
-                RemoveTheThings(extendedDLLs, selectedDLLs, newIP, path);
+                RemoveDLLsFromInstallPropertiesFile(customDLLs, selectedDLLs, newIP, path, "custom");
+                RemoveDLLsFromInstallPropertiesFile(extendedDLLs, selectedDLLs, newIP, path, "extended");
 
                 foreach (string file in selectedDLLs)
                     File.Delete(String.Format(@"{0}\{1}", path, file));
