@@ -60,7 +60,14 @@ namespace EnvironmentManager4
                         selectedDLLs.RemoveAt(selectedDLLs.IndexOf(dllsFromFile[i].CoreDLL));
                         foreach (string file in dllsFromFile[i].Files)
                             File.Delete(String.Format(@"{0}\{1}", path, file));
-                        ip.CustomDLLs.RemoveAt(i);
+                        try
+                        {
+                            ip.CustomDLLs.RemoveAt(i);
+                        }
+                        catch (Exception e)
+                        {
+                            ErrorHandling.LogException(e);
+                        }
                     }
                 }
         }
