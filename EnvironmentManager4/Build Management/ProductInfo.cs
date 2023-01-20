@@ -5,35 +5,10 @@ namespace EnvironmentManager4
     public class ProductInfo
     {
         public string InstallDirectory { get; set; }
-        //public string InstallDirectoryx86 { get; set; }
-        //public string InstallDirectoryx64 { get; set; }
         public string FileserverDirectory { get; set; }
         public string ModuleNaming { get; set; }
-        //public string ExtendedModulePath { get; set; }
-        //public string CustomModulePath { get; set; }
         public List<string> ProductExecutables { get; set; }
         public List<string> DirectoryFilters { get; set; }
-
-        //public static SettingsModel settings = SettingsUtilities.GetSettings();
-
-        ///// <summary>
-        ///// Unsure if this is really the way to go.
-        ///// Not a great way to list all the options (custom/extended/x86/x64).
-        ///// Also unsure if this compiles when the app is first launched, or is refreshed when accessed. Leaning towards the former.
-        ///// </summary>
-        //public static ProductInfo SalesPadProductInfo = new ProductInfo()
-        //{
-        //    InstallDirectoryx86 = settings.BuildManagement.SalesPadx86Directory,
-        //    InstallDirectoryx64 = settings.BuildManagement.SalesPadx64Directory,
-        //    FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\",
-        //    ModuleNaming = "SalesPad.Module.",
-        //    ProductExecutables = new List<string> { "SalesPad.exe" },
-        //    DirectoryFilters = new List<string> { "SalesPad.Desktop",
-        //        settings.BuildManagement.SalesPadx86Directory.Substring(settings.BuildManagement.SalesPadx86Directory.LastIndexOf('\\') + 1),
-        //        settings.BuildManagement.SalesPadx64Directory.Substring(settings.BuildManagement.SalesPadx64Directory.LastIndexOf('\\') + 1) },
-        //    ExtendedModulePath = @"ExtendedModules",
-        //    CustomModulePath = @"CustomModules"
-        //};
 
         public static ProductInfo GetProductInfo(string product, string version, bool install = false)
         {

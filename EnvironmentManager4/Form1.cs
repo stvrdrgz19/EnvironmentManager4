@@ -513,14 +513,14 @@ namespace EnvironmentManager4
             }
             if (s_InstallBuild == null)
             {
-                string selectedProduct = cbProductList.Text;
-                string selectedVersion = cbSPGPVersion.Text;
-                if (!Products.ListOfProducts().Contains(selectedProduct))
+                string product = cbProductList.Text;
+                string version = cbSPGPVersion.Text;
+                if (!Products.ListOfProducts().Contains(product))
                 {
                     MessageBox.Show("Please select a product from the list to continue.");
                     return;
                 }
-                if (!Utilities.versionList.Contains(selectedVersion))
+                if (!Utilities.versionList.Contains(version))
                 {
                     MessageBox.Show("Please select a version from the list to continue.");
                     return;
@@ -528,9 +528,17 @@ namespace EnvironmentManager4
 
                 s_InstallBuild = new Install();
                 string path = Clipboard.GetText();
-                Install.install = Installer.GetInstallerFile(path, selectedProduct, selectedVersion);
-                if (Install.install.Executable != "EXIT")
+                string installerPath = Install.GetInstallerPath(path, product, version);
+
+                //Install.install = Installer.GetInstallerFile(path, selectedProduct, selectedVersion);
+                if (installerPath != "EXIT")
+                {
+                    s_InstallBuild.Product = product;
+                    s_InstallBuild.Version = version;
+                    s_InstallBuild.NetworkPath = Path.GetDirectoryName(installerPath);
+                    s_InstallBuild.InstallerPath = installerPath;
                     s_InstallBuild.Show();
+                }
                 else
                     s_InstallBuild = null;
             }

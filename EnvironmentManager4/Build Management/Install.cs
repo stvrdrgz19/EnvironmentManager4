@@ -23,9 +23,86 @@ namespace EnvironmentManager4
             this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
-        public static Installer install = new Installer();
+        public string Product { get; set; }
+        public string Version { get; set; }
+        public string NetworkPath { get; set; }
+        public string InstallerPath { get; set; }
+        public string InstallLocation { get; set; }
+        public List<string> ExtendedDLLs { get; set; }
+        public List<string> CustomDLLs { get; set; }
+        public bool LaunchAfterInstall { get; set; }
+        public bool OpenInstallFolder { get; set; }
+        public bool RunDatabaseUpdate { get; set; }
+        public bool ResetDatabaseVersion { get; set; }
+
         public static string extModulesPath;
         public static string custModulesPath;
+
+        public static string GetInstallerPath(string path, string product, string version)
+        {
+            string installerPath;
+            ProductInfo pi = ProductInfo.GetProductInfo(product, version);
+            string initialDir = pi.FileserverDirectory;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                if (product == Products.SalesPad)
+                {
+                    switch (version)
+                    {
+                        case "x64":
+                        case "x86":
+                            openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", version);
+                            break;
+                        case "Pre":
+                            openFileDialog.Filter = "Executable Files (*.exe)|*.exe";
+                            break;
+                    }
+                }
+                else if (product == Products.GPWeb)
+                {
+                    openFileDialog.Filter = "ZIP Folder (.zip)|*.zip";
+                }
+                else if (product == Products.WebAPI)
+                {
+                    openFileDialog.Filter = "Windows Installer Package (.msi)|*.msi";
+                }
+                else
+                {
+                    openFileDialog.Filter = "Executable Files (*.exe)|*.exe";
+                }
+                if (!Directory.Exists(path))
+                {
+                    string newPath = String.Format(@"{0}{1}", "\\", path);
+                    if (Directory.Exists(newPath))
+                    {
+                        if (newPath.Contains(initialDir))
+                            openFileDialog.InitialDirectory = newPath;
+                        else
+                            openFileDialog.InitialDirectory = initialDir;
+                    }
+                    else
+                        openFileDialog.InitialDirectory = initialDir;
+                }
+                else
+                {
+                    if (path.Contains(initialDir))
+                        openFileDialog.InitialDirectory = path;
+                    else
+                        openFileDialog.InitialDirectory = initialDir;
+                }
+
+                openFileDialog.RestoreDirectory = true;
+                openFileDialog.Title = String.Format("Installing {0}", product);
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    installerPath = openFileDialog.FileName;
+                }
+                else
+                    installerPath = "EXIT";
+            }
+            return installerPath;
+        }
 
         public void CalculateInstallPath()
         {
@@ -33,23 +110,23 @@ namespace EnvironmentManager4
 
             int charCount = 0;
             string path = null;
-            if (install.Product == Products.WebAPI)
+            if (this.Product == Products.WebAPI)
             {
                 tbInstallLocation.Text = @"C:\inetpub\wwwroot\SalesPadWebAPI";
                 path = settings.BuildManagement.WebAPIDirectory;
             }
-            else if (install.Product == Products.GPWeb)
+            else if (this.Product == Products.GPWeb)
             {
                 tbInstallLocation.Text = @"C:\inetpub\wwwroot\SalesPadWebPortal";
                 path = settings.BuildManagement.GPWebDirectory;
             }
             else
             {
-                switch (install.Product)
+                switch (this.Product)
                 {
                     case Products.SalesPad:
                         charCount = 43;
-                        switch (install.Version)
+                        switch (this.Version)
                         {
                             case "x64":
                                 path = settings.BuildManagement.SalesPadx64Directory;
@@ -72,7 +149,7 @@ namespace EnvironmentManager4
                         path = settings.BuildManagement.ShipCenterDirectory;
                         break;
                 }
-                tbInstallLocation.Text = GetInstallPath(path, Path.GetDirectoryName(install.Executable), charCount);
+                tbInstallLocation.Text = GetInstallPath(path, this.NetworkPath, charCount);
             }
         }
 
@@ -109,7 +186,7 @@ namespace EnvironmentManager4
                 lbCustomModules.Items.AddRange(Modules.RetrieveDLLs(custModulesPath, installerPath, product, installer, productVersion));
         }
 
-        public void InstallGPWebBuild(string installPath)
+        public void InstallGPWebBuild()
         {
             //start the busy cursor
             this.Cursor = Cursors.WaitCursor;
@@ -123,12 +200,12 @@ namespace EnvironmentManager4
 
             //global variable installer = the installer file path
             //global variable installerpath = the path to the installer, excluding the file name
-            string installerFileName = Path.GetFileName(install.Executable);     //the actual file name without it's path
+            string installerFileName = Path.GetFileName(this.InstallerPath);     //the actual file name without it's path
             string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetFolder("Installers"), installerFileName);
-            File.Copy(install.Executable, tempInstaller, true);
+            File.Copy(this.InstallerPath, tempInstaller, true);
         }
 
-        public void InstallBuild(string installPath, List<string> extendedModules, List<string> customModules, bool launchAfterInstall, bool openInstallFolder, bool runDatabaseUpdate, bool resetDatabaseVersion, InstallProperties ip)
+        public void InstallBuild()
         {
             //start the busy cursor
             this.Cursor = Cursors.WaitCursor;
@@ -142,19 +219,19 @@ namespace EnvironmentManager4
 
             //global variable installer = the installer file path
             //global variable installerpath = the path to the installer, excluding the file name
-            string installerFileName = Path.GetFileName(install.Executable);     //the actual file name without it's path
+            string installerFileName = Path.GetFileName(this.InstallerPath);     //the actual file name without it's path
             string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetFolder("Installers"), installerFileName);
-            File.Copy(install.Executable, tempInstaller, true);
+            File.Copy(this.InstallerPath, tempInstaller, true);
 
             //SILENTLY INSTALL PRODUCT
             Process installProduct = new Process();
             installProduct.StartInfo.FileName = tempInstaller;
-            installProduct.StartInfo.Arguments = @"/S /D=" + installPath;
+            installProduct.StartInfo.Arguments = @"/S /D=" + this.InstallLocation;
             installProduct.Start();
             installProduct.WaitForExit();
 
             //WRITE BUILD INFORMATION TO INSTALLEDBUILD TABLE
-            BuildModel build = new BuildModel(Path.GetDirectoryName(install.Executable), install.Version, startTime, install.Product, installPath);
+            BuildModel build = new BuildModel(this.NetworkPath, this.Version, startTime, this.Product, this.InstallLocation);
             try
             {
                 SqliteDataAccess.SaveBuild(build);
@@ -181,13 +258,13 @@ namespace EnvironmentManager4
             List<string> extDllToAdd = new List<string>();
 
             //  ADD ANY SELECTED DLLS TO THE LIST
-            foreach (string dll in customModules)
+            foreach (string dll in this.CustomDLLs)
             {
                 custDllToAdd.Add(dll);
             }
             custDllToAdd.Sort();
 
-            foreach (string dll in extendedModules)
+            foreach (string dll in this.ExtendedDLLs)
             {
                 extDllToAdd.Add(dll);
             }
@@ -195,20 +272,20 @@ namespace EnvironmentManager4
 
             if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
             {
-                Modules.GetDLLs(install.Product, Path.GetDirectoryName(install.Executable), install.Version, startTime, custDllToAdd, extDllToAdd);
+                Modules.GetDLLs(this.Product, this.NetworkPath, this.Version, startTime, custDllToAdd, extDllToAdd);
             }
 
             //  UNZIP DLLS IF THERE ARE ANY
             if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
             {
-                if (install.Product == Products.DataCollection)
+                if (this.Product == Products.DataCollection)
                 {
-                    Modules.CopyDllsToInstalledBuild(installPath);
+                    Modules.CopyDllsToInstalledBuild(this.InstallLocation);
                 }
                 else
                 {
                     Modules.UnzipDLLFiles();
-                    Modules.CopyDllsFromDirectoriesToInstalledBuild(installPath);
+                    Modules.CopyDllsFromDirectoriesToInstalledBuild(this.InstallLocation);
                 }
             }
             //==========================================================================================================================================================================================
@@ -216,19 +293,19 @@ namespace EnvironmentManager4
             //==========================================================================================================================================================================================
 
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            if (resetDatabaseVersion)
+            if (this.ResetDatabaseVersion)
                 DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), settingsModel.DbManagement.DBToRestore);
 
-            if (runDatabaseUpdate)
+            if (this.RunDatabaseUpdate)
             {
                 //if log exists, delete log
                 ErrorHandling.DeleteLogFiles();
 
-                if (!resetDatabaseVersion)
+                if (!this.ResetDatabaseVersion)
                     DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), settingsModel.DbManagement.DBToRestore);
 
                 Process dbUpdate = new Process();
-                dbUpdate.StartInfo.FileName = installPath + @"\SalesPad.exe";
+                dbUpdate.StartInfo.FileName = this.InstallLocation + @"\SalesPad.exe";
                 dbUpdate.StartInfo.Arguments = String.Format(@"/dbUpdate /userfields /conn={0}", settingsModel.DbManagement.DBToRestore);
                 dbUpdate.StartInfo.UseShellExecute = false;
                 try
@@ -251,12 +328,19 @@ namespace EnvironmentManager4
             this.Cursor = Cursors.Default;
 
             //Write the install properties file to the install path.
-            InstallProperties.WritePropertiesFile(ip);
+            InstallProperties ip = new InstallProperties();
+            ip.Product = this.Product;
+            ip.Version = this.Version;
+            ip.CustomDLLs = InstallProperties.GetDLLList(this.CustomDLLs, this.NetworkPath, true, this.Product, this.Version);
+            ip.ExtendedDLLs = InstallProperties.GetDLLList(this.ExtendedDLLs, this.NetworkPath, false, this.Product, this.Version);
+            ip.BuildPath = this.NetworkPath;
+            ip.InstallPath = this.InstallLocation;
+            ip.WritePropertiesFile();
 
-            if (openInstallFolder)
+            if (this.OpenInstallFolder)
                 build.LaunchInstalledFolder();
 
-            if (launchAfterInstall)
+            if (this.LaunchAfterInstall)
                 build.LaunchBuild();
 
             Form1.EnableInstallButton(true);
@@ -286,23 +370,23 @@ namespace EnvironmentManager4
         {
             RegUtilities.CheckForInstallRegistryEntries();
             RegistryEntries reg = new RegistryEntries();
-            reg._product = install.Product;
+            reg._product = this.Product;
             checkLaunchAfterInstall.Checked = bool.Parse(reg.LaunchAfterInstall);
             checkInstallFolder.Checked = bool.Parse(reg.OpenInstallFolder);
             checkRunDatabaseUpdate.Checked = bool.Parse(reg.RunDatabaseUpdate);
             checkResetDBVersion.Checked = bool.Parse(reg.ResetDatabaseVersion);
 
-            string installerDirectory = Path.GetDirectoryName(install.Executable);
+            string installerDirectory = this.NetworkPath;
 
-            switch (install.Product)
+            switch (this.Product)
             {
                 case Products.SalesPad:
-                    switch (install.Version)
+                    switch (this.Version)
                     {
                         case "x64":
                         case "x86":
-                            extModulesPath = String.Format(@"{0}\ExtModules\{1}", installerDirectory, install.Version);
-                            custModulesPath = String.Format(@"{0}\CustomModules\{1}", installerDirectory, install.Version);
+                            extModulesPath = String.Format(@"{0}\ExtModules\{1}", installerDirectory, this.Version);
+                            custModulesPath = String.Format(@"{0}\CustomModules\{1}", installerDirectory, this.Version);
                             break;
                         case "Pre":
                             extModulesPath = String.Format(@"{0}\ExtModules\WithOutCardControl", installerDirectory);
@@ -348,7 +432,7 @@ namespace EnvironmentManager4
         private void SaveInstallOptions(bool launchAfterInstall, bool openInstallFolder, bool runDatabaseUpdate, bool resetDatabaseVersion)
         {
             RegistryEntries reg = new RegistryEntries();
-            reg._product = install.Product;
+            reg._product = this.Product;
             reg.LaunchAfterInstall = launchAfterInstall.ToString().ToLower();
             reg.OpenInstallFolder = openInstallFolder.ToString().ToLower();
             reg.RunDatabaseUpdate = runDatabaseUpdate.ToString().ToLower();
@@ -359,28 +443,28 @@ namespace EnvironmentManager4
         {
             ConfigureLoadForm();
 
-            if (install.Product != Products.SalesPad)
+            if (this.Product != Products.SalesPad)
             {
                 checkResetDBVersion.Enabled = false;
                 checkRunDatabaseUpdate.Enabled = false;
             }
-            if (install.Product == Products.SalesPadMobile)
+            if (this.Product == Products.SalesPadMobile)
             {
                 cbConfigurationList.Enabled = false;
                 btnAddConfiguration.Enabled = false;
                 btnRemoveConfiguration.Enabled = false;
             }
-            if (install.Product == Products.WebAPI || install.Product == Products.GPWeb)
+            if (this.Product == Products.WebAPI || this.Product == Products.GPWeb)
             {
                 tbInstallLocation.ReadOnly = true;
                 checkLaunchAfterInstall.Enabled = false;
                 checkLaunchAfterInstall.Checked = false;
             }
-            this.Text = String.Format("Install {0}", install.Product);
-            tbSelectedBuild.Text = Path.GetDirectoryName(install.Executable);
-            LoadModules(install.Product, Path.GetDirectoryName(install.Executable), install.Version, install.Executable);
+            this.Text = String.Format("Install {0}", this.Product);
+            tbSelectedBuild.Text = this.NetworkPath;
+            LoadModules(this.Product, this.NetworkPath, this.Version, this.InstallerPath);
             CalculateInstallPath();
-            LoadConfigurations(install.Product);
+            LoadConfigurations(this.Product);
             return;
         }
 
@@ -414,7 +498,7 @@ namespace EnvironmentManager4
                 TextPrompt.isConfiguration = true;
                 TextPrompt.extended = extendedList;
                 TextPrompt.custom = customList;
-                TextPrompt.product = install.Product;
+                TextPrompt.product = this.Product;
                 addConfiguration.FormClosing += new FormClosingEventHandler(AddConfigurationClose);
                 addConfiguration.Show();
             }
@@ -425,7 +509,7 @@ namespace EnvironmentManager4
         {
             if (String.IsNullOrWhiteSpace(TextPrompt.output))
                 return;
-            LoadConfigurations(install.Product);
+            LoadConfigurations(this.Product);
         }
 
         private void btnRemoveConfiguration_Click(object sender, EventArgs e)
@@ -433,7 +517,7 @@ namespace EnvironmentManager4
             if (cbConfigurationList.Text == "Select a Configuration" || cbConfigurationList.Text == "None")
                 return;
 
-            Configurations configurationToDelete = new Configurations(install.Product,
+            Configurations configurationToDelete = new Configurations(this.Product,
                 cbConfigurationList.Text,
                 SelectedModules(lbExtendedModules),
                 SelectedModules(lbCustomModules));
@@ -450,7 +534,7 @@ namespace EnvironmentManager4
             if (result == DialogResult.Yes)
             {
                 Configurations.DeleteConfiguration(configurationToDelete);
-                LoadConfigurations(install.Product);
+                LoadConfigurations(this.Product);
             }
             return;
         }
@@ -488,7 +572,7 @@ namespace EnvironmentManager4
             //prompt the user to delete existing installs if installing in a directory that already contains a build installation
             if (Directory.Exists(installPath))
             {
-                string existsMessage = String.Format("{0} is already installed in the specified location, do you want to overwrite this install?", install.Product);
+                string existsMessage = String.Format("{0} is already installed in the specified location, do you want to overwrite this install?", this.Product);
                 string existsCaption = "EXISTS";
                 MessageBoxButtons existsButtons = MessageBoxButtons.YesNo;
                 MessageBoxIcon existsIcon = MessageBoxIcon.Warning;
@@ -514,37 +598,25 @@ namespace EnvironmentManager4
                 }
             }
 
-            //save the install options
-            SaveInstallOptions(checkLaunchAfterInstall.Checked, checkInstallFolder.Checked, checkRunDatabaseUpdate.Checked, checkResetDBVersion.Checked);
+            this.InstallLocation = installPath;
+            this.ExtendedDLLs = SelectedModules(lbExtendedModules);
+            this.CustomDLLs = SelectedModules(lbCustomModules);
+            this.LaunchAfterInstall = checkLaunchAfterInstall.Checked;
+            this.OpenInstallFolder = checkInstallFolder.Checked;
+            this.RunDatabaseUpdate = checkRunDatabaseUpdate.Checked;
+            this.ResetDatabaseVersion = checkResetDBVersion.Checked;
 
-            InstallProperties ip = new InstallProperties();
-            ip.Product = install.Product;
-            ip.Version = install.Version;
-            ip.CustomDLLs = InstallProperties.GetDLLList(SelectedModules(lbCustomModules), tbSelectedBuild.Text, true, install.Product, install.Version);
-            ip.ExtendedDLLs = InstallProperties.GetDLLList(SelectedModules(lbExtendedModules), tbSelectedBuild.Text, false, install.Product, install.Version);
-            ip.BuildPath = tbSelectedBuild.Text;
-            ip.InstallPath = installPath;
+            //save the install options
+            SaveInstallOptions(this.LaunchAfterInstall, this.OpenInstallFolder, this.RunDatabaseUpdate, this.ResetDatabaseVersion);
 
             this.Close();
-
-            //add any selected custom/extended modules to the install
-            List<string> selectedExtendedModules = new List<string>();
-            foreach (string dll in lbExtendedModules.SelectedItems)
-                selectedExtendedModules.Add(dll);
-
-            List<string> selectedCustomModules = new List<string>();
-            foreach (string dll in lbCustomModules.SelectedItems)
-                selectedCustomModules.Add(dll);
-
-            //run the installation
-            Thread installBuild = new Thread(() => InstallBuild(installPath, selectedExtendedModules, selectedCustomModules, checkLaunchAfterInstall.Checked, checkInstallFolder.Checked, checkRunDatabaseUpdate.Checked, checkResetDBVersion.Checked, ip));
+            Thread installBuild = new Thread(() => InstallBuild());
             installBuild.Start();
             return;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            install = null;
             this.Close();
         }
 
@@ -556,7 +628,7 @@ namespace EnvironmentManager4
                 lbCustomModules.ClearSelected();
             }
 
-            string prod = install.Product;
+            string prod = this.Product;
             string configName = cbConfigurationList.Text;
             LoadConfiguration(prod, configName);
             return;

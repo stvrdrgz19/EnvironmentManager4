@@ -15,10 +15,10 @@ namespace EnvironmentManager4
         public string BuildPath { get; set; }
         public string InstallPath { get; set; }
 
-        public static void WritePropertiesFile(InstallProperties ip)
+        public void WritePropertiesFile()
         {
-            string json = JsonConvert.SerializeObject(ip, Formatting.Indented);
-            File.WriteAllText(String.Format(@"{0}\InstallProperties.envprop", ip.InstallPath), json);
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(String.Format(@"{0}\InstallProperties.envprop", this.InstallPath), json);
         }
 
         public static List<DLLFileModel> GetDLLList(List<string> rawDllList, string buildPath, bool cust, string product, string version)
@@ -31,11 +31,14 @@ namespace EnvironmentManager4
                 DLLFileModel dllConfig = new DLLFileModel();
                 List<string> fileList = new List<string>();
 
+                string buildNum = buildPath.Substring(buildPath.LastIndexOf('\\') + 1);
+                string dllName = dll;
                 string path = "";
                 switch (product)
                 {
                     case Products.SalesPad:
                         path = String.Format(@"{0}\{1}\{2}", buildPath, type, version);
+                        dllName = String.Format("{0}.{1}.{2}", dll, buildNum, version.ToUpper());
                         break;
                     case Products.DataCollection:
                         path = String.Format(@"{0}\{1}", buildPath, type);
@@ -45,6 +48,7 @@ namespace EnvironmentManager4
                         break;
                     case Products.ShipCenter:
                         path = String.Format(@"{0}\Custom", buildPath);
+                        dllName = String.Format("{0}.{1}", dll, buildNum);
                         break;
                     case Products.WebAPI:
                         path = String.Format(@"{0}\{1}", buildPath, type);
@@ -54,7 +58,7 @@ namespace EnvironmentManager4
                         break;
                 }
 
-                string[] files = Directory.GetFiles(path, String.Format("{0}{1}.*", pi.ModuleNaming, dll));
+                string[] files = Directory.GetFiles(path, String.Format("{0}{1}.*", pi.ModuleNaming, dllName));
 
                 foreach (string file in files)
                 {

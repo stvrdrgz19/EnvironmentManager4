@@ -82,7 +82,7 @@ namespace EnvironmentManager4
                     File.Delete(String.Format(@"{0}\{1}", path, file));
 
                 if (startingIP != newIP)
-                    InstallProperties.WritePropertiesFile(newIP);
+                    newIP.WritePropertiesFile();
             }
             else
                 foreach (string dll in selectedDLLs)

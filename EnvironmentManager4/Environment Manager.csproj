@@ -141,7 +141,6 @@
     <Compile Include="Build Management\Install.Designer.cs">
       <DependentUpon>Install.cs</DependentUpon>
     </Compile>
-    <Compile Include="Build Management\Installer.cs" />
     <Compile Include="Build Management\InstallProperties.cs" />
     <Compile Include="Build Management\LaunchProduct.cs">
       <SubType>Form</SubType>
