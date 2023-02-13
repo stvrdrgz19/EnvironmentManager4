@@ -15,6 +15,7 @@ namespace EnvironmentManager4.Build_Management
         public InstallPropertiesMonitor()
         {
             InitializeComponent();
+            this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
         private static void LoadProductList(ComboBox cbProducts)
@@ -88,6 +89,7 @@ namespace EnvironmentManager4.Build_Management
                         item.SubItems.Add(file);
                         lvInstallProperties.Items.Add(item);
                     }
+                Utilities.ResizeUpdateableListViewColumnWidthForScrollBar(lvInstallProperties, 9, 1, 329);
             }
             catch
             {
@@ -104,6 +106,11 @@ namespace EnvironmentManager4.Build_Management
                 lvInstallProperties.Items.Clear();
             }
             return;
+        }
+
+        private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)
+        {
+            Form1.s_InstallPropertiesMonitor = null;
         }
     }
 }
