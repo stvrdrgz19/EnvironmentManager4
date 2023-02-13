@@ -100,6 +100,12 @@
     <Compile Include="Build Management\Configurations.cs" />
     <Compile Include="Build Management\CoreModules.cs" />
     <Compile Include="Build Management\Builds.cs" />
+    <Compile Include="Build Management\InstallPropertiesMonitor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Build Management\InstallPropertiesMonitor.Designer.cs">
+      <DependentUpon>InstallPropertiesMonitor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Database Management\DatabaseActivityLog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,12 +153,6 @@
     </Compile>
     <Compile Include="Build Management\LaunchProduct.Designer.cs">
       <DependentUpon>LaunchProduct.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InstallPropertiesForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InstallPropertiesForm.Designer.cs">
-      <DependentUpon>InstallPropertiesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ListAndButtonForm.cs">
       <SubType>Form</SubType>
@@ -222,6 +222,9 @@
     <EmbeddedResource Include="Build Management\BuildLog.resx">
       <DependentUpon>BuildLog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Build Management\InstallPropertiesMonitor.resx">
+      <DependentUpon>InstallPropertiesMonitor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Database Management\DatabaseActivityLog.resx">
       <DependentUpon>DatabaseActivityLog.cs</DependentUpon>
     </EmbeddedResource>
@@ -242,9 +245,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Build Management\LaunchProduct.resx">
       <DependentUpon>LaunchProduct.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InstallPropertiesForm.resx">
-      <DependentUpon>InstallPropertiesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ListAndButtonForm.resx">
       <DependentUpon>ListAndButtonForm.cs</DependentUpon>

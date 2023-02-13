@@ -31,7 +31,14 @@ namespace EnvironmentManager4
                 DLLFileModel dllConfig = new DLLFileModel();
                 List<string> fileList = new List<string>();
 
+                //string buildNum = buildPath.Substring(0, buildPath.LastIndexOf('.')).Substring(buildPath.LastIndexOf('\\') + 1);
                 string buildNum = buildPath.Substring(buildPath.LastIndexOf('\\') + 1);
+
+                int count = buildNum.Split('.').Length - 1;
+
+                if (count >= 3)
+                    buildNum = buildNum.Substring(0, buildNum.LastIndexOf('.'));
+
                 string dllName = dll;
                 string path = "";
                 switch (product)

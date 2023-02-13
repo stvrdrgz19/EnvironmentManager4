@@ -217,8 +217,6 @@ namespace EnvironmentManager4
 
             string startTime = DateTime.Now.ToString();
 
-            //global variable installer = the installer file path
-            //global variable installerpath = the path to the installer, excluding the file name
             string installerFileName = Path.GetFileName(this.InstallerPath);     //the actual file name without it's path
             string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetFolder("Installers"), installerFileName);
             File.Copy(this.InstallerPath, tempInstaller, true);

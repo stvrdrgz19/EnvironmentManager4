@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EnvironmentManager4.Build_Management;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -46,6 +47,7 @@ namespace EnvironmentManager4
         public static NewDatabaseBackup s_NewBackup;
         public static NewDatabaseBackup s_OverwriteBackup;
         public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
+        public static InstallPropertiesMonitor s_InstallPropertiesMonitor;
 
         public static void EnableWaitCursor(bool enable)
         {
@@ -208,9 +210,15 @@ namespace EnvironmentManager4
         private void CheckForDevEnvironment()
         {
             if (Utilities.DevEnvironment())
+            {
                 SetGroupBoxForeColor(Color.Red);
+                tbDBDesc.BackColor = Color.MistyRose;
+            }
             else
+            {
                 SetGroupBoxForeColor(Color.Blue);
+                tbDBDesc.BackColor = Color.AliceBlue;
+            }
         }
 
         public void LoadFromSettings(SettingsModel settings)
@@ -903,6 +911,18 @@ namespace EnvironmentManager4
 
             // Perform the sort with these new sort options.
             this.lvInstalledSQLServers.Sort();
+        }
+
+        private void installPropertiesMonitorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (s_InstallPropertiesMonitor == null)
+            {
+                s_InstallPropertiesMonitor = new InstallPropertiesMonitor();
+                s_InstallPropertiesMonitor.Show();
+            }
+            else
+                s_InstallPropertiesMonitor.BringToFront();
+            return;
         }
     }
 }

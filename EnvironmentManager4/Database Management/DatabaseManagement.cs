@@ -27,9 +27,14 @@ namespace EnvironmentManager4
 
         public static void LoadDatabaseList(ComboBox cb, TextBox tb)
         {
-            cb.Items.Clear();
+            bool backupSelected = false;
+            string startingBackupLabel = cb.Text;
             cb.Text = "Select a Database Backup";
-            LoadDatabaseDescription(cb, tb);
+
+            if (startingBackupLabel != "Select a Database Backup")
+                backupSelected = true;
+
+            cb.Items.Clear();
             SettingsModel settingsModel = SettingsUtilities.GetSettings();
             if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
@@ -41,8 +46,13 @@ namespace EnvironmentManager4
                 MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist.", settingsModel.DbManagement.DatabaseBackupDirectory));
                 return;
             }
-
             cb.Items.AddRange(Utilities.GetFilesFromDirectoryByExtension(settingsModel.DbManagement.DatabaseBackupDirectory, "zip"));
+
+            if (backupSelected)
+                cb.SelectedIndex = cb.FindStringExact(startingBackupLabel);
+            else
+                cb.Text = "Select a Database Backup";
+            LoadDatabaseDescription(cb, tb);
         }
 
         public static void LoadDatabaseDescription(ComboBox cb, TextBox tb)
