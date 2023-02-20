@@ -20,8 +20,6 @@ namespace EnvironmentManager4
             this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
-        public static List<BuildModel> builds = new List<BuildModel>();
-        public static List<DllModel> dlls = new List<DllModel>();
         public static List<ListViewProperties> lvp = new List<ListViewProperties>();
         public static List<ListViewProperties> lvpDlls = new List<ListViewProperties>();
 
@@ -30,7 +28,7 @@ namespace EnvironmentManager4
             lvBuilds.Items.Clear();
             lvDlls.Items.Clear();
             ListViewProperties.UpdateListViewProperties(lvp);
-            builds = SqliteDataAccess.LoadBuilds();
+            List<BuildModel> builds = SqliteDataAccess.LoadBuilds();
             foreach (var build in builds)
             {
                 ListViewItem item1 = new ListViewItem(build.Path);
@@ -59,14 +57,12 @@ namespace EnvironmentManager4
             string entryDate = "";
             ListView.SelectedListViewItemCollection build = this.lvBuilds.SelectedItems;
             foreach (ListViewItem item in build)
-            {
                 entryDate = item.SubItems[2].Text;
-            }
-            dlls = SqliteDataAccess.LoadDlls(SqliteDataAccess.GetParentId(entryDate));
+
+            List<DllModel> dlls = SqliteDataAccess.LoadDlls(SqliteDataAccess.GetParentId(entryDate));
             if (dlls == null)
-            {
                 return;
-            }
+
             foreach (var dll in dlls)
             {
                 ListViewItem item1 = new ListViewItem(dll.Name);
@@ -86,14 +82,13 @@ namespace EnvironmentManager4
         private void btnCopy_Click(object sender, EventArgs e)
         {
             if (lvBuilds.SelectedItems.Count <= 0)
-            {
                 return;
-            }
 
             bool copyProduct = cbProduct.Checked;
             bool copyDll = cbDlls.Checked;
             string product = lvBuilds.SelectedItems[0].SubItems[3].Text;
             string selectedBuild = lvBuilds.SelectedItems[0].Text;
+
             if (copyProduct)
             {
                 switch (product)
@@ -102,8 +97,6 @@ namespace EnvironmentManager4
                         product = "Desktop: ";
                         break;
                     case Products.DataCollection:
-                        product = "Console: ";
-                        break;
                     case Products.SalesPadMobile:
                         product = "Console: ";
                         break;
@@ -113,13 +106,11 @@ namespace EnvironmentManager4
                 }
                 selectedBuild = product + lvBuilds.SelectedItems[0].Text;
             }
+
             if (copyDll)
-            {
                 foreach (ListViewItem item in lvDlls.Items)
-                {
                     selectedBuild += "\n" + item.SubItems[1].Text + ": " + Modules.TrimVersionAndExtension(item.Text, lvBuilds.SelectedItems[0].SubItems[3].Text);
-                }
-            }
+
             Clipboard.SetText(selectedBuild);
         }
 

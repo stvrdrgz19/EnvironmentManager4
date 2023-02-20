@@ -30,7 +30,15 @@ namespace EnvironmentManager4
         {
             cb.Items.Clear();
             cb.Text = "Select a GP Version to Install";
-            cb.Items.AddRange(Utilities.GetFilesFromDirectoryByExtension(availableGPsPath, "zip"));
+            try
+            {
+                cb.Items.AddRange(Utilities.GetFilesFromDirectoryByExtension(availableGPsPath, "zip"));
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e, false, "There were errors connecting to the network.");
+                ErrorHandling.DisplayExceptionMessage(e, false, "There were errors connecting to the network.");
+            }
         }
 
         public static void LaunchGP(string gp)

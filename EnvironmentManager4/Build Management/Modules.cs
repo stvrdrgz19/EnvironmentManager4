@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace EnvironmentManager4
 {
     public class Modules
     {
+        public string ModuleName { get; set; }
+        public string ModulePath { get; set; }
+        public List<ModuleFileContents> ModuleContents { get; set; }
+
         public static string[] RetrieveDLLs(string modulePath, string buildPath, string product, string installer, string version)
         {
             List<string> dllList = new List<string>();
@@ -60,9 +61,7 @@ namespace EnvironmentManager4
             if (pre)
                 return spVersion;
             if (spVersion.Count(character => character == '.') == charCount)
-            {
                 spVersion = spVersion.Substring(0, spVersion.LastIndexOf('.'));
-            }
             return spVersion;
         }
 
@@ -126,14 +125,10 @@ namespace EnvironmentManager4
             }
 
             if (custDlls.Count > 0)
-            {
                 CopyDllsFromBuild(custDlls, product, moduleStart, installerPath, custPath, startTime, "Custom DLL", version);
-            }
 
             if (extDlls.Count > 0)
-            {
                 CopyDllsFromBuild(extDlls, product, moduleStart, installerPath, extPath, startTime, "Extended DLL", version);
-            }
         }
 
         public static void CopyDllsFromBuild(List<string> dllList, string product, string moduleStart, string installerPath, string custExtPath, string startTime, string type, string version = null)
@@ -172,10 +167,7 @@ namespace EnvironmentManager4
                 }
                 string copyTo = "";
                 string copyFrom = String.Format("{0}{1}", custExtPath, dllName);
-                if (product == "DataCollection")
-                    copyTo = String.Format(@"{0}\{1}", Utilities.GetFolder("Dlls"), dllName);
-                else
-                    copyTo = String.Format(@"{0}\{1}{2}", Utilities.GetFolder("Dlls"), moduleStart, dllName);
+                copyTo = String.Format(@"{0}\{1}", Utilities.GetFolder("Dlls"), dllName);
                 try
                 {
                     File.Copy(copyFrom, copyTo, true);
@@ -263,5 +255,11 @@ namespace EnvironmentManager4
                 }
             }
         }
+    }
+
+    public class ModuleFileContents
+    {
+        public string ModuleName { get; set; }
+        public string FileName { get; set; }
     }
 }

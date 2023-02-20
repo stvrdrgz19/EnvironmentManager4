@@ -35,8 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>EnvMgr.ico</ApplicationIcon>
+    <ApplicationIcon>Files\Icons\EnvMgr.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -45,6 +46,20 @@
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="DevExpress.Data.Desktop.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Images.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Office.v21.1.Core, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Pdf.v21.1.Core, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Printing.v21.1.Core, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.RichEdit.v21.1.Core, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraBars.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraEditors.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraGrid.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraLayout.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraPrinting.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraRichEdit.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -75,30 +90,43 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="BuildLog.cs">
+    <Compile Include="Build Management\BuildLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BuildLog.Designer.cs">
+    <Compile Include="Build Management\BuildLog.Designer.cs">
       <DependentUpon>BuildLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="BuildModel.cs" />
-    <Compile Include="Configurations.cs" />
-    <Compile Include="CoreModules.cs" />
-    <Compile Include="DatabaseActivityLog.cs">
+    <Compile Include="Build Management\BuildModel.cs" />
+    <Compile Include="Build Management\Configurations.cs" />
+    <Compile Include="Build Management\CoreModules.cs" />
+    <Compile Include="Build Management\Builds.cs" />
+    <Compile Include="Build Management\InstallPropertiesMonitor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DatabaseActivityLog.Designer.cs">
+    <Compile Include="Build Management\InstallPropertiesMonitor.Designer.cs">
+      <DependentUpon>InstallPropertiesMonitor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Database Management\DatabaseActivityLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Database Management\DatabaseActivityLog.Designer.cs">
       <DependentUpon>DatabaseActivityLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseActivityLogModel.cs" />
-    <Compile Include="DatabaseManagement.cs" />
-    <Compile Include="DeleteBuilds.cs">
+    <Compile Include="Database Management\DatabaseActivityLogModel.cs" />
+    <Compile Include="Database Management\DatabaseManagement.cs" />
+    <Compile Include="Build Management\DeleteBuilds.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DeleteBuilds.Designer.cs">
+    <Compile Include="Build Management\DeleteBuilds.Designer.cs">
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
     </Compile>
-    <Compile Include="DllModel.cs" />
+    <Compile Include="DirectoryCompare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DirectoryCompare.Designer.cs">
+      <DependentUpon>DirectoryCompare.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Build Management\DllModel.cs" />
     <Compile Include="ErrorHandling.cs" />
     <Compile Include="ExceptionForm.cs">
       <SubType>Form</SubType>
@@ -112,17 +140,18 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="GPManagement.cs" />
-    <Compile Include="Install.cs">
+    <Compile Include="Dynamics Management\GPManagement.cs" />
+    <Compile Include="Build Management\Install.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Install.Designer.cs">
+    <Compile Include="Build Management\Install.Designer.cs">
       <DependentUpon>Install.cs</DependentUpon>
     </Compile>
-    <Compile Include="LaunchProduct.cs">
+    <Compile Include="Build Management\InstallProperties.cs" />
+    <Compile Include="Build Management\LaunchProduct.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LaunchProduct.Designer.cs">
+    <Compile Include="Build Management\LaunchProduct.Designer.cs">
       <DependentUpon>LaunchProduct.cs</DependentUpon>
     </Compile>
     <Compile Include="ListAndButtonForm.cs">
@@ -133,11 +162,11 @@
     </Compile>
     <Compile Include="ListViewColumnSorter.cs" />
     <Compile Include="ListViewProperties.cs" />
-    <Compile Include="Modules.cs" />
-    <Compile Include="NewDatabaseBackup.cs">
+    <Compile Include="Build Management\Modules.cs" />
+    <Compile Include="Database Management\NewDatabaseBackup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewDatabaseBackup.Designer.cs">
+    <Compile Include="Database Management\NewDatabaseBackup.Designer.cs">
       <DependentUpon>NewDatabaseBackup.cs</DependentUpon>
     </Compile>
     <Compile Include="Notes.cs">
@@ -146,10 +175,11 @@
     <Compile Include="Notes.Designer.cs">
       <DependentUpon>Notes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Build Management\ProductInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryEntries.cs" />
-    <Compile Include="ServiceManagement.cs" />
+    <Compile Include="Service Management\ServiceManagement.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +188,13 @@
     </Compile>
     <Compile Include="SettingsModel.cs" />
     <Compile Include="SqliteDataAccess.cs" />
+    <Compile Include="TestClass.cs" />
+    <Compile Include="TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextPrompt.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,10 +207,10 @@
     <Compile Include="UpdatePrompt.Designer.cs">
       <DependentUpon>UpdatePrompt.cs</DependentUpon>
     </Compile>
-    <Compile Include="UpdateDatabaseDescription.cs">
+    <Compile Include="Database Management\UpdateDatabaseDescription.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpdateDatabaseDescription.Designer.cs">
+    <Compile Include="Database Management\UpdateDatabaseDescription.Designer.cs">
       <DependentUpon>UpdateDatabaseDescription.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities.cs" />
@@ -182,14 +219,20 @@
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BuildLog.resx">
+    <EmbeddedResource Include="Build Management\BuildLog.resx">
       <DependentUpon>BuildLog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DatabaseActivityLog.resx">
+    <EmbeddedResource Include="Build Management\InstallPropertiesMonitor.resx">
+      <DependentUpon>InstallPropertiesMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Database Management\DatabaseActivityLog.resx">
       <DependentUpon>DatabaseActivityLog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DeleteBuilds.resx">
+    <EmbeddedResource Include="Build Management\DeleteBuilds.resx">
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DirectoryCompare.resx">
+      <DependentUpon>DirectoryCompare.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ExceptionForm.resx">
       <DependentUpon>ExceptionForm.cs</DependentUpon>
@@ -197,21 +240,22 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Install.resx">
+    <EmbeddedResource Include="Build Management\Install.resx">
       <DependentUpon>Install.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LaunchProduct.resx">
+    <EmbeddedResource Include="Build Management\LaunchProduct.resx">
       <DependentUpon>LaunchProduct.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ListAndButtonForm.resx">
       <DependentUpon>ListAndButtonForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewDatabaseBackup.resx">
+    <EmbeddedResource Include="Database Management\NewDatabaseBackup.resx">
       <DependentUpon>NewDatabaseBackup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Notes.resx">
       <DependentUpon>Notes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -225,6 +269,9 @@
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TextPrompt.resx">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </EmbeddedResource>
@@ -232,6 +279,7 @@
     <Content Include="EnvMgr.ico" />
     <Content Include="Files\Icons\Edb.png" />
     <Content Include="Files\Icons\EnvMgr.ico" />
+    <None Include="Files\Icons\EnvMgr.png" />
     <Content Include="Files\Icons\eyeclosed.png" />
     <Content Include="Files\Icons\eyeopen.png" />
     <Content Include="Files\Icons\ico1402.ico" />
@@ -243,7 +291,7 @@
     <EmbeddedResource Include="UpdatePrompt.resx">
       <DependentUpon>UpdatePrompt.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UpdateDatabaseDescription.resx">
+    <EmbeddedResource Include="Database Management\UpdateDatabaseDescription.resx">
       <DependentUpon>UpdateDatabaseDescription.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />

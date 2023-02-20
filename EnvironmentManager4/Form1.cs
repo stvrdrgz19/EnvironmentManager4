@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EnvironmentManager4.Build_Management;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -46,6 +47,7 @@ namespace EnvironmentManager4
         public static NewDatabaseBackup s_NewBackup;
         public static NewDatabaseBackup s_OverwriteBackup;
         public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
+        public static InstallPropertiesMonitor s_InstallPropertiesMonitor;
 
         public static void EnableWaitCursor(bool enable)
         {
@@ -96,7 +98,8 @@ namespace EnvironmentManager4
             cbDatabaseList.Enabled = enable;
             if (enable)
             {
-                Reload();
+                SettingsModel settings = SettingsUtilities.GetSettings();
+                LoadFromSettings(settings);
             }
         }
 
@@ -138,24 +141,6 @@ namespace EnvironmentManager4
         {
             GPManagement.LoadGPInsatlls(lbGPVersionsInstalled);
         }
-        
-        public void SettingsReload(bool settingsChange = false)
-        {
-            cbDatabaseList.Text = "Select a Database Backup";
-            DatabaseManagement.LoadDatabaseList(cbDatabaseList, tbDBDesc);
-            if (settingsChange)
-            {
-                DetermineMode();
-            }
-        }
-
-        public void Reload(bool settingsChange = false)
-        {
-            if (settingsChange)
-            {
-                DetermineMode();
-            }
-        }
 
         public static void SetStaticBackup(bool enable)
         {
@@ -170,14 +155,76 @@ namespace EnvironmentManager4
                 this.Invoke(new EnableDelegate(SetSelectedBackup), new object[] { enable });
                 return;
             }
-            SettingsReload();
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            LoadFromSettings(settings);
             cbDatabaseList.SelectedIndex = cbDatabaseList.FindStringExact(s_NewDBBackupName);
         }
 
-        public void DetermineMode()
+        private void LoadProductList()
         {
+            cbProductList.Items.Clear();
+            foreach (string product in Products.ListOfProducts())
+            {
+                cbProductList.Items.Add(product);
+            }
+            cbProductList.SelectedIndex = cbProductList.FindStringExact(Products.SalesPad);
+        }
+
+        private void LoadWifiIP()
+        {
+            tbWiFiIPAddress.Text = Utilities.GetIP("Wi-Fi");
+        }
+
+        private void LoadVPNIP()
+        {
+            tbSPVPNIPAddress.Text = Utilities.GetIP("SalesPad VPN");
+        }
+
+        private void LoadIPAddresses(SettingsModel settings)
+        {
+            if (settings.Other.ShowIP)
+                LoadWifiIP();
+
+            if (settings.Other.ShowVPNIP)
+                LoadVPNIP();
+        }
+
+        private void LoadBuildVersionAndCheckForUpdates()
+        {
+            labelVersion.Text = String.Format("v{0}", Utilities.GetAppVersion());
+            if (!Utilities.IsProgramUpToDate())
+            {
+                UpdatePrompt update = new UpdatePrompt();
+                UpdatePrompt.OpenFromStartup = true;
+                update.ShowDialog();
+            }
+        }
+
+        private void SetGroupBoxForeColor(Color color)
+        {
+            foreach (Control gb in this.Controls)
+                if (gb is GroupBox)
+                    gb.ForeColor = color;
+        }
+
+        private void CheckForDevEnvironment()
+        {
+            if (Utilities.DevEnvironment())
+            {
+                SetGroupBoxForeColor(Color.Red);
+                tbDBDesc.BackColor = Color.MistyRose;
+            }
+            else
+            {
+                SetGroupBoxForeColor(Color.Blue);
+                tbDBDesc.BackColor = Color.AliceBlue;
+            }
+        }
+
+        public void LoadFromSettings(SettingsModel settings)
+        {
+            DatabaseManagement.LoadDatabaseList(cbDatabaseList, tbDBDesc);
             LoadProductList();
-            SettingsModel settings = SettingsUtilities.GetSettings();
             cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
             cbAlwaysOnTop.Visible = settings.Other.ShowAlwaysOnTop;
             labelReloadVPNIPAddress.Visible = settings.Other.ShowVPNIP;
@@ -196,10 +243,6 @@ namespace EnvironmentManager4
 
             if (settings.Other.ShowVPNIP && !settings.Other.ShowIP)
             {
-                //starting VPNIPLabel POS   89, 566
-                //starting VPNIPTextBox POS 136, 563
-                //starting WifiIPLabel POS  339, 566
-                //starting WifiTextBox POS  386, 563
                 labelReloadVPNIPAddress.Location = new Point(339, 566);
                 tbSPVPNIPAddress.Location = new Point(386, 563);
             }
@@ -226,58 +269,17 @@ namespace EnvironmentManager4
             }
         }
 
-        private void LoadProductList()
-        {
-            cbProductList.Items.Clear();
-            foreach (string product in Products.ListOfProducts())
-            {
-                cbProductList.Items.Add(product);
-            }
-            cbProductList.SelectedIndex = cbProductList.FindStringExact(Products.SalesPad);
-        }
-
-        private void LoadWifiIP()
-        {
-            tbWiFiIPAddress.Text = Utilities.GetIP("Wi-Fi");
-        }
-
-        private void LoadVPNIP()
-        {
-            tbSPVPNIPAddress.Text = Utilities.GetIP("SalesPad VPN");
-        }
-
-        private void ConfigureEnvironment(string machine)
-        {
-            labelVersion.Text = String.Format("v{0}", Utilities.GetAppVersion());
-            if (machine != "STEVERODRIGUEZ")
-            {
-                notesToolStripMenuItem.Visible = false;
-                directoryCompareToolStripMenuItem.Visible = false;
-                trimSOLTickets.Visible = false;
-                generateSettingsFileToolStripMenuItem.Visible = false;
-                //generateCoreModulesFileToolStripMenuItem.Visible = false;
-                Configurations.UpdateConfigurationsFile();
-            }
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            ConfigureEnvironment(Environment.MachineName);
-            SettingsReload(true);
+            CheckForDevEnvironment();
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            LoadBuildVersionAndCheckForUpdates();
+            LoadFromSettings(settings);
+            LoadIPAddresses(settings);
             GPManagement.LoadGPInsatlls(lbGPVersionsInstalled);
             GPManagement.LoadAvailableGPs(cbGPListToInstall);
-            LoadWifiIP();
-            LoadVPNIP();
             s_LvProperties = ListViewProperties.RetrieveListViewProperties(lvInstalledSQLServers);
             ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers, s_LvProperties);
-            cbSPGPVersion.Enabled = false;
-            LoadProductList();
-            if (!Utilities.IsProgramUpToDate())
-            {
-                UpdatePrompt update = new UpdatePrompt();
-                UpdatePrompt.OpenFromStartup = true;
-                update.ShowDialog();
-            }
             this.lvInstalledSQLServers.ColumnClick += new ColumnClickEventHandler(ColumnClick);
             return;
         }
@@ -298,7 +300,8 @@ namespace EnvironmentManager4
         private void SettingsClose(object sender, FormClosingEventArgs e)
         {
             s_SettingsFormOpen = null;
-            SettingsReload(true);
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            LoadFromSettings(settings);
         }
 
         private void labelGPInstallationList_Click(object sender, EventArgs e)
@@ -412,7 +415,7 @@ namespace EnvironmentManager4
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
                 {
-                    Thread restoreBackup = new Thread(() => DatabaseManagement.RestoreDatabase(backupName, backupZip));
+                    Thread restoreBackup = new Thread(() => DatabaseManagement.Restore(backupName));
                     restoreBackup.Start();
                 }
             }
@@ -479,8 +482,8 @@ namespace EnvironmentManager4
         private void btnDeleteBackup_Click(object sender, EventArgs e)
         {
             string backupName = cbDatabaseList.Text;
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            string backupZip = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
             bool continueDelete = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Delete");
             if (continueDelete)
             {
@@ -493,8 +496,8 @@ namespace EnvironmentManager4
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
                 {
-                    DatabaseManagement.DeleteDatabase(backupName, backupZip, true, true);
-                    SettingsReload();
+                    DatabaseManagement.DeleteDatabaseBackup(backupName, backupZip, true, true);
+                    LoadFromSettings(settings);
                 }
             }
             return;
@@ -518,14 +521,14 @@ namespace EnvironmentManager4
             }
             if (s_InstallBuild == null)
             {
-                string selectedProduct = cbProductList.Text;
-                string selectedVersion = cbSPGPVersion.Text;
-                if (!Products.ListOfProducts().Contains(selectedProduct))
+                string product = cbProductList.Text;
+                string version = cbSPGPVersion.Text;
+                if (!Products.ListOfProducts().Contains(product))
                 {
                     MessageBox.Show("Please select a product from the list to continue.");
                     return;
                 }
-                if (!Utilities.versionList.Contains(selectedVersion))
+                if (!Utilities.versionList.Contains(version))
                 {
                     MessageBox.Show("Please select a version from the list to continue.");
                     return;
@@ -533,10 +536,17 @@ namespace EnvironmentManager4
 
                 s_InstallBuild = new Install();
                 string path = Clipboard.GetText();
-                GetInstaller getInstaller = new GetInstaller(path, selectedProduct, selectedVersion);
-                Install.install = s_InstallBuild.GetInstallerFile(getInstaller);
-                if (Install.install.InstallerPath != "EXIT")
+                string installerPath = Install.GetInstallerPath(path, product, version);
+
+                //Install.install = Installer.GetInstallerFile(path, selectedProduct, selectedVersion);
+                if (installerPath != "EXIT")
+                {
+                    s_InstallBuild.Product = product;
+                    s_InstallBuild.Version = version;
+                    s_InstallBuild.NetworkPath = Path.GetDirectoryName(installerPath);
+                    s_InstallBuild.InstallerPath = installerPath;
                     s_InstallBuild.Show();
+                }
                 else
                     s_InstallBuild = null;
             }
@@ -633,12 +643,13 @@ namespace EnvironmentManager4
             {
                 if (Environment.MachineName == "STEVERODRIGUEZ")
                 {
-                    //StringBuilder builder = new StringBuilder();
-                    //foreach (Control c in this.Controls)
-                    //{
-                    //    builder.Append(c.Name).AppendLine();
-                    //}
-                    //MessageBox.Show(builder.ToString());
+                    string path = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\master\5.2.40.25\CustomModules\x64\SalesPad.Module.AgruIntegration.5.2.40.X64.Zip";
+                    string extension = Path.GetExtension(path);
+                    MessageBox.Show(extension);
+                    //TestClass testClass = TestClass.tc;
+                    //testClass.GetTestClassValues();
+                    //TestForm tf = new TestForm();
+                    //tf.Show();
                 }
                 return;
             }
@@ -707,12 +718,6 @@ namespace EnvironmentManager4
         private void labelReloadIPAddress_Click(object sender, EventArgs e)
         {
             LoadWifiIP();
-            //string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            //string assemblyVersionX = Assembly.LoadFile(@"C:\Users\steve.rodriguez\source\repos\EnvironmentManager4\EnvironmentManager4\Properties\AssemblyInfo.cs").GetName().Version.ToString();
-            //string fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
-            //string productVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
-            //MessageBox.Show(String.Format("{0}\r\n{1]\r\n{2}\r\n{3}", assemblyVersion, assemblyVersionX, fileVersion, productVersion));
-            //MessageBox.Show(String.Format("{0}\r\n{1}\r\n{2}", assemblyVersion, fileVersion, productVersion));
             return;
         }
 
@@ -777,13 +782,9 @@ namespace EnvironmentManager4
 
         private void directoryCompareToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Directory Compare is not currently hooked up to Environment Manager.");
+            DirectoryCompare dc = new DirectoryCompare();
+            dc.Show();
             return;
-        }
-
-        private void trimSOLTickets_Click(object sender, EventArgs e)
-        {
-            //
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -794,18 +795,6 @@ namespace EnvironmentManager4
         private void cbDatabaseList_SelectedIndexChanged(object sender, EventArgs e)
         {
             DatabaseManagement.LoadDatabaseDescription(cbDatabaseList, tbDBDesc);
-        }
-
-        private void generateSettingsFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //SettingsUtilities.GenerateSettingsFile();
-            return;
-        }
-
-        private void generateCoreModulesFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //CoreModules.GenerateCoreModulesFile();
-            return;
         }
 
         private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)
@@ -922,6 +911,18 @@ namespace EnvironmentManager4
 
             // Perform the sort with these new sort options.
             this.lvInstalledSQLServers.Sort();
+        }
+
+        private void installPropertiesMonitorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (s_InstallPropertiesMonitor == null)
+            {
+                s_InstallPropertiesMonitor = new InstallPropertiesMonitor();
+                s_InstallPropertiesMonitor.Show();
+            }
+            else
+                s_InstallPropertiesMonitor.BringToFront();
+            return;
         }
     }
 }

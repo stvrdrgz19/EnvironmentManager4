@@ -79,14 +79,12 @@ namespace EnvironmentManager4
             this.killSalesPadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.directoryCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.trimSOLTickets = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateSettingsFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateCoreModulesFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.labelVersion = new System.Windows.Forms.Label();
+            this.installPropertiesMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -299,6 +297,7 @@ namespace EnvironmentManager4
             // 
             // tbDBDesc
             // 
+            this.tbDBDesc.BackColor = System.Drawing.Color.AliceBlue;
             this.tbDBDesc.Location = new System.Drawing.Point(6, 46);
             this.tbDBDesc.Multiline = true;
             this.tbDBDesc.Name = "tbDBDesc";
@@ -574,9 +573,7 @@ namespace EnvironmentManager4
             this.killSalesPadToolStripMenuItem,
             this.notesToolStripMenuItem,
             this.directoryCompareToolStripMenuItem,
-            this.trimSOLTickets,
-            this.generateSettingsFileToolStripMenuItem,
-            this.generateCoreModulesFileToolStripMenuItem});
+            this.installPropertiesMonitorToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -584,65 +581,44 @@ namespace EnvironmentManager4
             // resetDatabaseVersionToolStripMenuItem
             // 
             this.resetDatabaseVersionToolStripMenuItem.Name = "resetDatabaseVersionToolStripMenuItem";
-            this.resetDatabaseVersionToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.resetDatabaseVersionToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.resetDatabaseVersionToolStripMenuItem.Text = "Reset Database Version";
             this.resetDatabaseVersionToolStripMenuItem.Click += new System.EventHandler(this.resetDatabaseVersionToolStripMenuItem_Click);
             // 
             // deleteBuildInstallsToolStripMenuItem
             // 
             this.deleteBuildInstallsToolStripMenuItem.Name = "deleteBuildInstallsToolStripMenuItem";
-            this.deleteBuildInstallsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.deleteBuildInstallsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.deleteBuildInstallsToolStripMenuItem.Text = "Delete Build Installs";
             this.deleteBuildInstallsToolStripMenuItem.Click += new System.EventHandler(this.deleteBuildInstallsToolStripMenuItem_Click);
             // 
             // databaseLogToolStripMenuItem
             // 
             this.databaseLogToolStripMenuItem.Name = "databaseLogToolStripMenuItem";
-            this.databaseLogToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.databaseLogToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.databaseLogToolStripMenuItem.Text = "Database Log";
             this.databaseLogToolStripMenuItem.Click += new System.EventHandler(this.databaseLogToolStripMenuItem_Click);
             // 
             // killSalesPadToolStripMenuItem
             // 
             this.killSalesPadToolStripMenuItem.Name = "killSalesPadToolStripMenuItem";
-            this.killSalesPadToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.killSalesPadToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.killSalesPadToolStripMenuItem.Text = "Kill SalesPad";
             this.killSalesPadToolStripMenuItem.Click += new System.EventHandler(this.killSalesPadToolStripMenuItem_Click);
             // 
             // notesToolStripMenuItem
             // 
             this.notesToolStripMenuItem.Name = "notesToolStripMenuItem";
-            this.notesToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.notesToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.notesToolStripMenuItem.Text = "Notes";
             this.notesToolStripMenuItem.Click += new System.EventHandler(this.notesToolStripMenuItem_Click);
             // 
             // directoryCompareToolStripMenuItem
             // 
             this.directoryCompareToolStripMenuItem.Name = "directoryCompareToolStripMenuItem";
-            this.directoryCompareToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.directoryCompareToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.directoryCompareToolStripMenuItem.Text = "Directory Compare";
             this.directoryCompareToolStripMenuItem.Click += new System.EventHandler(this.directoryCompareToolStripMenuItem_Click);
-            // 
-            // trimSOLTickets
-            // 
-            this.trimSOLTickets.Name = "trimSOLTickets";
-            this.trimSOLTickets.Size = new System.Drawing.Size(235, 22);
-            this.trimSOLTickets.Text = "Trim Solutions Ticket Numbers";
-            this.trimSOLTickets.Click += new System.EventHandler(this.trimSOLTickets_Click);
-            // 
-            // generateSettingsFileToolStripMenuItem
-            // 
-            this.generateSettingsFileToolStripMenuItem.Name = "generateSettingsFileToolStripMenuItem";
-            this.generateSettingsFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.generateSettingsFileToolStripMenuItem.Text = "Generate Settings File";
-            this.generateSettingsFileToolStripMenuItem.Click += new System.EventHandler(this.generateSettingsFileToolStripMenuItem_Click);
-            // 
-            // generateCoreModulesFileToolStripMenuItem
-            // 
-            this.generateCoreModulesFileToolStripMenuItem.Name = "generateCoreModulesFileToolStripMenuItem";
-            this.generateCoreModulesFileToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.generateCoreModulesFileToolStripMenuItem.Text = "Regenerate Core Modules File";
-            this.generateCoreModulesFileToolStripMenuItem.Click += new System.EventHandler(this.generateCoreModulesFileToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -675,6 +651,13 @@ namespace EnvironmentManager4
             this.labelVersion.Size = new System.Drawing.Size(35, 13);
             this.labelVersion.TabIndex = 19;
             this.labelVersion.Text = "label1";
+            // 
+            // installPropertiesMonitorToolStripMenuItem
+            // 
+            this.installPropertiesMonitorToolStripMenuItem.Name = "installPropertiesMonitorToolStripMenuItem";
+            this.installPropertiesMonitorToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.installPropertiesMonitorToolStripMenuItem.Text = "Install Properties Monitor";
+            this.installPropertiesMonitorToolStripMenuItem.Click += new System.EventHandler(this.installPropertiesMonitorToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -760,17 +743,15 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ToolStripMenuItem killSalesPadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem notesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem directoryCompareToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem trimSOLTickets;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem generateSettingsFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem generateCoreModulesFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteBuildInstallsToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnOpenBuildFolder;
         private System.Windows.Forms.Button btnEditDescription;
         private System.Windows.Forms.Label labelVersion;
+        private System.Windows.Forms.ToolStripMenuItem installPropertiesMonitorToolStripMenuItem;
     }
 }
 
