@@ -205,6 +205,28 @@ namespace EnvironmentManager4
             File.Copy(this.InstallerPath, tempInstaller, true);
         }
 
+        public void InstallWebAPI()
+        {
+            this.Cursor = Cursors.WaitCursor;
+            Form1.EnableInstallButton(false);
+            Form1.EnableWaitCursor(true);
+            string startTime = DateTime.Now.ToString();
+
+            //remove files from insatll dir
+            foreach (string file in Directory.GetFiles(this.InstallLocation))
+                File.Delete(file);
+
+            //remove folders from install dir
+            foreach (string dir in Directory.GetDirectories(this.InstallLocation))
+                Directory.Delete(dir, true);
+
+
+
+            //copy zipped install file to Environment Manager/Installers
+            //Unzip the install file
+            //Copy the contents of the install file to the install path (excluding config.js)
+        }
+
         public void InstallBuild()
         {
             //start the busy cursor
@@ -373,7 +395,6 @@ namespace EnvironmentManager4
             checkInstallFolder.Checked = bool.Parse(reg.OpenInstallFolder);
             checkRunDatabaseUpdate.Checked = bool.Parse(reg.RunDatabaseUpdate);
             checkResetDBVersion.Checked = bool.Parse(reg.ResetDatabaseVersion);
-
             string installerDirectory = this.NetworkPath;
 
             switch (this.Product)
@@ -421,8 +442,10 @@ namespace EnvironmentManager4
                 case Products.GPWeb:
                     lbExtendedModules.Enabled = false;
                     checkRunDatabaseUpdate.Enabled = false;
+                    checkLaunchAfterInstall.Enabled = false;
+                    checkResetDBVersion.Enabled = false;
                     extModulesPath = null;
-                    custModulesPath = String.Format(@"{0}\Plugins", installerDirectory);
+                    custModulesPath = String.Format(@"{0}\plugins", installerDirectory);
                     break;
             }
         }
@@ -563,36 +586,40 @@ namespace EnvironmentManager4
             string installPath = tbInstallLocation.Text;
             if (defaultPaths.Contains(installPath))
             {
-                MessageBox.Show("Please enter an install location different than the default:\n\n" + installPath);
-                return;
+                if (this.Product != Products.GPWeb || this.Product != Products.WebAPI)
+                {
+                    MessageBox.Show("Please enter an install location different than the default:\n\n" + installPath);
+                    return;
+                }
             }
 
             //prompt the user to delete existing installs if installing in a directory that already contains a build installation
             if (Directory.Exists(installPath))
             {
-                string existsMessage = String.Format("{0} is already installed in the specified location, do you want to overwrite this install?", this.Product);
-                string existsCaption = "EXISTS";
-                MessageBoxButtons existsButtons = MessageBoxButtons.YesNo;
-                MessageBoxIcon existsIcon = MessageBoxIcon.Warning;
-                DialogResult existsResult;
+                if (this.Product != Products.GPWeb || this.Product != Products.WebAPI)
+                {
+                    string existsMessage = String.Format("{0} is already installed in the specified location, do you want to overwrite this install?", this.Product);
+                    string existsCaption = "EXISTS";
+                    MessageBoxButtons existsButtons = MessageBoxButtons.YesNo;
+                    MessageBoxIcon existsIcon = MessageBoxIcon.Warning;
+                    DialogResult existsResult;
 
-                existsResult = MessageBox.Show(existsMessage, existsCaption, existsButtons, existsIcon);
-                if (existsResult == DialogResult.Yes)
-                {
-                    try
+                    existsResult = MessageBox.Show(existsMessage, existsCaption, existsButtons, existsIcon);
+                    if (existsResult == DialogResult.Yes)
                     {
-                        Directory.Delete(installPath, true);
+                        try
+                        {
+                            Directory.Delete(installPath, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorHandling.LogException(ex);
+                            ErrorHandling.DisplayExceptionMessage(ex);
+                            return;
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        ErrorHandling.LogException(ex);
-                        ErrorHandling.DisplayExceptionMessage(ex);
+                    else
                         return;
-                    }
-                }
-                else
-                {
-                    return;
                 }
             }
 

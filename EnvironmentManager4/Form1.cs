@@ -538,7 +538,6 @@ namespace EnvironmentManager4
                 string path = Clipboard.GetText();
                 string installerPath = Install.GetInstallerPath(path, product, version);
 
-                //Install.install = Installer.GetInstallerFile(path, selectedProduct, selectedVersion);
                 if (installerPath != "EXIT")
                 {
                     s_InstallBuild.Product = product;
@@ -643,9 +642,10 @@ namespace EnvironmentManager4
             {
                 if (Environment.MachineName == "STEVERODRIGUEZ")
                 {
-                    string path = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\master\5.2.40.25\CustomModules\x64\SalesPad.Module.AgruIntegration.5.2.40.X64.Zip";
-                    string extension = Path.GetExtension(path);
-                    MessageBox.Show(extension);
+                    //RegUtilities.GenerateInstallOptionEntries();
+                    //string path = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\master\5.2.40.25\CustomModules\x64\SalesPad.Module.AgruIntegration.5.2.40.X64.Zip";
+                    //string extension = Path.GetExtension(path);
+                    //MessageBox.Show(extension);
                     //TestClass testClass = TestClass.tc;
                     //testClass.GetTestClassValues();
                     //TestForm tf = new TestForm();
