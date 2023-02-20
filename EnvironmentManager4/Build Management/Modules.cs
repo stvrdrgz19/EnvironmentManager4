@@ -61,9 +61,7 @@ namespace EnvironmentManager4
             if (pre)
                 return spVersion;
             if (spVersion.Count(character => character == '.') == charCount)
-            {
                 spVersion = spVersion.Substring(0, spVersion.LastIndexOf('.'));
-            }
             return spVersion;
         }
 
@@ -169,10 +167,7 @@ namespace EnvironmentManager4
                 }
                 string copyTo = "";
                 string copyFrom = String.Format("{0}{1}", custExtPath, dllName);
-                if (product == "DataCollection")
-                    copyTo = String.Format(@"{0}\{1}", Utilities.GetFolder("Dlls"), dllName);
-                else
-                    copyTo = String.Format(@"{0}\{1}{2}", Utilities.GetFolder("Dlls"), moduleStart, dllName);
+                copyTo = String.Format(@"{0}\{1}", Utilities.GetFolder("Dlls"), dllName);
                 try
                 {
                     File.Copy(copyFrom, copyTo, true);

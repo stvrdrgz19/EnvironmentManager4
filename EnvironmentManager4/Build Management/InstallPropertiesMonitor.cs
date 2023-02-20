@@ -72,13 +72,24 @@ namespace EnvironmentManager4.Build_Management
                 tbInstallPath.Text = ip.InstallPath;
 
                 lvInstallProperties.Items.Clear();
+
                 List<DLLFileModel> CustomDLLs = ip.CustomDLLs;
                 foreach (DLLFileModel dllModel in CustomDLLs)
-                    foreach (string file in dllModel.Files)
+                    //DataCollection dlls are written to the InstallProperties file differently
+                    if (ip.Product == Products.DataCollection)
                     {
                         ListViewItem item = new ListViewItem(dllModel.CoreDLL);
-                        item.SubItems.Add(file);
+                        item.SubItems.Add(dllModel.CoreDLL);
                         lvInstallProperties.Items.Add(item);
+                    }
+                    else
+                    {
+                        foreach (string file in dllModel.Files)
+                        {
+                            ListViewItem item = new ListViewItem(dllModel.CoreDLL);
+                            item.SubItems.Add(file);
+                            lvInstallProperties.Items.Add(item);
+                        }
                     }
 
                 List<DLLFileModel> ExtendedDLLs = ip.ExtendedDLLs;
