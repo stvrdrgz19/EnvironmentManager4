@@ -78,6 +78,13 @@ namespace EnvironmentManager4
                 checkShowAlwaysOnTop.Checked = settingsModel.Other.ShowAlwaysOnTop;
                 checkShowVPNIP.Checked = settingsModel.Other.ShowVPNIP;
                 checkShowWiFiIP.Checked = settingsModel.Other.ShowIP;
+                checkEnableWaterBot.Checked = settingsModel.Other.EnableWaterBot;
+
+                if (Environment.MachineName != "STEVERODRIGUEZ")
+                    labelSettingsVersion.Visible = false;
+                else
+                    labelSettingsVersion.Text = String.Format("Settings Version: {0}", settingsModel.Version);
+
                 SetStartingValues();
             }
             catch (Exception e)
@@ -117,7 +124,8 @@ namespace EnvironmentManager4
                 DefaultVersion = cbDefaultProductVersion.Text,
                 ShowAlwaysOnTop = checkShowAlwaysOnTop.Checked,
                 ShowVPNIP = checkShowVPNIP.Checked,
-                ShowIP = checkShowWiFiIP.Checked
+                ShowIP = checkShowWiFiIP.Checked,
+                EnableWaterBot = checkEnableWaterBot.Checked
             };
 
             var settings = new SettingsModel
@@ -232,10 +240,11 @@ namespace EnvironmentManager4
         private void Settings_Load(object sender, EventArgs e)
         {
             hidden = true;
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            SettingsUtilities.UpdateSettingsFile(settingsModel);
-            PopulateDatabaseList();
-            LoadSettings(settingsModel);
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            SettingsUtilities.UpdateSettingsFile(settings);
+            if (!String.IsNullOrWhiteSpace(settings.DbManagement.Connection))
+                PopulateDatabaseList();
+            LoadSettings(settings);
             SetStartingValues();
             ToggleModeExecute();
         }

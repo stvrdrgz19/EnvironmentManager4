@@ -43,6 +43,7 @@ namespace EnvironmentManager4
             string installerPath;
             ProductInfo pi = ProductInfo.GetProductInfo(product, version);
             string initialDir = pi.FileserverDirectory;
+            path = path.Replace("SP-FILESERV-01", "sp-fileserv-01");
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 if (product == Products.SalesPad)

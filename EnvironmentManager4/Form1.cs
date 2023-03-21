@@ -1,4 +1,5 @@
 ﻿using EnvironmentManager4.Build_Management;
+using EnvironmentManager4.Service_Management;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -269,8 +270,22 @@ namespace EnvironmentManager4
             }
         }
 
+        private void CheckIfConnectedToTheNetwork()
+        {
+            string connectionValue = Utilities.GetLatestVersion();
+            if (connectionValue == "Unable to Connect")
+            {
+                labelNotConnected.Visible = true;
+                labelNotConnected.BackColor = System.Drawing.Color.Transparent;
+            }
+            else
+                labelNotConnected.Visible = false;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            CheckIfConnectedToTheNetwork();
+            WaterBot.StartWaterBot();
             CheckForDevEnvironment();
             SettingsModel settings = SettingsUtilities.GetSettings();
             LoadBuildVersionAndCheckForUpdates();
@@ -302,6 +317,7 @@ namespace EnvironmentManager4
             s_SettingsFormOpen = null;
             SettingsModel settings = SettingsUtilities.GetSettings();
             LoadFromSettings(settings);
+            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers, s_LvProperties);
         }
 
         private void labelGPInstallationList_Click(object sender, EventArgs e)
@@ -324,6 +340,10 @@ namespace EnvironmentManager4
         private void btnInstallGP_Click(object sender, EventArgs e)
         {
             string selectedGP = cbGPListToInstall.Text;
+
+            if (selectedGP == Constants.CouldNotConnect)
+                return;
+
             List<string> installedGPs = new List<string>();
             foreach (string gp in lbGPVersionsInstalled.Items)
                 installedGPs.Add(gp);
@@ -642,6 +662,13 @@ namespace EnvironmentManager4
             {
                 if (Environment.MachineName == "STEVERODRIGUEZ")
                 {
+                    WaterBotForm waterBot = new WaterBotForm();
+                    waterBot.ShowDialog();
+
+                    //List<SQLServiceList> serviceList = SQLServiceList.GetSQLServices();
+                    //foreach (SQLServiceList service in serviceList)
+                    //    MessageBox.Show(String.Format("Name: {0}\nDisplay Name: {1}\nTrimmed Name: {2}", service.Name, service.DisplayName, service.DisplayNameTrimmed));
+
                     //RegUtilities.GenerateInstallOptionEntries();
                     //string path = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\master\5.2.40.25\CustomModules\x64\SalesPad.Module.AgruIntegration.5.2.40.X64.Zip";
                     //string extension = Path.GetExtension(path);

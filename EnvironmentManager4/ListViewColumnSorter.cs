@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Windows.Forms;
 
 /// <summary>
@@ -51,8 +52,21 @@ public class ListViewColumnSorter : IComparer
         listviewX = (ListViewItem)x;
         listviewY = (ListViewItem)y;
 
-        // Compare the two items
-        compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
+        //try
+        //{
+        //    DateTime dateX = Convert.ToDateTime(listviewX.SubItems[ColumnToSort].Text);
+        //    DateTime dateY = Convert.ToDateTime(listviewY.SubItems[ColumnToSort].Text);
+
+        //    // Compare the two items
+        //    compareResult = ObjectCompare.Compare(dateX, dateY);
+        //    //compareResult = DateTime.Compare(DateTime.Parse(listviewX.SubItems[ColumnToSort].Text), DateTime.Parse(listviewY.SubItems[ColumnToSort].Text));
+        //    MessageBox.Show("try");
+        //}
+        //catch
+        //{
+            compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
+        //    MessageBox.Show("catch");
+        //}
 
         // Calculate correct return value based on object comparison
         if (OrderOfSort == SortOrder.Ascending)

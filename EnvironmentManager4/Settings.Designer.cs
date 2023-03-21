@@ -70,6 +70,7 @@ namespace EnvironmentManager4
             this.btnSelectBackupDirectory = new System.Windows.Forms.Button();
             this.tbdatabaseBackupDirectory = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkEnableWaterBot = new System.Windows.Forms.CheckBox();
             this.checkShowWiFiIP = new System.Windows.Forms.CheckBox();
             this.checkShowVPNIP = new System.Windows.Forms.CheckBox();
             this.checkShowAlwaysOnTop = new System.Windows.Forms.CheckBox();
@@ -79,6 +80,7 @@ namespace EnvironmentManager4
             this.label8 = new System.Windows.Forms.Label();
             this.btnSaveExit = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.labelSettingsVersion = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -503,6 +505,7 @@ namespace EnvironmentManager4
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.checkEnableWaterBot);
             this.groupBox3.Controls.Add(this.checkShowWiFiIP);
             this.groupBox3.Controls.Add(this.checkShowVPNIP);
             this.groupBox3.Controls.Add(this.checkShowAlwaysOnTop);
@@ -513,10 +516,22 @@ namespace EnvironmentManager4
             this.groupBox3.ForeColor = System.Drawing.Color.Blue;
             this.groupBox3.Location = new System.Drawing.Point(2, 408);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(533, 135);
+            this.groupBox3.Size = new System.Drawing.Size(533, 152);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Other";
+            // 
+            // checkEnableWaterBot
+            // 
+            this.checkEnableWaterBot.AutoSize = true;
+            this.checkEnableWaterBot.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.checkEnableWaterBot.Location = new System.Drawing.Point(10, 131);
+            this.checkEnableWaterBot.Name = "checkEnableWaterBot";
+            this.checkEnableWaterBot.Size = new System.Drawing.Size(110, 17);
+            this.checkEnableWaterBot.TabIndex = 34;
+            this.checkEnableWaterBot.Text = "Enable Water Bot";
+            this.checkEnableWaterBot.UseVisualStyleBackColor = true;
+            this.checkEnableWaterBot.Visible = false;
             // 
             // checkShowWiFiIP
             // 
@@ -599,7 +614,7 @@ namespace EnvironmentManager4
             // btnSaveExit
             // 
             this.btnSaveExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnSaveExit.Location = new System.Drawing.Point(427, 549);
+            this.btnSaveExit.Location = new System.Drawing.Point(427, 565);
             this.btnSaveExit.Name = "btnSaveExit";
             this.btnSaveExit.Size = new System.Drawing.Size(75, 23);
             this.btnSaveExit.TabIndex = 34;
@@ -607,13 +622,24 @@ namespace EnvironmentManager4
             this.btnSaveExit.UseVisualStyleBackColor = true;
             this.btnSaveExit.Click += new System.EventHandler(this.btnSaveExit_Click);
             // 
+            // labelSettingsVersion
+            // 
+            this.labelSettingsVersion.AutoSize = true;
+            this.labelSettingsVersion.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.labelSettingsVersion.Location = new System.Drawing.Point(11, 571);
+            this.labelSettingsVersion.Name = "labelSettingsVersion";
+            this.labelSettingsVersion.Size = new System.Drawing.Size(41, 13);
+            this.labelSettingsVersion.TabIndex = 35;
+            this.labelSettingsVersion.Text = "label15";
+            // 
             // Settings
             // 
             this.AcceptButton = this.btnSaveExit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnSaveExit;
-            this.ClientSize = new System.Drawing.Size(537, 575);
+            this.ClientSize = new System.Drawing.Size(537, 594);
+            this.Controls.Add(this.labelSettingsVersion);
             this.Controls.Add(this.btnSaveExit);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -632,6 +658,7 @@ namespace EnvironmentManager4
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -684,5 +711,7 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ComboBox cbDBToReset;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkResetDatabase;
+        private System.Windows.Forms.CheckBox checkEnableWaterBot;
+        private System.Windows.Forms.Label labelSettingsVersion;
     }
 }

@@ -54,21 +54,22 @@ namespace EnvironmentManager4
         {
             lvDlls.Items.Clear();
             ListViewProperties.UpdateListViewProperties(lvpDlls);
-            string entryDate = "";
             ListView.SelectedListViewItemCollection build = this.lvBuilds.SelectedItems;
             foreach (ListViewItem item in build)
-                entryDate = item.SubItems[2].Text;
-
-            List<DllModel> dlls = SqliteDataAccess.LoadDlls(SqliteDataAccess.GetParentId(entryDate));
-            if (dlls == null)
-                return;
-
-            foreach (var dll in dlls)
             {
-                ListViewItem item1 = new ListViewItem(dll.Name);
-                item1.SubItems.Add(dll.Type);
-                lvDlls.Items.Add(item1);
+                ProductInfo pi = ProductInfo.GetProductInfo(item.SubItems[3].Text, item.SubItems[1].Text);
+                List<DllModel> dlls = SqliteDataAccess.LoadDlls(SqliteDataAccess.GetParentId(item.SubItems[2].Text));
+                if (dlls == null)
+                    return;
+
+                foreach (var dll in dlls)
+                {
+                    ListViewItem item1 = new ListViewItem(dll.Name.Replace(pi.ModuleNaming, ""));
+                    item1.SubItems.Add(dll.Type);
+                    lvDlls.Items.Add(item1);
+                }
             }
+
             Utilities.ResizeListViewColumnWidthForScrollBar(lvDlls, 9, 1);
             return;
         }

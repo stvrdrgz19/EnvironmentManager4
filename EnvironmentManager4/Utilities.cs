@@ -157,7 +157,7 @@ namespace EnvironmentManager4
             catch (Exception e)
             {
                 string extraMessage = "Possibly not connected to the SalesPad Network or VPN.";
-                ErrorHandling.DisplayExceptionMessage(e, false, extraMessage);
+                //ErrorHandling.DisplayExceptionMessage(e, false, extraMessage);
                 ErrorHandling.LogException(e, false, extraMessage);
                 version = "Unable to Connect";
             }
@@ -284,7 +284,7 @@ namespace EnvironmentManager4
             productsList.Add(SalesPadMobile);
             productsList.Add(ShipCenter);
             //productsList.Add(WebAPI);
-            productsList.Add(GPWeb);
+            //productsList.Add(GPWeb);
             return productsList;
         }
     }

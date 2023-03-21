@@ -45,6 +45,7 @@ namespace EnvironmentManager4
         public bool ShowAlwaysOnTop { get; set; }
         public bool ShowVPNIP { get; set; }
         public bool ShowIP { get; set; }
+        public bool EnableWaterBot { get; set; }
     }
 
     public class Connection
@@ -57,7 +58,7 @@ namespace EnvironmentManager4
     public class SettingsUtilities
     {
         //Increment this when a settings migration needs to happen due to the file structure changing
-        public const int SettingsVersion = 1;
+        public const int SettingsVersion = 2;
 
         public static SettingsModel GetSettings()
         {
@@ -127,7 +128,8 @@ namespace EnvironmentManager4
                 DefaultVersion = "x64",
                 ShowAlwaysOnTop = true,
                 ShowVPNIP = true,
-                ShowIP = true
+                ShowIP = true,
+                EnableWaterBot = false
             };
 
             var settings = new SettingsModel

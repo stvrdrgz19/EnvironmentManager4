@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using EnvironmentManager4.Service_Management;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -29,41 +30,29 @@ namespace EnvironmentManager4
         {
             lv.Items.Clear();
             ListViewProperties.UpdateListViewProperties(lvp);
-
-            List<string> services = InstalledSQLServerInstanceNames();
-            services.AddRange(GetSalesPadServices());
-            string serverStatus = "";
-            foreach (string service in services)
+            List<SQLServiceList> services = SQLServiceList.GetSQLServices();
+            services.AddRange(SQLServiceList.GetSalesPadServices());
+            foreach (SQLServiceList service in services)
             {
-                string serviceName = service;
-                //Format as SQL service if it is a SQL Service
-                if (IsSQLService(service))
-                    serviceName = String.Format("{0}{1}", "MSSQL$", serviceName);
-
-                bool status = IsServiceRunning(serviceName);
-                ListViewItem item = new ListViewItem(service);
+                bool status = IsServiceRunning(service.Name);
+                ListViewItem item = new ListViewItem(service.DisplayNameTrimmed);
                 switch (status)
                 {
                     case true:
                         item.ForeColor = Color.Green;
                         item.Font = new Font(item.Font, FontStyle.Bold);
-                        serverStatus = "RUNNING";
+                        service.ServiceStatus = "RUNNING";
                         break;
                     case false:
                         item.ForeColor = Color.Gray;
                         item.Font = new Font(item.Font, FontStyle.Italic);
-                        serverStatus = "NOT RUNNING";
+                        service.ServiceStatus = "NOT RUNNING";
                         break;
                 }
-                item.SubItems.Add(serverStatus);
+                item.SubItems.Add(service.ServiceStatus);
                 lv.Items.Add(item);
             }
             Utilities.ResizeListViewColumnWidthForScrollBar(lv, 6, 0);
-        }
-
-        public static bool IsSQLService(string service)
-        {
-            return service.Contains("SQL") ? true: false;
         }
 
         public static bool IsServiceRunning(string service)
@@ -77,29 +66,6 @@ namespace EnvironmentManager4
             {
                 return false;
             }
-        }
-
-        public static List<string> InstalledSQLServerInstanceNames()
-        {
-            List<string> sqlServerList = new List<string>();
-            RegistryView registryView = Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32;
-            using (RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
-            {
-                RegistryKey instanceKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL", false);
-                if (instanceKey != null)
-                    sqlServerList.AddRange(instanceKey.GetValueNames());
-            }
-            Environment.SpecialFolder.ApplicationData.ToString();
-            return sqlServerList;
-        }
-        public static List<string> GetSalesPadServices()
-        {
-            List<string> serverList = new List<string>();
-            ServiceController[] services = ServiceController.GetServices();
-            foreach (ServiceController service in services)
-                if (service.DisplayName.Contains("SalesPad"))
-                    serverList.Add(service.DisplayName);
-            return serverList;
         }
 
         public static void UpdateServices(string status, ListView lv, List<ListViewProperties> lvp)
@@ -130,15 +96,12 @@ namespace EnvironmentManager4
             if (String.IsNullOrWhiteSpace(service))
                 return;
 
-            //Format as SQL service if it is a SQL Service
-            if (IsSQLService(service))
-                service = String.Format("{0}{1}", "MSSQL$", service);
-
-            bool status = IsServiceRunning(service);
+            string serviceName = SQLServiceList.GetServiceName(service);
+            bool status = IsServiceRunning(serviceName);
             //Start the service if it isn't running
             if (!status)
             {
-                ServiceController serviceToStart = new ServiceController(service);
+                ServiceController serviceToStart = new ServiceController(serviceName);
                 try
                 {
                     if (serviceToStart.Status.Equals(ServiceControllerStatus.Stopped))
@@ -161,15 +124,12 @@ namespace EnvironmentManager4
             if (String.IsNullOrWhiteSpace(service))
                 return;
 
-            //Format as SQL service if it is a SQL Service
-            if (IsSQLService(service))
-                service = String.Format("{0}{1}", "MSSQL$", service);
-
-            bool status = IsServiceRunning(service);
+            string serviceName = SQLServiceList.GetServiceName(service);
+            bool status = IsServiceRunning(serviceName);
             //Stop the service if it is running
             if (status)
             {
-                ServiceController serviceToStart = new ServiceController(service);
+                ServiceController serviceToStart = new ServiceController(serviceName);
                 try
                 {
                     if (serviceToStart.Status.Equals(ServiceControllerStatus.Running))
