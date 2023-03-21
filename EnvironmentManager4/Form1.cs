@@ -22,15 +22,14 @@ namespace EnvironmentManager4
     {
         private static Form1 s_form = null;
         private delegate void EnableDelegate(bool enable);
+        private int sortColumn = -1;
+
         //https://www.py4u.net/discuss/717463
         //https://www.codegrepper.com/code-examples/csharp/c%23+edit+form+controls+from+another+class
-        private ListViewColumnSorter _lvwColumnSorter;
 
         public Form1()
         {
             InitializeComponent();
-            _lvwColumnSorter = new ListViewColumnSorter();
-            this.lvInstalledSQLServers.ListViewItemSorter = _lvwColumnSorter;
             s_form = this;
         }
 
@@ -921,23 +920,27 @@ namespace EnvironmentManager4
 
         private void ColumnClick(object o, ColumnClickEventArgs e)
         {
-            if (e.Column == _lvwColumnSorter.SortColumn)
+            // Determine whether the column is the same as the last column clicked.  
+            if (e.Column != sortColumn)
             {
-                // Reverse the current sort direction for this column.
-                if (_lvwColumnSorter.Order == SortOrder.Ascending)
-                    _lvwColumnSorter.Order = SortOrder.Descending;
-                else
-                    _lvwColumnSorter.Order = SortOrder.Ascending;
+                // Set the sort column to the new column.  
+                sortColumn = e.Column;
+                // Set the sort order to ascending by default.  
+                lvInstalledSQLServers.Sorting = SortOrder.Ascending;
             }
             else
             {
-                // Set the column number that is to be sorted; default to ascending.
-                _lvwColumnSorter.SortColumn = e.Column;
-                _lvwColumnSorter.Order = SortOrder.Ascending;
+                // Determine what the last sort order was and change it.  
+                if (lvInstalledSQLServers.Sorting == SortOrder.Ascending)
+                    lvInstalledSQLServers.Sorting = SortOrder.Descending;
+                else
+                    lvInstalledSQLServers.Sorting = SortOrder.Ascending;
             }
-
-            // Perform the sort with these new sort options.
-            this.lvInstalledSQLServers.Sort();
+            // Call the sort method to manually sort.  
+            lvInstalledSQLServers.Sort();
+            // Set the ListViewItemSorter property to a new ListViewItemComparer  
+            // object.  
+            this.lvInstalledSQLServers.ListViewItemSorter = new ListViewItemComparer(e.Column, lvInstalledSQLServers.Sorting);
         }
 
         private void installPropertiesMonitorToolStripMenuItem_Click(object sender, EventArgs e)
