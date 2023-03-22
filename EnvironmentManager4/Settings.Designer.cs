@@ -531,7 +531,6 @@ namespace EnvironmentManager4
             this.checkEnableWaterBot.TabIndex = 34;
             this.checkEnableWaterBot.Text = "Enable Water Bot";
             this.checkEnableWaterBot.UseVisualStyleBackColor = true;
-            this.checkEnableWaterBot.Visible = false;
             // 
             // checkShowWiFiIP
             // 

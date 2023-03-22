@@ -152,7 +152,6 @@
     <Compile Include="ListAndButtonForm.Designer.cs">
       <DependentUpon>ListAndButtonForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListViewColumnSorter.cs" />
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="ListViewProperties.cs" />
     <Compile Include="Build Management\Modules.cs" />
@@ -210,15 +209,6 @@
     <Compile Include="Utilities.cs" />
     <Compile Include="Variance.cs" />
     <Compile Include="WaterBot.cs" />
-    <Compile Include="WaterBotForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WaterBotForm.Designer.cs">
-      <DependentUpon>WaterBotForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="WaterBotForm.resx">
-      <DependentUpon>WaterBotForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Resources\EnvironmentManager.ico" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>

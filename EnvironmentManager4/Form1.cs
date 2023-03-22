@@ -22,7 +22,6 @@ namespace EnvironmentManager4
     {
         private static Form1 s_form = null;
         private delegate void EnableDelegate(bool enable);
-        private int sortColumn = -1;
 
         //https://www.py4u.net/discuss/717463
         //https://www.codegrepper.com/code-examples/csharp/c%23+edit+form+controls+from+another+class
@@ -33,7 +32,10 @@ namespace EnvironmentManager4
             s_form = this;
         }
 
+        //this is a placeholder value, used to set the selected database backup to the newly made one.
         public static string s_NewDBBackupName = "test1";
+
+        //These are here to prevent opening duplicates of the different forms.
         public static LaunchProduct s_Launch;
         public static UpdateDatabaseDescription s_Udd;
         public static Install s_InstallBuild;
@@ -46,8 +48,13 @@ namespace EnvironmentManager4
         public static About s_AboutForm;
         public static NewDatabaseBackup s_NewBackup;
         public static NewDatabaseBackup s_OverwriteBackup;
-        public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
         public static InstallPropertiesMonitor s_InstallPropertiesMonitor;
+
+        //This is in place to call/set for re-sizing the listview (lvInstalledSQLServers) depending on the number of rows - for the column chooser.
+        public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
+
+        //Set sort value for server listview (lvInstalledSQLServers).
+        private int sortColumn = -1;
 
         public static void EnableWaitCursor(bool enable)
         {
@@ -661,9 +668,6 @@ namespace EnvironmentManager4
             {
                 if (Environment.MachineName == "STEVERODRIGUEZ")
                 {
-                    WaterBotForm waterBot = new WaterBotForm();
-                    waterBot.ShowDialog();
-
                     //List<SQLServiceList> serviceList = SQLServiceList.GetSQLServices();
                     //foreach (SQLServiceList service in serviceList)
                     //    MessageBox.Show(String.Format("Name: {0}\nDisplay Name: {1}\nTrimmed Name: {2}", service.Name, service.DisplayName, service.DisplayNameTrimmed));
@@ -856,11 +860,10 @@ namespace EnvironmentManager4
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                //
-                FileInfo fi = new FileInfo(@"C:\DatabaseBackups\GP2016\NEWSP.zip");
-                long size = fi.Length;
-                MessageBox.Show(String.Format("File size in bytes: {0}", size));
-                return;
+                //FileInfo fi = new FileInfo(@"C:\DatabaseBackups\GP2016\NEWSP.zip");
+                //long size = fi.Length;
+                //MessageBox.Show(String.Format("File size in bytes: {0}", size));
+                //return;
             }
             string product = cbProductList.Text;
             if (String.IsNullOrWhiteSpace(product) || product == "Select a Product")
@@ -936,9 +939,9 @@ namespace EnvironmentManager4
                 else
                     lvInstalledSQLServers.Sorting = SortOrder.Ascending;
             }
-            // Call the sort method to manually sort.  
+            // Call the sort method to manually sort.
             lvInstalledSQLServers.Sort();
-            // Set the ListViewItemSorter property to a new ListViewItemComparer  
+            // Set the ListViewItemSorter property to a new ListViewItemComparer
             // object.  
             this.lvInstalledSQLServers.ListViewItemSorter = new ListViewItemComparer(e.Column, lvInstalledSQLServers.Sorting);
         }
