@@ -17,7 +17,7 @@ namespace EnvironmentManager4
             {
                 using (StreamWriter sw = new StreamWriter(stream))
                 {
-                    sw.WriteLine(String.Format("-({0})-------------------------------------------------", logTime));
+                    sw.WriteLine(String.Format("-({0}){1}", logTime, Constants.ExceptionDivider));
                     sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
                     sw.WriteLine(String.Format("Exception Message: {0}", e.Message));
                     sw.WriteLine(String.Format("Exception Type: {0}", e.GetType().ToString()));
@@ -36,17 +36,19 @@ namespace EnvironmentManager4
             }
         }
 
-        public static void DisplayExceptionMessage(Exception e, bool dbUpdate = false, string extraMessage = null)
+        public static void DisplayExceptionMessage(Exception e, bool dbUpdate = false, string extraMessage = null, string action = null, string variables = null)
         {
             ExceptionForm form = new ExceptionForm();
             ExceptionForm.exception = e;
             ExceptionForm.extraMessage = extraMessage;
+            ExceptionForm.action = action;
+            ExceptionForm.variables = variables;
             form.ShowDialog();
         }
 
         public static void LogDatabaseUpdateFailure()
         {
-            string logFile = Utilities.GetFile("Log.txt");
+            string logFile = Utilities.GetFile(Constants.EnvironmentManagerLogFile);
             DateTime logTime = DateTime.Now;
 
             using (FileStream stream = File.Open(logFile, FileMode.OpenOrCreate))
@@ -72,21 +74,21 @@ namespace EnvironmentManager4
         {
             foreach (string file in Directory.GetFiles(Utilities.GetCurrentDirectory()))
             {
-                if (file.Contains("pass_log_") || file.Contains("fail_log_"))
+                if (file.Contains(Constants.DatabaseUpdatePassLog) || file.Contains(Constants.DatabaseUpdateFailLog))
                     File.Delete(file);
             }
         }
 
         public static bool IsThereAFailLog()
         {
-            return Directory.GetFiles(Utilities.GetCurrentDirectory()).Any(s => s.Contains("fail_log_"));
+            return Directory.GetFiles(Utilities.GetCurrentDirectory()).Any(s => s.Contains(Constants.DatabaseUpdateFailLog));
         }
 
         private static string GetLogContents()
         {
-            string logContents = "Could not find fail log.";
+            string logContents = Constants.CouldNotFindFailLog;
             foreach (string file in Directory.GetFiles(Utilities.GetCurrentDirectory()))
-                if (file.Contains("fail_log_"))
+                if (file.Contains(Constants.DatabaseUpdateFailLog))
                     logContents = File.ReadAllText(file);
             return logContents;
         }

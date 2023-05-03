@@ -8,6 +8,20 @@ namespace EnvironmentManager4
 {
     public class Constants
     {
-        public static string CouldNotConnect = "Could not connect to network.";
+        //Misc
+        public const string EnvironmentManagerLogFile = "Log.txt";
+
+        //GP Management
+        public const string CouldNotConnect = "Could not connect to network.";
+        
+        //Database Management
+        public const string DatabaseUpdatePassLog = "pass_log_";
+        public const string DatabaseUpdateFailLog = "fail_log_";
+        public const string CouldNotFindFailLog = "Could not find fail log.";
+        public const string DescriptionFullLine = "===============================================================================";
+        public const string DescriptionFileNotPresent = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
+
+        //Exception Handling
+        public const string ExceptionDivider = "-------------------------------------------------";
     }
 }

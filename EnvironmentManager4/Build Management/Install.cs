@@ -259,7 +259,14 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
-                ErrorHandling.DisplayExceptionMessage(e);
+                string action = "Saving the database entry to the SQLite database.";
+                string variables = String.Format("Build:\n{\n\tPath: {0}\n\tVersion: {1}\n\tEntryDate: {2}\n\tProduct: {3}\n\tInstallPath: {4}\n}"
+                    ,this.NetworkPath
+                    ,this.Version
+                    ,startTime
+                    ,this.Product
+                    ,this.InstallLocation);
+                ErrorHandling.DisplayExceptionMessage(e, false, null, action, variables);
             }
 
             try

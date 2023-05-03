@@ -21,9 +21,9 @@ namespace EnvironmentManager4
         public string BackupDescription { get; set; }
         public List<string> Databases { get; set; }
         public string BackupLocation { get; set; }
-        public const string dbDescLine1 = "===============================================================================";
-        public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
-        public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
+        public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}"
+            ,Constants.DescriptionFullLine
+            ,Constants.DescriptionFileNotPresent);
         public static UpdateDatabaseDescription udd;
 
         public static void LoadDatabaseList(ComboBox cb, TextBox tb)
@@ -407,9 +407,9 @@ namespace EnvironmentManager4
             try
             {
                 //get the service for the connection - start it if it wasn't running.
-                string serviceName = SQLServiceList.GetServiceFromConnection(settings.DbManagement.Connection);
-                if (SQLServiceList.IsServiceRunning(serviceName) == false)
-                    ServiceManagement.StartService(serviceName);
+                //string serviceName = SQLServiceList.GetServiceFromConnection(settings.DbManagement.Connection);
+                //if (SQLServiceList.IsServiceRunning(serviceName) == false)
+                //    ServiceManagement.StartService(serviceName);
 
                 //get list of databases.
                 SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};",
