@@ -86,6 +86,7 @@ namespace EnvironmentManager4
                     break;
                 case Products.GPWeb:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\Web-Portal\GP";
+                    pi.InstallDirectory = settings.BuildManagement.GPWebDirectory;
                     break;
                 case Products.WebAPI:
                     pi.FileserverDirectory = @"\\sp-fileserv-01\Shares\Builds\SalesPad.WebApi";

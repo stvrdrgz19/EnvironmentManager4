@@ -1,4 +1,5 @@
 ﻿using EnvironmentManager4.Build_Management;
+using EnvironmentManager4.Service_Management;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -21,19 +22,20 @@ namespace EnvironmentManager4
     {
         private static Form1 s_form = null;
         private delegate void EnableDelegate(bool enable);
+
         //https://www.py4u.net/discuss/717463
         //https://www.codegrepper.com/code-examples/csharp/c%23+edit+form+controls+from+another+class
-        private ListViewColumnSorter _lvwColumnSorter;
 
         public Form1()
         {
             InitializeComponent();
-            _lvwColumnSorter = new ListViewColumnSorter();
-            this.lvInstalledSQLServers.ListViewItemSorter = _lvwColumnSorter;
             s_form = this;
         }
 
+        //this is a placeholder value, used to set the selected database backup to the newly made one.
         public static string s_NewDBBackupName = "test1";
+
+        //These are here to prevent opening duplicates of the different forms.
         public static LaunchProduct s_Launch;
         public static UpdateDatabaseDescription s_Udd;
         public static Install s_InstallBuild;
@@ -46,8 +48,13 @@ namespace EnvironmentManager4
         public static About s_AboutForm;
         public static NewDatabaseBackup s_NewBackup;
         public static NewDatabaseBackup s_OverwriteBackup;
-        public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
         public static InstallPropertiesMonitor s_InstallPropertiesMonitor;
+
+        //This is in place to call/set for re-sizing the listview (lvInstalledSQLServers) depending on the number of rows - for the column chooser.
+        public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
+
+        //Set sort value for server listview (lvInstalledSQLServers).
+        private int sortColumn = -1;
 
         public static void EnableWaitCursor(bool enable)
         {
@@ -269,8 +276,22 @@ namespace EnvironmentManager4
             }
         }
 
+        private void CheckIfConnectedToTheNetwork()
+        {
+            string connectionValue = Utilities.GetLatestVersion();
+            if (connectionValue == "Unable to Connect")
+            {
+                labelNotConnected.Visible = true;
+                labelNotConnected.BackColor = System.Drawing.Color.Transparent;
+            }
+            else
+                labelNotConnected.Visible = false;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            CheckIfConnectedToTheNetwork();
+            WaterBot.StartWaterBot();
             CheckForDevEnvironment();
             SettingsModel settings = SettingsUtilities.GetSettings();
             LoadBuildVersionAndCheckForUpdates();
@@ -302,6 +323,7 @@ namespace EnvironmentManager4
             s_SettingsFormOpen = null;
             SettingsModel settings = SettingsUtilities.GetSettings();
             LoadFromSettings(settings);
+            ServiceManagement.PopulateSQLServerList(lvInstalledSQLServers, s_LvProperties);
         }
 
         private void labelGPInstallationList_Click(object sender, EventArgs e)
@@ -324,6 +346,10 @@ namespace EnvironmentManager4
         private void btnInstallGP_Click(object sender, EventArgs e)
         {
             string selectedGP = cbGPListToInstall.Text;
+
+            if (selectedGP == Constants.CouldNotConnect)
+                return;
+
             List<string> installedGPs = new List<string>();
             foreach (string gp in lbGPVersionsInstalled.Items)
                 installedGPs.Add(gp);
@@ -538,7 +564,6 @@ namespace EnvironmentManager4
                 string path = Clipboard.GetText();
                 string installerPath = Install.GetInstallerPath(path, product, version);
 
-                //Install.install = Installer.GetInstallerFile(path, selectedProduct, selectedVersion);
                 if (installerPath != "EXIT")
                 {
                     s_InstallBuild.Product = product;
@@ -643,9 +668,14 @@ namespace EnvironmentManager4
             {
                 if (Environment.MachineName == "STEVERODRIGUEZ")
                 {
-                    string path = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\master\5.2.40.25\CustomModules\x64\SalesPad.Module.AgruIntegration.5.2.40.X64.Zip";
-                    string extension = Path.GetExtension(path);
-                    MessageBox.Show(extension);
+                    //List<SQLServiceList> serviceList = SQLServiceList.GetSQLServices();
+                    //foreach (SQLServiceList service in serviceList)
+                    //    MessageBox.Show(String.Format("Name: {0}\nDisplay Name: {1}\nTrimmed Name: {2}", service.Name, service.DisplayName, service.DisplayNameTrimmed));
+
+                    //RegUtilities.GenerateInstallOptionEntries();
+                    //string path = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\master\5.2.40.25\CustomModules\x64\SalesPad.Module.AgruIntegration.5.2.40.X64.Zip";
+                    //string extension = Path.GetExtension(path);
+                    //MessageBox.Show(extension);
                     //TestClass testClass = TestClass.tc;
                     //testClass.GetTestClassValues();
                     //TestForm tf = new TestForm();
@@ -830,11 +860,10 @@ namespace EnvironmentManager4
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                //
-                FileInfo fi = new FileInfo(@"C:\DatabaseBackups\GP2016\NEWSP.zip");
-                long size = fi.Length;
-                MessageBox.Show(String.Format("File size in bytes: {0}", size));
-                return;
+                //FileInfo fi = new FileInfo(@"C:\DatabaseBackups\GP2016\NEWSP.zip");
+                //long size = fi.Length;
+                //MessageBox.Show(String.Format("File size in bytes: {0}", size));
+                //return;
             }
             string product = cbProductList.Text;
             if (String.IsNullOrWhiteSpace(product) || product == "Select a Product")
@@ -894,23 +923,27 @@ namespace EnvironmentManager4
 
         private void ColumnClick(object o, ColumnClickEventArgs e)
         {
-            if (e.Column == _lvwColumnSorter.SortColumn)
+            // Determine whether the column is the same as the last column clicked.  
+            if (e.Column != sortColumn)
             {
-                // Reverse the current sort direction for this column.
-                if (_lvwColumnSorter.Order == SortOrder.Ascending)
-                    _lvwColumnSorter.Order = SortOrder.Descending;
-                else
-                    _lvwColumnSorter.Order = SortOrder.Ascending;
+                // Set the sort column to the new column.  
+                sortColumn = e.Column;
+                // Set the sort order to ascending by default.  
+                lvInstalledSQLServers.Sorting = SortOrder.Ascending;
             }
             else
             {
-                // Set the column number that is to be sorted; default to ascending.
-                _lvwColumnSorter.SortColumn = e.Column;
-                _lvwColumnSorter.Order = SortOrder.Ascending;
+                // Determine what the last sort order was and change it.  
+                if (lvInstalledSQLServers.Sorting == SortOrder.Ascending)
+                    lvInstalledSQLServers.Sorting = SortOrder.Descending;
+                else
+                    lvInstalledSQLServers.Sorting = SortOrder.Ascending;
             }
-
-            // Perform the sort with these new sort options.
-            this.lvInstalledSQLServers.Sort();
+            // Call the sort method to manually sort.
+            lvInstalledSQLServers.Sort();
+            // Set the ListViewItemSorter property to a new ListViewItemComparer
+            // object.  
+            this.lvInstalledSQLServers.ListViewItemSorter = new ListViewItemComparer(e.Column, lvInstalledSQLServers.Sorting);
         }
 
         private void installPropertiesMonitorToolStripMenuItem_Click(object sender, EventArgs e)

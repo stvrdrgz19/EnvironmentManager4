@@ -6,12 +6,11 @@ namespace EnvironmentManager4
 {
     public partial class DeleteBuilds : Form
     {
-        private ListViewColumnSorter lvwColumnSorter;
+        private int sortColumn = -1;
+
         public DeleteBuilds()
         {
             InitializeComponent();
-            lvwColumnSorter = new ListViewColumnSorter();
-            this.lvInstalledBuilds.ListViewItemSorter = lvwColumnSorter;
             this.FormClosing += new FormClosingEventHandler(this.FormIsClosing);
         }
 
@@ -92,23 +91,27 @@ namespace EnvironmentManager4
 
         private void ColumnClick(object o, ColumnClickEventArgs e)
         {
-            if (e.Column == lvwColumnSorter.SortColumn)
+            // Determine whether the column is the same as the last column clicked.  
+            if (e.Column != sortColumn)
             {
-                // Reverse the current sort direction for this column.
-                if (lvwColumnSorter.Order == SortOrder.Ascending)
-                    lvwColumnSorter.Order = SortOrder.Descending;
-                else
-                    lvwColumnSorter.Order = SortOrder.Ascending;
+                // Set the sort column to the new column.  
+                sortColumn = e.Column;
+                // Set the sort order to ascending by default.  
+                lvInstalledBuilds.Sorting = SortOrder.Ascending;
             }
             else
             {
-                // Set the column number that is to be sorted; default to ascending.
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
+                // Determine what the last sort order was and change it.  
+                if (lvInstalledBuilds.Sorting == SortOrder.Ascending)
+                    lvInstalledBuilds.Sorting = SortOrder.Descending;
+                else
+                    lvInstalledBuilds.Sorting = SortOrder.Ascending;
             }
-
-            // Perform the sort with these new sort options.
-            this.lvInstalledBuilds.Sort();
+            // Call the sort method to manually sort.  
+            lvInstalledBuilds.Sort();
+            // Set the ListViewItemSorter property to a new ListViewItemComparer  
+            // object.  
+            this.lvInstalledBuilds.ListViewItemSorter = new ListViewItemComparer(e.Column, lvInstalledBuilds.Sorting);
         }
 
         private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)

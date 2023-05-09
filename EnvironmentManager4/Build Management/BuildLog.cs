@@ -22,6 +22,8 @@ namespace EnvironmentManager4
 
         public static List<ListViewProperties> lvp = new List<ListViewProperties>();
         public static List<ListViewProperties> lvpDlls = new List<ListViewProperties>();
+        private int sortBuilds = -1;
+        private int sortDLLs = -1;
 
         private void LoadBuildLog(List<ListViewProperties> lvp)
         {
@@ -47,6 +49,8 @@ namespace EnvironmentManager4
             lvp = ListViewProperties.RetrieveListViewProperties(lvBuilds);
             lvpDlls = ListViewProperties.RetrieveListViewProperties(lvDlls);
             LoadBuildLog(lvp);
+            this.lvBuilds.ColumnClick += new ColumnClickEventHandler(lvBuilds_ColumnClick);
+            this.lvDlls.ColumnClick += new ColumnClickEventHandler(lvDlls_ColumnClick);
             return;
         }
 
@@ -54,21 +58,22 @@ namespace EnvironmentManager4
         {
             lvDlls.Items.Clear();
             ListViewProperties.UpdateListViewProperties(lvpDlls);
-            string entryDate = "";
             ListView.SelectedListViewItemCollection build = this.lvBuilds.SelectedItems;
             foreach (ListViewItem item in build)
-                entryDate = item.SubItems[2].Text;
-
-            List<DllModel> dlls = SqliteDataAccess.LoadDlls(SqliteDataAccess.GetParentId(entryDate));
-            if (dlls == null)
-                return;
-
-            foreach (var dll in dlls)
             {
-                ListViewItem item1 = new ListViewItem(dll.Name);
-                item1.SubItems.Add(dll.Type);
-                lvDlls.Items.Add(item1);
+                ProductInfo pi = ProductInfo.GetProductInfo(item.SubItems[3].Text, item.SubItems[1].Text);
+                List<DllModel> dlls = SqliteDataAccess.LoadDlls(SqliteDataAccess.GetParentId(item.SubItems[2].Text));
+                if (dlls == null)
+                    return;
+
+                foreach (var dll in dlls)
+                {
+                    ListViewItem item1 = new ListViewItem(dll.Name.Replace(pi.ModuleNaming, ""));
+                    item1.SubItems.Add(dll.Type);
+                    lvDlls.Items.Add(item1);
+                }
             }
+
             Utilities.ResizeListViewColumnWidthForScrollBar(lvDlls, 9, 1);
             return;
         }
@@ -112,6 +117,56 @@ namespace EnvironmentManager4
                     selectedBuild += "\n" + item.SubItems[1].Text + ": " + Modules.TrimVersionAndExtension(item.Text, lvBuilds.SelectedItems[0].SubItems[3].Text);
 
             Clipboard.SetText(selectedBuild);
+        }
+
+        private void lvBuilds_ColumnClick(object o, ColumnClickEventArgs e)
+        {
+            // Determine whether the column is the same as the last column clicked.  
+            if (e.Column != sortBuilds)
+            {
+                // Set the sort column to the new column.  
+                sortBuilds = e.Column;
+                // Set the sort order to ascending by default.  
+                lvBuilds.Sorting = SortOrder.Ascending;
+            }
+            else
+            {
+                // Determine what the last sort order was and change it.  
+                if (lvBuilds.Sorting == SortOrder.Ascending)
+                    lvBuilds.Sorting = SortOrder.Descending;
+                else
+                    lvBuilds.Sorting = SortOrder.Ascending;
+            }
+            // Call the sort method to manually sort.  
+            lvBuilds.Sort();
+            // Set the ListViewItemSorter property to a new ListViewItemComparer  
+            // object.  
+            this.lvBuilds.ListViewItemSorter = new ListViewItemComparer(e.Column, lvBuilds.Sorting);
+        }
+
+        private void lvDlls_ColumnClick(object o, ColumnClickEventArgs e)
+        {
+            // Determine whether the column is the same as the last column clicked.  
+            if (e.Column != sortDLLs)
+            {
+                // Set the sort column to the new column.  
+                sortDLLs = e.Column;
+                // Set the sort order to ascending by default.  
+                lvDlls.Sorting = SortOrder.Ascending;
+            }
+            else
+            {
+                // Determine what the last sort order was and change it.  
+                if (lvDlls.Sorting == SortOrder.Ascending)
+                    lvDlls.Sorting = SortOrder.Descending;
+                else
+                    lvDlls.Sorting = SortOrder.Ascending;
+            }
+            // Call the sort method to manually sort.  
+            lvDlls.Sort();
+            // Set the ListViewItemSorter property to a new ListViewItemComparer  
+            // object.  
+            this.lvDlls.ListViewItemSorter = new ListViewItemComparer(e.Column, lvDlls.Sorting);
         }
 
         private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)

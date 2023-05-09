@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EnvironmentManager4.Service_Management;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,9 +21,9 @@ namespace EnvironmentManager4
         public string BackupDescription { get; set; }
         public List<string> Databases { get; set; }
         public string BackupLocation { get; set; }
-        public const string dbDescLine1 = "===============================================================================";
-        public const string dbDescLine2 = "=================== SELECTED DATABASE HAS NO DESCRIPTION ==================";
-        public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}", dbDescLine1, dbDescLine2);
+        public static string dbDescDefault = String.Format("{0}\n{0}\n{0}\n{0}\n{0}\n{1}\n{0}\n{0}\n{0}\n{0}\n{0}"
+            ,Constants.DescriptionFullLine
+            ,Constants.DescriptionFileNotPresent);
         public static UpdateDatabaseDescription udd;
 
         public static void LoadDatabaseList(ComboBox cb, TextBox tb)
@@ -39,11 +40,13 @@ namespace EnvironmentManager4
             if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
                 MessageBox.Show("There is no value in the Database Backup Directory Setting. Please set one in Settings.");
+                LoadDatabaseDescription(cb, tb);
                 return;
             }
             if (!Directory.Exists(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
                 MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist.", settingsModel.DbManagement.DatabaseBackupDirectory));
+                LoadDatabaseDescription(cb, tb);
                 return;
             }
             cb.Items.AddRange(Utilities.GetFilesFromDirectoryByExtension(settingsModel.DbManagement.DatabaseBackupDirectory, "zip"));
@@ -403,6 +406,12 @@ namespace EnvironmentManager4
             string script = @"SELECT name FROM master.dbo.sysdatabases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb', 'toolbox')";
             try
             {
+                //get the service for the connection - start it if it wasn't running.
+                //string serviceName = SQLServiceList.GetServiceFromConnection(settings.DbManagement.Connection);
+                //if (SQLServiceList.IsServiceRunning(serviceName) == false)
+                //    ServiceManagement.StartService(serviceName);
+
+                //get list of databases.
                 SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};",
                     settings.DbManagement.Connection, settings.DbManagement.SQLServerUserName,
                     Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword))));

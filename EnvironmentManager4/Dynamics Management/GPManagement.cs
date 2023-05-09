@@ -36,8 +36,9 @@ namespace EnvironmentManager4
             }
             catch (Exception e)
             {
+                cb.Text = Constants.CouldNotConnect;
                 ErrorHandling.LogException(e, false, "There were errors connecting to the network.");
-                ErrorHandling.DisplayExceptionMessage(e, false, "There were errors connecting to the network.");
+                //ErrorHandling.DisplayExceptionMessage(e, false, "There were errors connecting to the network.");
             }
         }
 

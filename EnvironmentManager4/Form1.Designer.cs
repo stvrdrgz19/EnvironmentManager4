@@ -79,12 +79,13 @@ namespace EnvironmentManager4
             this.killSalesPadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.directoryCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.installPropertiesMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.labelVersion = new System.Windows.Forms.Label();
-            this.installPropertiesMonitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelNotConnected = new System.Windows.Forms.Label();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -620,6 +621,13 @@ namespace EnvironmentManager4
             this.directoryCompareToolStripMenuItem.Text = "Directory Compare";
             this.directoryCompareToolStripMenuItem.Click += new System.EventHandler(this.directoryCompareToolStripMenuItem_Click);
             // 
+            // installPropertiesMonitorToolStripMenuItem
+            // 
+            this.installPropertiesMonitorToolStripMenuItem.Name = "installPropertiesMonitorToolStripMenuItem";
+            this.installPropertiesMonitorToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.installPropertiesMonitorToolStripMenuItem.Text = "Install Properties Monitor";
+            this.installPropertiesMonitorToolStripMenuItem.Click += new System.EventHandler(this.installPropertiesMonitorToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -652,18 +660,23 @@ namespace EnvironmentManager4
             this.labelVersion.TabIndex = 19;
             this.labelVersion.Text = "label1";
             // 
-            // installPropertiesMonitorToolStripMenuItem
+            // labelNotConnected
             // 
-            this.installPropertiesMonitorToolStripMenuItem.Name = "installPropertiesMonitorToolStripMenuItem";
-            this.installPropertiesMonitorToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.installPropertiesMonitorToolStripMenuItem.Text = "Install Properties Monitor";
-            this.installPropertiesMonitorToolStripMenuItem.Click += new System.EventHandler(this.installPropertiesMonitorToolStripMenuItem_Click);
+            this.labelNotConnected.AutoSize = true;
+            this.labelNotConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelNotConnected.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.labelNotConnected.Location = new System.Drawing.Point(169, 7);
+            this.labelNotConnected.Name = "labelNotConnected";
+            this.labelNotConnected.Size = new System.Drawing.Size(198, 13);
+            this.labelNotConnected.TabIndex = 20;
+            this.labelNotConnected.Text = "You are NOT connected to the network.";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(520, 587);
+            this.Controls.Add(this.labelNotConnected);
             this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.labelReloadVPNIPAddress);
             this.Controls.Add(this.tbSPVPNIPAddress);
@@ -752,6 +765,7 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Button btnEditDescription;
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.ToolStripMenuItem installPropertiesMonitorToolStripMenuItem;
+        private System.Windows.Forms.Label labelNotConnected;
     }
 }
 

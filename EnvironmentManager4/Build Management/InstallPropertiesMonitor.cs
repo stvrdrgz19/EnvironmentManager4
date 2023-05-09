@@ -12,6 +12,9 @@ namespace EnvironmentManager4.Build_Management
 {
     public partial class InstallPropertiesMonitor : Form
     {
+        private int sortBuildColumn = -1;
+        private int sortPropertiesColumn = -1;
+
         public InstallPropertiesMonitor()
         {
             InitializeComponent();
@@ -31,6 +34,8 @@ namespace EnvironmentManager4.Build_Management
         private void InstallPropertiesMonitor_Load(object sender, EventArgs e)
         {
             LoadProductList(cbProducts);
+            this.lvInstalledBuilds.ColumnClick += new ColumnClickEventHandler(lvInstalledBuilds_ColumnClick);
+            this.lvInstallProperties.ColumnClick += new ColumnClickEventHandler(lvInstallProperties_ColumnClick);
             return;
         }
 
@@ -117,6 +122,56 @@ namespace EnvironmentManager4.Build_Management
                 lvInstallProperties.Items.Clear();
             }
             return;
+        }
+
+        private void lvInstalledBuilds_ColumnClick(object o, ColumnClickEventArgs e)
+        {
+            // Determine whether the column is the same as the last column clicked.  
+            if (e.Column != sortBuildColumn)
+            {
+                // Set the sort column to the new column.  
+                sortBuildColumn = e.Column;
+                // Set the sort order to ascending by default.  
+                lvInstalledBuilds.Sorting = SortOrder.Ascending;
+            }
+            else
+            {
+                // Determine what the last sort order was and change it.  
+                if (lvInstalledBuilds.Sorting == SortOrder.Ascending)
+                    lvInstalledBuilds.Sorting = SortOrder.Descending;
+                else
+                    lvInstalledBuilds.Sorting = SortOrder.Ascending;
+            }
+            // Call the sort method to manually sort.  
+            lvInstalledBuilds.Sort();
+            // Set the ListViewItemSorter property to a new ListViewItemComparer  
+            // object.  
+            this.lvInstalledBuilds.ListViewItemSorter = new ListViewItemComparer(e.Column, lvInstalledBuilds.Sorting);
+        }
+
+        private void lvInstallProperties_ColumnClick(object o, ColumnClickEventArgs e)
+        {
+            // Determine whether the column is the same as the last column clicked.  
+            if (e.Column != sortPropertiesColumn)
+            {
+                // Set the sort column to the new column.  
+                sortPropertiesColumn = e.Column;
+                // Set the sort order to ascending by default.  
+                lvInstallProperties.Sorting = SortOrder.Ascending;
+            }
+            else
+            {
+                // Determine what the last sort order was and change it.  
+                if (lvInstallProperties.Sorting == SortOrder.Ascending)
+                    lvInstallProperties.Sorting = SortOrder.Descending;
+                else
+                    lvInstallProperties.Sorting = SortOrder.Ascending;
+            }
+            // Call the sort method to manually sort.  
+            lvInstallProperties.Sort();
+            // Set the ListViewItemSorter property to a new ListViewItemComparer  
+            // object.  
+            this.lvInstallProperties.ListViewItemSorter = new ListViewItemComparer(e.Column, lvInstallProperties.Sorting);
         }
 
         private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)

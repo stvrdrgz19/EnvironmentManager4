@@ -15,6 +15,8 @@ namespace EnvironmentManager4
         public static Exception exception;
         public static string extraMessage;
         public static bool dbUpdateFail;
+        public static string action;
+        public static string variables;
         public ExceptionForm()
         {
             InitializeComponent();

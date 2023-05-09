@@ -21,6 +21,7 @@ namespace EnvironmentManager4
         public const string path1Load = "Enter/Select Directory 1...";
         public const string path2Load = "Enter/Select Directory 2...";
         public bool checkSubDirectories = true;
+        private int sortColumn = -1;
 
         public void SetDefaultValues()
         {
@@ -114,6 +115,7 @@ namespace EnvironmentManager4
             LoadListCounts(tbList1Count, lbList1);
             LoadListCounts(tbList2Count, lbList2);
             LoadListCounts(tbResultsCount, null, lvResults);
+            this.lvResults.ColumnClick += new ColumnClickEventHandler(ColumnClick);
             return;
         }
 
@@ -228,7 +230,31 @@ namespace EnvironmentManager4
 
             MessageBox.Show(message, caption, buttons, icon);
             return;
+        }
 
+        private void ColumnClick(object o, ColumnClickEventArgs e)
+        {
+            // Determine whether the column is the same as the last column clicked.  
+            if (e.Column != sortColumn)
+            {
+                // Set the sort column to the new column.  
+                sortColumn = e.Column;
+                // Set the sort order to ascending by default.  
+                lvResults.Sorting = SortOrder.Ascending;
+            }
+            else
+            {
+                // Determine what the last sort order was and change it.  
+                if (lvResults.Sorting == SortOrder.Ascending)
+                    lvResults.Sorting = SortOrder.Descending;
+                else
+                    lvResults.Sorting = SortOrder.Ascending;
+            }
+            // Call the sort method to manually sort.  
+            lvResults.Sort();
+            // Set the ListViewItemSorter property to a new ListViewItemComparer  
+            // object.  
+            this.lvResults.ListViewItemSorter = new ListViewItemComparer(e.Column, lvResults.Sorting);
         }
 
         private void btnCompareLists_Click(object sender, EventArgs e)
