@@ -182,6 +182,7 @@
     <Compile Include="SettingsModel.cs" />
     <Compile Include="SqliteDataAccess.cs" />
     <Compile Include="TestClass.cs" />
+    <Compile Include="TestLogs.cs" />
     <Compile Include="TextPrompt.cs">
       <SubType>Form</SubType>
     </Compile>

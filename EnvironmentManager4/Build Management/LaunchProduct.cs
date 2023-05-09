@@ -106,12 +106,21 @@ namespace EnvironmentManager4
 
         private void Launch_Click(object sender, EventArgs e)
         {
+            //delete the test log file
+            File.Delete(Utilities.GetFile("TestLog.txt"));
             if (lvInstalledBuilds.SelectedItems.Count != 0)
             {
                 string selectedBuild = lvInstalledBuilds.SelectedItems[0].Text;
+                //logging
+                TestLogs.LogMessage(String.Format("SelectedBuild: {0}", selectedBuild));
                 List<Builds> builds = Builds.GetInstalledBuilds(product, version);
                 foreach (Builds build in builds)
                 {
+                    //logging
+                    TestLogs.LogMessage(String.Format("InstallPath - {0}", build.InstallPath));
+                    TestLogs.LogMessage(String.Format("Exe: {0}", build.Exe));
+                    TestLogs.LogMessage(String.Format("ModifiedDate: {0}", build.ModifiedDate.ToString()));
+
                     if (selectedBuild == build.InstallPath)
                         Process.Start(String.Format(@"{0}\{1}",
                             selectedBuild,
