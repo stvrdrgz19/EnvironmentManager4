@@ -27,15 +27,7 @@ namespace EnvironmentManager4
             if (lastHour <= DateTime.Now.Hour || (lastHour == 23 && DateTime.Now.Hour == 0))
                 if (DateTime.Now.Minute == 0 || DateTime.Now.Minute == 30)
                     if (settings.Other.EnableWaterBot)
-                    {
-                        ToastContentBuilder wb = new ToastContentBuilder();
-                        wb.AddText("WaterBot");
-                        wb.AddText("Time to drink some water.");
-                        wb.Show(toast =>
-                        {
-                            toast.ExpirationTime = DateTime.Now.AddMinutes(10);
-                        });
-                    }
+                        Toasts.Toast("WaterBot", "Time to drink some water.", 10);
         }
     }
 }

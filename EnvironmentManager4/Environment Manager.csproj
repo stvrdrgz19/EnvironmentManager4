@@ -189,6 +189,7 @@
     <Compile Include="TextPrompt.Designer.cs">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Toasts.cs" />
     <Compile Include="UpdatePrompt.cs">
       <SubType>Form</SubType>
     </Compile>

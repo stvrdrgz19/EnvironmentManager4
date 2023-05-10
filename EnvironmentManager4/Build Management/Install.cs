@@ -370,6 +370,11 @@ namespace EnvironmentManager4
 
             if (this.LaunchAfterInstall)
                 build.LaunchBuild();
+            else
+                Toasts.Toast(
+                    "SUCCESS"
+                    , String.Format("Build version {0} of {1} was installed successfully.", ip.BuildPath.Substring(ip.BuildPath.LastIndexOf('\\') + 1), ip.Product)
+                    , 1);
 
             Form1.EnableInstallButton(true);
             Form1.EnableWaitCursor(false);

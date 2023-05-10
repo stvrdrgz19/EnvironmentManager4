@@ -237,12 +237,11 @@ namespace EnvironmentManager4
             if (settings.DbManagement.ResetDatabaseAfterRestore)
                 ResetDatabaseVersion(settings.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword)), settings.DbManagement.DBToRestore);
 
-            string message = String.Format(@"Backup '{0}' was successfully restored.", backupName);
-            string caption = "SUCCESS";
-            MessageBoxButtons buttons = MessageBoxButtons.OK;
-            MessageBoxIcon icon = MessageBoxIcon.Exclamation;
-
-            MessageBox.Show(message, caption, buttons, icon);
+            //Inform the user the install was successful via toast
+            Toasts.Toast(
+                "SUCCESS"
+                , String.Format(@"Backup '{0}' was successfully restored.", backupName)
+                , 1);
         }
 
         public static void DeleteDatabaseBackup(string backupName, string databaseFile, bool log, bool message)
@@ -252,7 +251,10 @@ namespace EnvironmentManager4
                 File.Delete(databaseFile);
 
                 if (message)
-                    MessageBox.Show(String.Format("Database '{0}' was successfully deleted.", backupName));
+                    Toasts.Toast(
+                        "SUCCESS"
+                        , String.Format("Database '{0}' was successfully deleted.", backupName)
+                        , 1);
 
                 if (log)
                 {
@@ -391,12 +393,10 @@ namespace EnvironmentManager4
             Form1.SetStaticBackup(true);
             Form1.EnableWaitCursor(false);
 
-            string message = String.Format("The database backup '{0}' has been {1} successfully.", databaseBackup.BackupName, actionLabel);
-            string caption = "SUCCESS";
-            MessageBoxButtons buttons = MessageBoxButtons.OK;
-            MessageBoxIcon icon = MessageBoxIcon.Exclamation;
-
-            MessageBox.Show(message, caption, buttons, icon);
+            Toasts.Toast(
+                "SUCCESS"
+                , String.Format("The database backup '{0}' has been {1} successfully.", databaseBackup.BackupName, actionLabel)
+                , 1);
         }
 
         public static List<string> RetrieveSQLDatabases()
