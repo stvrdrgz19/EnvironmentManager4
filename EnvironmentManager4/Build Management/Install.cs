@@ -244,6 +244,9 @@ namespace EnvironmentManager4
             string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetFolder("Installers"), installerFileName);
             File.Copy(this.InstallerPath, tempInstaller, true);
 
+            //Inform the user that Installation is happening
+            Toasts.Toast("INSTALLING", "Environment Manager is attempting to silently install the selected build. This could take a few minutes.", 1);
+
             //SILENTLY INSTALL PRODUCT
             Process installProduct = new Process();
             installProduct.StartInfo.FileName = tempInstaller;
@@ -300,6 +303,11 @@ namespace EnvironmentManager4
 
             if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
             {
+                //Inform the user that selected DLLs are being added to the install.
+                Toasts.Toast("INSTALLING DLLS"
+                    , String.Format("Environment Manager is adding any selected DLLs to this install of {0}", this.Product)
+                    , 1);
+
                 Modules.GetDLLs(this.Product, this.NetworkPath, this.Version, startTime, custDllToAdd, extDllToAdd);
             }
 
@@ -321,7 +329,12 @@ namespace EnvironmentManager4
             //==========================================================================================================================================================================================
             
             if (this.RunDatabaseUpdate)
+            {
+                Toasts.Toast("Running Datbase Update"
+                    , "The database update for the installed build is bring ran, this may take a few minutes."
+                    , 1);
                 DatabaseManagement.RunSalesPadDatabaseUpdate(this.InstallLocation);
+            }
 
             if (this.ResetDatabaseVersion && !this.RunDatabaseUpdate)
                 DatabaseManagement.ResetDatabaseVersion();
@@ -343,11 +356,11 @@ namespace EnvironmentManager4
 
             if (this.LaunchAfterInstall)
                 build.LaunchBuild();
-            else
-                Toasts.Toast(
-                    "SUCCESS"
-                    , String.Format("Build version {0} of {1} was installed successfully.", ip.BuildPath.Substring(ip.BuildPath.LastIndexOf('\\') + 1), ip.Product)
-                    , 1);
+
+            Toasts.Toast(
+                "SUCCESS"
+                , String.Format("Build version {0} of {1} was installed successfully.", ip.BuildPath.Substring(ip.BuildPath.LastIndexOf('\\') + 1), ip.Product)
+                , 1);
 
             Form1.EnableInstallButton(true);
             Form1.EnableWaitCursor(false);
