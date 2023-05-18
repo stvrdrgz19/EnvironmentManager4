@@ -81,6 +81,7 @@ namespace EnvironmentManager4
             this.btnSaveExit = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.labelSettingsVersion = new System.Windows.Forms.Label();
+            this.checkEnableInstallToasts = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -505,6 +506,7 @@ namespace EnvironmentManager4
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.checkEnableInstallToasts);
             this.groupBox3.Controls.Add(this.checkEnableWaterBot);
             this.groupBox3.Controls.Add(this.checkShowWiFiIP);
             this.groupBox3.Controls.Add(this.checkShowVPNIP);
@@ -516,7 +518,7 @@ namespace EnvironmentManager4
             this.groupBox3.ForeColor = System.Drawing.Color.Blue;
             this.groupBox3.Location = new System.Drawing.Point(2, 408);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(533, 152);
+            this.groupBox3.Size = new System.Drawing.Size(533, 172);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Other";
@@ -613,7 +615,7 @@ namespace EnvironmentManager4
             // btnSaveExit
             // 
             this.btnSaveExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnSaveExit.Location = new System.Drawing.Point(427, 565);
+            this.btnSaveExit.Location = new System.Drawing.Point(427, 585);
             this.btnSaveExit.Name = "btnSaveExit";
             this.btnSaveExit.Size = new System.Drawing.Size(75, 23);
             this.btnSaveExit.TabIndex = 34;
@@ -625,11 +627,24 @@ namespace EnvironmentManager4
             // 
             this.labelSettingsVersion.AutoSize = true;
             this.labelSettingsVersion.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.labelSettingsVersion.Location = new System.Drawing.Point(11, 571);
+            this.labelSettingsVersion.Location = new System.Drawing.Point(11, 591);
             this.labelSettingsVersion.Name = "labelSettingsVersion";
             this.labelSettingsVersion.Size = new System.Drawing.Size(41, 13);
             this.labelSettingsVersion.TabIndex = 35;
             this.labelSettingsVersion.Text = "label15";
+            // 
+            // checkEnableInstallToasts
+            // 
+            this.checkEnableInstallToasts.AutoSize = true;
+            this.checkEnableInstallToasts.ForeColor = System.Drawing.Color.Black;
+            this.checkEnableInstallToasts.Location = new System.Drawing.Point(10, 151);
+            this.checkEnableInstallToasts.Name = "checkEnableInstallToasts";
+            this.checkEnableInstallToasts.Size = new System.Drawing.Size(124, 17);
+            this.checkEnableInstallToasts.TabIndex = 35;
+            this.checkEnableInstallToasts.Text = "Enable Install Toasts";
+            this.toolTip1.SetToolTip(this.checkEnableInstallToasts, "This setting adds toast notifications to the Product install process to update th" +
+        "e user on what is happening.");
+            this.checkEnableInstallToasts.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -637,7 +652,7 @@ namespace EnvironmentManager4
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnSaveExit;
-            this.ClientSize = new System.Drawing.Size(537, 594);
+            this.ClientSize = new System.Drawing.Size(537, 614);
             this.Controls.Add(this.labelSettingsVersion);
             this.Controls.Add(this.btnSaveExit);
             this.Controls.Add(this.groupBox3);
@@ -712,5 +727,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.CheckBox checkResetDatabase;
         private System.Windows.Forms.CheckBox checkEnableWaterBot;
         private System.Windows.Forms.Label labelSettingsVersion;
+        private System.Windows.Forms.CheckBox checkEnableInstallToasts;
     }
 }

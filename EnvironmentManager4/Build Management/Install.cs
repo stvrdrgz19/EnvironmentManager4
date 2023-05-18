@@ -230,6 +230,8 @@ namespace EnvironmentManager4
 
         public void InstallBuild()
         {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+
             //start the busy cursor
             this.Cursor = Cursors.WaitCursor;
 
