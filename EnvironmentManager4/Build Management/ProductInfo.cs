@@ -95,5 +95,25 @@ namespace EnvironmentManager4
             }
             return pi;
         }
+
+        public static List<string> DefaultInstallPaths()
+        {
+            //get settings
+            SettingsModel settings = SettingsUtilities.GetSettings();
+
+            //build a list of default install paths
+            List<string> paths = new List<string>()
+            {
+                settings.BuildManagement.SalesPadx86Directory,
+                settings.BuildManagement.SalesPadx64Directory,
+                settings.BuildManagement.DataCollectionDirectory,
+                settings.BuildManagement.SalesPadMobileDirectory,
+                settings.BuildManagement.ShipCenterDirectory,
+                settings.BuildManagement.GPWebDirectory,
+                settings.BuildManagement.WebAPIDirectory
+            };
+
+            return paths;
+        }
     }
 }

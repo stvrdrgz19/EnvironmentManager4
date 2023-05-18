@@ -548,21 +548,6 @@ namespace EnvironmentManager4
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            //retrieve settings values from settings file
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-
-            //get a list of default install paths to prevent the user from installing in the base install directory
-            List<string> defaultPaths = new List<string>
-            {
-                settingsModel.BuildManagement.SalesPadx86Directory,
-                settingsModel.BuildManagement.SalesPadx64Directory,
-                settingsModel.BuildManagement.DataCollectionDirectory,
-                settingsModel.BuildManagement.SalesPadMobileDirectory,
-                settingsModel.BuildManagement.ShipCenterDirectory,
-                settingsModel.BuildManagement.GPWebDirectory,
-                settingsModel.BuildManagement.WebAPIDirectory
-            };
-
             //clear out any saved installers from previous installations
             DirectoryInfo di = new DirectoryInfo(Utilities.GetFolder("Installers"));
             foreach (FileInfo file in di.GetFiles())
@@ -570,7 +555,7 @@ namespace EnvironmentManager4
 
             //check if the selected install path is a base install path - reject
             string installPath = tbInstallLocation.Text;
-            if (defaultPaths.Contains(installPath))
+            if (ProductInfo.DefaultInstallPaths().Contains(installPath))
             {
                 if (this.Product != Products.GPWeb || this.Product != Products.WebAPI)
                 {
