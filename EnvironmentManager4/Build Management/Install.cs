@@ -230,6 +230,8 @@ namespace EnvironmentManager4
 
         public void InstallBuild()
         {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+
             //start the busy cursor
             this.Cursor = Cursors.WaitCursor;
 
@@ -243,6 +245,10 @@ namespace EnvironmentManager4
             string installerFileName = Path.GetFileName(this.InstallerPath);     //the actual file name without it's path
             string tempInstaller = String.Format(@"{0}\{1}", Utilities.GetFolder("Installers"), installerFileName);
             File.Copy(this.InstallerPath, tempInstaller, true);
+
+            //Inform the user that Installation is happening
+            if (settings.Other.EnableInstallToasts)
+                Toasts.Toast("INSTALLING", "Environment Manager is attempting to silently install the selected build. This could take a few minutes.", 1);
 
             //SILENTLY INSTALL PRODUCT
             Process installProduct = new Process();
@@ -300,6 +306,12 @@ namespace EnvironmentManager4
 
             if (custDllToAdd.Count > 0 || extDllToAdd.Count > 0)
             {
+                //Inform the user that selected DLLs are being added to the install.
+                if (settings.Other.EnableInstallToasts)
+                    Toasts.Toast("INSTALLING DLLS"
+                        ,String.Format("Environment Manager is adding any selected DLLs to this install of {0}", this.Product)
+                        ,1);
+
                 Modules.GetDLLs(this.Product, this.NetworkPath, this.Version, startTime, custDllToAdd, extDllToAdd);
             }
 
@@ -321,7 +333,13 @@ namespace EnvironmentManager4
             //==========================================================================================================================================================================================
             
             if (this.RunDatabaseUpdate)
+            {
+                if (settings.Other.EnableInstallToasts)
+                    Toasts.Toast("Running Datbase Update"
+                        , "The database update for the installed build is bring ran, this may take a few minutes."
+                        , 1);
                 DatabaseManagement.RunSalesPadDatabaseUpdate(this.InstallLocation);
+            }
 
             if (this.ResetDatabaseVersion && !this.RunDatabaseUpdate)
                 DatabaseManagement.ResetDatabaseVersion();
@@ -343,7 +361,8 @@ namespace EnvironmentManager4
 
             if (this.LaunchAfterInstall)
                 build.LaunchBuild();
-            else
+
+            if (settings.Other.EnableInstallToasts)
                 Toasts.Toast(
                     "SUCCESS"
                     , String.Format("Build version {0} of {1} was installed successfully.", ip.BuildPath.Substring(ip.BuildPath.LastIndexOf('\\') + 1), ip.Product)
@@ -548,21 +567,6 @@ namespace EnvironmentManager4
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            //retrieve settings values from settings file
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-
-            //get a list of default install paths to prevent the user from installing in the base install directory
-            List<string> defaultPaths = new List<string>
-            {
-                settingsModel.BuildManagement.SalesPadx86Directory,
-                settingsModel.BuildManagement.SalesPadx64Directory,
-                settingsModel.BuildManagement.DataCollectionDirectory,
-                settingsModel.BuildManagement.SalesPadMobileDirectory,
-                settingsModel.BuildManagement.ShipCenterDirectory,
-                settingsModel.BuildManagement.GPWebDirectory,
-                settingsModel.BuildManagement.WebAPIDirectory
-            };
-
             //clear out any saved installers from previous installations
             DirectoryInfo di = new DirectoryInfo(Utilities.GetFolder("Installers"));
             foreach (FileInfo file in di.GetFiles())
@@ -570,7 +574,7 @@ namespace EnvironmentManager4
 
             //check if the selected install path is a base install path - reject
             string installPath = tbInstallLocation.Text;
-            if (defaultPaths.Contains(installPath))
+            if (ProductInfo.DefaultInstallPaths().Contains(installPath))
             {
                 if (this.Product != Products.GPWeb || this.Product != Products.WebAPI)
                 {

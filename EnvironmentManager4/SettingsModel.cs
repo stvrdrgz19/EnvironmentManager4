@@ -46,6 +46,7 @@ namespace EnvironmentManager4
         public bool ShowVPNIP { get; set; }
         public bool ShowIP { get; set; }
         public bool EnableWaterBot { get; set; }
+        public bool EnableInstallToasts { get; set; }
     }
 
     public class Connection
@@ -129,7 +130,8 @@ namespace EnvironmentManager4
                 ShowAlwaysOnTop = true,
                 ShowVPNIP = true,
                 ShowIP = true,
-                EnableWaterBot = false
+                EnableWaterBot = false,
+                EnableInstallToasts = false
             };
 
             var settings = new SettingsModel
