@@ -675,17 +675,24 @@ namespace EnvironmentManager4
 
         private void LoadConfigurationModules(List<string> modules, ListBox listBox, string type)
         {
+            List<string> buildDLLs = new List<string>();
+            foreach (string item in listBox.Items)
+                buildDLLs.Add(item);
+
             foreach (string dll in modules)
             {
-                int index = listBox.FindStringExact(dll);
-                try
+                if (buildDLLs.Contains(dll))
                 {
-                    listBox.SetSelected(index, true);
-                }
-                catch (Exception e)
-                {
-                    ErrorHandling.LogException(e);
-                    ErrorHandling.DisplayExceptionMessage(e);
+                    int index = listBox.FindStringExact(dll);
+                    try
+                    {
+                        listBox.SetSelected(index, true);
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorHandling.LogException(e);
+                        ErrorHandling.DisplayExceptionMessage(e);
+                    }
                 }
             }
         }
