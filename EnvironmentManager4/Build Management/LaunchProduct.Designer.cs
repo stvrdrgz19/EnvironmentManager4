@@ -39,18 +39,20 @@ namespace EnvironmentManager4
             this.RemoveDLLs = new System.Windows.Forms.Button();
             this.CopyLabels = new System.Windows.Forms.Button();
             this.SelectedBuildDLLs = new System.Windows.Forms.ListBox();
+            this.checkRunDatabaseUpdate = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkRunDatabaseUpdate);
             this.groupBox1.Controls.Add(this.lvInstalledBuilds);
             this.groupBox1.Controls.Add(this.Launch);
             this.groupBox1.ForeColor = System.Drawing.Color.Blue;
             this.groupBox1.Location = new System.Drawing.Point(2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(680, 208);
+            this.groupBox1.Size = new System.Drawing.Size(680, 223);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Builds";
@@ -86,7 +88,7 @@ namespace EnvironmentManager4
             // Launch
             // 
             this.Launch.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Launch.Location = new System.Drawing.Point(7, 174);
+            this.Launch.Location = new System.Drawing.Point(7, 189);
             this.Launch.Name = "Launch";
             this.Launch.Size = new System.Drawing.Size(665, 23);
             this.Launch.TabIndex = 0;
@@ -100,7 +102,7 @@ namespace EnvironmentManager4
             this.groupBox2.Controls.Add(this.CopyLabels);
             this.groupBox2.Controls.Add(this.SelectedBuildDLLs);
             this.groupBox2.ForeColor = System.Drawing.Color.Blue;
-            this.groupBox2.Location = new System.Drawing.Point(2, 216);
+            this.groupBox2.Location = new System.Drawing.Point(2, 231);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(680, 208);
             this.groupBox2.TabIndex = 10;
@@ -139,11 +141,22 @@ namespace EnvironmentManager4
             this.SelectedBuildDLLs.TabIndex = 0;
             this.SelectedBuildDLLs.TabStop = false;
             // 
+            // checkRunDatabaseUpdate
+            // 
+            this.checkRunDatabaseUpdate.AutoSize = true;
+            this.checkRunDatabaseUpdate.ForeColor = System.Drawing.Color.Black;
+            this.checkRunDatabaseUpdate.Location = new System.Drawing.Point(8, 171);
+            this.checkRunDatabaseUpdate.Name = "checkRunDatabaseUpdate";
+            this.checkRunDatabaseUpdate.Size = new System.Drawing.Size(133, 17);
+            this.checkRunDatabaseUpdate.TabIndex = 3;
+            this.checkRunDatabaseUpdate.Text = "Run Database Update";
+            this.checkRunDatabaseUpdate.UseVisualStyleBackColor = true;
+            // 
             // LaunchProduct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 426);
+            this.ClientSize = new System.Drawing.Size(684, 441);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -154,6 +167,7 @@ namespace EnvironmentManager4
             this.Text = "Launch Product";
             this.Load += new System.EventHandler(this.LaunchProduct_Load);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -170,5 +184,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ListView lvInstalledBuilds;
         private System.Windows.Forms.ColumnHeader cbBuildPath;
         private System.Windows.Forms.ColumnHeader chDateModified;
+        private System.Windows.Forms.CheckBox checkRunDatabaseUpdate;
     }
 }

@@ -100,33 +100,39 @@ namespace EnvironmentManager4
         {
             this.Text = String.Format(@"Launch {0} {1}", product, version);
             Builds.PopulateBuildLists(lvInstalledBuilds, product, version);
+            if (product != Products.SalesPad)
+            {
+                checkRunDatabaseUpdate.Enabled = false;
+                checkRunDatabaseUpdate.Checked = false;
+            }
             this.lvInstalledBuilds.ColumnClick += new ColumnClickEventHandler(ColumnClick);
             return;
         }
 
         private void Launch_Click(object sender, EventArgs e)
         {
-            //delete the test log file
-            File.Delete(Utilities.GetFile("TestLog.txt"));
             if (lvInstalledBuilds.SelectedItems.Count != 0)
             {
                 string selectedBuild = lvInstalledBuilds.SelectedItems[0].Text;
-                //logging
-                TestLogs.LogMessage(String.Format("SelectedBuild: {0}", selectedBuild));
                 List<Builds> builds = Builds.GetInstalledBuilds(product, version);
+                this.Close();
                 foreach (Builds build in builds)
                 {
-                    //logging
-                    TestLogs.LogMessage(String.Format("InstallPath - {0}", build.InstallPath));
-                    TestLogs.LogMessage(String.Format("Exe: {0}", build.Exe));
-                    TestLogs.LogMessage(String.Format("ModifiedDate: {0}", build.ModifiedDate.ToString()));
-
                     if (selectedBuild == build.InstallPath)
+                    {
+                        if (checkRunDatabaseUpdate.Checked)
+                        {
+                            Toasts.Toast("Running Datbase Update"
+                                ,"The database update for the selected build is bring ran, this may take a few minutes. The build will be launched once complete."
+                                ,1);
+                            DatabaseManagement.RunSalesPadDatabaseUpdate(selectedBuild);
+                        }
+                        
                         Process.Start(String.Format(@"{0}\{1}",
                             selectedBuild,
                             build.Exe));
+                    }
                 }
-                this.Close();
             }
             return;
         }
