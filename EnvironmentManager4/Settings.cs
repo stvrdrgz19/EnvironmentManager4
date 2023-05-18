@@ -28,62 +28,63 @@ namespace EnvironmentManager4
         public static int s_Version;
         public static bool hidden;
 
-        public void LoadSettings(SettingsModel settingsModel)
+        public void LoadSettings(SettingsModel settings)
         {
             try
             {
                 cbConnections.Items.Clear();
 
-                s_Version = settingsModel.Version;
-                tbdatabaseBackupDirectory.Text = settingsModel.DbManagement.DatabaseBackupDirectory;
-                cbConnections.Text = settingsModel.DbManagement.Connection;
+                s_Version = settings.Version;
+                tbdatabaseBackupDirectory.Text = settings.DbManagement.DatabaseBackupDirectory;
+                cbConnections.Text = settings.DbManagement.Connection;
 
                 List<Connection> connectionsLists = new List<Connection>();
-                connectionsLists.AddRange(settingsModel.DbManagement.ConnectionsList);
+                connectionsLists.AddRange(settings.DbManagement.ConnectionsList);
 
                 //Need to check if connectionsInMemory already has a connection being loaded.
                 List<string> connectionNames = new List<string>();
                 foreach (Connection connectionInMemory in connectionsInMemory)
                     connectionNames.Add(connectionInMemory.ConnectionName);
-                foreach (Connection connectionList in settingsModel.DbManagement.ConnectionsList)
+                foreach (Connection connectionList in settings.DbManagement.ConnectionsList)
                     if (!connectionNames.Contains(connectionList.ConnectionName))
                         connectionsInMemory.Add(connectionList);
 
                 foreach (Connection conn in connectionsLists)
                     cbConnections.Items.Add(conn.ConnectionName);
 
-                tbSQLServerUN.Text = settingsModel.DbManagement.SQLServerUserName;
-                tbSQLServerPW.Text = Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword));
-                checkResetDatabase.Checked = settingsModel.DbManagement.ResetDatabaseAfterRestore;
-                if (cbDBToReset.Items.Contains(settingsModel.DbManagement.DBToRestore))
-                    cbDBToReset.SelectedIndex = cbDBToReset.FindStringExact(settingsModel.DbManagement.DBToRestore);
+                tbSQLServerUN.Text = settings.DbManagement.SQLServerUserName;
+                tbSQLServerPW.Text = Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword));
+                checkResetDatabase.Checked = settings.DbManagement.ResetDatabaseAfterRestore;
+                if (cbDBToReset.Items.Contains(settings.DbManagement.DBToRestore))
+                    cbDBToReset.SelectedIndex = cbDBToReset.FindStringExact(settings.DbManagement.DBToRestore);
                 else
-                    cbDBToReset.Text = settingsModel.DbManagement.DBToRestore;
+                    cbDBToReset.Text = settings.DbManagement.DBToRestore;
 
-                if (!settingsModel.DbManagement.ResetDatabaseAfterRestore)
+                if (!settings.DbManagement.ResetDatabaseAfterRestore)
                     cbDBToReset.Enabled = false;
 
                 //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
-                tbSalesPadx86Directory.Text = settingsModel.BuildManagement.SalesPadx86Directory;
-                tbSalesPadx64Directory.Text = settingsModel.BuildManagement.SalesPadx64Directory;
-                tbDataCollectionDirectory.Text = settingsModel.BuildManagement.DataCollectionDirectory;
-                tbSalesPadMobileDirectory.Text = settingsModel.BuildManagement.SalesPadMobileDirectory;
-                tbShipCenterDirectory.Text = settingsModel.BuildManagement.ShipCenterDirectory;
-                tbGPWebDirectory.Text = settingsModel.BuildManagement.GPWebDirectory;
-                tbWebAPIDirectory.Text = settingsModel.BuildManagement.WebAPIDirectory;
+                tbSalesPadx86Directory.Text = settings.BuildManagement.SalesPadx86Directory;
+                tbSalesPadx64Directory.Text = settings.BuildManagement.SalesPadx64Directory;
+                tbDataCollectionDirectory.Text = settings.BuildManagement.DataCollectionDirectory;
+                tbSalesPadMobileDirectory.Text = settings.BuildManagement.SalesPadMobileDirectory;
+                tbShipCenterDirectory.Text = settings.BuildManagement.ShipCenterDirectory;
+                tbGPWebDirectory.Text = settings.BuildManagement.GPWebDirectory;
+                tbWebAPIDirectory.Text = settings.BuildManagement.WebAPIDirectory;
 
                 //=====================================================[ OTHER SETTINGS ]======================================================
-                cbMode.Text = settingsModel.Other.Mode;
-                cbDefaultProductVersion.Text = settingsModel.Other.DefaultVersion;
-                checkShowAlwaysOnTop.Checked = settingsModel.Other.ShowAlwaysOnTop;
-                checkShowVPNIP.Checked = settingsModel.Other.ShowVPNIP;
-                checkShowWiFiIP.Checked = settingsModel.Other.ShowIP;
-                checkEnableWaterBot.Checked = settingsModel.Other.EnableWaterBot;
+                cbMode.Text = settings.Other.Mode;
+                cbDefaultProductVersion.Text = settings.Other.DefaultVersion;
+                checkShowAlwaysOnTop.Checked = settings.Other.ShowAlwaysOnTop;
+                checkShowVPNIP.Checked = settings.Other.ShowVPNIP;
+                checkShowWiFiIP.Checked = settings.Other.ShowIP;
+                checkEnableWaterBot.Checked = settings.Other.EnableWaterBot;
+                checkEnableInstallToasts.Checked = settings.Other.EnableInstallToasts;
 
                 if (Environment.MachineName != "STEVERODRIGUEZ")
                     labelSettingsVersion.Visible = false;
                 else
-                    labelSettingsVersion.Text = String.Format("Settings Version: {0}", settingsModel.Version);
+                    labelSettingsVersion.Text = String.Format("Settings Version: {0}", settings.Version);
 
                 SetStartingValues();
             }
@@ -125,7 +126,8 @@ namespace EnvironmentManager4
                 ShowAlwaysOnTop = checkShowAlwaysOnTop.Checked,
                 ShowVPNIP = checkShowVPNIP.Checked,
                 ShowIP = checkShowWiFiIP.Checked,
-                EnableWaterBot = checkEnableWaterBot.Checked
+                EnableWaterBot = checkEnableWaterBot.Checked,
+                EnableInstallToasts = checkEnableInstallToasts.Checked
             };
 
             var settings = new SettingsModel
