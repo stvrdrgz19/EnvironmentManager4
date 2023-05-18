@@ -319,40 +319,13 @@ namespace EnvironmentManager4
             //==========================================================================================================================================================================================
             //  DLL INSTALL END
             //==========================================================================================================================================================================================
-
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            if (this.ResetDatabaseVersion)
-                DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), settingsModel.DbManagement.DBToRestore);
-
+            
             if (this.RunDatabaseUpdate)
-            {
-                //if log exists, delete log
-                ErrorHandling.DeleteLogFiles();
+                DatabaseManagement.RunSalesPadDatabaseUpdate(this.InstallLocation);
 
-                if (!this.ResetDatabaseVersion)
-                    DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), settingsModel.DbManagement.DBToRestore);
+            if (this.ResetDatabaseVersion && !this.RunDatabaseUpdate)
+                DatabaseManagement.ResetDatabaseVersion();
 
-                Process dbUpdate = new Process();
-                dbUpdate.StartInfo.FileName = this.InstallLocation + @"\SalesPad.exe";
-                dbUpdate.StartInfo.Arguments = String.Format(@"/dbUpdate /userfields /conn={0}", settingsModel.DbManagement.DBToRestore);
-                dbUpdate.StartInfo.UseShellExecute = false;
-                try
-                {
-                    dbUpdate.Start();
-                    dbUpdate.WaitForExit();
-                    //check for pass/fail log
-                    if (ErrorHandling.IsThereAFailLog())
-                    {
-                        ErrorHandling.DisplayDatabaseUpdateFailure();
-                        ErrorHandling.LogDatabaseUpdateFailure();
-                    }
-                }
-                catch (Exception e)
-                {
-                    ErrorHandling.LogException(e);
-                    ErrorHandling.DisplayExceptionMessage(e);
-                }
-            }
             this.Cursor = Cursors.Default;
 
             //Write the install properties file to the install path.

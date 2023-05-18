@@ -80,11 +80,17 @@ namespace EnvironmentManager4
             }
         }
 
-        public static void ResetDatabaseVersion(string username, string password, string database = "TWO")
+        public static void ResetDatabaseVersion(string database = "TWO")
         {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            string username = settings.DbManagement.SQLServerUserName;
+            string password = Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword));
+
+            if (settings.DbManagement.DBToRestore != "")
+                database = settings.DbManagement.DBToRestore;
+
             string script = String.Format("USE {0} EXEC dbo.sppResetDatabase", database);
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settingsModel.DbManagement.Connection, username, password));
+            SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settings.DbManagement.Connection, username, password));
             SqlDataAdapter sqlAdapter = new SqlDataAdapter(script, sqlCon);
             DataTable dataTable = new DataTable();
             try
@@ -235,7 +241,7 @@ namespace EnvironmentManager4
             Form1.EnableDBControls(true);
 
             if (settings.DbManagement.ResetDatabaseAfterRestore)
-                ResetDatabaseVersion(settings.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword)), settings.DbManagement.DBToRestore);
+                ResetDatabaseVersion();
 
             //Inform the user the install was successful via toast
             Toasts.Toast(
@@ -437,6 +443,39 @@ namespace EnvironmentManager4
                 }
             }
             return companyDatabaseList;
+        }
+
+        public static void RunSalesPadDatabaseUpdate(string build)
+        {
+            //Get settings
+            SettingsModel settings = SettingsUtilities.GetSettings();
+
+            //delete dbupdate log if it exists
+            ErrorHandling.DeleteLogFiles();
+
+            //reset the database version
+            ResetDatabaseVersion();
+
+            Process dbUpdate = new Process();
+            dbUpdate.StartInfo.FileName = String.Format("{0}\\SalesPad.exe", build);
+            dbUpdate.StartInfo.Arguments = String.Format(@"/dbUpdate /userfields /conn={0}", settings.DbManagement.DBToRestore);
+            dbUpdate.StartInfo.UseShellExecute = false;
+            try
+            {
+                dbUpdate.Start();
+                dbUpdate.WaitForExit();
+                //check for pass/fail log
+                if (ErrorHandling.IsThereAFailLog())
+                {
+                    ErrorHandling.DisplayDatabaseUpdateFailure();
+                    ErrorHandling.LogDatabaseUpdateFailure();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+            }
         }
     }
 }

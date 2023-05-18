@@ -770,10 +770,7 @@ namespace EnvironmentManager4
         {
             s_ListAndButtonForm = null;
             if (!String.IsNullOrWhiteSpace(ListAndButtonForm.output))
-            {
-                SettingsModel settingsModel = SettingsUtilities.GetSettings();
-                DatabaseManagement.ResetDatabaseVersion(settingsModel.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settingsModel.DbManagement.SQLServerPassword)), ListAndButtonForm.output);
-            }
+                DatabaseManagement.ResetDatabaseVersion(ListAndButtonForm.output);
             return;
         }
 
