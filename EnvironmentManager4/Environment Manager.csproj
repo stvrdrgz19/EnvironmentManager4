@@ -311,9 +311,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BuildManagement\BuildManagement.csproj">
+      <Project>{a9e3fd3d-d02e-4fea-914c-466083dde506}</Project>
+      <Name>BuildManagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DLLManager\DLLManager.csproj">
       <Project>{9c96c620-6a00-4356-bcf3-ac3832ce9196}</Project>
       <Name>DLLManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Settings\Settings.csproj">
+      <Project>{e4692f65-156e-42db-a658-80b02edef936}</Project>
+      <Name>Settings</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
