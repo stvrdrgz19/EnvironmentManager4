@@ -310,5 +310,11 @@
       <Version>1.0.115.5</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DLLManager\DLLManager.csproj">
+      <Project>{9c96c620-6a00-4356-bcf3-ac3832ce9196}</Project>
+      <Name>DLLManager</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

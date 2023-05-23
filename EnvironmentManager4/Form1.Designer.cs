@@ -86,6 +86,7 @@ namespace EnvironmentManager4
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.labelVersion = new System.Windows.Forms.Label();
             this.labelNotConnected = new System.Windows.Forms.Label();
+            this.dLLManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -574,7 +575,8 @@ namespace EnvironmentManager4
             this.killSalesPadToolStripMenuItem,
             this.notesToolStripMenuItem,
             this.directoryCompareToolStripMenuItem,
-            this.installPropertiesMonitorToolStripMenuItem});
+            this.installPropertiesMonitorToolStripMenuItem,
+            this.dLLManagerToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -671,6 +673,13 @@ namespace EnvironmentManager4
             this.labelNotConnected.TabIndex = 20;
             this.labelNotConnected.Text = "You are NOT connected to the network.";
             // 
+            // dLLManagerToolStripMenuItem
+            // 
+            this.dLLManagerToolStripMenuItem.Name = "dLLManagerToolStripMenuItem";
+            this.dLLManagerToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.dLLManagerToolStripMenuItem.Text = "DLL Manager";
+            this.dLLManagerToolStripMenuItem.Click += new System.EventHandler(this.dLLManagerToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -766,6 +775,7 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.ToolStripMenuItem installPropertiesMonitorToolStripMenuItem;
         private System.Windows.Forms.Label labelNotConnected;
+        private System.Windows.Forms.ToolStripMenuItem dLLManagerToolStripMenuItem;
     }
 }
 

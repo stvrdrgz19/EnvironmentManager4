@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DLLManager;
 
 namespace EnvironmentManager4
 {
@@ -952,6 +953,13 @@ namespace EnvironmentManager4
             }
             else
                 s_InstallPropertiesMonitor.BringToFront();
+            return;
+        }
+
+        private void dLLManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DLLManagerForm formx = new DLLManagerForm();
+            formx.ShowDialog();
             return;
         }
     }
