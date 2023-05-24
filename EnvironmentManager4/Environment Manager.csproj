@@ -91,6 +91,12 @@
     <Compile Include="Build Management\Configurations.cs" />
     <Compile Include="Build Management\CoreModules.cs" />
     <Compile Include="Build Management\Builds.cs" />
+    <Compile Include="Build Management\DLLManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Build Management\DLLManager.Designer.cs">
+      <DependentUpon>DLLManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Build Management\InstallPropertiesMonitor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -211,6 +217,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Build Management\BuildLog.resx">
       <DependentUpon>BuildLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Build Management\DLLManager.resx">
+      <DependentUpon>DLLManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Build Management\InstallPropertiesMonitor.resx">
       <DependentUpon>InstallPropertiesMonitor.cs</DependentUpon>

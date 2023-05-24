@@ -954,5 +954,12 @@ namespace EnvironmentManager4
                 s_InstallPropertiesMonitor.BringToFront();
             return;
         }
+
+        private void dLLManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DLLManager dllManager = new DLLManager();
+            dllManager.Show();
+            return;
+        }
     }
 }
