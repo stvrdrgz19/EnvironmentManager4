@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 
-namespace EnvironmentManager4
+namespace Utilities
 {
     public class Toasts
     {
