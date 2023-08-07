@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace EnvironmentManager4
 {
@@ -181,10 +182,18 @@ namespace EnvironmentManager4
 
         public void LoadModules(string product, string installerPath, string productVersion, string installer)
         {
-            if (!String.IsNullOrWhiteSpace(extModulesPath))
-                lbExtendedModules.Items.AddRange(Modules.RetrieveDLLs(extModulesPath, installerPath, product, installer, productVersion));
-            if (!String.IsNullOrWhiteSpace(custModulesPath))
-                lbCustomModules.Items.AddRange(Modules.RetrieveDLLs(custModulesPath, installerPath, product, installer, productVersion));
+            RetrieveAndAddModulesPerType(extModulesPath, lvExtendedModules, product, installerPath, productVersion, installer);
+            RetrieveAndAddModulesPerType(custModulesPath, lvCustomModules, product, installerPath, productVersion, installer);
+        }
+
+        public void RetrieveAndAddModulesPerType(string path, ListView lv, string product, string installerPath, string productVersion, string installer)
+        {
+            string[] modulesArray = Modules.RetrieveDLLs(path, installerPath, product, installer, productVersion);
+            foreach (string module in modulesArray)
+            {
+                ListViewItem moduleToAdd = new ListViewItem(module);
+                lv.Items.Add(moduleToAdd);
+            }
         }
 
         public void InstallGPWebBuild()
@@ -336,7 +345,7 @@ namespace EnvironmentManager4
             {
                 if (settings.Other.EnableInstallToasts)
                     Toasts.Toast("Running Datbase Update"
-                        , "The database update for the installed build is bring ran, this may take a few minutes."
+                        , "The database update for the installed build is being ran, this may take a few minutes."
                         , 1);
                 DatabaseManagement.RunSalesPadDatabaseUpdate(this.InstallLocation);
             }
@@ -383,11 +392,11 @@ namespace EnvironmentManager4
                     cbConfigurationList.Items.Add(config.ConfigurationName);
         }
 
-        private List<string> SelectedModules(ListBox lb)
+        private List<string> SelectedModules(ListView lv)
         {
             List<string> selectedModules = new List<string>();
-            foreach (string dll in lb.SelectedItems)
-                selectedModules.Add(dll);
+            foreach (ListViewItem dll in lv.SelectedItems)
+                selectedModules.Add(dll.Text);
             return selectedModules;
         }
 
@@ -419,14 +428,14 @@ namespace EnvironmentManager4
                     }
                     break;
                 case Products.DataCollection:
-                    lbExtendedModules.Enabled = false;
+                    lvExtendedModules.Enabled = false;
                     checkRunDatabaseUpdate.Enabled = false;
                     extModulesPath = null;
                     custModulesPath = String.Format(@"{0}\CustomModules", installerDirectory);
                     break;
                 case Products.SalesPadMobile:
-                    lbExtendedModules.Enabled = false;
-                    lbCustomModules.Enabled = false;
+                    lvExtendedModules.Enabled = false;
+                    lvExtendedModules.Enabled = false;
                     checkRunDatabaseUpdate.Enabled = false;
                     cbConfigurationList.Enabled = false;
                     btnAddConfiguration.Enabled = false;
@@ -435,7 +444,7 @@ namespace EnvironmentManager4
                     custModulesPath = null;
                     break;
                 case Products.ShipCenter:
-                    lbExtendedModules.Enabled = false;
+                    lvExtendedModules.Enabled = false;
                     checkRunDatabaseUpdate.Enabled = false;
                     extModulesPath = null;
                     custModulesPath = String.Format(@"{0}\Custom", installerDirectory);
@@ -445,7 +454,7 @@ namespace EnvironmentManager4
                     custModulesPath = String.Format(@"{0}\CustomModules", installerDirectory);
                     break;
                 case Products.GPWeb:
-                    lbExtendedModules.Enabled = false;
+                    lvExtendedModules.Enabled = false;
                     checkRunDatabaseUpdate.Enabled = false;
                     checkLaunchAfterInstall.Enabled = false;
                     checkResetDBVersion.Enabled = false;
@@ -496,8 +505,8 @@ namespace EnvironmentManager4
 
         private void btnAddConfiguration_Click(object sender, EventArgs e)
         {
-            List<string> extendedList = SelectedModules(lbExtendedModules);
-            List<string> customList = SelectedModules(lbCustomModules);
+            List<string> extendedList = SelectedModules(lvExtendedModules);
+            List<string> customList = SelectedModules(lvCustomModules);
             if (extendedList.Count == 0 && customList.Count == 0)
             {
                 string eMessage = "To save a configuration there must be more than 0 extended or custom dlls selected.";
@@ -545,12 +554,12 @@ namespace EnvironmentManager4
 
             Configurations configurationToDelete = new Configurations(this.Product,
                 cbConfigurationList.Text,
-                SelectedModules(lbExtendedModules),
-                SelectedModules(lbCustomModules));
+                SelectedModules(lvExtendedModules),
+                SelectedModules(lvCustomModules));
 
             string message = String.Format("Are you sure you want to delete the '{0}' configuration for the '{1}' product? This action cannot be undone."
-                ,configurationToDelete.ConfigurationName
-                ,configurationToDelete.Product);
+                , configurationToDelete.ConfigurationName
+                , configurationToDelete.Product);
             string caption = "CONFIRM";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
             MessageBoxIcon icon = MessageBoxIcon.Question;
@@ -614,8 +623,8 @@ namespace EnvironmentManager4
             }
 
             this.InstallLocation = installPath;
-            this.ExtendedDLLs = SelectedModules(lbExtendedModules);
-            this.CustomDLLs = SelectedModules(lbCustomModules);
+            this.ExtendedDLLs = SelectedModules(lvExtendedModules);
+            this.CustomDLLs = SelectedModules(lvCustomModules);
             this.LaunchAfterInstall = checkLaunchAfterInstall.Checked;
             this.OpenInstallFolder = checkInstallFolder.Checked;
             this.RunDatabaseUpdate = checkRunDatabaseUpdate.Checked;
@@ -639,8 +648,8 @@ namespace EnvironmentManager4
         {
             if (cbConfigurationList.Text == "None")
             {
-                lbExtendedModules.ClearSelected();
-                lbCustomModules.ClearSelected();
+                lvExtendedModules.SelectedItems.Clear();
+                lvCustomModules.SelectedItems.Clear();
             }
 
             string prod = this.Product;
@@ -651,8 +660,8 @@ namespace EnvironmentManager4
 
         private void LoadConfiguration(string product, string configurationName)
         {
-            lbExtendedModules.ClearSelected();
-            lbCustomModules.ClearSelected();
+            lvExtendedModules.SelectedItems.Clear();
+            lvCustomModules.SelectedItems.Clear();
             List<string> extendedModules = new List<string>();
             List<string> customModules = new List<string>();
             List<Configurations> configurations = Configurations.GetConfigurationsByProduct(product);
@@ -667,31 +676,30 @@ namespace EnvironmentManager4
             }
 
             if (extendedModules != null)
-                LoadConfigurationModules(extendedModules, lbExtendedModules, "Extended");
+                LoadConfigurationModules(extendedModules, lvExtendedModules, "Extended");
 
             if (customModules != null)
-                LoadConfigurationModules(customModules, lbCustomModules, "Custom");
+                LoadConfigurationModules(customModules, lvCustomModules, "Custom");
         }
 
-        private void LoadConfigurationModules(List<string> modules, ListBox listBox, string type)
+        private void LoadConfigurationModules(List<string> modules, ListView lv, string type)
         {
+            //get a list of all of the items in the modules listview
             List<string> buildDLLs = new List<string>();
-            foreach (string item in listBox.Items)
-                buildDLLs.Add(item);
+            foreach (ListViewItem item in lv.Items)
+                buildDLLs.Add(item.Text);
 
+            //iterate through each module name provided
             foreach (string dll in modules)
             {
                 if (buildDLLs.Contains(dll))
                 {
-                    int index = listBox.FindStringExact(dll);
-                    try
+                    for (int i = 0; i < buildDLLs.Count; i++)
                     {
-                        listBox.SetSelected(index, true);
-                    }
-                    catch (Exception e)
-                    {
-                        ErrorHandling.LogException(e);
-                        ErrorHandling.DisplayExceptionMessage(e);
+                        if (lv.Items[i].Text == dll)
+                        {
+                            lv.Items[i].Selected = true;
+                        }
                     }
                 }
             }

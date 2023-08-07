@@ -45,6 +45,39 @@ namespace EnvironmentManager4
             return dllList.ToArray();
         }
 
+        public static List<string> RetrieveDLLs2(string modulePath, string buildPath, string product, string installer, string version)
+        {
+            List<string> dllList = new List<string>();
+            switch (product)
+            {
+                case Products.SalesPad:
+                    switch (version)
+                    {
+                        case "x64":
+                        case "x86":
+                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, Products.SalesPad).ToString())).TrimEnd('.')));
+                            break;
+                        case "Pre":
+                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, Products.SalesPad).ToString())).TrimEnd('.')));
+                            break;
+                    }
+                    break;
+                case Products.DataCollection:
+                    dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(24, Path.GetFileName(file).Substring(24).IndexOf(".dll"))));
+                    break;
+                case Products.ShipCenter:
+                    dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(20, Path.GetFileNameWithoutExtension(file).Substring(20).IndexOf(TrimVersion(buildPath, Products.ShipCenter).ToString())).TrimEnd('.')));
+                    break;
+                case Products.GPWeb:
+                    dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file)));
+                    break;
+                case Products.WebAPI:
+                    dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file.Replace(GetVersionNum(installer), "")).Substring(19)));
+                    break;
+            }
+            return dllList;
+        }
+
         public static string TrimVersion(string path, string product, bool pre = false)
         {
             int charCount = 0;
