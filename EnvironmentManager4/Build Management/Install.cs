@@ -336,7 +336,7 @@ namespace EnvironmentManager4
             {
                 if (settings.Other.EnableInstallToasts)
                     Toasts.Toast("Running Datbase Update"
-                        , "The database update for the installed build is bring ran, this may take a few minutes."
+                        , "The database update for the installed build is being ran, this may take a few minutes."
                         , 1);
                 DatabaseManagement.RunSalesPadDatabaseUpdate(this.InstallLocation);
             }
