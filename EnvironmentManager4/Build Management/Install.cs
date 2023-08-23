@@ -300,7 +300,7 @@ namespace EnvironmentManager4
             List<string> custDllToAdd = new List<string>();
             List<string> extDllToAdd = new List<string>();
 
-            //  ADD ANY SELECTED DLLS TO THE LIST
+            //  ADD ANY SELECTED DLLS TO THE LIST (The sorting here removes duplicates - might be able to handle this earlier?)
             foreach (string dll in this.CustomDLLs)
             {
                 custDllToAdd.Add(dll);
@@ -395,7 +395,7 @@ namespace EnvironmentManager4
         private List<string> SelectedModules(ListView lv)
         {
             List<string> selectedModules = new List<string>();
-            foreach (ListViewItem dll in lv.SelectedItems)
+            foreach (ListViewItem dll in lv.CheckedItems)
                 selectedModules.Add(dll.Text);
             return selectedModules;
         }
@@ -576,6 +576,18 @@ namespace EnvironmentManager4
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            //testing
+            //if (Control.ModifierKeys == Keys.Shift)
+            //{
+            //    List<string> selectedModules = new List<string>();
+            //    foreach (ListViewItem item in lvExtendedModules.CheckedItems)
+            //        selectedModules.Add(item.Text);
+
+            //    string output = string.Join(Environment.NewLine, selectedModules.ToArray());
+            //    MessageBox.Show(output);
+            //    return;
+            //}
+
             //clear out any saved installers from previous installations
             DirectoryInfo di = new DirectoryInfo(Utilities.GetFolder("Installers"));
             foreach (FileInfo file in di.GetFiles())
@@ -676,13 +688,13 @@ namespace EnvironmentManager4
             }
 
             if (extendedModules != null)
-                LoadConfigurationModules(extendedModules, lvExtendedModules, "Extended");
+                LoadConfigurationModules(extendedModules, lvExtendedModules);
 
             if (customModules != null)
-                LoadConfigurationModules(customModules, lvCustomModules, "Custom");
+                LoadConfigurationModules(customModules, lvCustomModules);
         }
 
-        private void LoadConfigurationModules(List<string> modules, ListView lv, string type)
+        private void LoadConfigurationModules(List<string> modules, ListView lv)
         {
             //get a list of all of the items in the modules listview
             List<string> buildDLLs = new List<string>();
@@ -703,6 +715,34 @@ namespace EnvironmentManager4
                     }
                 }
             }
+        }
+
+        private void lvCustomModules_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateSelectedModuleLabels(lvCustomModules, "Custom", label3);
+            return;
+        }
+
+        private void lvExtendedModules_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateSelectedModuleLabels(lvExtendedModules, "Extended", label2);
+            return;
+        }
+
+        private void UpdateSelectedModuleLabels(MultiSelectListView listView, string moduleType, Label label)
+        {
+            //get a count of selected (checked) modules.
+            int selectedModules = 0;
+            foreach (ListViewItem item in listView.Items)
+                if (item.Checked)
+                    selectedModules++;
+
+            //update the modules label depending on if any modules of their type are selected.
+            if (selectedModules == 0)
+                label.Text = moduleType;
+            else
+                label.Text = String.Format("{0} ({1})", moduleType, selectedModules);
+            return;
         }
 
         private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)

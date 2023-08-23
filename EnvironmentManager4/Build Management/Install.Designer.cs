@@ -46,10 +46,10 @@ namespace EnvironmentManager4
             this.tbInstallLocation = new System.Windows.Forms.TextBox();
             this.tbSelectedBuild = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.lvExtendedModules = new System.Windows.Forms.ListView();
-            this.chExtDLL = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvCustomModules = new System.Windows.Forms.ListView();
-            this.chCustomDLL = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvCustomModules = new EnvironmentManager4.MultiSelectListView();
+            this.chCustDLL = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvExtendedModules = new EnvironmentManager4.MultiSelectListView();
+            this.chExtendedDLL = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -213,27 +213,11 @@ namespace EnvironmentManager4
             this.label1.TabIndex = 25;
             this.label1.Text = "Please enter the location you would like to install the following build to:";
             // 
-            // lvExtendedModules
-            // 
-            this.lvExtendedModules.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chExtDLL});
-            this.lvExtendedModules.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lvExtendedModules.HideSelection = false;
-            this.lvExtendedModules.Location = new System.Drawing.Point(12, 84);
-            this.lvExtendedModules.Name = "lvExtendedModules";
-            this.lvExtendedModules.Size = new System.Drawing.Size(274, 199);
-            this.lvExtendedModules.TabIndex = 35;
-            this.lvExtendedModules.UseCompatibleStateImageBehavior = false;
-            this.lvExtendedModules.View = System.Windows.Forms.View.Details;
-            // 
-            // chExtDLL
-            // 
-            this.chExtDLL.Width = 252;
-            // 
             // lvCustomModules
             // 
+            this.lvCustomModules.CheckBoxes = true;
             this.lvCustomModules.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chCustomDLL});
+            this.chCustDLL});
             this.lvCustomModules.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvCustomModules.HideSelection = false;
             this.lvCustomModules.Location = new System.Drawing.Point(294, 84);
@@ -242,10 +226,30 @@ namespace EnvironmentManager4
             this.lvCustomModules.TabIndex = 36;
             this.lvCustomModules.UseCompatibleStateImageBehavior = false;
             this.lvCustomModules.View = System.Windows.Forms.View.Details;
+            this.lvCustomModules.SelectedIndexChanged += new System.EventHandler(this.lvCustomModules_SelectedIndexChanged);
             // 
-            // chCustomDLL
+            // chCustDLL
             // 
-            this.chCustomDLL.Width = 252;
+            this.chCustDLL.Width = 252;
+            // 
+            // lvExtendedModules
+            // 
+            this.lvExtendedModules.CheckBoxes = true;
+            this.lvExtendedModules.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chExtendedDLL});
+            this.lvExtendedModules.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvExtendedModules.HideSelection = false;
+            this.lvExtendedModules.Location = new System.Drawing.Point(12, 84);
+            this.lvExtendedModules.Name = "lvExtendedModules";
+            this.lvExtendedModules.Size = new System.Drawing.Size(274, 199);
+            this.lvExtendedModules.TabIndex = 37;
+            this.lvExtendedModules.UseCompatibleStateImageBehavior = false;
+            this.lvExtendedModules.View = System.Windows.Forms.View.Details;
+            this.lvExtendedModules.SelectedIndexChanged += new System.EventHandler(this.lvExtendedModules_SelectedIndexChanged);
+            // 
+            // chExtendedDLL
+            // 
+            this.chExtendedDLL.Width = 252;
             // 
             // Install
             // 
@@ -254,8 +258,8 @@ namespace EnvironmentManager4
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(581, 395);
-            this.Controls.Add(this.lvCustomModules);
             this.Controls.Add(this.lvExtendedModules);
+            this.Controls.Add(this.lvCustomModules);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox2);
@@ -298,9 +302,9 @@ namespace EnvironmentManager4
         private System.Windows.Forms.TextBox tbInstallLocation;
         private System.Windows.Forms.TextBox tbSelectedBuild;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView lvExtendedModules;
-        private System.Windows.Forms.ColumnHeader chExtDLL;
-        private System.Windows.Forms.ListView lvCustomModules;
-        private System.Windows.Forms.ColumnHeader chCustomDLL;
+        private MultiSelectListView lvCustomModules;
+        private System.Windows.Forms.ColumnHeader chCustDLL;
+        private MultiSelectListView lvExtendedModules;
+        private System.Windows.Forms.ColumnHeader chExtendedDLL;
     }
 }

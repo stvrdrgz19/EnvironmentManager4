@@ -161,6 +161,9 @@
     <Compile Include="Database Management\NewDatabaseBackup.Designer.cs">
       <DependentUpon>NewDatabaseBackup.cs</DependentUpon>
     </Compile>
+    <Compile Include="MultiSelectListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Notes.cs">
       <SubType>Form</SubType>
     </Compile>
