@@ -24,7 +24,7 @@ namespace EnvironmentManager4.Service_Management
             List<SQLServiceList> sQLServiceLists = new List<SQLServiceList>();
             ServiceController[] services = ServiceController.GetServices();
             foreach (ServiceController service in services)
-                if (service.ServiceName.Contains("MSSQL") && !service.ServiceName.Contains("Agent") && !service.ServiceName.Contains("TELEMETRY"))
+                if (service.ServiceName.Contains("MSSQL$") && !service.ServiceName.Contains("Agent") && !service.ServiceName.Contains("TELEMETRY"))
                 {
                     SQLServiceList s = new SQLServiceList();
                     s.Name = service.ServiceName;
