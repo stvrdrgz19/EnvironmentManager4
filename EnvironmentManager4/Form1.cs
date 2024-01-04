@@ -827,7 +827,7 @@ namespace EnvironmentManager4
         private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedProduct = cbProductList.Text;
-            if (selectedProduct == Products.SalesPad)
+            if (selectedProduct == Products.SalesPad || selectedProduct == Products.ShipCenter)
             {
                 SettingsModel settings = SettingsUtilities.GetSettings();
                 cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
