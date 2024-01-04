@@ -46,7 +46,7 @@ namespace EnvironmentManager4
             path = path.Replace("SP-FILESERV-01", "sp-fileserv-01");
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                if (product == Products.SalesPad)
+                if (product == Products.SalesPad || product == Products.ShipCenter)
                 {
                     switch (version)
                     {
