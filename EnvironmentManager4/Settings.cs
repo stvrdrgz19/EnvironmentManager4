@@ -68,7 +68,8 @@ namespace EnvironmentManager4
                 tbSalesPadx64Directory.Text = settings.BuildManagement.SalesPadx64Directory;
                 tbDataCollectionDirectory.Text = settings.BuildManagement.DataCollectionDirectory;
                 tbSalesPadMobileDirectory.Text = settings.BuildManagement.SalesPadMobileDirectory;
-                tbShipCenterDirectory.Text = settings.BuildManagement.ShipCenterDirectory;
+                tbShipCenterDirectory.Text = settings.BuildManagement.ShipCenterx86Directory;
+                tbShipCenterx64Directory.Text = settings.BuildManagement.ShipCenterx64Directory;
                 tbGPWebDirectory.Text = settings.BuildManagement.GPWebDirectory;
                 tbWebAPIDirectory.Text = settings.BuildManagement.WebAPIDirectory;
 
@@ -114,7 +115,8 @@ namespace EnvironmentManager4
                 SalesPadx64Directory = tbSalesPadx64Directory.Text,
                 DataCollectionDirectory = tbDataCollectionDirectory.Text,
                 SalesPadMobileDirectory = tbSalesPadMobileDirectory.Text,
-                ShipCenterDirectory = tbShipCenterDirectory.Text,
+                ShipCenterx86Directory = tbShipCenterDirectory.Text,
+                ShipCenterx64Directory = tbShipCenterx64Directory.Text,
                 GPWebDirectory = tbGPWebDirectory.Text,
                 WebAPIDirectory = tbWebAPIDirectory.Text
             };
@@ -217,6 +219,7 @@ namespace EnvironmentManager4
             btnSelectDatacollectionDirectory.Enabled = tf;
             btnSelectSalesPadMobileDirectory.Enabled = tf;
             btnSelectShipCenterDirectory.Enabled = tf;
+            btnSelectShipCenterx64Directory.Enabled = tf;
             btnSelectGPWebDirectory.Enabled = tf;
             btnSelectWebAPIDirectory.Enabled = tf;
         }
@@ -284,6 +287,12 @@ namespace EnvironmentManager4
         private void btnSelectShipCenterDirectory_Click(object sender, EventArgs e)
         {
             tbShipCenterDirectory.Text = GetDirectory(tbShipCenterDirectory.Text);
+            return;
+        }
+
+        private void btnSelectShipCenterx64Directory_Click(object sender, EventArgs e)
+        {
+            tbShipCenterx64Directory.Text = GetDirectory(tbShipCenterx64Directory.Text);
             return;
         }
 

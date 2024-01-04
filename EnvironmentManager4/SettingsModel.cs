@@ -60,7 +60,7 @@ namespace EnvironmentManager4
     public class SettingsUtilities
     {
         //Increment this when a settings migration needs to happen due to the file structure changing
-        public const int SettingsVersion = 2;
+        public const int SettingsVersion = 3;
 
         public static SettingsModel GetSettings()
         {

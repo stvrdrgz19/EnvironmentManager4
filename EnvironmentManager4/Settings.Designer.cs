@@ -70,6 +70,7 @@ namespace EnvironmentManager4
             this.btnSelectBackupDirectory = new System.Windows.Forms.Button();
             this.tbdatabaseBackupDirectory = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkEnableInstallToasts = new System.Windows.Forms.CheckBox();
             this.checkEnableWaterBot = new System.Windows.Forms.CheckBox();
             this.checkShowWiFiIP = new System.Windows.Forms.CheckBox();
             this.checkShowVPNIP = new System.Windows.Forms.CheckBox();
@@ -81,7 +82,9 @@ namespace EnvironmentManager4
             this.btnSaveExit = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.labelSettingsVersion = new System.Windows.Forms.Label();
-            this.checkEnableInstallToasts = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.btnSelectShipCenterx64Directory = new System.Windows.Forms.Button();
+            this.tbShipCenterx64Directory = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -89,6 +92,9 @@ namespace EnvironmentManager4
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label15);
+            this.groupBox2.Controls.Add(this.btnSelectShipCenterx64Directory);
+            this.groupBox2.Controls.Add(this.tbShipCenterx64Directory);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.btnSelectWebAPIDirectory);
             this.groupBox2.Controls.Add(this.tbWebAPIDirectory);
@@ -113,7 +119,7 @@ namespace EnvironmentManager4
             this.groupBox2.ForeColor = System.Drawing.Color.Blue;
             this.groupBox2.Location = new System.Drawing.Point(2, 213);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(532, 188);
+            this.groupBox2.Size = new System.Drawing.Size(532, 211);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Build Management";
@@ -122,7 +128,7 @@ namespace EnvironmentManager4
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label9.Location = new System.Drawing.Point(7, 162);
+            this.label9.Location = new System.Drawing.Point(7, 185);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(98, 13);
             this.label9.TabIndex = 23;
@@ -131,10 +137,10 @@ namespace EnvironmentManager4
             // btnSelectWebAPIDirectory
             // 
             this.btnSelectWebAPIDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSelectWebAPIDirectory.Location = new System.Drawing.Point(501, 158);
+            this.btnSelectWebAPIDirectory.Location = new System.Drawing.Point(501, 181);
             this.btnSelectWebAPIDirectory.Name = "btnSelectWebAPIDirectory";
             this.btnSelectWebAPIDirectory.Size = new System.Drawing.Size(24, 22);
-            this.btnSelectWebAPIDirectory.TabIndex = 24;
+            this.btnSelectWebAPIDirectory.TabIndex = 26;
             this.btnSelectWebAPIDirectory.Text = "...";
             this.btnSelectWebAPIDirectory.UseVisualStyleBackColor = true;
             this.btnSelectWebAPIDirectory.Click += new System.EventHandler(this.btnSelectWebAPIDirectory_Click);
@@ -142,16 +148,16 @@ namespace EnvironmentManager4
             // tbWebAPIDirectory
             // 
             this.tbWebAPIDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.tbWebAPIDirectory.Location = new System.Drawing.Point(151, 159);
+            this.tbWebAPIDirectory.Location = new System.Drawing.Point(151, 182);
             this.tbWebAPIDirectory.Name = "tbWebAPIDirectory";
             this.tbWebAPIDirectory.Size = new System.Drawing.Size(348, 20);
-            this.tbWebAPIDirectory.TabIndex = 23;
+            this.tbWebAPIDirectory.TabIndex = 25;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label10.Location = new System.Drawing.Point(7, 139);
+            this.label10.Location = new System.Drawing.Point(7, 162);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(93, 13);
             this.label10.TabIndex = 20;
@@ -160,10 +166,10 @@ namespace EnvironmentManager4
             // btnSelectGPWebDirectory
             // 
             this.btnSelectGPWebDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSelectGPWebDirectory.Location = new System.Drawing.Point(501, 135);
+            this.btnSelectGPWebDirectory.Location = new System.Drawing.Point(501, 158);
             this.btnSelectGPWebDirectory.Name = "btnSelectGPWebDirectory";
             this.btnSelectGPWebDirectory.Size = new System.Drawing.Size(24, 22);
-            this.btnSelectGPWebDirectory.TabIndex = 22;
+            this.btnSelectGPWebDirectory.TabIndex = 24;
             this.btnSelectGPWebDirectory.Text = "...";
             this.btnSelectGPWebDirectory.UseVisualStyleBackColor = true;
             this.btnSelectGPWebDirectory.Click += new System.EventHandler(this.btnSelectGPWebDirectory_Click);
@@ -171,10 +177,10 @@ namespace EnvironmentManager4
             // tbGPWebDirectory
             // 
             this.tbGPWebDirectory.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.tbGPWebDirectory.Location = new System.Drawing.Point(151, 136);
+            this.tbGPWebDirectory.Location = new System.Drawing.Point(151, 159);
             this.tbGPWebDirectory.Name = "tbGPWebDirectory";
             this.tbGPWebDirectory.Size = new System.Drawing.Size(348, 20);
-            this.tbGPWebDirectory.TabIndex = 21;
+            this.tbGPWebDirectory.TabIndex = 23;
             // 
             // label11
             // 
@@ -182,9 +188,9 @@ namespace EnvironmentManager4
             this.label11.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label11.Location = new System.Drawing.Point(7, 116);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(107, 13);
+            this.label11.Size = new System.Drawing.Size(127, 13);
             this.label11.TabIndex = 17;
-            this.label11.Text = "ShipCenter Directory:";
+            this.label11.Text = "ShipCenter x86 Directory:";
             // 
             // btnSelectShipCenterDirectory
             // 
@@ -516,12 +522,25 @@ namespace EnvironmentManager4
             this.groupBox3.Controls.Add(this.cbMode);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.ForeColor = System.Drawing.Color.Blue;
-            this.groupBox3.Location = new System.Drawing.Point(2, 408);
+            this.groupBox3.Location = new System.Drawing.Point(2, 426);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(533, 172);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Other";
+            // 
+            // checkEnableInstallToasts
+            // 
+            this.checkEnableInstallToasts.AutoSize = true;
+            this.checkEnableInstallToasts.ForeColor = System.Drawing.Color.Black;
+            this.checkEnableInstallToasts.Location = new System.Drawing.Point(10, 151);
+            this.checkEnableInstallToasts.Name = "checkEnableInstallToasts";
+            this.checkEnableInstallToasts.Size = new System.Drawing.Size(124, 17);
+            this.checkEnableInstallToasts.TabIndex = 35;
+            this.checkEnableInstallToasts.Text = "Enable Install Toasts";
+            this.toolTip1.SetToolTip(this.checkEnableInstallToasts, "This setting adds toast notifications to the Product install process to update th" +
+        "e user on what is happening.");
+            this.checkEnableInstallToasts.UseVisualStyleBackColor = true;
             // 
             // checkEnableWaterBot
             // 
@@ -563,7 +582,7 @@ namespace EnvironmentManager4
             this.checkShowAlwaysOnTop.Location = new System.Drawing.Point(10, 70);
             this.checkShowAlwaysOnTop.Name = "checkShowAlwaysOnTop";
             this.checkShowAlwaysOnTop.Size = new System.Drawing.Size(189, 17);
-            this.checkShowAlwaysOnTop.TabIndex = 31;
+            this.checkShowAlwaysOnTop.TabIndex = 29;
             this.checkShowAlwaysOnTop.Text = "Show \"Always On Top\" Checkbox";
             this.checkShowAlwaysOnTop.UseVisualStyleBackColor = true;
             // 
@@ -577,7 +596,7 @@ namespace EnvironmentManager4
             this.cbDefaultProductVersion.Location = new System.Drawing.Point(151, 42);
             this.cbDefaultProductVersion.Name = "cbDefaultProductVersion";
             this.cbDefaultProductVersion.Size = new System.Drawing.Size(349, 21);
-            this.cbDefaultProductVersion.TabIndex = 29;
+            this.cbDefaultProductVersion.TabIndex = 28;
             // 
             // label14
             // 
@@ -599,7 +618,7 @@ namespace EnvironmentManager4
             this.cbMode.Location = new System.Drawing.Point(151, 17);
             this.cbMode.Name = "cbMode";
             this.cbMode.Size = new System.Drawing.Size(349, 21);
-            this.cbMode.TabIndex = 25;
+            this.cbMode.TabIndex = 27;
             this.cbMode.SelectedIndexChanged += new System.EventHandler(this.cbMode_SelectedIndexChanged);
             // 
             // label8
@@ -615,7 +634,7 @@ namespace EnvironmentManager4
             // btnSaveExit
             // 
             this.btnSaveExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnSaveExit.Location = new System.Drawing.Point(427, 585);
+            this.btnSaveExit.Location = new System.Drawing.Point(427, 603);
             this.btnSaveExit.Name = "btnSaveExit";
             this.btnSaveExit.Size = new System.Drawing.Size(75, 23);
             this.btnSaveExit.TabIndex = 34;
@@ -627,24 +646,40 @@ namespace EnvironmentManager4
             // 
             this.labelSettingsVersion.AutoSize = true;
             this.labelSettingsVersion.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.labelSettingsVersion.Location = new System.Drawing.Point(11, 591);
+            this.labelSettingsVersion.Location = new System.Drawing.Point(11, 609);
             this.labelSettingsVersion.Name = "labelSettingsVersion";
             this.labelSettingsVersion.Size = new System.Drawing.Size(41, 13);
             this.labelSettingsVersion.TabIndex = 35;
             this.labelSettingsVersion.Text = "label15";
             // 
-            // checkEnableInstallToasts
+            // label15
             // 
-            this.checkEnableInstallToasts.AutoSize = true;
-            this.checkEnableInstallToasts.ForeColor = System.Drawing.Color.Black;
-            this.checkEnableInstallToasts.Location = new System.Drawing.Point(10, 151);
-            this.checkEnableInstallToasts.Name = "checkEnableInstallToasts";
-            this.checkEnableInstallToasts.Size = new System.Drawing.Size(124, 17);
-            this.checkEnableInstallToasts.TabIndex = 35;
-            this.checkEnableInstallToasts.Text = "Enable Install Toasts";
-            this.toolTip1.SetToolTip(this.checkEnableInstallToasts, "This setting adds toast notifications to the Product install process to update th" +
-        "e user on what is happening.");
-            this.checkEnableInstallToasts.UseVisualStyleBackColor = true;
+            this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label15.Location = new System.Drawing.Point(8, 139);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(127, 13);
+            this.label15.TabIndex = 25;
+            this.label15.Text = "ShipCenter x64 Directory:";
+            // 
+            // btnSelectShipCenterx64Directory
+            // 
+            this.btnSelectShipCenterx64Directory.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSelectShipCenterx64Directory.Location = new System.Drawing.Point(502, 135);
+            this.btnSelectShipCenterx64Directory.Name = "btnSelectShipCenterx64Directory";
+            this.btnSelectShipCenterx64Directory.Size = new System.Drawing.Size(24, 22);
+            this.btnSelectShipCenterx64Directory.TabIndex = 22;
+            this.btnSelectShipCenterx64Directory.Text = "...";
+            this.btnSelectShipCenterx64Directory.UseVisualStyleBackColor = true;
+            this.btnSelectShipCenterx64Directory.Click += new System.EventHandler(this.btnSelectShipCenterx64Directory_Click);
+            // 
+            // tbShipCenterx64Directory
+            // 
+            this.tbShipCenterx64Directory.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.tbShipCenterx64Directory.Location = new System.Drawing.Point(152, 136);
+            this.tbShipCenterx64Directory.Name = "tbShipCenterx64Directory";
+            this.tbShipCenterx64Directory.Size = new System.Drawing.Size(348, 20);
+            this.tbShipCenterx64Directory.TabIndex = 21;
             // 
             // Settings
             // 
@@ -652,7 +687,7 @@ namespace EnvironmentManager4
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnSaveExit;
-            this.ClientSize = new System.Drawing.Size(537, 614);
+            this.ClientSize = new System.Drawing.Size(537, 631);
             this.Controls.Add(this.labelSettingsVersion);
             this.Controls.Add(this.btnSaveExit);
             this.Controls.Add(this.groupBox3);
@@ -728,5 +763,8 @@ namespace EnvironmentManager4
         private System.Windows.Forms.CheckBox checkEnableWaterBot;
         private System.Windows.Forms.Label labelSettingsVersion;
         private System.Windows.Forms.CheckBox checkEnableInstallToasts;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Button btnSelectShipCenterx64Directory;
+        private System.Windows.Forms.TextBox tbShipCenterx64Directory;
     }
 }
