@@ -666,21 +666,46 @@ namespace EnvironmentManager4
         {
             if (Control.ModifierKeys == Keys.Shift)
             {
-                if (Environment.MachineName == "STEVERODRIGUEZ")
-                {
-                    //List<SQLServiceList> serviceList = SQLServiceList.GetSQLServices();
-                    //foreach (SQLServiceList service in serviceList)
-                    //    MessageBox.Show(String.Format("Name: {0}\nDisplay Name: {1}\nTrimmed Name: {2}", service.Name, service.DisplayName, service.DisplayNameTrimmed));
+                //SILENTLY INSTALL PRODUCT
+                string tempInstaller = @"C:\Program Files (x86)\Environment Manager\Installers\ShipCenter.Setup.1.2.0.38-ProductDev-JacobPeacock-SHIP-637-x64-ShipCenter.37.x86.exe";
+                string tempInstaller2 = @"C:\Program Files (x86)\Environment Manager\Installers\ShipCenter.Setup.1.2.0.38-Development.8.exe";
+                string installLocation = @"C:\Program Files (x86)\ShipCenter\ProductDev\JACOBPEACOCK\SHIP-637\1.2.0.38.38";
 
-                    //RegUtilities.GenerateInstallOptionEntries();
-                    //string path = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\master\5.2.40.25\CustomModules\x64\SalesPad.Module.AgruIntegration.5.2.40.X64.Zip";
-                    //string extension = Path.GetExtension(path);
-                    //MessageBox.Show(extension);
-                    //TestClass testClass = TestClass.tc;
-                    //testClass.GetTestClassValues();
-                    //TestForm tf = new TestForm();
-                    //tf.Show();
-                }
+                //Process installProduct = new Process();
+                //installProduct.StartInfo.FileName = tempInstaller;
+                //installProduct.StartInfo.Arguments = @"/S /D=" + installLocation;
+                //installProduct.Start();
+                //installProduct.WaitForExit();
+
+                // Create process start info
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = tempInstaller2;
+
+                // Add command-line arguments for silent installation
+                startInfo.Arguments = $"/S /D={installLocation}";
+
+                // Optionally, hide the installer window
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+                // Start the process
+                Process.Start(startInfo);
+
+
+                //if (Environment.MachineName == "STEVERODRIGUEZ")
+                //{
+                //    //List<SQLServiceList> serviceList = SQLServiceList.GetSQLServices();
+                //    //foreach (SQLServiceList service in serviceList)
+                //    //    MessageBox.Show(String.Format("Name: {0}\nDisplay Name: {1}\nTrimmed Name: {2}", service.Name, service.DisplayName, service.DisplayNameTrimmed));
+
+                //    //RegUtilities.GenerateInstallOptionEntries();
+                //    //string path = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\master\5.2.40.25\CustomModules\x64\SalesPad.Module.AgruIntegration.5.2.40.X64.Zip";
+                //    //string extension = Path.GetExtension(path);
+                //    //MessageBox.Show(extension);
+                //    //TestClass testClass = TestClass.tc;
+                //    //testClass.GetTestClassValues();
+                //    //TestForm tf = new TestForm();
+                //    //tf.Show();
+                //}
                 return;
             }
 

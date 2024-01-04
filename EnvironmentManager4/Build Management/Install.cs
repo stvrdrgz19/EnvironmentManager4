@@ -147,7 +147,15 @@ namespace EnvironmentManager4
                         break;
                     case Products.ShipCenter:
                         charCount = 42;
-                        path = settings.BuildManagement.ShipCenterDirectory;
+                        switch (this.Version)
+                        {
+                            case "x64":
+                                path = settings.BuildManagement.ShipCenterx64Directory;
+                                break;
+                            case "x86":
+                                path = settings.BuildManagement.ShipCenterx86Directory;
+                                break;
+                        }
                         break;
                 }
                 tbInstallLocation.Text = GetInstallPath(path, this.NetworkPath, charCount);
