@@ -604,9 +604,9 @@ namespace EnvironmentManager4
             this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label14.Location = new System.Drawing.Point(6, 46);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(130, 13);
+            this.label14.Size = new System.Drawing.Size(82, 13);
             this.label14.TabIndex = 26;
-            this.label14.Text = "Default SalesPad Version:";
+            this.label14.Text = "Default Version:";
             // 
             // cbMode
             // 
