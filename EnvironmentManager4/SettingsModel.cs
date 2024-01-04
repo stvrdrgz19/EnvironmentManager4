@@ -33,7 +33,8 @@ namespace EnvironmentManager4
         public string SalesPadx64Directory { get; set; }
         public string DataCollectionDirectory { get; set; }
         public string SalesPadMobileDirectory { get; set; }
-        public string ShipCenterDirectory { get; set; }
+        public string ShipCenterx86Directory { get; set; }
+        public string ShipCenterx64Directory { get; set; }
         public string GPWebDirectory { get; set; }
         public string WebAPIDirectory { get; set; }
     }
@@ -118,7 +119,8 @@ namespace EnvironmentManager4
                 SalesPadx64Directory = @"C:\Program Files\SalesPad.Desktop",
                 DataCollectionDirectory = @"C:\Program Files (x86)\DataCollection",
                 SalesPadMobileDirectory = @"C:\Program Files (x86)\SalesPad.GP.Mobile.Server",
-                ShipCenterDirectory = @"C:\Program Files (x86)\ShipCenter",
+                ShipCenterx86Directory = @"C:\Program Files (x86)\ShipCenter",
+                ShipCenterx64Directory = @"C:\Program Files\ShipCenter",
                 GPWebDirectory = @"C:\inetpub\wwwroot\SalesPadWebPortal",
                 WebAPIDirectory = @"C:\inetpub\wwwroot\SalesPadWebAPI"
             };
