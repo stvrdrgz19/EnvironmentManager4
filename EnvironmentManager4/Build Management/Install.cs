@@ -46,7 +46,7 @@ namespace EnvironmentManager4
             path = path.Replace("SP-FILESERV-01", "sp-fileserv-01");
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                if (product == Products.SalesPad || product == Products.ShipCenter)
+                if (product == Products.SalesPad)
                 {
                     switch (version)
                     {
@@ -54,6 +54,19 @@ namespace EnvironmentManager4
                         case "x86":
                             openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", version);
                             break;
+                        case "Pre":
+                            openFileDialog.Filter = "Executable Files (*.exe)|*.exe";
+                            break;
+                    }
+                }
+                else if (product == Products.ShipCenter)
+                {
+                    switch (version)
+                    {
+                        case "x64":
+                            openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", version);
+                            break;
+                        case "x86":
                         case "Pre":
                             openFileDialog.Filter = "Executable Files (*.exe)|*.exe";
                             break;
@@ -133,6 +146,7 @@ namespace EnvironmentManager4
                                 path = settings.BuildManagement.SalesPadx64Directory;
                                 break;
                             case "x86":
+                            case "Pre":
                                 path = settings.BuildManagement.SalesPadx86Directory;
                                 break;
                         }
@@ -153,6 +167,7 @@ namespace EnvironmentManager4
                                 path = settings.BuildManagement.ShipCenterx64Directory;
                                 break;
                             case "x86":
+                            case "Pre":
                                 path = settings.BuildManagement.ShipCenterx86Directory;
                                 break;
                         }
