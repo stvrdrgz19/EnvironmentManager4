@@ -198,12 +198,16 @@ namespace EnvironmentManager4
 
         private void LoadBuildVersionAndCheckForUpdates()
         {
+            SettingsModel settings = SettingsUtilities.GetSettings();
             labelVersion.Text = String.Format("v{0}", Utilities.GetAppVersion());
-            if (!Utilities.IsProgramUpToDate())
+            if (settings.Other.PromptForUpdate)
             {
-                UpdatePrompt update = new UpdatePrompt();
-                UpdatePrompt.OpenFromStartup = true;
-                update.ShowDialog();
+                if (!Utilities.IsProgramUpToDate())
+                {
+                    UpdatePrompt update = new UpdatePrompt();
+                    UpdatePrompt.OpenFromStartup = true;
+                    update.ShowDialog();
+                }
             }
         }
 

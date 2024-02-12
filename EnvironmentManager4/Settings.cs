@@ -81,6 +81,7 @@ namespace EnvironmentManager4
                 checkShowWiFiIP.Checked = settings.Other.ShowIP;
                 checkEnableWaterBot.Checked = settings.Other.EnableWaterBot;
                 checkEnableInstallToasts.Checked = settings.Other.EnableInstallToasts;
+                checkPromptForUpdate.Checked = settings.Other.PromptForUpdate;
 
                 if (Environment.MachineName != "STEVERODRIGUEZ")
                     labelSettingsVersion.Visible = false;
@@ -129,7 +130,8 @@ namespace EnvironmentManager4
                 ShowVPNIP = checkShowVPNIP.Checked,
                 ShowIP = checkShowWiFiIP.Checked,
                 EnableWaterBot = checkEnableWaterBot.Checked,
-                EnableInstallToasts = checkEnableInstallToasts.Checked
+                EnableInstallToasts = checkEnableInstallToasts.Checked,
+                PromptForUpdate = checkPromptForUpdate.Checked,
             };
 
             var settings = new SettingsModel
