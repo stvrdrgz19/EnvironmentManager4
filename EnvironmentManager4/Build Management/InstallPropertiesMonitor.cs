@@ -42,16 +42,13 @@ namespace EnvironmentManager4.Build_Management
         private void cbProducts_SelectedIndexChanged(object sender, EventArgs e)
         {
             string product = cbProducts.Text;
-            if (product != Products.SalesPad)
-            {
-                cbVersion.Text = "x86";
+            cbVersion.Text = "x86";
+
+            if (product != Products.SalesPad && product != Products.ShipCenter)
                 cbVersion.Enabled = false;
-            }
-            else if (product == Products.SalesPad)
-            {
-                if (cbVersion.Enabled == false)
-                    cbVersion.Enabled = true;
-            }
+            else
+                cbVersion.Enabled = true;
+
             Builds.PopulateBuildLists(lvInstalledBuilds, product, cbVersion.Text);
             return;
         }

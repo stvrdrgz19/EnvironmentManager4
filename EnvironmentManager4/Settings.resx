@@ -124,7 +124,7 @@
   <data name="btnDeleteConnection.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAAXpJREFUOE+1lb1OwzAURr3AUrXAhERKgfJCPAIjYmLiNZDagQdAhQHRDDwDEhML
+        wQAADsEBuJFr7QAAAXpJREFUOE+1lb1OwzAURr3AUrXAhERKgfJCPAIjYmLiNZDagQdAhQHRDDwDEhML
         DCwo/A1ITF2YkEyOnRtsx4Yqgit9inJtH9nfvXFUKkZqfXessnys+rqpLGe8mvp7jFR/p1xUsPhycUNf
         dzb1bXerFu/kK3jB/GppPMoJRwJ7Wd7WbytpPSwN9XRhYOCsqxB+CJCdxCApMT8K5ghtgCIH/G0F3nDk
         2IJ5Za3ICgO0Ve43PJztH+qP0wsvJyLPuJvDY7vbsitoj9gu3yfnmgjBvBOMu3lkuyLLS2jcy2l3Td+d
@@ -133,6 +133,9 @@
         vv6w4k/uUwmOgDcCZyf0n4h3W+U5b343bFe0+Ucp9QV6YQ0iKNqOGQAAAABJRU5ErkJggg==
 </value>
   </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAUAEBAAAAEAIABoBAAAVgAAABgYAAABACAAiAkAAL4EAAAgIBAAAQAEAOgCAABGDgAAMDAAAAEA

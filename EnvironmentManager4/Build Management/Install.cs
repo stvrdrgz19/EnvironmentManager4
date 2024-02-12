@@ -59,6 +59,19 @@ namespace EnvironmentManager4
                             break;
                     }
                 }
+                else if (product == Products.ShipCenter)
+                {
+                    switch (version)
+                    {
+                        case "x64":
+                            openFileDialog.Filter = String.Format("Executable Files (*.exe)|*{0}.exe", version);
+                            break;
+                        case "x86":
+                        case "Pre":
+                            openFileDialog.Filter = "Executable Files (*.exe)|*.exe";
+                            break;
+                    }
+                }
                 else if (product == Products.GPWeb)
                 {
                     openFileDialog.Filter = "ZIP Folder (.zip)|*.zip";
@@ -133,6 +146,7 @@ namespace EnvironmentManager4
                                 path = settings.BuildManagement.SalesPadx64Directory;
                                 break;
                             case "x86":
+                            case "Pre":
                                 path = settings.BuildManagement.SalesPadx86Directory;
                                 break;
                         }
@@ -147,7 +161,16 @@ namespace EnvironmentManager4
                         break;
                     case Products.ShipCenter:
                         charCount = 42;
-                        path = settings.BuildManagement.ShipCenterDirectory;
+                        switch (this.Version)
+                        {
+                            case "x64":
+                                path = settings.BuildManagement.ShipCenterx64Directory;
+                                break;
+                            case "x86":
+                            case "Pre":
+                                path = settings.BuildManagement.ShipCenterx86Directory;
+                                break;
+                        }
                         break;
                 }
                 tbInstallLocation.Text = GetInstallPath(path, this.NetworkPath, charCount);

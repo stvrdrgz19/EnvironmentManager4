@@ -664,26 +664,6 @@ namespace EnvironmentManager4
 
         private void btnBuildFolder_Click(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Shift)
-            {
-                if (Environment.MachineName == "STEVERODRIGUEZ")
-                {
-                    //List<SQLServiceList> serviceList = SQLServiceList.GetSQLServices();
-                    //foreach (SQLServiceList service in serviceList)
-                    //    MessageBox.Show(String.Format("Name: {0}\nDisplay Name: {1}\nTrimmed Name: {2}", service.Name, service.DisplayName, service.DisplayNameTrimmed));
-
-                    //RegUtilities.GenerateInstallOptionEntries();
-                    //string path = @"\\sp-fileserv-01\Shares\Builds\SalesPad.GP\master\5.2.40.25\CustomModules\x64\SalesPad.Module.AgruIntegration.5.2.40.X64.Zip";
-                    //string extension = Path.GetExtension(path);
-                    //MessageBox.Show(extension);
-                    //TestClass testClass = TestClass.tc;
-                    //testClass.GetTestClassValues();
-                    //TestForm tf = new TestForm();
-                    //tf.Show();
-                }
-                return;
-            }
-
             string product = cbProductList.Text;
             string version = cbSPGPVersion.Text;
             if (!Products.ListOfProducts().Contains(product))
@@ -827,7 +807,7 @@ namespace EnvironmentManager4
         private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedProduct = cbProductList.Text;
-            if (selectedProduct == Products.SalesPad)
+            if (selectedProduct == Products.SalesPad || selectedProduct == Products.ShipCenter)
             {
                 SettingsModel settings = SettingsUtilities.GetSettings();
                 cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);

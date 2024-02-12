@@ -123,7 +123,7 @@ namespace EnvironmentManager4
                         if (checkRunDatabaseUpdate.Checked)
                         {
                             Toasts.Toast("Running Datbase Update"
-                                ,"The database update for the selected build is bring ran, this may take a few minutes. The build will be launched once complete."
+                                ,"The database update for the selected build is being ran, this may take a few minutes. The build will be launched once complete."
                                 ,1);
                             DatabaseManagement.RunSalesPadDatabaseUpdate(selectedBuild);
                         }

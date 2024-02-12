@@ -73,14 +73,33 @@ namespace EnvironmentManager4
                     pi.ModuleNaming = "SalesPad.ShipCenter.";
                     pi.ProductExecutables = new List<string> { "SalesPad.ShipCenter.exe" };
                     pi.DirectoryFilters = new List<string> { "ShipCenter",
-                        settings.BuildManagement.ShipCenterDirectory.Substring(settings.BuildManagement.ShipCenterDirectory.LastIndexOf('\\')+1)};
+                        settings.BuildManagement.ShipCenterx86Directory.Substring(settings.BuildManagement.ShipCenterx86Directory.LastIndexOf('\\')+1),
+                        settings.BuildManagement.ShipCenterx64Directory.Substring(settings.BuildManagement.ShipCenterx64Directory.LastIndexOf('\\')+1)};
                     switch (install)
                     {
                         case true:
-                            pi.InstallDirectory = settings.BuildManagement.ShipCenterDirectory;
+                            switch (version)
+                            {
+                                case "x64":
+                                    pi.InstallDirectory = settings.BuildManagement.ShipCenterx64Directory;
+                                    break;
+                                case "x86":
+                                case "Pre":
+                                    pi.InstallDirectory = settings.BuildManagement.ShipCenterx86Directory;
+                                    break;
+                            }
                             break;
                         case false:
-                            pi.InstallDirectory = @"C:\Program Files (x86)";
+                            switch (version)
+                            {
+                                case "x64":
+                                    pi.InstallDirectory = @"C:\Program Files";
+                                    break;
+                                case "x86":
+                                case "Pre":
+                                    pi.InstallDirectory = @"C:\Program Files (x86)";
+                                    break;
+                            }
                             break;
                     }
                     break;
@@ -108,7 +127,8 @@ namespace EnvironmentManager4
                 settings.BuildManagement.SalesPadx64Directory,
                 settings.BuildManagement.DataCollectionDirectory,
                 settings.BuildManagement.SalesPadMobileDirectory,
-                settings.BuildManagement.ShipCenterDirectory,
+                settings.BuildManagement.ShipCenterx86Directory,
+                settings.BuildManagement.ShipCenterx64Directory,
                 settings.BuildManagement.GPWebDirectory,
                 settings.BuildManagement.WebAPIDirectory
             };
