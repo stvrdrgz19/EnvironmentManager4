@@ -292,6 +292,47 @@ namespace EnvironmentManager4
                 labelNotConnected.Visible = false;
         }
 
+        private static List<string> generalVersionList = new List<string>()
+        {
+            "x64",
+            "x86",
+            "Pre"
+        };
+
+        private static List<string> shipCenterVersionList = new List<string>()
+        {
+            "x64",
+            "Pre"
+        };
+
+        private void SetVersionList()
+        {
+            cbSPGPVersion.Items.Clear();
+            cbSPGPVersion.Enabled = true;
+
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            string selectedProduct = cbProductList.Text;
+            if (selectedProduct != Products.ShipCenter)
+            {
+                foreach (string version in generalVersionList)
+                    cbSPGPVersion.Items.Add(version);
+                if (selectedProduct == Products.SalesPad)
+                    cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
+                else
+                {
+                    cbSPGPVersion.SelectedIndex = 1;
+                    cbSPGPVersion.Enabled = false;
+                }
+            }
+            else
+            {
+                foreach (string version in shipCenterVersionList)
+                    cbSPGPVersion.Items.Add(version);
+                cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
+            }
+        }
+
+
         private void Form1_Load(object sender, EventArgs e)
         {
             CheckIfConnectedToTheNetwork();
@@ -810,19 +851,7 @@ namespace EnvironmentManager4
 
         private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedProduct = cbProductList.Text;
-            if (selectedProduct == Products.SalesPad || selectedProduct == Products.ShipCenter)
-            {
-                SettingsModel settings = SettingsUtilities.GetSettings();
-                cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
-                cbSPGPVersion.Enabled = true;
-            }
-            else
-            {
-                cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact("x86");
-                cbSPGPVersion.Enabled = false;
-            }
-            return;
+            SetVersionList();
         }
 
         private void deleteBuildInstallsToolStripMenuItem_Click(object sender, EventArgs e)
