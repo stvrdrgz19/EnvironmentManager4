@@ -13,26 +13,25 @@ namespace EnvironmentManager4
         {
             string logFile = Utilities.GetFile("Log.txt");
             DateTime logTime = DateTime.Now;
-            using (FileStream stream = File.Open(logFile, FileMode.OpenOrCreate))
+
+            using (StreamWriter writer = File.AppendText(logFile))
             {
-                using (StreamWriter sw = new StreamWriter(stream))
+                writer.WriteLine("===============================================================================");
+                writer.WriteLine(String.Format("-({0}){1}", logTime, Constants.ExceptionDivider));
+                writer.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
+                writer.WriteLine(String.Format("Exception Message: {0}", e.Message));
+                writer.WriteLine(String.Format("Exception Type: {0}", e.GetType().ToString()));
+                writer.WriteLine(String.Format("Exception Source: {0}", e.Source));
+                writer.WriteLine(String.Format("Exception Target Site: {0}", e.TargetSite));
+                writer.WriteLine("");
+                if (!String.IsNullOrEmpty(extraMessage))
                 {
-                    sw.WriteLine(String.Format("-({0}){1}", logTime, Constants.ExceptionDivider));
-                    sw.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
-                    sw.WriteLine(String.Format("Exception Message: {0}", e.Message));
-                    sw.WriteLine(String.Format("Exception Type: {0}", e.GetType().ToString()));
-                    sw.WriteLine(String.Format("Exception Source: {0}", e.Source));
-                    sw.WriteLine(String.Format("Exception Target Site: {0}", e.TargetSite));
-                    sw.WriteLine("");
-                    if (!String.IsNullOrEmpty(extraMessage))
-                    {
-                        sw.WriteLine(extraMessage);
-                        sw.WriteLine("");
-                    }
-                    sw.WriteLine("STACK TRACE");
-                    sw.WriteLine(e.StackTrace);
-                    sw.WriteLine("");
+                    writer.WriteLine(extraMessage);
+                    writer.WriteLine("");
                 }
+                writer.WriteLine("STACK TRACE");
+                writer.WriteLine(e.StackTrace);
+                writer.WriteLine("");
             }
         }
 
