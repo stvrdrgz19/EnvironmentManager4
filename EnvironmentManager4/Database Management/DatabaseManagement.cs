@@ -199,6 +199,7 @@ namespace EnvironmentManager4
             catch (Exception e)
             {
                 ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
             }
         }
 
@@ -306,6 +307,7 @@ namespace EnvironmentManager4
             catch (Exception e)
             {
                 ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
                 Form1.EnableWaitCursor(false);
                 return;
             }
