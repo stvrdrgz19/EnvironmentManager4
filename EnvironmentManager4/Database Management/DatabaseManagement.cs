@@ -46,7 +46,8 @@ namespace EnvironmentManager4
             }
             if (!Directory.Exists(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
-                MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist.", settingsModel.DbManagement.DatabaseBackupDirectory));
+                string projectName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
+                MessageBox.Show(String.Format("The provided database backup DIR '{0}' doesn't exist. {1} will create this folder if you choose to create a database backup using this value.", settingsModel.DbManagement.DatabaseBackupDirectory, projectName));
                 LoadDatabaseDescription(cb, tb);
                 return;
             }
