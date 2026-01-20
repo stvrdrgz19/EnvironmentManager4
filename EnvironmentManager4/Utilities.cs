@@ -26,6 +26,8 @@ namespace EnvironmentManager4
         public const string debugPath = @"C:\Users\steve.rodriguez\source\repos\EnvironmentManager4\EnvironmentManager4\bin\Debug";
         public const string localPath = @"C:\Program Files (x86)\Environment Manager";
 
+        public const string sqlServerNotRunningMessage = "The selected SQL Server is NOT running!";
+
         /// <summary>
         /// Current versions of SalesPad that are supported.
         /// </summary>
@@ -130,9 +132,23 @@ namespace EnvironmentManager4
             {
                 using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
                 {
-                    ZipArchiveEntry description = archive.GetEntry("Description.txt");
-                    using (StreamReader reader = new StreamReader(description.Open()))
-                        return reader.ReadToEnd();
+                    try
+                    {
+                        ZipArchiveEntry description = archive.GetEntry("Description.txt");
+
+                        using (StreamReader reader = new StreamReader(description.Open()))
+                            return reader.ReadToEnd();
+                    }
+                    catch (NullReferenceException e)
+                    {
+                        ErrorHandling.LogException(e);
+                        return DatabaseManagement.dbDescDefault;
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorHandling.LogException(e);
+                        return DatabaseManagement.dbDescDefault;
+                    }
                 }
             }
         }

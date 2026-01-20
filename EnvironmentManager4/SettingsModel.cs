@@ -105,7 +105,7 @@ namespace EnvironmentManager4
 
             var dbManagement = new DbManagement
             {
-                DatabaseBackupDirectory = "",
+                DatabaseBackupDirectory = @"C:\",
                 Connection = "",
                 ConnectionsList = connectionList,
                 SQLServerUserName = "",
@@ -135,7 +135,7 @@ namespace EnvironmentManager4
                 ShowIP = true,
                 EnableWaterBot = false,
                 EnableInstallToasts = false,
-                PromptForUpdate = false
+                PromptForUpdate = true
             };
 
             var settings = new SettingsModel

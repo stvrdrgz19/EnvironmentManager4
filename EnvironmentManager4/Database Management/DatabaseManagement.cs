@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -45,7 +46,8 @@ namespace EnvironmentManager4
             }
             if (!Directory.Exists(settingsModel.DbManagement.DatabaseBackupDirectory))
             {
-                MessageBox.Show(String.Format("The provided database backup directory '{0}' doesn't exist.", settingsModel.DbManagement.DatabaseBackupDirectory));
+                string projectName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
+                MessageBox.Show(String.Format("The provided database backup DIR '{0}' doesn't exist. {1} will create this folder if you choose to create a database backup using this value.", settingsModel.DbManagement.DatabaseBackupDirectory, projectName));
                 LoadDatabaseDescription(cb, tb);
                 return;
             }
@@ -67,16 +69,7 @@ namespace EnvironmentManager4
             }
             else
             {
-                try
-                {
-                    tb.Text = Utilities.GetDatabaseDescription(backup);
-                }
-                catch (Exception e)
-                {
-                    ErrorHandling.LogException(e);
-                    ErrorHandling.DisplayExceptionMessage(e);
-                    tb.Text = dbDescDefault;
-                }
+                tb.Text = Utilities.GetDatabaseDescription(backup);
             }
         }
 
@@ -287,13 +280,18 @@ namespace EnvironmentManager4
                 return true;
         }
 
-        public void BackupDatabases(SettingsModel settings)
+        public bool BackupDatabases(SettingsModel settings)
         {
             foreach (string database in this.Databases)
-                BackupDatabase(database, this.BackupName, settings);
+            {
+                if (!BackupDatabase(database, this.BackupName, settings))
+                    return false;
+            }
+
+            return true;
         }
 
-        public static void BackupDatabase(string databaseFile, string backupName, SettingsModel settings)
+        public static bool BackupDatabase(string databaseFile, string backupName, SettingsModel settings)
         {
             string script = String.Format(@"BACKUP DATABASE {2} TO DISK='{0}\{1}\{2}.bak' WITH INIT", settings.DbManagement.DatabaseBackupDirectory, backupName, databaseFile);
 
@@ -303,13 +301,28 @@ namespace EnvironmentManager4
             try
             {
                 newDBScript.Fill(newDBTable);
+                return true;
             }
             catch (Exception e)
             {
-                ErrorHandling.LogException(e);
-                ErrorHandling.DisplayExceptionMessage(e);
-                Form1.EnableWaitCursor(false);
-                return;
+                if (e.Message.Contains("Operating system error 5(Access is denied.)"))
+                {
+                    string projectName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
+                    string path = settings.DbManagement.DatabaseBackupDirectory;
+                    string message = $"{projectName} is unable to read or write to path '{path}'.\n\nPlease modify the 'Database Backup Directory' setting to use a path Environment Manager can access, such as 'C:\\DatabaseBackups'.";
+                    string caption = "ERROR";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    MessageBoxIcon icon = MessageBoxIcon.Error;
+
+                    MessageBox.Show(message, caption, buttons, icon);
+                }
+                else
+                {
+                    ErrorHandling.LogException(e);
+                    ErrorHandling.DisplayExceptionMessage(e);
+                    Form1.EnableWaitCursor(false);
+                }
+                return false;
             }
         }
 
@@ -376,15 +389,6 @@ namespace EnvironmentManager4
                 return;
             }
 
-            databaseBackup.BackupDatabases(settings);
-            databaseBackup.CreateDatabaseDescriptionFile(action);
-
-            //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
-            DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), action, databaseBackup.BackupName);
-            SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
-
-            databaseBackup.ZipBackupFolderAndRemove();
-
             string actionLabel = "";
             switch (action)
             {
@@ -396,15 +400,49 @@ namespace EnvironmentManager4
                     break;
             }
 
-            Form1.EnableDBControls(true);
-            Form1.s_NewDBBackupName = databaseBackup.BackupName;
-            Form1.SetStaticBackup(true);
-            Form1.EnableWaitCursor(false);
+            bool backupSuccess = databaseBackup.BackupDatabases(settings);
 
-            Toasts.Toast(
-                "SUCCESS"
-                , String.Format("The database backup '{0}' has been {1} successfully.", databaseBackup.BackupName, actionLabel)
-                , 1);
+            if (backupSuccess)
+            {
+                databaseBackup.CreateDatabaseDescriptionFile(action);
+
+                //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
+                DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), action, databaseBackup.BackupName);
+                SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
+
+                databaseBackup.ZipBackupFolderAndRemove();
+
+                Form1.EnableDBControls(true);
+                Form1.s_NewDBBackupName = databaseBackup.BackupName;
+                Form1.SetStaticBackup(true);
+                Form1.EnableWaitCursor(false);
+
+                Toasts.Toast(
+                    "SUCCESS"
+                    , String.Format("The database backup '{0}' has been {1} successfully.", databaseBackup.BackupName, actionLabel)
+                    , 1);
+            }
+            else
+            {
+                Form1.EnableDBControls(true);
+                Form1.EnableWaitCursor(false);
+                Toasts.Toast(
+                    "FAILURE"
+                    , String.Format("The database backup '{0}' was unable to be {1}. Please update the Database Backup Directory to one Environment Manager has access to and try again.", databaseBackup.BackupName, actionLabel)
+                    , 1);
+
+                try
+                {
+                    Directory.Delete(databaseBackup.BackupLocation);
+                }
+                catch (Exception e)
+                {
+                    ErrorHandling.LogException(e);
+                    ErrorHandling.DisplayExceptionMessage(e);
+                    Form1.EnableWaitCursor(false);
+                    return;
+                }
+            }
         }
 
         public static List<string> RetrieveSQLDatabases()
