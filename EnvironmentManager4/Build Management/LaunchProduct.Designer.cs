@@ -31,6 +31,7 @@ namespace EnvironmentManager4
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LaunchProduct));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkRunDatabaseUpdate = new System.Windows.Forms.CheckBox();
             this.lvInstalledBuilds = new System.Windows.Forms.ListView();
             this.cbBuildPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chDateModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -39,23 +40,36 @@ namespace EnvironmentManager4
             this.RemoveDLLs = new System.Windows.Forms.Button();
             this.CopyLabels = new System.Windows.Forms.Button();
             this.SelectedBuildDLLs = new System.Windows.Forms.ListBox();
-            this.checkRunDatabaseUpdate = new System.Windows.Forms.CheckBox();
+            this.cbDatabase = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbDatabase);
             this.groupBox1.Controls.Add(this.checkRunDatabaseUpdate);
             this.groupBox1.Controls.Add(this.lvInstalledBuilds);
             this.groupBox1.Controls.Add(this.Launch);
             this.groupBox1.ForeColor = System.Drawing.Color.Blue;
             this.groupBox1.Location = new System.Drawing.Point(2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(680, 223);
+            this.groupBox1.Size = new System.Drawing.Size(680, 228);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Builds";
+            // 
+            // checkRunDatabaseUpdate
+            // 
+            this.checkRunDatabaseUpdate.AutoSize = true;
+            this.checkRunDatabaseUpdate.ForeColor = System.Drawing.Color.Black;
+            this.checkRunDatabaseUpdate.Location = new System.Drawing.Point(8, 173);
+            this.checkRunDatabaseUpdate.Name = "checkRunDatabaseUpdate";
+            this.checkRunDatabaseUpdate.Size = new System.Drawing.Size(133, 17);
+            this.checkRunDatabaseUpdate.TabIndex = 3;
+            this.checkRunDatabaseUpdate.Text = "Run Database Update";
+            this.checkRunDatabaseUpdate.UseVisualStyleBackColor = true;
+            this.checkRunDatabaseUpdate.CheckedChanged += new System.EventHandler(this.checkRunDatabaseUpdate_CheckedChanged);
             // 
             // lvInstalledBuilds
             // 
@@ -88,7 +102,7 @@ namespace EnvironmentManager4
             // Launch
             // 
             this.Launch.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Launch.Location = new System.Drawing.Point(7, 189);
+            this.Launch.Location = new System.Drawing.Point(7, 194);
             this.Launch.Name = "Launch";
             this.Launch.Size = new System.Drawing.Size(665, 23);
             this.Launch.TabIndex = 0;
@@ -102,7 +116,7 @@ namespace EnvironmentManager4
             this.groupBox2.Controls.Add(this.CopyLabels);
             this.groupBox2.Controls.Add(this.SelectedBuildDLLs);
             this.groupBox2.ForeColor = System.Drawing.Color.Blue;
-            this.groupBox2.Location = new System.Drawing.Point(2, 231);
+            this.groupBox2.Location = new System.Drawing.Point(2, 236);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(680, 208);
             this.groupBox2.TabIndex = 10;
@@ -141,22 +155,20 @@ namespace EnvironmentManager4
             this.SelectedBuildDLLs.TabIndex = 0;
             this.SelectedBuildDLLs.TabStop = false;
             // 
-            // checkRunDatabaseUpdate
+            // cbDatabase
             // 
-            this.checkRunDatabaseUpdate.AutoSize = true;
-            this.checkRunDatabaseUpdate.ForeColor = System.Drawing.Color.Black;
-            this.checkRunDatabaseUpdate.Location = new System.Drawing.Point(8, 171);
-            this.checkRunDatabaseUpdate.Name = "checkRunDatabaseUpdate";
-            this.checkRunDatabaseUpdate.Size = new System.Drawing.Size(133, 17);
-            this.checkRunDatabaseUpdate.TabIndex = 3;
-            this.checkRunDatabaseUpdate.Text = "Run Database Update";
-            this.checkRunDatabaseUpdate.UseVisualStyleBackColor = true;
+            this.cbDatabase.Enabled = false;
+            this.cbDatabase.FormattingEnabled = true;
+            this.cbDatabase.Location = new System.Drawing.Point(141, 171);
+            this.cbDatabase.Name = "cbDatabase";
+            this.cbDatabase.Size = new System.Drawing.Size(121, 21);
+            this.cbDatabase.TabIndex = 4;
             // 
             // LaunchProduct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 441);
+            this.ClientSize = new System.Drawing.Size(684, 446);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -185,5 +197,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.ColumnHeader cbBuildPath;
         private System.Windows.Forms.ColumnHeader chDateModified;
         private System.Windows.Forms.CheckBox checkRunDatabaseUpdate;
+        private System.Windows.Forms.ComboBox cbDatabase;
     }
 }

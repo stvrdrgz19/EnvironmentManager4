@@ -79,9 +79,6 @@ namespace EnvironmentManager4
             string username = settings.DbManagement.SQLServerUserName;
             string password = Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword));
 
-            if (settings.DbManagement.DBToRestore != "")
-                database = settings.DbManagement.DBToRestore;
-
             string script = String.Format("USE {0} EXEC dbo.sppResetDatabase", database);
             SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settings.DbManagement.Connection, username, password));
             SqlDataAdapter sqlAdapter = new SqlDataAdapter(script, sqlCon);
@@ -233,9 +230,6 @@ namespace EnvironmentManager4
             SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
             Form1.EnableWaitCursor(false);
             Form1.EnableDBControls(true);
-
-            if (settings.DbManagement.ResetDatabaseAfterRestore)
-                ResetDatabaseVersion();
 
             //Inform the user the install was successful via toast
             Toasts.Toast(
@@ -485,20 +479,17 @@ namespace EnvironmentManager4
             return companyDatabaseList;
         }
 
-        public static void RunSalesPadDatabaseUpdate(string build)
+        public static void RunSalesPadDatabaseUpdate(string build, string database)
         {
-            //Get settings
-            SettingsModel settings = SettingsUtilities.GetSettings();
-
             //delete dbupdate log if it exists
             ErrorHandling.DeleteLogFiles();
 
             //reset the database version
-            ResetDatabaseVersion();
+            ResetDatabaseVersion(database);
 
             Process dbUpdate = new Process();
             dbUpdate.StartInfo.FileName = String.Format("{0}\\SalesPad.exe", build);
-            dbUpdate.StartInfo.Arguments = String.Format(@"/dbUpdate /userfields /conn={0}", settings.DbManagement.DBToRestore);
+            dbUpdate.StartInfo.Arguments = String.Format(@"/dbUpdate /userfields /conn={0}", database);
             dbUpdate.StartInfo.UseShellExecute = false;
             try
             {

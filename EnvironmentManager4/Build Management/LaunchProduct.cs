@@ -106,6 +106,15 @@ namespace EnvironmentManager4
                 checkRunDatabaseUpdate.Checked = false;
             }
             this.lvInstalledBuilds.ColumnClick += new ColumnClickEventHandler(ColumnClick);
+
+            // load databases into cbDatabases
+            cbDatabase.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
+
+            // get and set the Database to Update value
+            RegUtilities.CheckForInstallRegistryEntries();
+            RegistryEntries reg = new RegistryEntries();
+            reg._product = product;
+            cbDatabase.Text = reg.DatabaseToUpdate;
             return;
         }
 
@@ -113,6 +122,14 @@ namespace EnvironmentManager4
         {
             if (lvInstalledBuilds.SelectedItems.Count != 0)
             {
+                string databaseToUpdate = cbDatabase.Text;
+
+                // save the database to update to the registry
+                RegUtilities.CheckForInstallRegistryEntries();
+                RegistryEntries reg = new RegistryEntries();
+                reg._product = product;
+                reg.DatabaseToUpdate = databaseToUpdate;
+
                 string selectedBuild = lvInstalledBuilds.SelectedItems[0].Text;
                 List<Builds> builds = Builds.GetInstalledBuilds(product, version);
                 this.Close();
@@ -125,7 +142,7 @@ namespace EnvironmentManager4
                             Toasts.Toast("Running Datbase Update"
                                 ,"The database update for the selected build is being ran, this may take a few minutes. The build will be launched once complete."
                                 ,1);
-                            DatabaseManagement.RunSalesPadDatabaseUpdate(selectedBuild);
+                            DatabaseManagement.RunSalesPadDatabaseUpdate(selectedBuild, databaseToUpdate);
                         }
                         
                         Process.Start(String.Format(@"{0}\{1}",
@@ -234,6 +251,15 @@ namespace EnvironmentManager4
         private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
             Form1.s_Launch = null;
+        }
+
+        private void checkRunDatabaseUpdate_CheckedChanged(object sender, EventArgs e)
+        {
+            bool isChecked = checkRunDatabaseUpdate.Checked;
+            if (isChecked)
+                cbDatabase.Enabled = true;
+            else
+                cbDatabase.Enabled= false;
         }
     }
 }

@@ -54,14 +54,6 @@ namespace EnvironmentManager4
 
                 tbSQLServerUN.Text = settings.DbManagement.SQLServerUserName;
                 tbSQLServerPW.Text = Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword));
-                checkResetDatabase.Checked = settings.DbManagement.ResetDatabaseAfterRestore;
-                if (cbDBToReset.Items.Contains(settings.DbManagement.DBToRestore))
-                    cbDBToReset.SelectedIndex = cbDBToReset.FindStringExact(settings.DbManagement.DBToRestore);
-                else
-                    cbDBToReset.Text = settings.DbManagement.DBToRestore;
-
-                if (!settings.DbManagement.ResetDatabaseAfterRestore)
-                    cbDBToReset.Enabled = false;
 
                 //================================================[ BUILD MANAGEMENT SETTINGS ]================================================
                 tbSalesPadx86Directory.Text = settings.BuildManagement.SalesPadx86Directory;
@@ -106,8 +98,6 @@ namespace EnvironmentManager4
                 ConnectionsList = connectionsInMemory,
                 SQLServerUserName = tbSQLServerUN.Text,
                 SQLServerPassword = Utilities.EncryptString(Utilities.ToSecureString(tbSQLServerPW.Text)),
-                ResetDatabaseAfterRestore = checkResetDatabase.Checked,
-                DBToRestore = cbDBToReset.Text
             };
 
             var buildManagement = new BuildManagement
@@ -239,18 +229,11 @@ namespace EnvironmentManager4
             return cbConnections.Items.Contains(connectionName) ? true : false;
         }
 
-        public void PopulateDatabaseList()
-        {
-            cbDBToReset.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
-        }
-
         private void Settings_Load(object sender, EventArgs e)
         {
             hidden = true;
             SettingsModel settings = SettingsUtilities.GetSettings();
             SettingsUtilities.UpdateSettingsFile(settings);
-            if (!String.IsNullOrWhiteSpace(settings.DbManagement.Connection))
-                PopulateDatabaseList();
             LoadSettings(settings);
             SetStartingValues();
             ToggleModeExecute();
@@ -441,11 +424,6 @@ namespace EnvironmentManager4
                 if (unsavedResult == DialogResult.Cancel)
                     e.Cancel = true;
             }
-        }
-
-        private void checkResetDatabase_CheckedChanged(object sender, EventArgs e)
-        {
-            cbDBToReset.Enabled = checkResetDatabase.Checked ? true : false;
         }
     }
 }

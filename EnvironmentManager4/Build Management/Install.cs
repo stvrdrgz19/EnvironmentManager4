@@ -33,7 +33,7 @@ namespace EnvironmentManager4
         public bool LaunchAfterInstall { get; set; }
         public bool OpenInstallFolder { get; set; }
         public bool RunDatabaseUpdate { get; set; }
-        public bool ResetDatabaseVersion { get; set; }
+        public string DatabaseToUpdate { get; set; }
 
         public static string extModulesPath;
         public static string custModulesPath;
@@ -361,11 +361,8 @@ namespace EnvironmentManager4
                     Toasts.Toast("Running Datbase Update"
                         , "The database update for the installed build is being ran, this may take a few minutes."
                         , 1);
-                DatabaseManagement.RunSalesPadDatabaseUpdate(this.InstallLocation);
+                DatabaseManagement.RunSalesPadDatabaseUpdate(this.InstallLocation, this.DatabaseToUpdate);
             }
-
-            if (this.ResetDatabaseVersion && !this.RunDatabaseUpdate)
-                DatabaseManagement.ResetDatabaseVersion();
 
             this.Cursor = Cursors.Default;
 
@@ -416,13 +413,24 @@ namespace EnvironmentManager4
 
         private void ConfigureLoadForm()
         {
+            // load databases into cbDatabases
+            cbDatabase.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
+
+            // Set values based on registry settings
             RegUtilities.CheckForInstallRegistryEntries();
             RegistryEntries reg = new RegistryEntries();
             reg._product = this.Product;
             checkLaunchAfterInstall.Checked = bool.Parse(reg.LaunchAfterInstall);
             checkInstallFolder.Checked = bool.Parse(reg.OpenInstallFolder);
             checkRunDatabaseUpdate.Checked = bool.Parse(reg.RunDatabaseUpdate);
-            checkResetDBVersion.Checked = bool.Parse(reg.ResetDatabaseVersion);
+
+            // enable/disable database based on run db update checkbox
+            if (checkRunDatabaseUpdate.Checked)
+                cbDatabase.Enabled = true;
+            else
+                cbDatabase.Enabled = false;
+            cbDatabase.Text = reg.DatabaseToUpdate;
+
             string installerDirectory = this.NetworkPath;
 
             switch (this.Product)
@@ -471,21 +479,20 @@ namespace EnvironmentManager4
                     lbExtendedModules.Enabled = false;
                     checkRunDatabaseUpdate.Enabled = false;
                     checkLaunchAfterInstall.Enabled = false;
-                    checkResetDBVersion.Enabled = false;
                     extModulesPath = null;
                     custModulesPath = String.Format(@"{0}\plugins", installerDirectory);
                     break;
             }
         }
 
-        private void SaveInstallOptions(bool launchAfterInstall, bool openInstallFolder, bool runDatabaseUpdate, bool resetDatabaseVersion)
+        private void SaveInstallOptions(bool launchAfterInstall, bool openInstallFolder, bool runDatabaseUpdate, string databaseToUpdate)
         {
             RegistryEntries reg = new RegistryEntries();
             reg._product = this.Product;
             reg.LaunchAfterInstall = launchAfterInstall.ToString().ToLower();
             reg.OpenInstallFolder = openInstallFolder.ToString().ToLower();
             reg.RunDatabaseUpdate = runDatabaseUpdate.ToString().ToLower();
-            reg.ResetDatabaseVersion = resetDatabaseVersion.ToString().ToLower();
+            reg.DatabaseToUpdate = databaseToUpdate;
         }
 
         private void Install_Load(object sender, EventArgs e)
@@ -494,7 +501,6 @@ namespace EnvironmentManager4
 
             if (this.Product != Products.SalesPad)
             {
-                checkResetDBVersion.Enabled = false;
                 checkRunDatabaseUpdate.Enabled = false;
             }
             if (this.Product == Products.SalesPadMobile)
@@ -642,10 +648,10 @@ namespace EnvironmentManager4
             this.LaunchAfterInstall = checkLaunchAfterInstall.Checked;
             this.OpenInstallFolder = checkInstallFolder.Checked;
             this.RunDatabaseUpdate = checkRunDatabaseUpdate.Checked;
-            this.ResetDatabaseVersion = checkResetDBVersion.Checked;
+            this.DatabaseToUpdate = cbDatabase.Text;
 
             //save the install options
-            SaveInstallOptions(this.LaunchAfterInstall, this.OpenInstallFolder, this.RunDatabaseUpdate, this.ResetDatabaseVersion);
+            SaveInstallOptions(this.LaunchAfterInstall, this.OpenInstallFolder, this.RunDatabaseUpdate, this.DatabaseToUpdate);
 
             this.Close();
             Thread installBuild = new Thread(() => InstallBuild());
@@ -723,6 +729,15 @@ namespace EnvironmentManager4
         private void FormIsClosing(object sender, FormClosingEventArgs eventArgs)
         {
             Form1.s_InstallBuild = null;
+        }
+
+        private void checkRunDatabaseUpdate_CheckedChanged(object sender, EventArgs e)
+        {
+            bool isChecked = checkRunDatabaseUpdate.Checked;
+            if (isChecked)
+                cbDatabase.Enabled = true;
+            else
+                cbDatabase.Enabled = false;
         }
     }
 }
