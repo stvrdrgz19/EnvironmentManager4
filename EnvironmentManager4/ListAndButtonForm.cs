@@ -40,8 +40,20 @@ namespace EnvironmentManager4
         private void button1_Click(object sender, EventArgs e)
         {
             output = listBox1.Text;
-            this.Close();
-            return;
+            if (String.IsNullOrEmpty(output))
+            {
+                string message = "Please select a database to reset from the list.";
+                string caption = "MISSING SELECTION";
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                MessageBoxIcon icon = MessageBoxIcon.Error;
+                MessageBox.Show(message, caption, buttons, icon);
+                return;
+            }
+            else
+            {
+                this.Close();
+                return;
+            }
         }
     }
 }
