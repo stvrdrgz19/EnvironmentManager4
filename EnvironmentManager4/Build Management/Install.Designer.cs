@@ -39,7 +39,6 @@ namespace EnvironmentManager4
             this.btnAddConfiguration = new System.Windows.Forms.Button();
             this.cbConfigurationList = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkResetDBVersion = new System.Windows.Forms.CheckBox();
             this.checkInstallFolder = new System.Windows.Forms.CheckBox();
             this.checkRunDatabaseUpdate = new System.Windows.Forms.CheckBox();
             this.checkLaunchAfterInstall = new System.Windows.Forms.CheckBox();
@@ -48,6 +47,7 @@ namespace EnvironmentManager4
             this.tbInstallLocation = new System.Windows.Forms.TextBox();
             this.tbSelectedBuild = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.cbDatabase = new System.Windows.Forms.ComboBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -137,7 +137,7 @@ namespace EnvironmentManager4
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.checkResetDBVersion);
+            this.groupBox1.Controls.Add(this.cbDatabase);
             this.groupBox1.Controls.Add(this.checkInstallFolder);
             this.groupBox1.Controls.Add(this.checkRunDatabaseUpdate);
             this.groupBox1.Controls.Add(this.checkLaunchAfterInstall);
@@ -147,16 +147,6 @@ namespace EnvironmentManager4
             this.groupBox1.TabIndex = 29;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Build Options";
-            // 
-            // checkResetDBVersion
-            // 
-            this.checkResetDBVersion.AutoSize = true;
-            this.checkResetDBVersion.Location = new System.Drawing.Point(132, 44);
-            this.checkResetDBVersion.Name = "checkResetDBVersion";
-            this.checkResetDBVersion.Size = new System.Drawing.Size(141, 17);
-            this.checkResetDBVersion.TabIndex = 6;
-            this.checkResetDBVersion.Text = "Reset Database Version";
-            this.checkResetDBVersion.UseVisualStyleBackColor = true;
             // 
             // checkInstallFolder
             // 
@@ -177,6 +167,7 @@ namespace EnvironmentManager4
             this.checkRunDatabaseUpdate.TabIndex = 5;
             this.checkRunDatabaseUpdate.Text = "Run Database Update";
             this.checkRunDatabaseUpdate.UseVisualStyleBackColor = true;
+            this.checkRunDatabaseUpdate.CheckedChanged += new System.EventHandler(this.checkRunDatabaseUpdate_CheckedChanged);
             // 
             // checkLaunchAfterInstall
             // 
@@ -231,6 +222,15 @@ namespace EnvironmentManager4
             this.label1.TabIndex = 25;
             this.label1.Text = "Please enter the location you would like to install the following build to:";
             // 
+            // cbDatabase
+            // 
+            this.cbDatabase.Enabled = false;
+            this.cbDatabase.FormattingEnabled = true;
+            this.cbDatabase.Location = new System.Drawing.Point(132, 41);
+            this.cbDatabase.Name = "cbDatabase";
+            this.cbDatabase.Size = new System.Drawing.Size(121, 21);
+            this.cbDatabase.TabIndex = 6;
+            // 
             // Install
             // 
             this.AcceptButton = this.btnOK;
@@ -276,7 +276,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Button btnAddConfiguration;
         private System.Windows.Forms.ComboBox cbConfigurationList;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox checkResetDBVersion;
         private System.Windows.Forms.CheckBox checkInstallFolder;
         private System.Windows.Forms.CheckBox checkRunDatabaseUpdate;
         private System.Windows.Forms.CheckBox checkLaunchAfterInstall;
@@ -285,5 +284,6 @@ namespace EnvironmentManager4
         private System.Windows.Forms.TextBox tbInstallLocation;
         private System.Windows.Forms.TextBox tbSelectedBuild;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cbDatabase;
     }
 }

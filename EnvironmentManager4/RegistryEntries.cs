@@ -13,7 +13,7 @@ namespace EnvironmentManager4
         public const string _LaunchAfterInstall = "Launch After Install";
         public const string _OpenInstallFolder = "Open Install Folder";
         public const string _RunDatabaseUpdate = "Run Database Update";
-        public const string _ResetDatabaseVersion = "Reset Database Version";
+        public const string _DatabaseToUpdate = "Database To Update";
 
         public string LaunchAfterInstall
         {
@@ -57,17 +57,17 @@ namespace EnvironmentManager4
             }
         }
 
-        public string ResetDatabaseVersion
+        public string DatabaseToUpdate
         {
             get
             {
-                RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
-                return (string)key.GetValue(_ResetDatabaseVersion);
+                RegistryKey key = RegUtilities.GetInstallSubRegKey (_product);
+                return (string)key.GetValue(_DatabaseToUpdate);
             }
             set
             {
                 RegistryKey key = RegUtilities.GetInstallSubRegKey(_product);
-                key.SetValue(_ResetDatabaseVersion, value);
+                key.SetValue(_DatabaseToUpdate, value);
             }
         }
     }

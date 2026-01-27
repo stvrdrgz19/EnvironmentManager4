@@ -330,7 +330,7 @@ namespace EnvironmentManager4
                 key.SetValue(RegistryEntries._LaunchAfterInstall, "false");
                 key.SetValue(RegistryEntries._OpenInstallFolder, "false");
                 key.SetValue(RegistryEntries._RunDatabaseUpdate, "false");
-                key.SetValue(RegistryEntries._ResetDatabaseVersion, "false");
+                key.SetValue(RegistryEntries._DatabaseToUpdate, "");
                 key.Close();
             }
         }
