@@ -20,12 +20,13 @@ namespace EnvironmentManager4
             InitializeComponent();
         }
 
-        public static DatabaseManagement backupConfig = new DatabaseManagement();
+        public static string BackupName { get; set; }
+        public static string BackupDescription { get; set; }
 
         private void UpdateDatabaseDescription_Load(object sender, EventArgs e)
         {
-            tbDatabaseName.Text = backupConfig.BackupName;
-            tbDatabaseDescription.Text = backupConfig.BackupDescription;
+            tbDatabaseName.Text = BackupName;
+            tbDatabaseDescription.Text = BackupDescription;
             return;
         }
 
@@ -44,10 +45,10 @@ namespace EnvironmentManager4
                 if (result == DialogResult.No)
                     return;
             }
-            if (newDesc == backupConfig.BackupDescription)
+            if (newDesc == BackupDescription)
                 this.Close();
             SettingsModel settings = SettingsUtilities.GetSettings();
-            string zipPath = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupConfig.BackupName);
+            string zipPath = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, BackupName);
             using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
             {
                 using (ZipArchive updateArchive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))

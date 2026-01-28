@@ -136,8 +136,16 @@ namespace EnvironmentManager4
                     {
                         ZipArchiveEntry description = archive.GetEntry("Description.txt");
 
-                        using (StreamReader reader = new StreamReader(description.Open()))
-                            return reader.ReadToEnd();
+                        if (description != null)
+                        {
+                            using (StreamReader reader = new StreamReader(description.Open()))
+                                return reader.ReadToEnd();
+                        }
+                        else
+                        {
+                            // return default description if no description file was found
+                            return DatabaseManagement.dbDescDefault;
+                        }
                     }
                     catch (NullReferenceException e)
                     {

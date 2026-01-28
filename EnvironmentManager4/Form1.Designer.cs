@@ -279,7 +279,7 @@ namespace EnvironmentManager4
             this.btnNewDB.Name = "btnNewDB";
             this.btnNewDB.Size = new System.Drawing.Size(125, 23);
             this.btnNewDB.TabIndex = 13;
-            this.btnNewDB.Text = "New DB Backup";
+            this.btnNewDB.Text = "Create DB Backup";
             this.toolTip1.SetToolTip(this.btnNewDB, "Create a new database backup.");
             this.btnNewDB.UseVisualStyleBackColor = true;
             this.btnNewDB.Click += new System.EventHandler(this.btnNewDB_Click);
@@ -291,7 +291,7 @@ namespace EnvironmentManager4
             this.btnOverwriteDB.Name = "btnOverwriteDB";
             this.btnOverwriteDB.Size = new System.Drawing.Size(125, 23);
             this.btnOverwriteDB.TabIndex = 12;
-            this.btnOverwriteDB.Text = "Overwrite DB";
+            this.btnOverwriteDB.Text = "Overwrite DB Backup";
             this.toolTip1.SetToolTip(this.btnOverwriteDB, "Overwrite the selected backup using your current environment.");
             this.btnOverwriteDB.UseVisualStyleBackColor = true;
             this.btnOverwriteDB.Click += new System.EventHandler(this.btnOverwriteDB_Click);
@@ -315,7 +315,7 @@ namespace EnvironmentManager4
             this.btnRestoreDB.Name = "btnRestoreDB";
             this.btnRestoreDB.Size = new System.Drawing.Size(125, 23);
             this.btnRestoreDB.TabIndex = 11;
-            this.btnRestoreDB.Text = "Restore DB";
+            this.btnRestoreDB.Text = "Restore DB Backup";
             this.toolTip1.SetToolTip(this.btnRestoreDB, "Restore the selected database backup.");
             this.btnRestoreDB.UseVisualStyleBackColor = true;
             this.btnRestoreDB.Click += new System.EventHandler(this.btnRestoreDB_Click);
@@ -576,7 +576,7 @@ namespace EnvironmentManager4
             this.directoryCompareToolStripMenuItem,
             this.installPropertiesMonitorToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // resetDatabaseVersionToolStripMenuItem

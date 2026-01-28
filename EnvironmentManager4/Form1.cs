@@ -1,4 +1,5 @@
 ﻿using EnvironmentManager4.Build_Management;
+using EnvironmentManager4.Database_Management;
 using EnvironmentManager4.Service_Management;
 using Newtonsoft.Json;
 using System;
@@ -46,9 +47,9 @@ namespace EnvironmentManager4
         public static DatabaseActivityLog s_DbLog;
         public static Notes s_Notes;
         public static About s_AboutForm;
-        public static NewDatabaseBackup s_NewBackup;
-        public static NewDatabaseBackup s_OverwriteBackup;
         public static InstallPropertiesMonitor s_InstallPropertiesMonitor;
+
+        public static DatabaseManagementForm s_DBMgmtTest;
 
         //This is in place to call/set for re-sizing the listview (lvInstalledSQLServers) depending on the number of rows - for the column chooser.
         public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
@@ -431,81 +432,70 @@ namespace EnvironmentManager4
         private void btnRestoreDB_Click(object sender, EventArgs e)
         {
             string backupName = cbDatabaseList.Text;
-            SettingsModel settingsModel = SettingsUtilities.GetSettings();
-            string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
-            bool continueRestore = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Restore");
-            if (continueRestore)
-            {
-                string message = String.Format("Are you sure you want to restore the backup '{0}' over your current environment?", backupName);
-                string caption = "CONFIRM";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                MessageBoxIcon icon = MessageBoxIcon.Question;
-                DialogResult result;
 
-                result = MessageBox.Show(message, caption, buttons, icon);
-                if (result == DialogResult.Yes)
-                {
-                    Thread restoreBackup = new Thread(() => DatabaseManagement.Restore(backupName));
-                    restoreBackup.Start();
-                }
+            // stop if no backup is selected
+            if (backupName == "Select a Database Backup")
+            {
+                string message = "Please select a database backup to Restore.";
+                string caption = "ERROR";
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                MessageBoxIcon icon = MessageBoxIcon.Error;
+                MessageBox.Show(message, caption, buttons, icon);
+                return;
             }
+
+            // launch restore database backup form
+            if (s_DBMgmtTest == null)
+            {
+                s_DBMgmtTest = new DatabaseManagementForm();
+                DatabaseManagementForm.Type = DBUtils.DBManagementType.Restore;
+                DatabaseManagementForm.BackupName = backupName;
+                s_DBMgmtTest.Show();
+            }
+            else
+                s_DBMgmtTest.BringToFront();
             return;
         }
 
         private void btnOverwriteDB_Click(object sender, EventArgs e)
         {
-            if (s_OverwriteBackup == null)
-            {
-                string backupName = cbDatabaseList.Text;
-                SettingsModel settingsModel = SettingsUtilities.GetSettings();
-                string backupZip = String.Format(@"{0}\{1}.zip", settingsModel.DbManagement.DatabaseBackupDirectory, backupName);
-                bool continueOverwrite = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Overwrite");
-                if (continueOverwrite)
-                {
-                    string message = String.Format(@"Are you sure you want to overwrite the selected backup '{0}'? This action cannot be undone.", backupName);
-                    string caption = "OVERWRITE?";
-                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                    MessageBoxIcon icon = MessageBoxIcon.Question;
-                    DialogResult result;
+            string backupName = cbDatabaseList.Text;
 
-                    result = MessageBox.Show(message, caption, buttons, icon);
-                    if (result == DialogResult.Yes)
-                    {
-                        s_OverwriteBackup = new NewDatabaseBackup();
-                        NewDatabaseBackup.existingDatabaseName = backupName;
-                        NewDatabaseBackup.existingDatabaseFile = backupZip;
-                        NewDatabaseBackup.action = "OVERWRITE";
-                        s_OverwriteBackup.Show();
-                    }
-                }
+            // stop if no backup is selected
+            if (backupName == "Select a Database Backup")
+            {
+                string message = "Please select a database backup to Overwrite.";
+                string caption = "ERROR";
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                MessageBoxIcon icon = MessageBoxIcon.Error;
+                MessageBox.Show(message, caption, buttons, icon);
+                return;
+            }
+
+            // launch overwrite database backup form
+            if (s_DBMgmtTest == null)
+            {
+                s_DBMgmtTest = new DatabaseManagementForm();
+                DatabaseManagementForm.Type = DBUtils.DBManagementType.Overwrite;
+                DatabaseManagementForm.BackupName = backupName;
+                s_DBMgmtTest.Show();
             }
             else
-                s_OverwriteBackup.BringToFront();
+                s_DBMgmtTest.BringToFront();
             return;
         }
 
         private void btnNewDB_Click(object sender, EventArgs e)
         {
-            if (s_NewBackup == null)
+            // launch create database backup form
+            if (s_DBMgmtTest == null)
             {
-                string message = "Are you sure you want to create a new Database Backup?";
-                string caption = "CONFIRM";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                MessageBoxIcon icon = MessageBoxIcon.Question;
-                DialogResult result;
-
-                result = MessageBox.Show(message, caption, buttons, icon);
-                if (result == DialogResult.Yes)
-                {
-                    s_NewBackup = new NewDatabaseBackup();
-                    NewDatabaseBackup.existingDatabaseName = null;
-                    NewDatabaseBackup.existingDatabaseFile = null;
-                    NewDatabaseBackup.action = "BACKUP";
-                    s_NewBackup.Show();
-                }
+                s_DBMgmtTest = new DatabaseManagementForm();
+                DatabaseManagementForm.Type = DBUtils.DBManagementType.Create;
+                s_DBMgmtTest.Show();
             }
             else
-                s_NewBackup.BringToFront();
+                s_DBMgmtTest.BringToFront();
             return;
         }
 
@@ -870,11 +860,9 @@ namespace EnvironmentManager4
                     || !File.Exists(String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, cbDatabaseList.Text)))
                     return;
 
-                DatabaseManagement backupConfig = new DatabaseManagement();
-                backupConfig.BackupName = cbDatabaseList.Text;
-                backupConfig.BackupDescription = tbDBDesc.Text;
                 s_Udd = new UpdateDatabaseDescription();
-                UpdateDatabaseDescription.backupConfig = backupConfig;
+                UpdateDatabaseDescription.BackupName = cbDatabaseList.Text;
+                UpdateDatabaseDescription.BackupDescription = tbDBDesc.Text;
                 s_Udd.FormClosing += new FormClosingEventHandler(EditDescriptionClose);
                 s_Udd.Show();
             }
