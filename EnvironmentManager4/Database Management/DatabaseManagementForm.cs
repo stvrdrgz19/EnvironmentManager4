@@ -13,6 +13,8 @@ using System.Windows.Forms.VisualStyles;
 using Windows.Devices.AllJoyn;
 using System.Data.SqlClient;
 using System.Threading;
+using System.Diagnostics;
+using Dapper;
 
 namespace EnvironmentManager4.Database_Management
 {
@@ -58,7 +60,7 @@ namespace EnvironmentManager4.Database_Management
                     tbDatabaseName.BackColor = Color.WhiteSmoke;
                     tbDatabaseDescription.ReadOnly = true;
                     tbDatabaseDescription.BackColor = Color.WhiteSmoke;
-                    tbDatabaseDescription.Text = Utilities.GetDatabaseDescription(BackupName);
+                    tbDatabaseDescription.Text = GetDatabaseDescription();
                     break;
                 case DBUtils.DBManagementType.Overwrite:
                     tbDatabaseName.ReadOnly = true;
@@ -89,7 +91,7 @@ namespace EnvironmentManager4.Database_Management
         {
             if (type == DBUtils.DBManagementType.Create || type == DBUtils.DBManagementType.Overwrite)
             {
-                String[] databases = DatabaseManagement.RetrieveSQLDatabases().ToArray();
+                String[] databases = RetrieveSQLDatabases().ToArray();
                 foreach (string database in databases)
                 {
                     ListViewItem item = new ListViewItem(database);
@@ -126,6 +128,39 @@ namespace EnvironmentManager4.Database_Management
                 }
             }
             return databaseFiles;
+        }
+
+        public static string GetDatabaseDescription()
+        {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            string zipPath = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, BackupName);
+
+            using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
+            {
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
+                {
+                    try
+                    {
+                        ZipArchiveEntry description = archive.GetEntry("Description.txt");
+
+                        if (description != null)
+                        {
+                            using (StreamReader reader = new StreamReader(description.Open()))
+                                return reader.ReadToEnd();
+                        }
+                        else
+                        {
+                            // return default description if no description file was found
+                            return DBUtils.defaultBackupDescription;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorHandling.LogException(e);
+                        return DBUtils.defaultBackupDescription;
+                    }
+                }
+            }
         }
 
         private void CreateDatabaseBackup(List<string> databases)
@@ -354,7 +389,7 @@ namespace EnvironmentManager4.Database_Management
             string multiUserScript = $"ALTER DATABASE {database} SET MULTI_USER;";
 
             // get a list of existing databases
-            string[] databases = DatabaseManagement.RetrieveSQLDatabases().ToArray();
+            string[] databases = RetrieveSQLDatabases().ToArray();
 
             // establish sql connection
             SqlConnection conn = new SqlConnection();
@@ -427,6 +462,142 @@ namespace EnvironmentManager4.Database_Management
                 {
                     //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
                     DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "DELETED", backupName);
+                    SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+            }
+        }
+
+        public static void RunSalesPadDatabaseUpdate(string build, string database)
+        {
+            //delete dbupdate log if it exists
+            ErrorHandling.DeleteLogFiles();
+
+            //reset the database version
+            ResetDatabaseVersion(database);
+
+            Process dbUpdate = new Process();
+            dbUpdate.StartInfo.FileName = String.Format("{0}\\SalesPad.exe", build);
+            dbUpdate.StartInfo.Arguments = String.Format(@"/dbUpdate /userfields /conn={0}", database);
+            dbUpdate.StartInfo.UseShellExecute = false;
+            try
+            {
+                dbUpdate.Start();
+                dbUpdate.WaitForExit();
+                //check for pass/fail log
+                if (ErrorHandling.IsThereAFailLog())
+                {
+                    ErrorHandling.DisplayDatabaseUpdateFailure();
+                    ErrorHandling.LogDatabaseUpdateFailure();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+            }
+        }
+
+        public static void ResetDatabaseVersion(string database = "TWO")
+        {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            string username = settings.DbManagement.SQLServerUserName;
+            string password = Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword));
+
+            string script = String.Format("USE {0} EXEC dbo.sppResetDatabase", database);
+            SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settings.DbManagement.Connection, username, password));
+            SqlDataAdapter sqlAdapter = new SqlDataAdapter(script, sqlCon);
+            DataTable dataTable = new DataTable();
+            try
+            {
+                sqlAdapter.Fill(dataTable);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+                return;
+            }
+        }
+
+        public static void LaunchDBBackupFolder()
+        {
+            string message = "Are you sure you want to open the database backup folder?";
+            string caption = "CONFIRM";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            MessageBoxIcon icon = MessageBoxIcon.Question;
+            DialogResult result;
+
+            result = MessageBox.Show(message, caption, buttons, icon);
+            if (result == DialogResult.Yes)
+            {
+                SettingsModel settingsModel = SettingsUtilities.GetSettings();
+                Process.Start(settingsModel.DbManagement.DatabaseBackupDirectory);
+            }
+        }
+
+        public static List<string> RetrieveSQLDatabases()
+        {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            List<string> databaseList = new List<string>();
+            string script = @"SELECT name FROM master.dbo.sysdatabases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb', 'toolbox')";
+            try
+            {
+                //get the service for the connection - start it if it wasn't running.
+                //string serviceName = SQLServiceList.GetServiceFromConnection(settings.DbManagement.Connection);
+                //if (SQLServiceList.IsServiceRunning(serviceName) == false)
+                //    ServiceManagement.StartService(serviceName);
+
+                //get list of databases.
+                SqlConnection sqlCon = new SqlConnection(String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};",
+                    settings.DbManagement.Connection, settings.DbManagement.SQLServerUserName,
+                    Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword))));
+                databaseList.AddRange(sqlCon.Query<string>(script).AsList());
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e);
+                ErrorHandling.DisplayExceptionMessage(e);
+            }
+            return databaseList;
+        }
+
+        public static List<string> GetCompanyDatabases()
+        {
+            List<string> databaseList = RetrieveSQLDatabases();
+            List<string> companyDatabaseList = new List<string>();
+            foreach (string database in databaseList)
+            {
+                if (!database.Contains("DYNAMICS"))
+                {
+                    companyDatabaseList.Add(database);
+                }
+            }
+            return companyDatabaseList;
+        }
+
+        public static void DeleteDatabaseBackup(bool log, bool message)
+        {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            string databaseFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, BackupName);
+            try
+            {
+                File.Delete(databaseFile);
+
+                if (message)
+                    Toasts.Toast(
+                        "SUCCESS"
+                        , String.Format("Database '{0}' was successfully deleted.", BackupName)
+                        , 1);
+
+                if (log)
+                {
+                    //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
+                    DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "DELETED", BackupName);
                     SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
                 }
             }
@@ -524,7 +695,7 @@ namespace EnvironmentManager4.Database_Management
                 if (result == DialogResult.Yes && Type == DBUtils.DBManagementType.Overwrite)
                 {
                     string databaseFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, BackupName);
-                    BackupDescription = String.Format("{0}\n\n{1}", BackupDescription, Utilities.GetDatabaseDescription(BackupName));
+                    BackupDescription = String.Format("{0}\n\n{1}", BackupDescription, GetDatabaseDescription());
                     DeleteDatabaseBackup(BackupName, databaseFile, false, false);
                 }
             }

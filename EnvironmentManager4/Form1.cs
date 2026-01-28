@@ -233,9 +233,52 @@ namespace EnvironmentManager4
             }
         }
 
+        private void LoadDatabaseList()
+        {
+            bool backupSelected = false;
+            string startingBackupLabel = cbDatabaseList.Text;
+            cbDatabaseList.Text = "Select a Database Backup";
+
+            if (startingBackupLabel != "Select a Database Backup")
+                backupSelected = true;
+
+            cbDatabaseList.Items.Clear();
+            SettingsModel settingsModel = SettingsUtilities.GetSettings();
+            if (String.IsNullOrWhiteSpace(settingsModel.DbManagement.DatabaseBackupDirectory))
+            {
+                MessageBox.Show("There is no value in the Database Backup Directory Setting. Please set one in Settings.");
+                LoadDatabaseDescription();
+                return;
+            }
+            if (!Directory.Exists(settingsModel.DbManagement.DatabaseBackupDirectory))
+            {
+                string projectName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
+                MessageBox.Show(String.Format("The provided database backup DIR '{0}' doesn't exist. {1} will create this folder if you choose to create a database backup using this value.", settingsModel.DbManagement.DatabaseBackupDirectory, projectName));
+                LoadDatabaseDescription();
+                return;
+            }
+            cbDatabaseList.Items.AddRange(Utilities.GetFilesFromDirectoryByExtension(settingsModel.DbManagement.DatabaseBackupDirectory, "zip"));
+
+            if (backupSelected)
+                cbDatabaseList.SelectedIndex = cbDatabaseList.FindStringExact(startingBackupLabel);
+            else
+                cbDatabaseList.Text = "Select a Database Backup";
+            LoadDatabaseDescription();
+        }
+
+        private void LoadDatabaseDescription()
+        {
+            string databaseBackup = cbDatabaseList.Text;
+            DatabaseManagementForm.BackupName = databaseBackup;
+            if (databaseBackup == "Select a Database Backup")
+                tbDBDesc.Text = DBUtils.defaultBackupDescription;
+            else
+                tbDBDesc.Text = DatabaseManagementForm.GetDatabaseDescription();
+        }
+
         public void LoadFromSettings(SettingsModel settings)
         {
-            DatabaseManagement.LoadDatabaseList(cbDatabaseList, tbDBDesc);
+            LoadDatabaseList();
             LoadProductList();
             cbSPGPVersion.SelectedIndex = cbSPGPVersion.FindStringExact(settings.Other.DefaultVersion);
             cbAlwaysOnTop.Visible = settings.Other.ShowAlwaysOnTop;
@@ -425,7 +468,7 @@ namespace EnvironmentManager4
 
         private void btnDBBackupFolder_Click(object sender, EventArgs e)
         {
-            DatabaseManagement.LaunchDBBackupFolder();
+            DatabaseManagementForm.LaunchDBBackupFolder();
             return;
         }
 
@@ -503,22 +546,36 @@ namespace EnvironmentManager4
         {
             string backupName = cbDatabaseList.Text;
             SettingsModel settings = SettingsUtilities.GetSettings();
-            string backupZip = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
-            bool continueDelete = DatabaseManagement.PreDatabaseActionValidation(backupName, backupZip, "Delete");
-            if (continueDelete)
-            {
-                string message = String.Format(@"Are you sure you want to delete the selected backup '{0}'? This action cannot be undone.", backupName);
-                string caption = "DELETE?";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                MessageBoxIcon icon = MessageBoxIcon.Question;
-                DialogResult result;
+            string databaseFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
 
-                result = MessageBox.Show(message, caption, buttons, icon);
-                if (result == DialogResult.Yes)
-                {
-                    DatabaseManagement.DeleteDatabaseBackup(backupName, backupZip, true, true);
-                    LoadFromSettings(settings);
-                }
+            if (backupName == "Select a Database Backup")
+            {
+                MessageBox.Show("Please select a backup to delete.");
+                return;
+            }
+            if (!File.Exists(databaseFile))
+            {
+                string promptMessage = String.Format("The selected backup '{0}' does not exist in the below path:\n\n{1}", backupName, databaseFile);
+                string promptCaption = "ERROR";
+                MessageBoxButtons promptButton = MessageBoxButtons.OK;
+                MessageBoxIcon promptIcon = MessageBoxIcon.Error;
+
+                MessageBox.Show(promptMessage, promptCaption, promptButton, promptIcon);
+                return;
+            }
+
+            string message = String.Format(@"Are you sure you want to delete the selected backup '{0}'? This action cannot be undone.", backupName);
+            string caption = "DELETE?";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            MessageBoxIcon icon = MessageBoxIcon.Question;
+            DialogResult result;
+
+            result = MessageBox.Show(message, caption, buttons, icon);
+            if (result == DialogResult.Yes)
+            {
+                DatabaseManagementForm.BackupName = backupName;
+                DatabaseManagementForm.DeleteDatabaseBackup(false, false);
+                LoadFromSettings(settings);
             }
             return;
         }
@@ -744,7 +801,7 @@ namespace EnvironmentManager4
         {
             s_ListAndButtonForm = null;
             if (!String.IsNullOrWhiteSpace(ListAndButtonForm.output))
-                DatabaseManagement.ResetDatabaseVersion(ListAndButtonForm.output);
+                DatabaseManagementForm.ResetDatabaseVersion(ListAndButtonForm.output);
             return;
         }
 
@@ -795,7 +852,7 @@ namespace EnvironmentManager4
 
         private void cbDatabaseList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DatabaseManagement.LoadDatabaseDescription(cbDatabaseList, tbDBDesc);
+            LoadDatabaseDescription();
         }
 
         private void cbProductList_SelectedIndexChanged(object sender, EventArgs e)
@@ -874,7 +931,7 @@ namespace EnvironmentManager4
         private void EditDescriptionClose(object sender, FormClosingEventArgs e)
         {
             s_Udd = null;
-            DatabaseManagement.LoadDatabaseDescription(cbDatabaseList, tbDBDesc);
+            LoadDatabaseDescription();
             return;
         }
 

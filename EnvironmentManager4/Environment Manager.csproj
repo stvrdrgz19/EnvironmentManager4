@@ -105,7 +105,6 @@
       <DependentUpon>DatabaseActivityLog.cs</DependentUpon>
     </Compile>
     <Compile Include="Database Management\DatabaseActivityLogModel.cs" />
-    <Compile Include="Database Management\DatabaseManagement.cs" />
     <Compile Include="Build Management\DeleteBuilds.cs">
       <SubType>Form</SubType>
     </Compile>
