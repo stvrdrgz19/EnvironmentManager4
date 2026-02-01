@@ -123,36 +123,6 @@ namespace EnvironmentManager4
             return -1;
         }
 
-        public static string GetDatabaseDescription(string backupName)
-        {
-            SettingsModel settings = SettingsUtilities.GetSettings();
-            string zipPath = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
-
-            using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
-            {
-                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
-                {
-                    try
-                    {
-                        ZipArchiveEntry description = archive.GetEntry("Description.txt");
-
-                        using (StreamReader reader = new StreamReader(description.Open()))
-                            return reader.ReadToEnd();
-                    }
-                    catch (NullReferenceException e)
-                    {
-                        ErrorHandling.LogException(e);
-                        return DatabaseManagement.dbDescDefault;
-                    }
-                    catch (Exception e)
-                    {
-                        ErrorHandling.LogException(e);
-                        return DatabaseManagement.dbDescDefault;
-                    }
-                }
-            }
-        }
-
         public static string GetAppVersion()
         {
             return Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -187,11 +157,6 @@ namespace EnvironmentManager4
                 return true;
             else
                 return false;
-        }
-
-        public static string GetUpdateFile()
-        {
-            return @"\\sp-fileserv-01\Team QA\Tools\Environment Manager\Utility Scripts\GetLatestEnvironmentManagerAdmin.bat.lnk";
         }
 
         public static string GetProjectLink()

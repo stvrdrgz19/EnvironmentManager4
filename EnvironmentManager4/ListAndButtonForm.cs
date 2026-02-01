@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EnvironmentManager4.Database_Management;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,7 +26,7 @@ namespace EnvironmentManager4
 
         public void LoadDatabases()
         {
-            listBox1.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
+            listBox1.Items.AddRange(DatabaseManagementForm.GetCompanyDatabases().ToArray());
             return;
         }
 

@@ -59,7 +59,17 @@ namespace EnvironmentManager4
     public class SettingsUtilities
     {
         //Increment this when a settings migration needs to happen due to the file structure changing
-        public const int SettingsVersion = 3;
+        public const int SettingsVersion = 4;
+
+        public static bool SQLSettingsConfigured(SettingsModel settings)
+        {
+            if (String.IsNullOrWhiteSpace(settings.DbManagement.Connection) ||
+                String.IsNullOrWhiteSpace(settings.DbManagement.SQLServerUserName) ||
+                String.IsNullOrWhiteSpace(settings.DbManagement.SQLServerPassword))
+                return false;
+            else
+                return true;
+        }
 
         public static SettingsModel GetSettings()
         {

@@ -75,7 +75,7 @@ namespace EnvironmentManager4
                 checkEnableInstallToasts.Checked = settings.Other.EnableInstallToasts;
                 checkPromptForUpdate.Checked = settings.Other.PromptForUpdate;
 
-                if (Environment.MachineName != "STEVERODRIGUEZ")
+                if (Environment.MachineName != "SRODRIGUEZ")
                     labelSettingsVersion.Visible = false;
                 else
                     labelSettingsVersion.Text = String.Format("Settings Version: {0}", settings.Version);

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EnvironmentManager4.Database_Management;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -361,7 +362,7 @@ namespace EnvironmentManager4
                     Toasts.Toast("Running Datbase Update"
                         , "The database update for the installed build is being ran, this may take a few minutes."
                         , 1);
-                DatabaseManagement.RunSalesPadDatabaseUpdate(this.InstallLocation, this.DatabaseToUpdate);
+                DatabaseManagementForm.RunSalesPadDatabaseUpdate(this.InstallLocation, this.DatabaseToUpdate);
             }
 
             this.Cursor = Cursors.Default;
@@ -414,7 +415,7 @@ namespace EnvironmentManager4
         private void ConfigureLoadForm()
         {
             // load databases into cbDatabases
-            cbDatabase.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
+            cbDatabase.Items.AddRange(DatabaseManagementForm.GetCompanyDatabases().ToArray());
 
             // Set values based on registry settings
             RegUtilities.CheckForInstallRegistryEntries();

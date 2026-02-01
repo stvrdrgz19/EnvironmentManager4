@@ -105,12 +105,18 @@
       <DependentUpon>DatabaseActivityLog.cs</DependentUpon>
     </Compile>
     <Compile Include="Database Management\DatabaseActivityLogModel.cs" />
-    <Compile Include="Database Management\DatabaseManagement.cs" />
     <Compile Include="Build Management\DeleteBuilds.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Build Management\DeleteBuilds.Designer.cs">
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Database Management\DBUtils.cs" />
+    <Compile Include="Database Management\DatabaseManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Database Management\DatabaseManagementForm.Designer.cs">
+      <DependentUpon>DatabaseManagementForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DirectoryCompare.cs">
       <SubType>Form</SubType>
@@ -155,12 +161,6 @@
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="ListViewProperties.cs" />
     <Compile Include="Build Management\Modules.cs" />
-    <Compile Include="Database Management\NewDatabaseBackup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database Management\NewDatabaseBackup.Designer.cs">
-      <DependentUpon>NewDatabaseBackup.cs</DependentUpon>
-    </Compile>
     <Compile Include="Notes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,6 +221,9 @@
     <EmbeddedResource Include="Build Management\DeleteBuilds.resx">
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Database Management\DatabaseManagementForm.resx">
+      <DependentUpon>DatabaseManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DirectoryCompare.resx">
       <DependentUpon>DirectoryCompare.cs</DependentUpon>
     </EmbeddedResource>
@@ -238,9 +241,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ListAndButtonForm.resx">
       <DependentUpon>ListAndButtonForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database Management\NewDatabaseBackup.resx">
-      <DependentUpon>NewDatabaseBackup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Notes.resx">
       <DependentUpon>Notes.cs</DependentUpon>
