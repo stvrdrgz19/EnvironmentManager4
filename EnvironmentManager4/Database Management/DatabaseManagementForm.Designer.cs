@@ -50,9 +50,10 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(437, 461);
+            this.btnCancel.Location = new System.Drawing.Point(583, 567);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(100, 28);
             this.btnCancel.TabIndex = 15;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -60,9 +61,10 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(357, 461);
+            this.btnOK.Location = new System.Drawing.Point(476, 567);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.Size = new System.Drawing.Size(100, 28);
             this.btnOK.TabIndex = 14;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -72,9 +74,10 @@
             // 
             this.labelBackupName.AutoSize = true;
             this.labelBackupName.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.labelBackupName.Location = new System.Drawing.Point(6, 28);
+            this.labelBackupName.Location = new System.Drawing.Point(8, 34);
+            this.labelBackupName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelBackupName.Name = "labelBackupName";
-            this.labelBackupName.Size = new System.Drawing.Size(78, 13);
+            this.labelBackupName.Size = new System.Drawing.Size(96, 16);
             this.labelBackupName.TabIndex = 6;
             this.labelBackupName.Text = "Backup Name:";
             // 
@@ -83,18 +86,20 @@
             this.tbDatabaseName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.tbDatabaseName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.RecentlyUsedList;
             this.tbDatabaseName.BackColor = System.Drawing.SystemColors.Window;
-            this.tbDatabaseName.Location = new System.Drawing.Point(6, 45);
+            this.tbDatabaseName.Location = new System.Drawing.Point(8, 55);
+            this.tbDatabaseName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbDatabaseName.Name = "tbDatabaseName";
-            this.tbDatabaseName.Size = new System.Drawing.Size(498, 20);
+            this.tbDatabaseName.Size = new System.Drawing.Size(663, 22);
             this.tbDatabaseName.TabIndex = 0;
             // 
             // labelDescription
             // 
             this.labelDescription.AutoSize = true;
             this.labelDescription.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.labelDescription.Location = new System.Drawing.Point(6, 76);
+            this.labelDescription.Location = new System.Drawing.Point(8, 94);
+            this.labelDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelDescription.Name = "labelDescription";
-            this.labelDescription.Size = new System.Drawing.Size(63, 13);
+            this.labelDescription.Size = new System.Drawing.Size(78, 16);
             this.labelDescription.TabIndex = 8;
             this.labelDescription.Text = "Description:";
             // 
@@ -104,11 +109,12 @@
             this.tbDatabaseDescription.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.tbDatabaseDescription.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.RecentlyUsedList;
             this.tbDatabaseDescription.BackColor = System.Drawing.SystemColors.Window;
-            this.tbDatabaseDescription.Location = new System.Drawing.Point(6, 92);
+            this.tbDatabaseDescription.Location = new System.Drawing.Point(8, 113);
+            this.tbDatabaseDescription.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbDatabaseDescription.Multiline = true;
             this.tbDatabaseDescription.Name = "tbDatabaseDescription";
             this.tbDatabaseDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbDatabaseDescription.Size = new System.Drawing.Size(498, 157);
+            this.tbDatabaseDescription.Size = new System.Drawing.Size(663, 192);
             this.tbDatabaseDescription.TabIndex = 1;
             // 
             // gbDatabases
@@ -119,11 +125,11 @@
             this.gbDatabases.Controls.Add(this.btnSelectAll);
             this.gbDatabases.Controls.Add(this.lvDatabases);
             this.gbDatabases.ForeColor = System.Drawing.Color.Blue;
-            this.gbDatabases.Location = new System.Drawing.Point(5, 269);
-            this.gbDatabases.Margin = new System.Windows.Forms.Padding(2);
+            this.gbDatabases.Location = new System.Drawing.Point(7, 331);
+            this.gbDatabases.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gbDatabases.Name = "gbDatabases";
-            this.gbDatabases.Padding = new System.Windows.Forms.Padding(2);
-            this.gbDatabases.Size = new System.Drawing.Size(510, 189);
+            this.gbDatabases.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.gbDatabases.Size = new System.Drawing.Size(680, 233);
             this.gbDatabases.TabIndex = 17;
             this.gbDatabases.TabStop = false;
             this.gbDatabases.Text = "Databases to Include";
@@ -134,9 +140,10 @@
             this.labelSQLServer.Enabled = false;
             this.labelSQLServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSQLServer.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.labelSQLServer.Location = new System.Drawing.Point(262, 24);
+            this.labelSQLServer.Location = new System.Drawing.Point(349, 30);
+            this.labelSQLServer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelSQLServer.Name = "labelSQLServer";
-            this.labelSQLServer.Size = new System.Drawing.Size(35, 13);
+            this.labelSQLServer.Size = new System.Drawing.Size(46, 17);
             this.labelSQLServer.TabIndex = 15;
             this.labelSQLServer.Text = "label4";
             // 
@@ -144,19 +151,20 @@
             // 
             this.labelSQLServerText.AutoSize = true;
             this.labelSQLServerText.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.labelSQLServerText.Location = new System.Drawing.Point(200, 24);
+            this.labelSQLServerText.Location = new System.Drawing.Point(267, 30);
+            this.labelSQLServerText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelSQLServerText.Name = "labelSQLServerText";
-            this.labelSQLServerText.Size = new System.Drawing.Size(65, 13);
+            this.labelSQLServerText.Size = new System.Drawing.Size(79, 16);
             this.labelSQLServerText.TabIndex = 14;
             this.labelSQLServerText.Text = "SQL Server:";
             // 
             // btnClearSelections
             // 
             this.btnClearSelections.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.btnClearSelections.Location = new System.Drawing.Point(101, 18);
-            this.btnClearSelections.Margin = new System.Windows.Forms.Padding(2);
+            this.btnClearSelections.Location = new System.Drawing.Point(135, 22);
+            this.btnClearSelections.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClearSelections.Name = "btnClearSelections";
-            this.btnClearSelections.Size = new System.Drawing.Size(94, 24);
+            this.btnClearSelections.Size = new System.Drawing.Size(125, 30);
             this.btnClearSelections.TabIndex = 3;
             this.btnClearSelections.Text = "Uncheck All";
             this.btnClearSelections.UseVisualStyleBackColor = true;
@@ -165,10 +173,10 @@
             // btnSelectAll
             // 
             this.btnSelectAll.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.btnSelectAll.Location = new System.Drawing.Point(5, 18);
-            this.btnSelectAll.Margin = new System.Windows.Forms.Padding(2);
+            this.btnSelectAll.Location = new System.Drawing.Point(7, 22);
+            this.btnSelectAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSelectAll.Name = "btnSelectAll";
-            this.btnSelectAll.Size = new System.Drawing.Size(94, 24);
+            this.btnSelectAll.Size = new System.Drawing.Size(125, 30);
             this.btnSelectAll.TabIndex = 2;
             this.btnSelectAll.Text = "Check All";
             this.btnSelectAll.UseVisualStyleBackColor = true;
@@ -179,13 +187,14 @@
             this.lvDatabases.CheckBoxes = true;
             this.lvDatabases.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.DatabaseName});
+            this.lvDatabases.FullRowSelect = true;
             this.lvDatabases.GridLines = true;
             this.lvDatabases.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvDatabases.HideSelection = false;
-            this.lvDatabases.Location = new System.Drawing.Point(6, 46);
-            this.lvDatabases.Margin = new System.Windows.Forms.Padding(2);
+            this.lvDatabases.Location = new System.Drawing.Point(8, 57);
+            this.lvDatabases.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lvDatabases.Name = "lvDatabases";
-            this.lvDatabases.Size = new System.Drawing.Size(498, 132);
+            this.lvDatabases.Size = new System.Drawing.Size(663, 162);
             this.lvDatabases.TabIndex = 4;
             this.lvDatabases.UseCompatibleStateImageBehavior = false;
             this.lvDatabases.View = System.Windows.Forms.View.Details;
@@ -202,26 +211,27 @@
             this.gbBackupDetails.Controls.Add(this.labelDescription);
             this.gbBackupDetails.Controls.Add(this.tbDatabaseDescription);
             this.gbBackupDetails.ForeColor = System.Drawing.Color.Blue;
-            this.gbBackupDetails.Location = new System.Drawing.Point(5, 8);
-            this.gbBackupDetails.Margin = new System.Windows.Forms.Padding(2);
+            this.gbBackupDetails.Location = new System.Drawing.Point(7, 10);
+            this.gbBackupDetails.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gbBackupDetails.Name = "gbBackupDetails";
-            this.gbBackupDetails.Padding = new System.Windows.Forms.Padding(2);
-            this.gbBackupDetails.Size = new System.Drawing.Size(510, 259);
+            this.gbBackupDetails.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.gbBackupDetails.Size = new System.Drawing.Size(680, 319);
             this.gbBackupDetails.TabIndex = 16;
             this.gbBackupDetails.TabStop = false;
             this.gbBackupDetails.Text = "Backup Details";
             // 
             // DatabaseManagementForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(520, 492);
+            this.ClientSize = new System.Drawing.Size(693, 606);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.gbDatabases);
             this.Controls.Add(this.gbBackupDetails);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MinimizeBox = false;
             this.Name = "DatabaseManagementForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

@@ -268,12 +268,12 @@ namespace EnvironmentManager4
 
         private void LoadDatabaseDescription()
         {
-            string databaseBackup = cbDatabaseList.Text;
-            DatabaseManagementForm.BackupName = databaseBackup;
-            if (databaseBackup == "Select a Database Backup")
+            DatabaseManagementForm databaseManagement = new DatabaseManagementForm();
+            databaseManagement.backupName = cbDatabaseList.Text;
+            if (databaseManagement.backupName == "Select a Database Backup")
                 tbDBDesc.Text = DBUtils.defaultBackupDescription;
             else
-                tbDBDesc.Text = DatabaseManagementForm.GetDatabaseDescription();
+                tbDBDesc.Text = databaseManagement.GetDatabaseDescription();
         }
 
         public void LoadFromSettings(SettingsModel settings)
@@ -491,8 +491,8 @@ namespace EnvironmentManager4
             if (s_DBMgmtTest == null)
             {
                 s_DBMgmtTest = new DatabaseManagementForm();
-                DatabaseManagementForm.Type = DBUtils.DBManagementType.Restore;
-                DatabaseManagementForm.BackupName = backupName;
+                s_DBMgmtTest.type = DBUtils.DBManagementType.Restore;
+                s_DBMgmtTest.backupName = backupName;
                 s_DBMgmtTest.Show();
             }
             else
@@ -518,9 +518,11 @@ namespace EnvironmentManager4
             // launch overwrite database backup form
             if (s_DBMgmtTest == null)
             {
-                s_DBMgmtTest = new DatabaseManagementForm();
-                DatabaseManagementForm.Type = DBUtils.DBManagementType.Overwrite;
-                DatabaseManagementForm.BackupName = backupName;
+                s_DBMgmtTest = new DatabaseManagementForm
+                {
+                    type = DBUtils.DBManagementType.Overwrite,
+                    backupName = backupName
+                };
                 s_DBMgmtTest.Show();
             }
             else
@@ -533,8 +535,10 @@ namespace EnvironmentManager4
             // launch create database backup form
             if (s_DBMgmtTest == null)
             {
-                s_DBMgmtTest = new DatabaseManagementForm();
-                DatabaseManagementForm.Type = DBUtils.DBManagementType.Create;
+                s_DBMgmtTest = new DatabaseManagementForm
+                {
+                    type = DBUtils.DBManagementType.Create
+                };
                 s_DBMgmtTest.Show();
             }
             else
@@ -573,8 +577,9 @@ namespace EnvironmentManager4
             result = MessageBox.Show(message, caption, buttons, icon);
             if (result == DialogResult.Yes)
             {
-                DatabaseManagementForm.BackupName = backupName;
-                DatabaseManagementForm.DeleteDatabaseBackup(false, false);
+                DatabaseManagementForm databaseManagement = new DatabaseManagementForm();
+                databaseManagement.backupName = backupName;
+                databaseManagement.DeleteDatabaseBackup(false, false);
                 LoadFromSettings(settings);
             }
             return;

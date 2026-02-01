@@ -36,9 +36,9 @@ namespace EnvironmentManager4.Database_Management
             labelSQLServerText.TabStop = true;
         }
 
-        public static DBUtils.DBManagementType Type { get; set; }
-        public static string BackupName { get; set; }
-        public static string BackupDescription { get; set; }
+        public DBUtils.DBManagementType type;
+        public string backupName;
+        public string backupDescription;
 
         private void DBMgmtTest_Load(object sender, EventArgs e)
         {
@@ -46,17 +46,17 @@ namespace EnvironmentManager4.Database_Management
             SettingsModel settings = SettingsUtilities.GetSettings();
 
             // set form name dynamically
-            this.Text = $"{Type} Database Backup";
+            this.Text = $"{type} Database Backup";
 
             // set SQL Server from settings
             labelSQLServer.Text = settings.DbManagement.Connection;
 
             // configure form depending on type
-            switch (Type)
+            switch (type)
             {
                 case DBUtils.DBManagementType.Restore:
                     tbDatabaseName.ReadOnly = true;
-                    tbDatabaseName.Text = BackupName;
+                    tbDatabaseName.Text = backupName;
                     tbDatabaseName.BackColor = Color.WhiteSmoke;
                     tbDatabaseDescription.ReadOnly = true;
                     tbDatabaseDescription.BackColor = Color.WhiteSmoke;
@@ -64,13 +64,13 @@ namespace EnvironmentManager4.Database_Management
                     break;
                 case DBUtils.DBManagementType.Overwrite:
                     tbDatabaseName.ReadOnly = true;
-                    tbDatabaseName.Text = BackupName;
+                    tbDatabaseName.Text = backupName;
                     tbDatabaseName.BackColor = Color.WhiteSmoke;
                     break;
             }
 
             // populate database list
-            PopulateDatabaseList(Type);
+            PopulateDatabaseList(type);
 
             // check all items by default
             foreach (ListViewItem item in lvDatabases.Items)
@@ -100,7 +100,7 @@ namespace EnvironmentManager4.Database_Management
             }
             else
             {
-                List<string> databaseFiles = GetDatabaseFiles(BackupName);
+                List<string> databaseFiles = GetDatabaseFiles(backupName);
                 foreach (string database in databaseFiles)
                 {
                     ListViewItem item = new ListViewItem(database);
@@ -130,10 +130,10 @@ namespace EnvironmentManager4.Database_Management
             return databaseFiles;
         }
 
-        public static string GetDatabaseDescription()
+        public string GetDatabaseDescription()
         {
             SettingsModel settings = SettingsUtilities.GetSettings();
-            string zipPath = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, BackupName);
+            string zipPath = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, this.backupName);
 
             using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
             {
@@ -180,7 +180,7 @@ namespace EnvironmentManager4.Database_Management
                 return;
             }
 
-            string backupDirectory = String.Format(@"{0}\{1}", settings.DbManagement.DatabaseBackupDirectory, BackupName);
+            string backupDirectory = String.Format(@"{0}\{1}", settings.DbManagement.DatabaseBackupDirectory, backupName);
 
             // attempt to create the directory
             try
@@ -201,9 +201,9 @@ namespace EnvironmentManager4.Database_Management
 
             // establish what action was taken
             string action = "";
-            if (Type == DBUtils.DBManagementType.Create)
+            if (type == DBUtils.DBManagementType.Create)
                 action = "BACKUP";
-            else if (Type == DBUtils.DBManagementType.Overwrite)
+            else if (type == DBUtils.DBManagementType.Overwrite)
                 action = "OVERWRITE";
 
             if (backupSuccessful)
@@ -212,22 +212,22 @@ namespace EnvironmentManager4.Database_Management
                 CreateDatabaseDescriptionFile(action, backupDirectory);
 
                 // save database activity to table
-                DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), action, BackupName);
+                DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), action, backupName);
                 SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
 
                 // Zip the backup and remove the folder
                 ZipBackupFolderAndRemove(backupDirectory);
 
                 // restore control access
-                Form1.EnableDBControls(true);
-                Form1.s_NewDBBackupName = BackupName;
+                Form1.EnableDBControls(true); // this setting the db list back to Select a Database is messing up with Backup Name down the line.
+                Form1.s_NewDBBackupName = backupName;
                 Form1.SetStaticBackup(true);
                 Form1.EnableWaitCursor(false);
 
                 // inform the user that the backup was successful
                 Toasts.Toast(
                     "SUCCESS"
-                    , String.Format("The database backup '{0}' has been {1} successfully.", BackupName, action)
+                    , String.Format("The database backup '{0}' has been backed up successfully.", backupName)
                     , 1);
             }
             else
@@ -236,7 +236,7 @@ namespace EnvironmentManager4.Database_Management
                 Form1.EnableWaitCursor(false);
                 Toasts.Toast(
                     "FAILURE"
-                    , String.Format("The database backup '{0}' was unable to be {1}. Please update the Database Backup Directory to one Environment Manager has access to and try again.", BackupName, action)
+                    , String.Format("The database backup '{0}' was unable to be {1}. Please update the Database Backup Directory to one Environment Manager has access to and try again.", backupName, action)
                     , 1);
 
                 try
@@ -253,9 +253,9 @@ namespace EnvironmentManager4.Database_Management
             }
         }
 
-        private static bool BackupDatabase(string database, SettingsModel settings)
+        private bool BackupDatabase(string database, SettingsModel settings)
         {
-            string script = String.Format(@"BACKUP DATABASE {2} TO DISK='{0}\{1}\{2}.bak' WITH INIT", settings.DbManagement.DatabaseBackupDirectory, BackupName, database);
+            string script = String.Format(@"BACKUP DATABASE {2} TO DISK='{0}\{1}\{2}.bak' WITH INIT", settings.DbManagement.DatabaseBackupDirectory, this.backupName, database);
             string connString = String.Format(@"Data Source={0};Initial Catalog=MASTER;User ID={1};Password={2};", settings.DbManagement.Connection, settings.DbManagement.SQLServerUserName, Utilities.ToInsecureString(Utilities.DecryptString(settings.DbManagement.SQLServerPassword)));
 
             SqlConnection conn = new SqlConnection(connString);
@@ -296,9 +296,9 @@ namespace EnvironmentManager4.Database_Management
             using (StreamWriter writer = File.AppendText(String.Format(@"{0}\Description.txt", backupDirectory)))
             {
                 writer.WriteLine("===============================================================================");
-                writer.WriteLine(String.Format("{0} - {1}", action, BackupName));
+                writer.WriteLine(String.Format("{0} - {1}", action, backupName));
                 writer.WriteLine(DateTime.Now);
-                writer.Write(BackupDescription);
+                writer.Write(this.backupDescription);
             }
         }
 
@@ -345,7 +345,7 @@ namespace EnvironmentManager4.Database_Management
             }
 
             // unzip the selected backup
-            string zipFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, BackupName);
+            string zipFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, backupName);
             string unzipDirectory = String.Format(@"{0}\{1}", Path.GetDirectoryName(zipFile), Path.GetFileNameWithoutExtension(zipFile));
 
             UnzipBackup(zipFile, unzipDirectory);
@@ -366,7 +366,7 @@ namespace EnvironmentManager4.Database_Management
             }
 
             // save database activity to database activity table
-            DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "RESTORED", BackupName);
+            DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "RESTORED", backupName);
             SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
             Form1.EnableWaitCursor(false);
             Form1.EnableDBControls(true);
@@ -374,7 +374,7 @@ namespace EnvironmentManager4.Database_Management
             // inform the user the install was successful via toast
             Toasts.Toast(
                 "SUCCESS"
-                , String.Format(@"Backup '{0}' was successfully restored.", BackupName)
+                , String.Format(@"Backup '{0}' was successfully restored.", backupName)
                 , 1);
         }
 
@@ -580,10 +580,10 @@ namespace EnvironmentManager4.Database_Management
             return companyDatabaseList;
         }
 
-        public static void DeleteDatabaseBackup(bool log, bool message)
+        public void DeleteDatabaseBackup(bool log, bool message)
         {
             SettingsModel settings = SettingsUtilities.GetSettings();
-            string databaseFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, BackupName);
+            string databaseFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, this.backupName);
             try
             {
                 File.Delete(databaseFile);
@@ -591,13 +591,13 @@ namespace EnvironmentManager4.Database_Management
                 if (message)
                     Toasts.Toast(
                         "SUCCESS"
-                        , String.Format("Database '{0}' was successfully deleted.", BackupName)
+                        , String.Format("Database '{0}' was successfully deleted.", this.backupName)
                         , 1);
 
                 if (log)
                 {
                     //SAVE DATABASE ACTIVITY TO DATABASEACTIVITY TABLE
-                    DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "DELETED", BackupName);
+                    DatabaseActivityLogModel databaseActivity = new DatabaseActivityLogModel(Convert.ToString(DateTime.Now), "DELETED", this.backupName);
                     SqliteDataAccess.SaveDatabaseActivity(databaseActivity);
                 }
             }
@@ -637,11 +637,11 @@ namespace EnvironmentManager4.Database_Management
             SettingsModel settings = SettingsUtilities.GetSettings();
 
             // get backup name if creating
-            if (Type == DBUtils.DBManagementType.Create)
-                BackupName = tbDatabaseName.Text;
+            if (type == DBUtils.DBManagementType.Create)
+                this.backupName = tbDatabaseName.Text;
 
             // get the backup description
-            BackupDescription = tbDatabaseDescription.Text;
+            this.backupDescription = tbDatabaseDescription.Text;
 
             // get list of selected backups
             List<string> databases = new List<string>();
@@ -662,13 +662,13 @@ namespace EnvironmentManager4.Database_Management
                 return;
             }
 
-            if (Type == DBUtils.DBManagementType.Overwrite || Type == DBUtils.DBManagementType.Restore)
+            if (type == DBUtils.DBManagementType.Overwrite || type == DBUtils.DBManagementType.Restore)
             {
                 // ensure the backup exists
-                if (!BackupExists(BackupName))
+                if (!BackupExists(this.backupName))
                 {
                     string backupPath = settings.DbManagement.DatabaseBackupDirectory;
-                    string message = $"The selected backup '{BackupName}' does not exist in the below path:\n\n{backupPath}/{BackupName}.zip";
+                    string message = $"The selected backup '{this.backupName}' does not exist in the below path:\n\n{backupPath}/{this.backupName}.zip";
                     string caption = "ERROR";
                     MessageBoxButtons buttons = MessageBoxButtons.OK;
                     MessageBoxIcon icon = MessageBoxIcon.Error;
@@ -678,10 +678,10 @@ namespace EnvironmentManager4.Database_Management
 
                 // define message dynamically based on Type
                 string typeMessage = "";
-                if (Type == DBUtils.DBManagementType.Overwrite)
-                    typeMessage = $"Are you sure you want to overwrite the selected backup '{BackupName}'? This action cannot be undone.";
-                else if (Type == DBUtils.DBManagementType.Restore)
-                    typeMessage = $"Are you sure you want to restore the backup '{BackupName}' over your current environment?";
+                if (type == DBUtils.DBManagementType.Overwrite)
+                    typeMessage = $"Are you sure you want to overwrite the selected backup '{this.backupName}'? This action cannot be undone.";
+                else if (type == DBUtils.DBManagementType.Restore)
+                    typeMessage = $"Are you sure you want to restore the backup '{this.backupName}' over your current environment?";
                 string typeCaption = "CONFIRM";
                 MessageBoxButtons typeButtons = MessageBoxButtons.YesNo;
                 MessageBoxIcon typeIcon = MessageBoxIcon.Question;
@@ -692,18 +692,18 @@ namespace EnvironmentManager4.Database_Management
                     return;
 
                 // delete old backup if yes and overwrite is the type
-                if (result == DialogResult.Yes && Type == DBUtils.DBManagementType.Overwrite)
+                if (result == DialogResult.Yes && type == DBUtils.DBManagementType.Overwrite)
                 {
-                    string databaseFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, BackupName);
-                    BackupDescription = String.Format("{0}\n\n{1}", BackupDescription, GetDatabaseDescription());
-                    DeleteDatabaseBackup(BackupName, databaseFile, false, false);
+                    string databaseFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, this.backupName);
+                    this.backupDescription = String.Format("{0}\n\n{1}", this.backupDescription, GetDatabaseDescription());
+                    DeleteDatabaseBackup(this.backupName, databaseFile, false, false);
                 }
             }
 
             // prompt the user if creating a new backup that already exists
-            if (Type == DBUtils.DBManagementType.Create && BackupExists(BackupName))
+            if (type == DBUtils.DBManagementType.Create && BackupExists(this.backupName))
             {
-                string message = $"A backup with the name '{BackupName}' already exists, do you want to overwrite the existing backup with the curent dataset?";
+                string message = $"A backup with the name '{this.backupName}' already exists, do you want to overwrite the existing backup with the curent dataset?";
                 string caption = "ERROR";
                 MessageBoxButtons buttons = MessageBoxButtons.YesNoCancel;
                 MessageBoxIcon icon = MessageBoxIcon.Question;
@@ -712,8 +712,8 @@ namespace EnvironmentManager4.Database_Management
                 result = MessageBox.Show(message, caption, buttons, icon);
                 if (result == DialogResult.Yes)
                 {
-                    string databaseFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, BackupName);
-                    DeleteDatabaseBackup(BackupName, databaseFile, true, false);
+                    string databaseFile = String.Format(@"{0}\{1}.zip", settings.DbManagement.DatabaseBackupDirectory, this.backupName);
+                    DeleteDatabaseBackup(backupName, databaseFile, true, false);
                 }
                 else if (result == DialogResult.No)
                     return;
@@ -725,12 +725,12 @@ namespace EnvironmentManager4.Database_Management
             }
 
             // Restore the selected database backup
-            if (Type == DBUtils.DBManagementType.Restore)
+            if (type == DBUtils.DBManagementType.Restore)
             {
                 // push toast notification informing the user the databases are being restored
                 Toasts.Toast(
                     "RESTORING"
-                    , String.Format(@"Backup '{0}' is being restored.", BackupName)
+                    , String.Format(@"Backup '{0}' is being restored.", this.backupName)
                     , 1);
 
                 Thread restoreBackup = new Thread(() => RestoreDatabaseBackup(databases));
@@ -741,7 +741,7 @@ namespace EnvironmentManager4.Database_Management
                 // push toast notification informing the user that the selected databases are being backed up
                 Toasts.Toast(
                     "CREATING BACKUP"
-                    , String.Format(@"Backup '{0}' is being created.", BackupName)
+                    , String.Format(@"Backup '{0}' is being created.", this.backupName)
                     , 1);
 
                 Thread createBackup = new Thread(() => CreateDatabaseBackup(databases));
