@@ -362,7 +362,7 @@ namespace EnvironmentManager4
                     Toasts.Toast("Running Datbase Update"
                         , "The database update for the installed build is being ran, this may take a few minutes."
                         , 1);
-                DatabaseManagementForm.RunSalesPadDatabaseUpdate(this.InstallLocation, this.DatabaseToUpdate);
+                DatabaseManagement.RunSalesPadDatabaseUpdate(this.InstallLocation, this.DatabaseToUpdate);
             }
 
             this.Cursor = Cursors.Default;
@@ -415,7 +415,7 @@ namespace EnvironmentManager4
         private void ConfigureLoadForm()
         {
             // load databases into cbDatabases
-            cbDatabase.Items.AddRange(DatabaseManagementForm.GetCompanyDatabases().ToArray());
+            cbDatabase.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
 
             // Set values based on registry settings
             RegUtilities.CheckForInstallRegistryEntries();

@@ -26,7 +26,7 @@ namespace EnvironmentManager4
 
         public void LoadDatabases()
         {
-            listBox1.Items.AddRange(DatabaseManagementForm.GetCompanyDatabases().ToArray());
+            listBox1.Items.AddRange(DatabaseManagement.GetCompanyDatabases().ToArray());
             return;
         }
 
