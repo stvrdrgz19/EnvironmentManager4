@@ -112,11 +112,11 @@
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
     </Compile>
     <Compile Include="Database Management\DBUtils.cs" />
-    <Compile Include="Database Management\DatabaseManagementForm.cs">
+    <Compile Include="Database Management\DatabaseManagement.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Database Management\DatabaseManagementForm.Designer.cs">
-      <DependentUpon>DatabaseManagementForm.cs</DependentUpon>
+    <Compile Include="Database Management\DatabaseManagement.Designer.cs">
+      <DependentUpon>DatabaseManagement.cs</DependentUpon>
     </Compile>
     <Compile Include="DirectoryCompare.cs">
       <SubType>Form</SubType>
@@ -221,8 +221,8 @@
     <EmbeddedResource Include="Build Management\DeleteBuilds.resx">
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Database Management\DatabaseManagementForm.resx">
-      <DependentUpon>DatabaseManagementForm.cs</DependentUpon>
+    <EmbeddedResource Include="Database Management\DatabaseManagement.resx">
+      <DependentUpon>DatabaseManagement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DirectoryCompare.resx">
       <DependentUpon>DirectoryCompare.cs</DependentUpon>

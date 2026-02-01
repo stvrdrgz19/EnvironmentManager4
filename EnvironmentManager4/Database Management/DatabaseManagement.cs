@@ -18,9 +18,9 @@ using Dapper;
 
 namespace EnvironmentManager4.Database_Management
 {
-    public partial class DatabaseManagementForm : Form
+    public partial class DatabaseManagement : Form
     {
-        public DatabaseManagementForm()
+        public DatabaseManagement()
         {
             InitializeComponent();
 
@@ -610,7 +610,7 @@ namespace EnvironmentManager4.Database_Management
 
         private void FormIsClosing(object sender, FormClosingEventArgs e)
         {
-            Form1.s_DBMgmtTest = null;
+            Form1.s_DatabaseManagement = null;
             return;
         }
 

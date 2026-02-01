@@ -48,8 +48,7 @@ namespace EnvironmentManager4
         public static Notes s_Notes;
         public static About s_AboutForm;
         public static InstallPropertiesMonitor s_InstallPropertiesMonitor;
-
-        public static DatabaseManagementForm s_DBMgmtTest;
+        public static DatabaseManagement s_DatabaseManagement;
 
         //This is in place to call/set for re-sizing the listview (lvInstalledSQLServers) depending on the number of rows - for the column chooser.
         public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
@@ -268,7 +267,7 @@ namespace EnvironmentManager4
 
         private void LoadDatabaseDescription()
         {
-            DatabaseManagementForm databaseManagement = new DatabaseManagementForm();
+            DatabaseManagement databaseManagement = new DatabaseManagement();
             databaseManagement.backupName = cbDatabaseList.Text;
             if (databaseManagement.backupName == "Select a Database Backup")
                 tbDBDesc.Text = DBUtils.defaultBackupDescription;
@@ -468,7 +467,7 @@ namespace EnvironmentManager4
 
         private void btnDBBackupFolder_Click(object sender, EventArgs e)
         {
-            DatabaseManagementForm.LaunchDBBackupFolder();
+            DatabaseManagement.LaunchDBBackupFolder();
             return;
         }
 
@@ -488,15 +487,15 @@ namespace EnvironmentManager4
             }
 
             // launch restore database backup form
-            if (s_DBMgmtTest == null)
+            if (s_DatabaseManagement == null)
             {
-                s_DBMgmtTest = new DatabaseManagementForm();
-                s_DBMgmtTest.type = DBUtils.DBManagementType.Restore;
-                s_DBMgmtTest.backupName = backupName;
-                s_DBMgmtTest.Show();
+                s_DatabaseManagement = new DatabaseManagement();
+                s_DatabaseManagement.type = DBUtils.DBManagementType.Restore;
+                s_DatabaseManagement.backupName = backupName;
+                s_DatabaseManagement.Show();
             }
             else
-                s_DBMgmtTest.BringToFront();
+                s_DatabaseManagement.BringToFront();
             return;
         }
 
@@ -516,33 +515,33 @@ namespace EnvironmentManager4
             }
 
             // launch overwrite database backup form
-            if (s_DBMgmtTest == null)
+            if (s_DatabaseManagement == null)
             {
-                s_DBMgmtTest = new DatabaseManagementForm
+                s_DatabaseManagement = new DatabaseManagement
                 {
                     type = DBUtils.DBManagementType.Overwrite,
                     backupName = backupName
                 };
-                s_DBMgmtTest.Show();
+                s_DatabaseManagement.Show();
             }
             else
-                s_DBMgmtTest.BringToFront();
+                s_DatabaseManagement.BringToFront();
             return;
         }
 
         private void btnNewDB_Click(object sender, EventArgs e)
         {
             // launch create database backup form
-            if (s_DBMgmtTest == null)
+            if (s_DatabaseManagement == null)
             {
-                s_DBMgmtTest = new DatabaseManagementForm
+                s_DatabaseManagement = new DatabaseManagement
                 {
                     type = DBUtils.DBManagementType.Create
                 };
-                s_DBMgmtTest.Show();
+                s_DatabaseManagement.Show();
             }
             else
-                s_DBMgmtTest.BringToFront();
+                s_DatabaseManagement.BringToFront();
             return;
         }
 
@@ -577,7 +576,7 @@ namespace EnvironmentManager4
             result = MessageBox.Show(message, caption, buttons, icon);
             if (result == DialogResult.Yes)
             {
-                DatabaseManagementForm databaseManagement = new DatabaseManagementForm();
+                DatabaseManagement databaseManagement = new DatabaseManagement();
                 databaseManagement.backupName = backupName;
                 databaseManagement.DeleteDatabaseBackup(false, false);
                 LoadFromSettings(settings);
@@ -806,7 +805,7 @@ namespace EnvironmentManager4
         {
             s_ListAndButtonForm = null;
             if (!String.IsNullOrWhiteSpace(ListAndButtonForm.output))
-                DatabaseManagementForm.ResetDatabaseVersion(ListAndButtonForm.output);
+                DatabaseManagement.ResetDatabaseVersion(ListAndButtonForm.output);
             return;
         }
 
