@@ -9,30 +9,43 @@ namespace EnvironmentManager4
 {
     public class ErrorHandling
     {
+        private string existingLogContents;
         public static void LogException(Exception e, bool dbUpdate = false, string extraMessage = null)
         {
             string logFile = Utilities.GetFile("Log.txt");
             DateTime logTime = DateTime.Now;
 
-            using (StreamWriter writer = File.AppendText(logFile))
+            // 1. Read existing log (if it exists)
+            string existingLog = File.Exists(logFile)
+                ? File.ReadAllText(logFile)
+                : string.Empty;
+
+            // 2. Build new log entry
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("===============================================================================");
+            sb.AppendLine(string.Format("-({0}){1}", logTime, Constants.ExceptionDivider));
+            sb.AppendLine(string.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
+            sb.AppendLine(string.Format("Exception Message: {0}", e.Message));
+            sb.AppendLine(string.Format("Exception Type: {0}", e.GetType()));
+            sb.AppendLine(string.Format("Exception Source: {0}", e.Source));
+            sb.AppendLine(string.Format("Exception Target Site: {0}", e.TargetSite));
+            sb.AppendLine();
+
+            if (!string.IsNullOrEmpty(extraMessage))
             {
-                writer.WriteLine("===============================================================================");
-                writer.WriteLine(String.Format("-({0}){1}", logTime, Constants.ExceptionDivider));
-                writer.WriteLine(String.Format("Environment Manager v{0}", Utilities.GetAppVersion()));
-                writer.WriteLine(String.Format("Exception Message: {0}", e.Message));
-                writer.WriteLine(String.Format("Exception Type: {0}", e.GetType().ToString()));
-                writer.WriteLine(String.Format("Exception Source: {0}", e.Source));
-                writer.WriteLine(String.Format("Exception Target Site: {0}", e.TargetSite));
-                writer.WriteLine("");
-                if (!String.IsNullOrEmpty(extraMessage))
-                {
-                    writer.WriteLine(extraMessage);
-                    writer.WriteLine("");
-                }
-                writer.WriteLine("STACK TRACE");
-                writer.WriteLine(e.StackTrace);
-                writer.WriteLine("");
+                sb.AppendLine(extraMessage);
+                sb.AppendLine();
             }
+
+            sb.AppendLine("STACK TRACE");
+            sb.AppendLine(e.StackTrace);
+            sb.AppendLine();
+
+            // 3. Overwrite file with new entry + old content
+            sb.Append(existingLog);
+
+            File.WriteAllText(logFile, sb.ToString());
         }
 
         public static void DisplayExceptionMessage(Exception e, bool dbUpdate = false, string extraMessage = null, string action = null, string variables = null)
