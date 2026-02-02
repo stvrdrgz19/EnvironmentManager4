@@ -1,5 +1,6 @@
 ﻿using EnvironmentManager4.Build_Management;
 using EnvironmentManager4.Database_Management;
+using EnvironmentManager4.ErrorManagement;
 using EnvironmentManager4.Service_Management;
 using Newtonsoft.Json;
 using System;
@@ -12,6 +13,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,6 +51,7 @@ namespace EnvironmentManager4
         public static About s_AboutForm;
         public static InstallPropertiesMonitor s_InstallPropertiesMonitor;
         public static DatabaseManagement s_DatabaseManagement;
+        public static ExceptionLog s_ExceptionLog;
 
         //This is in place to call/set for re-sizing the listview (lvInstalledSQLServers) depending on the number of rows - for the column chooser.
         public static List<ListViewProperties> s_LvProperties = new List<ListViewProperties>();
@@ -985,6 +988,18 @@ namespace EnvironmentManager4
             }
             else
                 s_InstallPropertiesMonitor.BringToFront();
+            return;
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (s_ExceptionLog == null)
+            {
+                s_ExceptionLog = new ExceptionLog();
+                s_ExceptionLog.Show();
+            }
+            else
+                s_ExceptionLog.BringToFront();
             return;
         }
     }
