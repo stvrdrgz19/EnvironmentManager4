@@ -38,13 +38,6 @@ namespace EnvironmentManager4
             this.Close();
         }
 
-        private void linkProject_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            this.linkProject.LinkVisited = true;
-            Process.Start(Utilities.GetProjectLink());
-            return;
-        }
-
         private void linkWiki_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.linkWiki.LinkVisited = true;
@@ -63,6 +56,13 @@ namespace EnvironmentManager4
         {
             this.LinkChangeLog.LinkVisited = true;
             Process.Start(Utilities.GetChangeLogLink());
+            return;
+        }
+
+        private void linkDev1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.linkDev1.LinkVisited = true;
+            Process.Start(Utilities.GetDev1());
             return;
         }
 

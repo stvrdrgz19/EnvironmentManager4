@@ -34,11 +34,9 @@ namespace EnvironmentManager4
             this.labelVersion = new System.Windows.Forms.Label();
             this.labelIsAppUpdated = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.linkProject = new System.Windows.Forms.LinkLabel();
             this.linkWiki = new System.Windows.Forms.LinkLabel();
             this.linkRepo = new System.Windows.Forms.LinkLabel();
             this.LinkChangeLog = new System.Windows.Forms.LinkLabel();
@@ -46,6 +44,10 @@ namespace EnvironmentManager4
             this.btnClose = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label2 = new System.Windows.Forms.Label();
+            this.linkDev1 = new System.Windows.Forms.LinkLabel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelVersion
@@ -80,16 +82,6 @@ namespace EnvironmentManager4
             this.label1.TabIndex = 2;
             this.label1.Text = "Links";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(15, 102);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Project Board:";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -114,23 +106,11 @@ namespace EnvironmentManager4
             // 
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(16, 147);
+            this.label5.Location = new System.Drawing.Point(18, 39);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(68, 13);
             this.label5.TabIndex = 6;
             this.label5.Text = "Change Log:";
-            // 
-            // linkProject
-            // 
-            this.linkProject.AutoSize = true;
-            this.linkProject.BackColor = System.Drawing.Color.White;
-            this.linkProject.Location = new System.Drawing.Point(122, 102);
-            this.linkProject.Name = "linkProject";
-            this.linkProject.Size = new System.Drawing.Size(314, 13);
-            this.linkProject.TabIndex = 2;
-            this.linkProject.TabStop = true;
-            this.linkProject.Text = "https://github.com/stvrdrgz19/EnvironmentManager4/projects/1";
-            this.linkProject.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkProject_LinkClicked);
             // 
             // linkWiki
             // 
@@ -160,7 +140,7 @@ namespace EnvironmentManager4
             // 
             this.LinkChangeLog.AutoSize = true;
             this.LinkChangeLog.BackColor = System.Drawing.Color.White;
-            this.LinkChangeLog.Location = new System.Drawing.Point(122, 147);
+            this.LinkChangeLog.Location = new System.Drawing.Point(124, 39);
             this.LinkChangeLog.Name = "LinkChangeLog";
             this.LinkChangeLog.Size = new System.Drawing.Size(347, 13);
             this.LinkChangeLog.TabIndex = 10;
@@ -171,15 +151,20 @@ namespace EnvironmentManager4
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.linkDev1);
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.LinkChangeLog);
+            this.panel1.Controls.Add(this.label5);
             this.panel1.Location = new System.Drawing.Point(-2, 63);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(610, 117);
+            this.panel1.Size = new System.Drawing.Size(610, 155);
             this.panel1.TabIndex = 11;
             // 
             // btnClose
             // 
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(526, 187);
+            this.btnClose.Location = new System.Drawing.Point(526, 223);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 0;
@@ -198,23 +183,53 @@ namespace EnvironmentManager4
             this.btnUpdate.UseVisualStyleBackColor = true;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.White;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(113)))), ((int)(((byte)(155)))));
+            this.label2.Location = new System.Drawing.Point(17, 100);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(53, 20);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Team";
+            // 
+            // linkDev1
+            // 
+            this.linkDev1.AutoSize = true;
+            this.linkDev1.BackColor = System.Drawing.Color.White;
+            this.linkDev1.Location = new System.Drawing.Point(124, 122);
+            this.linkDev1.Name = "linkDev1";
+            this.linkDev1.Size = new System.Drawing.Size(149, 13);
+            this.linkDev1.TabIndex = 14;
+            this.linkDev1.TabStop = true;
+            this.linkDev1.Text = "https://github.com/stvrdrgz19";
+            this.linkDev1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDev1_LinkClicked);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.White;
+            this.label6.Location = new System.Drawing.Point(18, 122);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Developer:";
+            // 
             // About
             // 
             this.AcceptButton = this.btnClose;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(606, 218);
+            this.ClientSize = new System.Drawing.Size(606, 252);
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.LinkChangeLog);
             this.Controls.Add(this.linkRepo);
             this.Controls.Add(this.linkWiki);
-            this.Controls.Add(this.linkProject);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.labelIsAppUpdated);
             this.Controls.Add(this.labelVersion);
@@ -227,6 +242,8 @@ namespace EnvironmentManager4
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Environment Manager - About";
             this.Load += new System.EventHandler(this.About_Load);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -237,11 +254,9 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.Label labelIsAppUpdated;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.LinkLabel linkProject;
         private System.Windows.Forms.LinkLabel linkWiki;
         private System.Windows.Forms.LinkLabel linkRepo;
         private System.Windows.Forms.LinkLabel LinkChangeLog;
@@ -249,5 +264,8 @@ namespace EnvironmentManager4
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.LinkLabel linkDev1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label2;
     }
 }

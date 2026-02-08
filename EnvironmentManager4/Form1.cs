@@ -1002,5 +1002,12 @@ namespace EnvironmentManager4
                 s_ExceptionLog.BringToFront();
             return;
         }
+
+        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SettingsModel settings = SettingsUtilities.GetSettings();
+            LoadFromSettings(settings);
+            return;
+        }
     }
 }

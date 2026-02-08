@@ -159,11 +159,6 @@ namespace EnvironmentManager4
                 return false;
         }
 
-        public static string GetProjectLink()
-        {
-            return "https://github.com/stvrdrgz19/EnvironmentManager4/projects/1";
-        }
-
         public static string GetWikiLink()
         {
             return "https://github.com/stvrdrgz19/EnvironmentManager4/wiki";
@@ -177,6 +172,11 @@ namespace EnvironmentManager4
         public static string GetChangeLogLink()
         {
             return "https://github.com/stvrdrgz19/EnvironmentManager4/wiki/Change-Log";
+        }
+
+        public static string GetDev1()
+        {
+            return "https://github.com/stvrdrgz19";
         }
 
         //=======================================================[ ENCRYPTION ]========================================================
