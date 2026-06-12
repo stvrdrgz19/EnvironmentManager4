@@ -14,6 +14,21 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,7 +55,7 @@
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationManifest>src\WinForms\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.Data.Desktop.v21.1, Version=21.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -75,183 +90,230 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\Core\Models\AppSettings.cs" />
+    <Compile Include="src\Core\Models\BuildManagement.Settings.cs" />
+    <Compile Include="src\Core\Models\ConnectionInfo.Settings.cs" />
+    <Compile Include="src\Core\Models\DBManagement.Settings.cs" />
+    <Compile Include="src\Core\Models\InstalledBuilds.cs" />
+    <Compile Include="src\Core\Models\BuildInfo.cs" />
+    <Compile Include="src\Core\Models\Other.Settings.cs" />
+    <Compile Include="src\Core\Models\Products.cs" />
+    <Compile Include="src\Core\Models\SettingsModel.Settings.cs" />
+    <Compile Include="src\Core\Models\Versions.cs" />
+    <Compile Include="src\Core\Utilities\AppVersionUtilities.cs" />
+    <Compile Include="src\Core\Utilities\DirectoryUtilities.cs" />
+    <Compile Include="src\WinForms\Controls\BuildList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\WinForms\Controls\BuildList.Designer.cs">
+      <DependentUpon>BuildList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\WinForms\Controls\CombinedProductVersionBuild.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\WinForms\Controls\CombinedProductVersionBuild.Designer.cs">
+      <DependentUpon>CombinedProductVersionBuild.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\WinForms\Controls\ProductVersionLists.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\WinForms\Controls\ProductVersionLists.Designer.cs">
+      <DependentUpon>ProductVersionLists.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\WinForms\Forms\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\WinForms\Forms\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\About\About.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Tools\About\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="Build Management\BuildLog.cs">
+    <Compile Include="src\WinForms\Forms\BuildLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Build Management\BuildLog.Designer.cs">
+    <Compile Include="src\WinForms\Forms\BuildLog.Designer.cs">
       <DependentUpon>BuildLog.cs</DependentUpon>
     </Compile>
     <Compile Include="Build Management\BuildModel.cs" />
     <Compile Include="Build Management\Configurations.cs" />
     <Compile Include="Build Management\CoreModules.cs" />
     <Compile Include="Build Management\Builds.cs" />
-    <Compile Include="Build Management\InstallPropertiesMonitor.cs">
+    <Compile Include="src\WinForms\Forms\InstallPropertiesMonitor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Build Management\InstallPropertiesMonitor.Designer.cs">
+    <Compile Include="src\WinForms\Forms\InstallPropertiesMonitor.Designer.cs">
       <DependentUpon>InstallPropertiesMonitor.cs</DependentUpon>
     </Compile>
     <Compile Include="Constants.cs" />
-    <Compile Include="Database Management\DatabaseActivityLog.cs">
+    <Compile Include="src\WinForms\Forms\DatabaseActivityLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Database Management\DatabaseActivityLog.Designer.cs">
+    <Compile Include="src\WinForms\Forms\DatabaseActivityLog.Designer.cs">
       <DependentUpon>DatabaseActivityLog.cs</DependentUpon>
     </Compile>
     <Compile Include="Database Management\DatabaseActivityLogModel.cs" />
-    <Compile Include="Build Management\DeleteBuilds.cs">
+    <Compile Include="src\WinForms\Forms\DeleteBuilds.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Build Management\DeleteBuilds.Designer.cs">
+    <Compile Include="src\WinForms\Forms\DeleteBuilds.Designer.cs">
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
     </Compile>
     <Compile Include="Database Management\DBUtils.cs" />
-    <Compile Include="Database Management\DatabaseManagement.cs">
+    <Compile Include="src\WinForms\Forms\DatabaseManagement.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Database Management\DatabaseManagement.Designer.cs">
+    <Compile Include="src\WinForms\Forms\DatabaseManagement.Designer.cs">
       <DependentUpon>DatabaseManagement.cs</DependentUpon>
     </Compile>
-    <Compile Include="DirectoryCompare.cs">
+    <Compile Include="src\WinForms\Forms\DirectoryCompare.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DirectoryCompare.Designer.cs">
+    <Compile Include="src\WinForms\Forms\DirectoryCompare.Designer.cs">
       <DependentUpon>DirectoryCompare.cs</DependentUpon>
     </Compile>
     <Compile Include="Build Management\DllModel.cs" />
     <Compile Include="ErrorHandling.cs" />
-    <Compile Include="ErrorManagement\ExceptionLog.cs">
+    <Compile Include="src\WinForms\Forms\ExceptionLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ErrorManagement\ExceptionLog.Designer.cs">
+    <Compile Include="src\WinForms\Forms\ExceptionLog.Designer.cs">
       <DependentUpon>ExceptionLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExceptionForm.cs">
+    <Compile Include="src\WinForms\Forms\ExceptionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExceptionForm.Designer.cs">
+    <Compile Include="src\WinForms\Forms\ExceptionForm.Designer.cs">
       <DependentUpon>ExceptionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="src\WinForms\Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="src\WinForms\Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Dynamics Management\GPManagement.cs" />
-    <Compile Include="Build Management\Install.cs">
+    <Compile Include="src\WinForms\Forms\Install.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Build Management\Install.Designer.cs">
+    <Compile Include="src\WinForms\Forms\Install.Designer.cs">
       <DependentUpon>Install.cs</DependentUpon>
     </Compile>
     <Compile Include="Build Management\InstallProperties.cs" />
-    <Compile Include="Build Management\LaunchProduct.cs">
+    <Compile Include="src\WinForms\Forms\LaunchProduct.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Build Management\LaunchProduct.Designer.cs">
+    <Compile Include="src\WinForms\Forms\LaunchProduct.Designer.cs">
       <DependentUpon>LaunchProduct.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListAndButtonForm.cs">
+    <Compile Include="src\WinForms\Forms\ListAndButtonForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ListAndButtonForm.Designer.cs">
+    <Compile Include="src\WinForms\Forms\ListAndButtonForm.Designer.cs">
       <DependentUpon>ListAndButtonForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="ListViewProperties.cs" />
     <Compile Include="Build Management\Modules.cs" />
-    <Compile Include="Notes.cs">
+    <Compile Include="src\WinForms\Forms\Notes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Notes.Designer.cs">
+    <Compile Include="src\WinForms\Forms\Notes.Designer.cs">
       <DependentUpon>Notes.cs</DependentUpon>
     </Compile>
     <Compile Include="Build Management\ProductInfo.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="src\WinForms\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryEntries.cs" />
     <Compile Include="Service Management\ServiceManagement.cs" />
     <Compile Include="Service Management\SQLServiceList.cs" />
-    <Compile Include="Settings.cs">
+    <Compile Include="src\WinForms\Forms\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Settings.Designer.cs">
+    <Compile Include="src\WinForms\Forms\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsModel.cs" />
     <Compile Include="SqliteDataAccess.cs" />
-    <Compile Include="TestClass.cs" />
     <Compile Include="TestLogs.cs" />
-    <Compile Include="TextPrompt.cs">
+    <Compile Include="src\WinForms\Forms\TextPrompt.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TextPrompt.Designer.cs">
+    <Compile Include="src\WinForms\Forms\TextPrompt.Designer.cs">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </Compile>
     <Compile Include="Toasts.cs" />
-    <Compile Include="UpdatePrompt.cs">
+    <Compile Include="src\WinForms\Forms\UpdatePrompt.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpdatePrompt.Designer.cs">
+    <Compile Include="src\WinForms\Forms\UpdatePrompt.Designer.cs">
       <DependentUpon>UpdatePrompt.cs</DependentUpon>
     </Compile>
-    <Compile Include="Database Management\UpdateDatabaseDescription.cs">
+    <Compile Include="src\WinForms\Forms\UpdateDatabaseDescription.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Database Management\UpdateDatabaseDescription.Designer.cs">
+    <Compile Include="src\WinForms\Forms\UpdateDatabaseDescription.Designer.cs">
       <DependentUpon>UpdateDatabaseDescription.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utilities.cs" />
+    <Compile Include="UtilitiesOld.cs" />
     <Compile Include="Variance.cs" />
     <Compile Include="WaterBot.cs" />
+    <None Include="app.config" />
     <None Include="Resources\EnvironmentManager.ico" />
+    <EmbeddedResource Include="src\WinForms\Controls\BuildList.resx">
+      <DependentUpon>BuildList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\WinForms\Controls\CombinedProductVersionBuild.resx">
+      <DependentUpon>CombinedProductVersionBuild.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\WinForms\Controls\ProductVersionLists.resx">
+      <DependentUpon>ProductVersionLists.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\WinForms\Forms\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\About\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Build Management\BuildLog.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\BuildLog.resx">
       <DependentUpon>BuildLog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Build Management\InstallPropertiesMonitor.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\InstallPropertiesMonitor.resx">
       <DependentUpon>InstallPropertiesMonitor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Database Management\DatabaseActivityLog.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\DatabaseActivityLog.resx">
       <DependentUpon>DatabaseActivityLog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Build Management\DeleteBuilds.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\DeleteBuilds.resx">
       <DependentUpon>DeleteBuilds.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Database Management\DatabaseManagement.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\DatabaseManagement.resx">
       <DependentUpon>DatabaseManagement.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DirectoryCompare.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\DirectoryCompare.resx">
       <DependentUpon>DirectoryCompare.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ErrorManagement\ExceptionLog.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\ExceptionLog.resx">
       <DependentUpon>ExceptionLog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExceptionForm.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\ExceptionForm.resx">
       <DependentUpon>ExceptionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Build Management\Install.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\Install.resx">
       <DependentUpon>Install.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Build Management\LaunchProduct.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\LaunchProduct.resx">
       <DependentUpon>LaunchProduct.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ListAndButtonForm.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\ListAndButtonForm.resx">
       <DependentUpon>ListAndButtonForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Notes.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\Notes.resx">
       <DependentUpon>Notes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -264,10 +326,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Settings.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TextPrompt.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\TextPrompt.resx">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="EnvironmentManager.ico" />
@@ -283,13 +345,13 @@
     <Content Include="Files\Icons\ico24.ico" />
     <Content Include="Files\Icons\ico4.ico" />
     <Content Include="Files\Log.txt" />
-    <EmbeddedResource Include="UpdatePrompt.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\UpdatePrompt.resx">
       <DependentUpon>UpdatePrompt.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Database Management\UpdateDatabaseDescription.resx">
+    <EmbeddedResource Include="src\WinForms\Forms\UpdateDatabaseDescription.resx">
       <DependentUpon>UpdateDatabaseDescription.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="app.manifest" />
+    <None Include="src\WinForms\app.manifest" />
     <None Include="Files\GetLatestEnvironmentManager.bat" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -302,7 +364,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="src\WinForms\App.config" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper">
@@ -317,6 +379,18 @@
     <PackageReference Include="System.Data.SQLite.Core">
       <Version>1.0.115.5</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

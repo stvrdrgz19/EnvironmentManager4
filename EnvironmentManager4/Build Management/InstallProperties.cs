@@ -43,24 +43,24 @@ namespace EnvironmentManager4
                 string path = "";
                 switch (product)
                 {
-                    case Products.SalesPad:
+                    case ProductsOld.SalesPad:
                         path = String.Format(@"{0}\{1}\{2}", buildPath, type, version);
                         dllName = String.Format("{0}.{1}.{2}", dll, buildNum, version.ToUpper());
                         break;
-                    case Products.DataCollection:
+                    case ProductsOld.DataCollection:
                         path = String.Format(@"{0}\{1}", buildPath, type);
                         break;
-                    case Products.SalesPadMobile:
+                    case ProductsOld.SalesPadMobile:
                         path = "";
                         break;
-                    case Products.ShipCenter:
+                    case ProductsOld.ShipCenter:
                         path = String.Format(@"{0}\Custom", buildPath);
                         dllName = String.Format("{0}.{1}", dll, buildNum);
                         break;
-                    case Products.WebAPI:
+                    case ProductsOld.WebAPI:
                         path = String.Format(@"{0}\{1}", buildPath, type);
                         break;
-                    case Products.GPWeb:
+                    case ProductsOld.GPWeb:
                         path = String.Format(@"{0}\plugins", buildPath);
                         break;
                 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnvironmentManager4.src.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace EnvironmentManager4
         public static void LogMessage(string message, string logFile = null)
         {
             if (logFile == null)
-                logFile = Utilities.GetFile("TestLog.txt");
+                logFile = DirectoryUtilities.GetFile("TestLog.txt");
 
             DateTime logTime = DateTime.Now;
 

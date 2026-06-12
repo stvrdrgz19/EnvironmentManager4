@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
+﻿using EnvironmentManager4.src.Core.Models;
+using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,10 @@ namespace EnvironmentManager4
 
         private static void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-            SettingsModel settings = SettingsUtilities.GetSettings();
+            AppSettings settings = new AppSettings();
             if (lastHour <= DateTime.Now.Hour || (lastHour == 23 && DateTime.Now.Hour == 0))
                 if (DateTime.Now.Minute == 0 || DateTime.Now.Minute == 30)
-                    if (settings.Other.EnableWaterBot)
+                    if (settings.OEnableWaterBot)
                         Toasts.Toast("WaterBot", "Time to drink some water.", 10);
         }
     }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EnvironmentManager4.src.Core.Utilities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,7 @@ namespace EnvironmentManager4
 
         public static List<Configurations> GetConfigurations()
         {
-            string configurationsFile = Utilities.GetFile("Configurations.json");
+            string configurationsFile = DirectoryUtilities.GetFile("Configurations.json");
             if (!File.Exists(configurationsFile))
                 GenerateDefaultConfigurationsFile();
             return JsonConvert.DeserializeObject<List<Configurations>>(File.ReadAllText(configurationsFile));
@@ -42,22 +43,22 @@ namespace EnvironmentManager4
                 switch (configuration.Product)
                 {
                     case "SalesPad GP":
-                        configuration.Product = Products.SalesPad;
+                        configuration.Product = ProductsOld.SalesPad;
                         break;
                 }
                 newConfigurations.Add(configuration);
             }
             string json = JsonConvert.SerializeObject(newConfigurations.Distinct(), Formatting.Indented);
-            File.WriteAllText(Utilities.GetFile("Configurations.json"), json);
+            File.WriteAllText(DirectoryUtilities.GetFile("Configurations.json"), json);
         }
 
         public static void GenerateDefaultConfigurationsFile()
         {
-            Configurations ediConfiguration = new Configurations(Products.SalesPad,
+            Configurations ediConfiguration = new Configurations(ProductsOld.SalesPad,
                 "EDI",
                 new List<string> { "SalesPadEDI" },
                 new List<string>());
-            Configurations aaConfiguration = new Configurations(Products.SalesPad,
+            Configurations aaConfiguration = new Configurations(ProductsOld.SalesPad,
                 "AA",
                 new List<string> { "AutomationAgent", "AutomationAgentService" },
                 new List<string>());
@@ -65,7 +66,7 @@ namespace EnvironmentManager4
             List<Configurations> configurationList = new List<Configurations> { ediConfiguration, aaConfiguration };
 
             string json = JsonConvert.SerializeObject(configurationList, Formatting.Indented);
-            File.WriteAllText(Utilities.GetFile("Configurations.json"), json);
+            File.WriteAllText(DirectoryUtilities.GetFile("Configurations.json"), json);
         }
 
         public static void GenerateConfigurationsFile(List<Configurations> configurations, bool append = true)
@@ -75,7 +76,7 @@ namespace EnvironmentManager4
                     configurations.AddRange(GetConfigurations());
 
             string json = JsonConvert.SerializeObject(configurations.Distinct(), Formatting.Indented);
-            File.WriteAllText(Utilities.GetFile("Configurations.json"), json);
+            File.WriteAllText(DirectoryUtilities.GetFile("Configurations.json"), json);
         }
 
         public static List<Configurations> GetConfigurationsByProduct(string product)

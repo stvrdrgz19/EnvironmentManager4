@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EnvironmentManager4.src.Core.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -175,7 +176,7 @@ namespace EnvironmentManager4
     {
         public static void GetDatabaseFile()
         {
-            string dbFile = Utilities.GetFile("Database.db");
+            string dbFile = DirectoryUtilities.GetFile("Database.db");
             if (!File.Exists(dbFile))
                 GenerateDatabaseFile();
         }

@@ -64,7 +64,7 @@ namespace EnvironmentManager4
                 item.SubItems.Add(build.ModifiedDate.ToString());
                 lv.Items.Add(item);
             }
-            Utilities.ResizeUpdateableListViewColumnWidthForScrollBar(lv, 7, 0, 500);
+            UtilitiesOld.ResizeUpdateableListViewColumnWidthForScrollBar(lv, 7, 0, 500);
         }
     }
 }
