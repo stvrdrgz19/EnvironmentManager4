@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnvironmentManager4.src.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,8 +23,8 @@ namespace EnvironmentManager4
 
         private void About_Load(object sender, EventArgs e)
         {
-            labelVersion.Text = String.Format("Environment Manager v{0}", Utilities.GetAppVersion());
-            if (Utilities.IsProgramUpToDate())
+            labelVersion.Text = String.Format("Environment Manager v{0}", AppVersionUtilities.GetAppVersion());
+            if (AppVersionUtilities.IsUpToDate())
             {
                 labelIsAppUpdated.Text = "Environment Manager is up to date.";
                 btnUpdate.Enabled = false;
@@ -41,28 +42,28 @@ namespace EnvironmentManager4
         private void linkWiki_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.linkWiki.LinkVisited = true;
-            Process.Start(Utilities.GetWikiLink());
+            Process.Start(UtilitiesOld.GetWikiLink());
             return;
         }
 
         private void linkRepo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.linkRepo.LinkVisited = true;
-            Process.Start(Utilities.GetRepoLink());
+            Process.Start(UtilitiesOld.GetRepoLink());
             return;
         }
 
         private void LinkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.LinkChangeLog.LinkVisited = true;
-            Process.Start(Utilities.GetChangeLogLink());
+            Process.Start(UtilitiesOld.GetChangeLogLink());
             return;
         }
 
         private void linkDev1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.linkDev1.LinkVisited = true;
-            Process.Start(Utilities.GetDev1());
+            Process.Start(UtilitiesOld.GetDev1());
             return;
         }
 

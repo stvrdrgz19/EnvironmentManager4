@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnvironmentManager4.src.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -32,7 +33,7 @@ namespace EnvironmentManager4
             cb.Text = "Select a GP Version to Install";
             try
             {
-                cb.Items.AddRange(Utilities.GetFilesFromDirectoryByExtension(availableGPsPath, "zip"));
+                cb.Items.AddRange(UtilitiesOld.GetFilesFromDirectoryByExtension(availableGPsPath, "zip"));
             }
             catch (Exception e)
             {
@@ -91,7 +92,7 @@ namespace EnvironmentManager4
 
             //Build paths
             string newGP = String.Format("{0}{1}.zip", availableGPsPath, selectedGP);
-            string newPath = String.Format(@"{0}\{1}.zip", Utilities.GetFolder("DLLs"), selectedGP);
+            string newPath = String.Format(@"{0}\{1}.zip", DirectoryUtilities.GetFolder("DLLs"), selectedGP);
             string destination = String.Format("{0}{1}", gpInstallPath, selectedGP);
 
             //Copy the zipped build to the DLLs directory to extract

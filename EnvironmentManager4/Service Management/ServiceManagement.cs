@@ -52,7 +52,7 @@ namespace EnvironmentManager4
                 item.SubItems.Add(service.ServiceStatus);
                 lv.Items.Add(item);
             }
-            Utilities.ResizeListViewColumnWidthForScrollBar(lv, 6, 0);
+            UtilitiesOld.ResizeListViewColumnWidthForScrollBar(lv, 6, 0);
         }
 
         public static bool IsServiceRunning(string service)

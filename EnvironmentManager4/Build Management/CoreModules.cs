@@ -7,13 +7,13 @@
             string[] coreModules = new string[] { };
             switch (product)
             {
-                case Products.SalesPad:
+                case ProductsOld.SalesPad:
                     return salesPadCoreModules;
-                case Products.DataCollection:
+                case ProductsOld.DataCollection:
                     return dataCollectionCoreModules;
-                case Products.SalesPadMobile:
+                case ProductsOld.SalesPadMobile:
                     return salesPadMobileCoreModules;
-                case Products.ShipCenter:
+                case ProductsOld.ShipCenter:
                     return shipCenterCoreModules;
             }
             return coreModules;

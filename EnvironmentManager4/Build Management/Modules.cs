@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnvironmentManager4.src.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -17,28 +18,29 @@ namespace EnvironmentManager4
             List<string> dllList = new List<string>();
             switch (product)
             {
-                case Products.SalesPad:
+                case ProductsOld.SalesPad:
                     switch (version)
                     {
                         case "x64":
                         case "x86":
-                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, Products.SalesPad).ToString())).TrimEnd('.')));
+                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, ProductsOld.SalesPad).ToString())).TrimEnd('.')));
                             break;
                         case "Pre":
-                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, Products.SalesPad).ToString())).TrimEnd('.')));
+                            dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(16, Path.GetFileNameWithoutExtension(file).Substring(16).IndexOf(TrimVersion(buildPath, ProductsOld.SalesPad).ToString())).TrimEnd('.')));
                             break;
                     }
                     break;
-                case Products.DataCollection:
+                case ProductsOld.DataCollection:
                     dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(24, Path.GetFileName(file).Substring(24).IndexOf(".dll"))));
                     break;
-                case Products.ShipCenter:
-                    dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(20, Path.GetFileNameWithoutExtension(file).Substring(20).IndexOf(TrimVersion(buildPath, Products.ShipCenter).ToString())).TrimEnd('.')));
+                case ProductsOld.ShipCenter:
+                    //dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Substring(20, Path.GetFileNameWithoutExtension(file).Substring(20).IndexOf(TrimVersion(buildPath, ProductsOld.ShipCenter).ToString())).TrimEnd('.')));
+                    dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file).Split('.')[2]));
                     break;
-                case Products.GPWeb:
+                case ProductsOld.GPWeb:
                     dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file)));
                     break;
-                case Products.WebAPI:
+                case ProductsOld.WebAPI:
                     dllList.AddRange(Directory.GetFiles(modulePath).Select(file => Path.GetFileNameWithoutExtension(file.Replace(GetVersionNum(installer), "")).Substring(19)));
                     break;
             }
@@ -50,10 +52,10 @@ namespace EnvironmentManager4
             int charCount = 0;
             switch (product)
             {
-                case Products.SalesPad:
+                case ProductsOld.SalesPad:
                     charCount = 3;
                     break;
-                case Products.ShipCenter:
+                case ProductsOld.ShipCenter:
                     charCount = 4;
                     break;
             }
@@ -73,7 +75,7 @@ namespace EnvironmentManager4
 
         public static string TrimVersionAndExtension(string dll, string product)
         {
-            if (product == Products.SalesPad)
+            if (product == ProductsOld.SalesPad)
             {
                 string dllWithoutExt = dll.Substring(0, dll.LastIndexOf('.'));
                 return dllWithoutExt.Substring(0, dllWithoutExt.LastIndexOf('.'));
@@ -89,7 +91,7 @@ namespace EnvironmentManager4
             string moduleStart = "";
             switch (product)
             {
-                case Products.SalesPad:
+                case ProductsOld.SalesPad:
                     switch (version)
                     {
                         case "x64":
@@ -104,22 +106,22 @@ namespace EnvironmentManager4
                     }
                     moduleStart = "SalesPad.Module.";
                     break;
-                case Products.WebAPI:
+                case ProductsOld.WebAPI:
                     extPath = String.Format(@"{0}\ExtModules\", installerPath);
                     custPath = String.Format(@"{0}\CustomModules\", installerPath);
                     moduleStart = "SalesPad.GP.RESTv3.";
                     break;
-                case Products.DataCollection:
+                case ProductsOld.DataCollection:
                     custPath = String.Format(@"{0}\CustomModules\", installerPath);
                     moduleStart = "SalesPad.DataCollection.";
                     break;
-                case Products.SalesPadMobile:
+                case ProductsOld.SalesPadMobile:
                     break;
-                case Products.ShipCenter:
+                case ProductsOld.ShipCenter:
                     custPath = String.Format(@"{0}\Custom\", installerPath);
                     moduleStart = "SalesPad.ShipCenter.";
                     break;
-                case Products.GPWeb:
+                case ProductsOld.GPWeb:
                     custPath = String.Format(@"{0}\Plugins\", installerPath);
                     break;
             }
@@ -138,7 +140,7 @@ namespace EnvironmentManager4
             {
                 switch (product)
                 {
-                    case Products.SalesPad:
+                    case ProductsOld.SalesPad:
                         switch (version)
                         {
                             case "x64":
@@ -150,24 +152,24 @@ namespace EnvironmentManager4
                                 break;
                         }
                         break;
-                    case Products.WebAPI:
+                    case ProductsOld.WebAPI:
                         dllName = String.Format("");
                         break;
-                    case Products.DataCollection:
+                    case ProductsOld.DataCollection:
                         dllName = String.Format("{0}{1}.dll", moduleStart, dll);
                         break;
-                    case Products.SalesPadMobile:
+                    case ProductsOld.SalesPadMobile:
                         break;
-                    case Products.ShipCenter:
+                    case ProductsOld.ShipCenter:
                         dllName = String.Format("{0}{1}.{2}.Zip", moduleStart, dll, Modules.TrimVersion(installerPath, product));
                         break;
-                    case Products.GPWeb:
+                    case ProductsOld.GPWeb:
                         dllName = String.Format("");
                         break;
                 }
                 string copyTo = "";
                 string copyFrom = String.Format("{0}{1}", custExtPath, dllName);
-                copyTo = String.Format(@"{0}\{1}", Utilities.GetFolder("Dlls"), dllName);
+                copyTo = String.Format(@"{0}\{1}", DirectoryUtilities.GetFolder("Dlls"), dllName);
                 try
                 {
                     File.Copy(copyFrom, copyTo, true);
@@ -194,11 +196,11 @@ namespace EnvironmentManager4
 
         public static void UnzipDLLFiles()
         {
-            string[] toExtract = Directory.GetFiles(Utilities.GetFolder("Dlls"));
+            string[] toExtract = Directory.GetFiles(DirectoryUtilities.GetFolder("Dlls"));
             foreach (string dll in toExtract)
             {
                 string dllName = Path.GetFileNameWithoutExtension(dll);
-                string dllTempFolder = Utilities.GetFolder("Dlls") + @"\" + dllName;
+                string dllTempFolder = DirectoryUtilities.GetFolder("Dlls") + @"\" + dllName;
                 Directory.CreateDirectory(dllTempFolder);
                 using (ZipArchive zip = ZipFile.Open(dll, ZipArchiveMode.Read))
                 {
@@ -219,7 +221,7 @@ namespace EnvironmentManager4
 
         public static void CopyDllsFromDirectoriesToInstalledBuild(string installPath)
         {
-            foreach (string dir in Directory.GetDirectories(Utilities.GetFolder("Dlls")))
+            foreach (string dir in Directory.GetDirectories(DirectoryUtilities.GetFolder("Dlls")))
             {
                 foreach (string file in Directory.GetFiles(dir))
                 {
@@ -240,7 +242,7 @@ namespace EnvironmentManager4
 
         public static void CopyDllsToInstalledBuild(string installPath)
         {
-            foreach (string file in Directory.GetFiles(Utilities.GetFolder("Dlls")))
+            foreach (string file in Directory.GetFiles(DirectoryUtilities.GetFolder("Dlls")))
             {
                 string fileName = Path.GetFileName(file);
                 try
