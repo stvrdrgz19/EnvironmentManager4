@@ -68,5 +68,11 @@
     <Setting Name="Mode" Type="System.String" Scope="User">
       <Value Profile="(Default)">Standard</Value>
     </Setting>
+    <Setting Name="UpgradeTypeThreshold" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Patch</Value>
+    </Setting>
+    <Setting Name="UpgradePrompt" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

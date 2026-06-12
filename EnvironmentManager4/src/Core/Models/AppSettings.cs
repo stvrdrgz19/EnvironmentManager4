@@ -117,10 +117,17 @@ namespace EnvironmentManager4.src.Core.Models
             get { return Properties.Settings.Default.OEnableInstallToasts; }
             set { Properties.Settings.Default.OEnableInstallToasts = value; Properties.Settings.Default.Save(); }
         }
-        public bool OPromptForUpgrade
+
+        // Application Upgrading
+        public bool UpgradePrompt
         {
-            get { return Properties.Settings.Default.OPromptForUpgrade; }
-            set { Properties.Settings.Default.OPromptForUpgrade = value; Properties.Settings.Default.Save(); }
+            get { return Properties.Settings.Default.UpgradePrompt; }
+            set { Properties.Settings.Default.UpgradePrompt = value; Properties.Settings.Default.Save(); }
+        }
+        public string UpgradeTypeThreshold
+        {
+            get { return Properties.Settings.Default.UpgradeTypeThreshold; }
+            set { Properties.Settings.Default.UpgradeTypeThreshold = value; Properties.Settings.Default.Save(); }
         }
 
         // Versioning

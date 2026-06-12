@@ -180,7 +180,6 @@ namespace EnvironmentManager4
             checkShowWiFiIP.Checked = settings.OShowWIFIIP;
             checkEnableWaterBot.Checked = settings.OEnableWaterBot;
             checkEnableInstallToasts.Checked = settings.OEnableInstallToasts;
-            checkPromptForUpdate.Checked = settings.OPromptForUpgrade;
 
             if (Environment.MachineName != "SRODRIGUEZ")
                 labelSettingsVersion.Visible = false;

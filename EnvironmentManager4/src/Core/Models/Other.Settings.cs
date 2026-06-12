@@ -14,6 +14,5 @@ namespace EnvironmentManager4.src.Core.Models
         public bool ShowIP { get; set; }
         public bool EnableWaterBot { get; set; }
         public bool EnableInstallToasts { get; set; }
-        public bool PromptForUpdate { get; set; }
     }
 }

@@ -286,5 +286,29 @@ namespace EnvironmentManager4.Properties {
                 this["Mode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Patch")]
+        public string UpgradeTypeThreshold {
+            get {
+                return ((string)(this["UpgradeTypeThreshold"]));
+            }
+            set {
+                this["UpgradeTypeThreshold"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UpgradePrompt {
+            get {
+                return ((bool)(this["UpgradePrompt"]));
+            }
+            set {
+                this["UpgradePrompt"] = value;
+            }
+        }
     }
 }
