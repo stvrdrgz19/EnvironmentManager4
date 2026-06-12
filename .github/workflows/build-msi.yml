@@ -1,0 +1,49 @@
+name: Build MSI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # allows manual trigger from GitHub UI
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore EnvironmentManager4.sln
+
+      - name: Find Visual Studio installation path
+        id: find-vs
+        shell: pwsh
+        run: |
+          $vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vsPath = & "$vsWhere" -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
+          echo "VS_PATH=$vsPath" >> $env:GITHUB_OUTPUT
+          Write-Host "Found Visual Studio at: $vsPath"
+
+      - name: Build solution using devenv (required for .vdproj Setup project)
+        shell: pwsh
+        run: |
+          $devEnv = "${{ steps.find-vs.outputs.VS_PATH }}\Common7\IDE\devenv.com"
+          Write-Host "Using devenv at: $devEnv"
+          & "$devEnv" "EnvironmentManager4.sln" /build "Release"
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "devenv build failed with exit code $LASTEXITCODE"
+            exit $LASTEXITCODE
+          }
+
+      - name: Upload MSI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EnvMgr-Setup-MSI
+          path: "EnvMgr Setup/Release/*.msi"
+          if-no-files-found: error
