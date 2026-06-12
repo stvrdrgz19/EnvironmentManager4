@@ -99,6 +99,7 @@
     <Compile Include="src\Core\Models\Other.Settings.cs" />
     <Compile Include="src\Core\Models\Products.cs" />
     <Compile Include="src\Core\Models\SettingsModel.Settings.cs" />
+    <Compile Include="src\Core\Models\Upgrade.Settings.cs" />
     <Compile Include="src\Core\Models\Versions.cs" />
     <Compile Include="src\Core\Utilities\AppVersionUtilities.cs" />
     <Compile Include="src\Core\Utilities\DirectoryUtilities.cs" />
