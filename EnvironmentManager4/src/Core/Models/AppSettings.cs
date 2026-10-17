@@ -133,6 +133,53 @@ namespace EnvironmentManager4.src.Core.Models
         //Increment this when a settings migration needs to happen
         public const int SettingsVersion = 5;
 
+        /// <summary>
+        /// User settings live in a per-version user.config, and the .NET 8 build uses a different base folder than the
+        /// .NET Framework build. When this version has no user.config yet, copy values from the most recent earlier one.
+        /// </summary>
+        public static void ImportPreviousSettings()
+        {
+            try
+            {
+                string currentConfig = System.Configuration.ConfigurationManager
+                    .OpenExeConfiguration(System.Configuration.ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+                if (File.Exists(currentConfig))
+                    return;
+
+                // The base folder is derived from the company/assembly name, which differs between the .NET Framework
+                // and .NET 8 builds, so search every %LocalAppData% folder that looks like ours
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                FileInfo previousConfig = new DirectoryInfo(localAppData)
+                    .GetDirectories("*nvironment*")
+                    .SelectMany(dir => dir.GetFiles("user.config", SearchOption.AllDirectories))
+                    .Where(f => File.ReadAllText(f.FullName).Contains("EnvironmentManager4.Properties.Settings"))
+                    .OrderByDescending(f => f.LastWriteTime)
+                    .FirstOrDefault();
+                if (previousConfig == null)
+                    return;
+
+                var settings = Properties.Settings.Default;
+                var values = System.Xml.Linq.XDocument.Load(previousConfig.FullName)
+                    .Descendants("EnvironmentManager4.Properties.Settings")
+                    .SelectMany(section => section.Elements("setting"));
+                foreach (var value in values)
+                {
+                    var property = settings.Properties[(string)value.Attribute("name")];
+                    if (property == null)
+                        continue;
+                    string text = (string)value.Element("value") ?? String.Empty;
+                    settings[property.Name] = System.ComponentModel.TypeDescriptor
+                        .GetConverter(property.PropertyType)
+                        .ConvertFromInvariantString(text);
+                }
+                settings.Save();
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e, false, "Unable to import settings from a previous version.");
+            }
+        }
+
         public static void CheckForSettingsUpdate()
         {
             if (SettingsVersion != GetSettingsVersion())

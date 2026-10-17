@@ -37,9 +37,23 @@ namespace EnvironmentManager4
 
         private void btnYes_Click(object sender, EventArgs e)
         {
-            ProcessStartInfo info = new ProcessStartInfo(DirectoryUtilities.GetFile("GetLatestEnvironmentManager.bat"));
-            Process.Start(info);
-            this.Close();
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                string installer = AppVersionUtilities.DownloadLatestInstaller();
+
+                // The app runs elevated, so msiexec inherits admin rights; exit so the MSI can replace in-use files
+                Process.Start("msiexec.exe", String.Format("/i \"{0}\"", installer));
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                ErrorHandling.LogException(ex, false, "Unable to download the latest installer.");
+                ErrorHandling.DisplayExceptionMessage(ex, false, "Unable to download the latest installer. The releases page will be opened instead.");
+                Process.Start(new ProcessStartInfo(AppVersionUtilities.releasesPage) { UseShellExecute = true });
+                this.Close();
+            }
             return;
         }
 
@@ -52,7 +66,7 @@ namespace EnvironmentManager4
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.linkLabel1.LinkVisited = true;
-            Process.Start(UtilitiesOld.GetChangeLogLink());
+            Process.Start(new ProcessStartInfo(UtilitiesOld.GetChangeLogLink()) { UseShellExecute = true });
             return;
         }
     }

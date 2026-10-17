@@ -11,13 +11,21 @@ namespace EnvironmentManager4
     {
         public static void Toast(string title, string message, int expireMinutes = 5)
         {
-            ToastContentBuilder tst = new ToastContentBuilder();
-            tst.AddText(title);
-            tst.AddText(message);
-            tst.Show(toast =>
+            // Toasts are informational only; some machines reject them (PlatformNotSupportedException), so never let them crash the app
+            try
             {
-                toast.ExpirationTime = DateTime.Now.AddMinutes(expireMinutes);
-            });
+                ToastContentBuilder tst = new ToastContentBuilder();
+                tst.AddText(title);
+                tst.AddText(message);
+                tst.Show(toast =>
+                {
+                    toast.ExpirationTime = DateTime.Now.AddMinutes(expireMinutes);
+                });
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.LogException(e, false, String.Format("Unable to show toast: {0} - {1}", title, message));
+            }
         }
     }
 }

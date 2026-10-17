@@ -1,0 +1,72 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <!-- UpgradeCode carried over from the old EnvMgr Setup.vdproj so existing installs upgrade in place -->
+  <Package Name="Environment Manager"
+           Manufacturer="Steve Rodriguez"
+           Version="$(var.Version)"
+           UpgradeCode="D4416156-6E67-4E56-B187-FCE1B44FAAF4"
+           Scope="perMachine">
+
+    <MajorUpgrade AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="A newer version of Environment Manager is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="AppIcon" SourceFile="..\EnvironmentManager4\Files\Icons\EnvMgr.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+
+    <!-- DirectoryUtilities.localPath expects this location -->
+    <StandardDirectory Id="ProgramFilesFolder">
+      <Directory Id="INSTALLFOLDER" Name="Environment Manager" />
+    </StandardDirectory>
+
+    <Feature Id="Main">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentRef Id="Shortcuts" />
+    </Feature>
+
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+      <!-- The exe is declared explicitly so the launch-after-install action can reference it by Id -->
+      <Component>
+        <File Id="AppExe" Source="$(var.PublishDir)Environment Manager.exe" KeyPath="yes" />
+      </Component>
+      <Files Include="$(var.PublishDir)**">
+        <Exclude Files="$(var.PublishDir)Environment Manager.exe" />
+      </Files>
+    </ComponentGroup>
+
+    <!-- WorkingDirectory matters: the app resolves Files\ relative to the current directory -->
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Component Id="Shortcuts" Guid="7C1B0F3E-5A2D-4E9B-9C61-2F8D3A4B5E10">
+        <Shortcut Id="StartMenuShortcut"
+                  Name="Environment Manager"
+                  Target="[INSTALLFOLDER]Environment Manager.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+        <Shortcut Id="DesktopShortcut"
+                  Directory="DesktopFolder"
+                  Name="Environment Manager"
+                  Target="[INSTALLFOLDER]Environment Manager.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+        <RegistryValue Root="HKCU" Key="Software\Environment Manager" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+
+    <!-- Optional "Launch Environment Manager" checkbox on the final dialog, checked by default -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Environment Manager" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+    <Property Id="WixShellExecTarget" Value="[#AppExe]" />
+    <CustomAction Id="LaunchApplication"
+                  BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)"
+                  DllEntry="WixShellExec"
+                  Impersonate="yes" />
+
+    <UI>
+      <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+      <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchApplication"
+               Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed" />
+    </UI>
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+  </Package>
+</Wix>

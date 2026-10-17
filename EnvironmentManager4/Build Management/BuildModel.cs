@@ -37,7 +37,7 @@ namespace EnvironmentManager4
 
         public void LaunchInstalledFolder()
         {
-            Process.Start(this.InstallPath);
+            Process.Start(new ProcessStartInfo(this.InstallPath) { UseShellExecute = true });
         }
     }
 }

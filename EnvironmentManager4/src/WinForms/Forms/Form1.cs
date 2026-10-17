@@ -284,8 +284,7 @@ namespace EnvironmentManager4
 
         private void CheckIfConnectedToTheNetwork()
         {
-            string connectionValue = AppVersionUtilities.GetLatestVersion();
-            if (connectionValue == "Unable to Connect")
+            if (!AppVersionUtilities.IsConnectedToNetwork())
             {
                 labelNotConnected.Visible = true;
                 labelNotConnected.BackColor = System.Drawing.Color.Transparent;
@@ -302,7 +301,8 @@ namespace EnvironmentManager4
             // inform the user if connected to the Cavallo Network or not
             CheckIfConnectedToTheNetwork();
 
-            // retrieve settings
+            // retrieve settings, carrying them over from a previous version's user.config on first run
+            AppSettings.ImportPreviousSettings();
             AppSettings settings = new AppSettings();
             AppSettings.CheckForSettingsUpdate();
 
@@ -739,7 +739,7 @@ namespace EnvironmentManager4
             }
             try
             {
-                Process.Start(buildPath);
+                Process.Start(new ProcessStartInfo(buildPath) { UseShellExecute = true });
                 return;
             }
             catch (Exception ex)
@@ -884,7 +884,7 @@ namespace EnvironmentManager4
             ProductInfo pi = ProductInfo.GetProductInfo(product, version);
             try
             {
-                Process.Start(pi.FileserverDirectory);
+                Process.Start(new ProcessStartInfo(pi.FileserverDirectory) { UseShellExecute = true });
             }
             catch (Exception ex)
             {

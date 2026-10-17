@@ -54,7 +54,7 @@ namespace EnvironmentManager4
             {
                 try
                 {
-                    Process.Start(String.Format("{0}{1}", gpInstallPath, gp));
+                    Process.Start(new ProcessStartInfo(String.Format("{0}{1}", gpInstallPath, gp)) { UseShellExecute = true });
                 }
                 catch (Exception e)
                 {

@@ -42,28 +42,28 @@ namespace EnvironmentManager4
         private void linkWiki_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.linkWiki.LinkVisited = true;
-            Process.Start(UtilitiesOld.GetWikiLink());
+            Process.Start(new ProcessStartInfo(UtilitiesOld.GetWikiLink()) { UseShellExecute = true });
             return;
         }
 
         private void linkRepo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.linkRepo.LinkVisited = true;
-            Process.Start(UtilitiesOld.GetRepoLink());
+            Process.Start(new ProcessStartInfo(UtilitiesOld.GetRepoLink()) { UseShellExecute = true });
             return;
         }
 
         private void LinkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.LinkChangeLog.LinkVisited = true;
-            Process.Start(UtilitiesOld.GetChangeLogLink());
+            Process.Start(new ProcessStartInfo(UtilitiesOld.GetChangeLogLink()) { UseShellExecute = true });
             return;
         }
 
         private void linkDev1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.linkDev1.LinkVisited = true;
-            Process.Start(UtilitiesOld.GetDev1());
+            Process.Start(new ProcessStartInfo(UtilitiesOld.GetDev1()) { UseShellExecute = true });
             return;
         }
 
