@@ -284,8 +284,7 @@ namespace EnvironmentManager4
 
         private void CheckIfConnectedToTheNetwork()
         {
-            string connectionValue = AppVersionUtilities.GetLatestVersion();
-            if (connectionValue == "Unable to Connect")
+            if (!AppVersionUtilities.IsConnectedToNetwork())
             {
                 labelNotConnected.Visible = true;
                 labelNotConnected.BackColor = System.Drawing.Color.Transparent;

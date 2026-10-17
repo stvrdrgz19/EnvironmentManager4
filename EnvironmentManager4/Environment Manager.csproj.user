@@ -11,4 +11,72 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="src\WinForms\Controls\BuildList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Controls\CombinedProductVersionBuild.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Controls\ProductVersionLists.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\BuildLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\DatabaseActivityLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\DatabaseManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\DeleteBuilds.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\DirectoryCompare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\ExceptionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\ExceptionLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\Install.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\InstallPropertiesMonitor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\LaunchProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\ListAndButtonForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\Notes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\TextPrompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\UpdateDatabaseDescription.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\WinForms\Forms\UpdatePrompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Tools\About\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>
