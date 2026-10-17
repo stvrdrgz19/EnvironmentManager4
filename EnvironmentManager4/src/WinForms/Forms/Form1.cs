@@ -739,7 +739,7 @@ namespace EnvironmentManager4
             }
             try
             {
-                Process.Start(buildPath);
+                Process.Start(new ProcessStartInfo(buildPath) { UseShellExecute = true });
                 return;
             }
             catch (Exception ex)
@@ -884,7 +884,7 @@ namespace EnvironmentManager4
             ProductInfo pi = ProductInfo.GetProductInfo(product, version);
             try
             {
-                Process.Start(pi.FileserverDirectory);
+                Process.Start(new ProcessStartInfo(pi.FileserverDirectory) { UseShellExecute = true });
             }
             catch (Exception ex)
             {

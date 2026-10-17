@@ -52,7 +52,7 @@ namespace EnvironmentManager4
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.linkLabel1.LinkVisited = true;
-            Process.Start(UtilitiesOld.GetChangeLogLink());
+            Process.Start(new ProcessStartInfo(UtilitiesOld.GetChangeLogLink()) { UseShellExecute = true });
             return;
         }
     }

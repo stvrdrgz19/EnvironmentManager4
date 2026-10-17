@@ -1,0 +1,47 @@
+name: Build installer
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Tag builds (v2.1.0.0) stamp that version; everything else uses the csproj <Version>
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -like 'refs/tags/v*') { $v = $env:GITHUB_REF_NAME.TrimStart('v') }
+          else { $v = (Select-String -Path 'EnvironmentManager4/Environment Manager.csproj' -Pattern '<Version>([^<]+)</Version>').Matches[0].Groups[1].Value }
+          "value=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Publish app
+        run: >
+          dotnet publish "EnvironmentManager4/Environment Manager.csproj" -c Release
+          -o EnvironmentManager4/bin/publish
+          -p:Version=${{ steps.version.outputs.value }}
+
+      - name: Build MSI
+        run: dotnet build Installer/Installer.wixproj -c Release -p:Version=${{ steps.version.outputs.value }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Environment Manager v${{ steps.version.outputs.value }}
+          path: Installer/bin/x64/Release/*.msi
+
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Installer/bin/x64/Release/*.msi

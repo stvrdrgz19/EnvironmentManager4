@@ -536,7 +536,7 @@ namespace EnvironmentManager4.Database_Management
             if (result == DialogResult.Yes)
             {
                 AppSettings settings = new AppSettings();
-                Process.Start(settings.DBBackupDirectory);
+                Process.Start(new ProcessStartInfo(settings.DBBackupDirectory) { UseShellExecute = true });
             }
         }
 
