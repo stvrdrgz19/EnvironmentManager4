@@ -301,7 +301,8 @@ namespace EnvironmentManager4
             // inform the user if connected to the Cavallo Network or not
             CheckIfConnectedToTheNetwork();
 
-            // retrieve settings
+            // retrieve settings, carrying them over from a previous version's user.config on first run
+            AppSettings.ImportPreviousSettings();
             AppSettings settings = new AppSettings();
             AppSettings.CheckForSettingsUpdate();
 
