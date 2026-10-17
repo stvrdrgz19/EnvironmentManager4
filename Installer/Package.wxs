@@ -26,7 +26,13 @@
     </Feature>
 
     <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
-      <Files Include="$(var.PublishDir)**" />
+      <!-- The exe is declared explicitly so the launch-after-install action can reference it by Id -->
+      <Component>
+        <File Id="AppExe" Source="$(var.PublishDir)Environment Manager.exe" KeyPath="yes" />
+      </Component>
+      <Files Include="$(var.PublishDir)**">
+        <Exclude Files="$(var.PublishDir)Environment Manager.exe" />
+      </Files>
     </ComponentGroup>
 
     <!-- WorkingDirectory matters: the app resolves Files\ relative to the current directory -->
@@ -47,7 +53,20 @@
       </Component>
     </StandardDirectory>
 
-    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <!-- Optional "Launch Environment Manager" checkbox on the final dialog, checked by default -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Environment Manager" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+    <Property Id="WixShellExecTarget" Value="[#AppExe]" />
+    <CustomAction Id="LaunchApplication"
+                  BinaryRef="Wix4UtilCA_$(sys.BUILDARCHSHORT)"
+                  DllEntry="WixShellExec"
+                  Impersonate="yes" />
+
+    <UI>
+      <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+      <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchApplication"
+               Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed" />
+    </UI>
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
   </Package>
 </Wix>
