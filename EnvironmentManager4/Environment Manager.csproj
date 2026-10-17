@@ -9,7 +9,7 @@
     <ApplicationIcon>Files\Icons\EnvMgr.ico</ApplicationIcon>
     <ApplicationManifest>src\WinForms\app.manifest</ApplicationManifest>
     <!-- Single source of truth for the app and MSI version; CI overrides with -p:Version on tag builds -->
-    <Version>2.1.1.0</Version>
+    <Version>2.1.2.0</Version>
     <Product>EnvironmentManager4</Product>
     <AssemblyTitle>EnvironmentManager4</AssemblyTitle>
     <Copyright>Copyright © 2021</Copyright>
